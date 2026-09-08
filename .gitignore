@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.wrangler/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.generated/
+# Internal work belongs in the separate private repository.
+AGENTS.md
+*HANDOFF*.md
+*INTERNAL*.md
+PLAN.md
+SPEC.md
+DECISIONS.md
+TICKETS.md
+diagrams/
+adrs/
+internal/
