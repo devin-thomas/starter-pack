@@ -18,6 +18,21 @@
       "updated_at": "2026-09-08T00:00:00Z",
       "notes": []
     },
+    "primary-ai-phone-app": {
+      "status": "not_started",
+      "updated_at": "2026-09-08T00:00:00Z",
+      "notes": []
+    },
+    "authenticator": {
+      "status": "not_started",
+      "updated_at": "2026-09-08T00:00:00Z",
+      "notes": []
+    },
+    "github-mobile": {
+      "status": "not_started",
+      "updated_at": "2026-09-08T00:00:00Z",
+      "notes": []
+    },
     "core-accounts": {
       "status": "in_progress",
       "updated_at": "2026-09-08T00:00:00Z",

@@ -337,7 +337,16 @@ function RecommendationCard({
             {isBrandName(item.id) ? (
               <BrandIcon name={item.id} size={27} />
             ) : (
-              <Icon name="blocks" size={25} />
+              <Icon
+                name={
+                  item.id === "github-mobile"
+                    ? "smartphone"
+                    : item.id === "authenticator"
+                      ? "shield-check"
+                      : "blocks"
+                }
+                size={25}
+              />
             )}
           </span>
           <span>{item.name}</span>
@@ -412,6 +421,10 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
             </p>
           </div>
         </div>
+        <p className="account-summary">
+          Required phone apps: your primary AI app, GitHub Mobile, and an
+          authenticator.
+        </p>
         <p className="account-summary">
           Account checklist: GitHub, Cloudflare, Neon, your primary agent, and
           one instant app builder.
@@ -667,8 +680,8 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                       <span className="eyebrow">REQUIRED</span>
                       <h2>Core accounts and tools</h2>
                       <p>
-                        These are the foundations for the full Starter Pack
-                        path.
+                        Your primary AI phone app is required. Use the provider
+                        you already have, and prepare these apps and accounts.
                       </p>
                     </div>
                     <div className="recommendation-list">

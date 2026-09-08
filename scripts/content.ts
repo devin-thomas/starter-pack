@@ -12,7 +12,7 @@ const headingIcons: Readonly<Record<string, string>> = {
   "Your work belongs to you": "shield-check",
   "A living set of recommendations": "compass",
   "Start with your agent": "terminal",
-  "Prepare your core accounts": "lock-keyhole",
+  "Prepare your apps and accounts": "lock-keyhole",
   "Make one app that does something": "blocks",
   "Choose what happens to this first build": "route",
   "Save your place": "file-json",

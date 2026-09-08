@@ -13,6 +13,32 @@
     "kind": "recommendation"
   },
   {
+    "id": "github-mobile",
+    "name": "GitHub Mobile",
+    "category": "phone-app",
+    "reason": "Required in Phase 1. Sign into your GitHub account and confirm your profile opens.",
+    "url": "https://github.com/mobile",
+    "requirement": "required",
+    "status": "recommended",
+    "recommended_by": "Devin Thomas",
+    "checked_at": "2026-09-08",
+    "phase": "phase-1",
+    "kind": "recommendation"
+  },
+  {
+    "id": "authenticator",
+    "name": "Authenticator app",
+    "category": "account-security",
+    "reason": "Required in Phase 1, even when you usually use passkeys. I use Google Authenticator; an existing working authenticator counts.",
+    "url": "https://support.google.com/accounts/answer/1066447",
+    "requirement": "required",
+    "status": "recommended",
+    "recommended_by": "Devin Thomas",
+    "checked_at": "2026-09-08",
+    "phase": "phase-1",
+    "kind": "recommendation"
+  },
+  {
     "id": "cloudflare",
     "name": "Cloudflare",
     "category": "hosting",

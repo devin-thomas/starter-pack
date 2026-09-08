@@ -3,9 +3,9 @@
   "skills": [
     {
       "id": "starter-pack",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "current": "/skills/starter-pack/current/SKILL.md",
-      "versioned": "/skills/starter-pack/0.1.0/SKILL.md"
+      "versioned": "/skills/starter-pack/0.1.1/SKILL.md"
     },
     {
       "id": "computer-setup",
