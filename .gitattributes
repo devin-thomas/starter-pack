@@ -1,0 +1,2 @@
+# Preserve vendored bytes and their recorded hashes across operating systems.
+public/icons/** -text whitespace=cr-at-eol
