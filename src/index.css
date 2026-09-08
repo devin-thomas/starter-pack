@@ -58,6 +58,7 @@ button {
 a:focus-visible,
 button:focus-visible,
 textarea:focus-visible,
+input:focus-visible,
 summary:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
@@ -402,9 +403,7 @@ h3 {
   font-size: 13px;
   color: var(--muted);
 }
-.copy-status:empty {
-  display: none;
-}
+
 .copy-status {
   font-size: 13px;
   line-height: 1.6;
@@ -717,26 +716,110 @@ h3 {
   border-radius: 7px;
   overflow: hidden;
 }
-.resource-list > a {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  padding: 16px;
+.resource-item {
+  padding: 18px;
   background: var(--surface);
   border-bottom: 1px solid var(--line);
+  min-width: 0;
 }
-.resource-list > a:last-child {
+.resource-item:last-child {
   border-bottom: 0;
 }
-.resource-list > a:hover {
-  background: var(--surface-raised);
+.resource-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
 }
-.resource-list > a > .ui-icon:first-child {
-  color: var(--accent);
+.resource-heading > div {
+  min-width: 0;
 }
-.resource-list > a > .ui-icon:last-child {
-  margin-left: auto;
+.copy-disclosure {
+  border-top: 1px solid var(--line);
+}
+.copy-disclosure summary,
+.agent-files > summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 12px 18px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.agent-files > summary {
+  padding-left: 0;
+}
+.agent-files[open] > summary {
+  margin-bottom: 12px;
+}
+.copy-field {
+  padding: 0 18px 16px;
+  min-width: 0;
+}
+.copy-field label {
+  display: block;
+  font-size: 13px;
   color: var(--muted);
+  margin-bottom: 8px;
+}
+.copy-field textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  resize: vertical;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  -webkit-user-select: text;
+  user-select: text;
+}
+.manual-copy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 6px 0;
+}
+.manual-copy-actions .text-link {
+  border: 0;
+  padding: 8px 0;
+  min-height: 44px;
+  background: transparent;
+  font-size: 13px;
+}
+.copy-address .copy-field,
+.copy-address .prompt-controls {
+  padding: 0;
+}
+.copy-address .copy-field label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.copy-address .prompt-controls > span {
+  text-align: left;
+}
+.copy-field > p {
+  margin-bottom: 0;
+}
+.copy-status:empty {
+  display: none;
+}
+.external-link-icon {
+  width: 13px;
+  height: 13px;
+  margin-left: 3px;
+  vertical-align: baseline;
+}
+[id] {
+  scroll-margin-top: 20px;
 }
 .resource-list strong {
   font-size: 15px;
@@ -975,59 +1058,6 @@ h3 {
 .prose .has-heading-icon > .ui-icon {
   color: var(--phase-build);
   margin-top: 3px;
-}
-.info-tip {
-  position: relative;
-  display: inline-flex;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-.info-tip-trigger {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  border: 1px solid var(--line-strong);
-  border-radius: 50%;
-  color: var(--muted);
-  background: transparent;
-  font: 650 13px/1 "Geist Variable", sans-serif;
-  cursor: help;
-}
-.info-tip-trigger:hover,
-.info-tip-trigger:focus-visible {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.info-tip-content {
-  position: absolute;
-  z-index: 5;
-  top: 50%;
-  left: calc(100% + 10px);
-  width: min(310px, calc(100vw - 48px));
-  padding: 11px 13px;
-  border: 1px solid var(--line-strong);
-  background: var(--surface);
-  box-shadow: 0 14px 28px rgb(0 0 0 / 22%);
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.5;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateY(-50%) translateY(4px);
-  transition:
-    opacity 160ms ease,
-    transform 160ms ease,
-    visibility 160ms ease;
-}
-.info-tip:hover .info-tip-content,
-.info-tip:focus-within .info-tip-content {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(-50%);
 }
 .prose .heading-label {
   min-width: 0;
@@ -1276,16 +1306,6 @@ h3 {
   .recommendation-group-heading h2 {
     font-size: 19px;
   }
-  .info-tip-content {
-    top: calc(100% + 10px);
-    right: 0;
-    left: auto;
-    transform: translateY(4px);
-  }
-  .info-tip:hover .info-tip-content,
-  .info-tip:focus-within .info-tip-content {
-    transform: translateY(0);
-  }
   .phase-card {
     padding: 20px;
   }
@@ -1344,7 +1364,7 @@ h3 {
   .recommendation {
     padding: 20px;
   }
-  .resource-list > a {
+  .resource-item {
     padding: 15px 12px;
   }
   .resource-list small {

@@ -1,4 +1,4 @@
-import { readFile, access } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { build } from "vite";
 import { createElement } from "react";
@@ -6,7 +6,6 @@ import { renderToString } from "react-dom/server";
 import App from "../src/App";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-import { marked } from "marked";
 import {
   files,
   generateResources,
@@ -51,6 +50,7 @@ const titles: Record<string, string> = {
   "/guide": "Browse the guide",
   "/recommendations": "Recommendations",
   "/resources": "Skills and agent resources",
+  "/artifacts": "Project templates",
   "/about": "About this pack",
 };
 const analyticsConfig = JSON.parse(await readFile("analytics.json", "utf8"));
@@ -93,53 +93,126 @@ await write(
   "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n",
 );
 
-// Resolve local links in the generated site and hosted Markdown before publishing.
-const artifactHtml = await marked.parse(
-  await readFile("public/artifacts/index.md", "utf8"),
-);
-await write(
-  "dist/artifacts/index.html",
-  template
-    .replace(
-      "<!--app-html-->",
-      `<main style="max-width:800px;margin:40px auto;padding:20px">${artifactHtml}</main>`,
-    )
-    .replace("<!--app-data-->", "")
-    .replace(/<script type="module"[^>]*><\/script>/g, ""),
-);
+// Resolve local resources and enforce the human-facing link contract before publishing.
 const outputFiles = await files("dist");
 async function exists(candidate: string) {
   try {
-    await access(candidate);
-    return true;
+    return (await stat(candidate)).isFile();
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return false;
     throw error;
   }
 }
+function decodeHtml(value: string) {
+  return value.replace(/&(?:amp|quot|apos|lt|gt|#\d+|#x[\da-f]+);/gi, (entity) => {
+    const named: Record<string, string> = {
+      "&amp;": "&", "&quot;": '"', "&apos;": "'", "&lt;": "<", "&gt;": ">",
+    };
+    if (entity[1] !== "#") return named[entity.toLowerCase()];
+    return String.fromCodePoint(
+      entity[2].toLowerCase() === "x"
+        ? parseInt(entity.slice(3, -1), 16)
+        : parseInt(entity.slice(2, -1), 10),
+    );
+  });
+}
+function attributes(tag: string) {
+  const result = new Map<string, string>();
+  for (const match of tag.matchAll(
+    /([^\s=<>/]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g,
+  ))
+    result.set(
+      match[1].toLowerCase(),
+      decodeHtml(match[2] ?? match[3] ?? match[4] ?? ""),
+    );
+  return result;
+}
+function hostedUrls(text: string) {
+  return [
+    ...decodeHtml(text).matchAll(/https:\/\/starter\.devthomas\.site\/[^\s<>"'`]+/g),
+  ].map((match) => match[0].replace(/[.,;:!?)\]]+$/, ""));
+}
+const htmlIds = new Map<string, Set<string>>();
+async function destinationIds(file: string) {
+  let ids = htmlIds.get(file);
+  if (!ids) {
+    const html = await readFile(file, "utf8");
+    ids = new Set(
+      [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => decodeHtml(match[1])),
+    );
+    htmlIds.set(file, ids);
+  }
+  return ids;
+}
 const broken = new Set<string>();
+const invalidLinks = new Set<string>();
 for (const file of outputFiles.filter(
-  (file) => /\.(html|md|json)$/.test(file) && !file.includes(".vite"),
+  (file) => /\.(html|md|json|txt)$/.test(file) && !file.includes(".vite"),
 )) {
-  const text = await readFile(file, "utf8");
+  const raw = await readFile(file, "utf8");
+  const text = file.endsWith(".html")
+    ? raw.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+    : raw;
+  const basePath =
+    "/" + path.relative("dist", file)
+      .replace(/\\/g, "/")
+      .replace(/(?:^|\/)index\.html$/, "/")
+      .replace(/\.html$/, "");
+  const baseUrl = origin + basePath.replace(/^\/\//, "/");
+  if (file.endsWith(".html")) {
+    for (const anchor of text.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)) {
+      const attrs = attributes(anchor[1]);
+      const href = attrs.get("href");
+      if (!href) continue;
+      const url = new URL(href, baseUrl);
+      if (/\.(md|json|txt)$/i.test(url.pathname) && !attrs.has("download"))
+        invalidLinks.add(
+          `${file}: raw resource link ${href} must be a copyable URL or an explicit download`,
+        );
+      const external = /^https?:$/.test(url.protocol) && url.origin !== origin;
+      const opensNewTab = attrs.get("target")?.toLowerCase() === "_blank";
+      if (external && !opensNewTab)
+        invalidLinks.add(
+          `${file}: external link ${href} must open in a new tab`,
+        );
+      if (!external && opensNewTab)
+        invalidLinks.add(
+          `${file}: internal link ${href} must stay in the same tab`,
+        );
+      if (opensNewTab) {
+        const rel = new Set((attrs.get("rel") || "").toLowerCase().split(/\s+/));
+        if (!rel.has("noopener") || !rel.has("noreferrer"))
+          invalidLinks.add(
+            `${file}: new-tab link ${href} needs rel="noopener noreferrer"`,
+          );
+        const accessibleLabel =
+          attrs.get("aria-label") ?? decodeHtml(anchor[2].replace(/<[^>]+>/g, ""));
+        if (!/opens in a new tab/i.test(accessibleLabel))
+          invalidLinks.add(
+            `${file}: new-tab link ${href} needs an accessible new-tab cue`,
+          );
+      }
+    }
+  }
   const references = file.endsWith(".html")
-    ? [...text.matchAll(/(?:href|src)="([^"]+)"/g)].map((match) => match[1])
+    ? [
+        ...[...text.matchAll(/(?:href|src)="([^"]+)"/g)].map((match) => match[1]),
+        ...[...text.matchAll(/<textarea\b([^>]*)>([\s\S]*?)<\/textarea>/gi)]
+          .filter((match) => attributes(match[1]).has("readonly"))
+          .flatMap((match) => hostedUrls(match[2])),
+      ]
     : file.endsWith(".json")
       ? [
           ...text.matchAll(
             /"((?:\/|https:\/\/starter\.devthomas\.site\/)[^"\s]*)"/g,
           ),
         ].map((match) => match[1])
-      : [...text.matchAll(/\]\(([^)\s]+)\)/g)].map((match) => match[1]);
+      : file.endsWith(".txt")
+        ? hostedUrls(text)
+        : [...text.matchAll(/\]\(([^)\s]+)\)/g)].map((match) => match[1]);
   for (const reference of references) {
-    if (/^(#|mailto:|data:)/.test(reference)) continue;
-    const basePath =
-      "/" +
-      path
-        .relative("dist", file)
-        .replace(/\\/g, "/")
-        .replace(/\.html$/, "");
-    const url = new URL(reference, origin + basePath);
+    if (/^(mailto:|data:|tel:)/.test(reference)) continue;
+    const url = new URL(decodeHtml(reference), baseUrl);
     if (url.origin !== origin) continue;
     const pathname = decodeURIComponent(url.pathname);
     const candidate = path.resolve("dist", "." + pathname);
@@ -149,16 +222,27 @@ for (const file of outputFiles.filter(
     )
       throw new Error(`Invalid resource path ${reference}`);
     const matches = pathname.endsWith("/")
-      ? [path.join(candidate, "index.html"), candidate.slice(0, -1) + ".html"]
+      ? [path.join(candidate, "index.html"), candidate + ".html"]
       : [candidate, candidate + ".html", path.join(candidate, "index.html")];
-    if (!(await Promise.all(matches.map(exists))).some(Boolean))
+    const found = await Promise.all(matches.map(exists));
+    const destination = matches[found.indexOf(true)];
+    if (!destination) {
       broken.add(`${file}: ${reference}`);
+    } else if (
+      file.endsWith(".html") && url.hash && destination.endsWith(".html")
+    ) {
+      const fragment = decodeURIComponent(url.hash.slice(1));
+      if (!(await destinationIds(destination)).has(fragment))
+        broken.add(`${file}: missing fragment ${reference}`);
+    }
   }
 }
+if (invalidLinks.size)
+  throw new Error(`Invalid human links:\n${[...invalidLinks].join("\n")}`);
 if (broken.size)
   throw new Error(`Broken public links:\n${[...broken].join("\n")}`);
 console.log(
-  `Generated ${routes.length} HTML pages and ${outputFiles.length} public files; local links passed.`,
+  `Generated ${routes.length} HTML pages and ${outputFiles.length} public files; local links, fragments, and human link semantics passed.`,
 );
 console.log(
   `Web Analytics: ${analyticsToken ? "beacon included" : "not configured"}.`,

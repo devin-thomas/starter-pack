@@ -3,7 +3,6 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
-import { marked } from "marked";
 import { generateResources, loadContent, routes } from "./content";
 
 const server = await createServer({
@@ -16,17 +15,6 @@ server.middlewares.use(async (request, response, next) => {
       /\/$/,
       "",
     ) || "/";
-  if (pathname === "/artifacts") {
-    try {
-      response.setHeader("Content-Type", "text/html");
-      response.end(
-        `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Starter Pack resources</title><body><main>${await marked.parse(await readFile("public/artifacts/index.md", "utf8"))}</main></body></html>`,
-      );
-    } catch (error) {
-      next(error);
-    }
-    return;
-  }
   if (
     /^\/(guide|about)\.(md|json)$/.test(pathname) ||
     /^\/phases\/[123]\.(md|json)$/.test(pathname) ||

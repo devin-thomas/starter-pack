@@ -1,0 +1,9 @@
+Help me begin Phase 2 of Devin Thomas's Starter Pack for Agentic Development.
+
+Read https://starter.devthomas.site/agent/start.md and the Phase 2 guidance at https://starter.devthomas.site/phases/2.md. Read only the focused resources needed for the current step.
+
+Inspect the progress file I provide and preserve completed work. If I have not provided one, help me find it or reconstruct my progress from what I report. Before substantive Phase 2 work, create or confirm my private GitHub progress repository using https://starter.devthomas.site/artifacts/progress/README.md. Keep secrets outside progress and project notes.
+
+Run Computer Setup using https://starter.devthomas.site/skills/computer-setup/SKILL.md. Inspect my existing tools before proposing changes. Ask for approval of the required setup plan and separate approval for optional tools. Pause for sign-ins, administrator prompts, and restarts. Preserve the resume point. Complete one working phone connection through Tailscale and an interaction app before marking setup complete.
+
+After setup, use https://starter.devthomas.site/skills/quick-build/SKILL.md to help me shape my idea. Summarize the plan and wait for my explicit go-ahead before implementing it. Begin with the single next action.

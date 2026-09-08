@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { type ReactNode } from "react";
+import { CopyText } from "./CopyText";
 import { motion, useReducedMotion } from "motion/react";
 import {
   Icon,
@@ -31,6 +32,7 @@ export interface SiteData {
     url: string;
   }[];
   prompt: string;
+  phase2Prompt: string;
 }
 
 const milestones = [
@@ -47,64 +49,112 @@ const nav = [
   ["/about", "About"],
 ];
 
-function Prompt({ prompt }: { prompt: string }) {
-  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
-  async function copy() {
-    try {
-      if (!navigator.clipboard) {
-        setStatus("failed");
-        return;
-      }
-      await navigator.clipboard.writeText(prompt);
-      setStatus("copied");
-    } catch {
-      setStatus("failed");
-    }
-  }
+function Prompt({
+  prompt,
+  phase2 = false,
+  home = false,
+}: {
+  prompt: string;
+  phase2?: boolean;
+  home?: boolean;
+}) {
   return (
-    <section className="prompt-workbench" aria-labelledby="prompt-label">
+    <section
+      id="starting-prompt"
+      className="prompt-workbench"
+      aria-labelledby="prompt-label"
+    >
       <div className="document-toolbar">
         <span id="prompt-label">
-          <Icon name="terminal" size={20} /> Your starting prompt
+          <Icon name="terminal" size={20} />
+          {phase2 ? "Phase 2 handoff" : "Your starting prompt"}
         </span>
         <span className="metadata">COPY + PASTE</span>
       </div>
-      <AgentBrands />
-      <div className="prompt-controls">
-        <button className="primary-action" onClick={copy}>
-          {status === "copied" ? (
-            <Icon name="check" size={17} />
-          ) : (
-            <Icon name="clipboard" size={17} />
-          )}
-          {status === "copied" ? "Prompt copied" : "Get Started"}
-          <Icon name="arrow-right" size={17} />
-        </button>
-        <span>Copy, then paste into your agent.</span>
-      </div>
-      <div className="copy-status" role="status" aria-live="polite">
-        {status === "copied" &&
-          "Ready. Paste this into a new conversation with your agent."}
-        {status === "failed" && (
-          <>
-            Clipboard unavailable. Download the prompt instead: {" "}
-            <a href="/prompts/get-started.txt" download>
-              get-started.txt
-            </a>
-            .
-          </>
-        )}
-      </div>
-      <div className="prompt-explainer" aria-labelledby="prompt-explainer-label">
-        <h3 id="prompt-explainer-label">What happens when I copy this?</h3>
-        <p>
-          Copying only puts this text on your clipboard. Once you paste it into
-          your agent and send it, your agent reads the pack, finds your starting
-          point, and guides you one step at a time. It asks before making
-          changes to your computer.
-        </p>
-      </div>
+      {!phase2 && <AgentBrands />}
+      <CopyText
+        text={prompt}
+        label={phase2 ? "Phase 2 handoff text" : "Starting prompt text"}
+        buttonLabel={
+          home ? "Get Started" : phase2 ? "Copy Phase 2 handoff" : "Copy prompt"
+        }
+        copiedLabel={phase2 ? "Handoff copied" : "Prompt copied"}
+        instruction={
+          phase2
+            ? "Paste into your computer agent. Attach your saved progress before sending."
+            : "Paste into your agent, then send."
+        }
+        download={phase2 ? "/prompts/phase-2.txt" : "/prompts/get-started.txt"}
+      />
+      {!phase2 && (
+        <div className="prompt-explainer">
+          <h3>What happens next?</h3>
+          <p>
+            Your agent reads the pack and helps you take one step at a time. It
+            asks before changing your computer.
+          </p>
+        </div>
+      )}
     </section>
+  );
+}
+
+function ExternalLink({
+  href,
+  children,
+  label,
+}: {
+  href: string;
+  children: ReactNode;
+  label?: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label ? `${label} (opens in a new tab)` : undefined}
+    >
+      {children}
+      <span className="sr-only"> (opens in a new tab)</span>
+    </a>
+  );
+}
+
+function PhaseContent({
+  phase,
+  data,
+}: {
+  phase: SiteData["phases"][number];
+  data: SiteData;
+}) {
+  const boundary =
+    phase.order === 1 ? "use-the-setup-you-have" : "complete-computer-setup";
+  const split =
+    phase.order < 3 ? phase.html.indexOf(`<h2 id="${boundary}"`) : -1;
+  if (phase.order < 3 && split < 0)
+    throw new Error(`Missing phase ${phase.order} handoff position`);
+  return (
+    <>
+      <article
+        className="prose"
+        dangerouslySetInnerHTML={{
+          __html: split < 0 ? phase.html : phase.html.slice(0, split),
+        }}
+      />
+      {split >= 0 && (
+        <>
+          <Prompt
+            prompt={phase.order === 1 ? data.prompt : data.phase2Prompt}
+            phase2={phase.order === 2}
+          />
+          <article
+            className="prose"
+            dangerouslySetInnerHTML={{ __html: phase.html.slice(split) }}
+          />
+        </>
+      )}
+    </>
   );
 }
 
@@ -136,102 +186,129 @@ function PhaseCards() {
           </p>
           <span className="card-link">
             {i === 2 ? "Explore the preview" : "Open phase"}
-            <Icon name="arrow-up-right" size={16} />
+            <Icon name="arrow-right" size={16} />
           </span>
         </a>
+      ))}
+    </div>
+  );
+}
+
+const resourceOrigin = "https://starter.devthomas.site";
+type Resource = readonly [path: string, label: string, description?: string];
+const templateResources: Resource[] = [
+  [
+    "/artifacts/progress/README.md",
+    "Progress repository template",
+    "Your agent uses this to keep a private record of completed work.",
+  ],
+  [
+    "/artifacts/quick-build/README.md",
+    "Quick Build templates",
+    "Your agent creates the plan and project notes from these files.",
+  ],
+  ["/setup/computer-setup.manifest.json", "Computer Setup manifest"],
+  ["/setup/state.example.json", "Setup state example"],
+  ["/skills/versions.json", "Skill versions"],
+];
+
+function ResourceList({ items }: { items: Resource[] }) {
+  return (
+    <div className="resource-list">
+      {items.map(([path, label, description]) => (
+        <div className="resource-item" key={path}>
+          <div className="resource-heading">
+            <span className="resource-symbol">
+              <Icon name={resourceIcon(path)} size={21} />
+            </span>
+            <div>
+              <strong>{label}</strong>
+              {description && <small>{description}</small>}
+            </div>
+          </div>
+          <CopyText
+            text={`${resourceOrigin}${path}`}
+            label={`${label} address`}
+            alwaysVisible
+            buttonLabel="Copy address"
+            copiedLabel="Address copied"
+            instruction="Paste into your agent."
+          />
+        </div>
       ))}
     </div>
   );
 }
 
 function Resources({ phase }: { phase?: number }) {
-  const links = phase
+  const items: Resource[] = phase
     ? [
-        [`/phases/${phase}.md`, "Phase Markdown"],
-        [`/phases/${phase}.json`, "Phase JSON"],
+        [`/phases/${phase}.md`, "Phase guide for your agent"],
+        [`/phases/${phase}.json`, "Phase data"],
         ...(phase === 2
-          ? [
-              ["/skills/computer-setup/SKILL.md", "Computer Setup skill"],
-              ["/skills/quick-build/SKILL.md", "Quick Build skill"],
-            ]
-          : [["/skills/starter-pack/SKILL.md", "Starter Pack skill"]]),
+          ? ([
+              [
+                "/skills/computer-setup/SKILL.md",
+                "Computer Setup instructions",
+              ],
+              ["/skills/quick-build/SKILL.md", "Quick Build instructions"],
+            ] satisfies Resource[])
+          : ([
+              ["/skills/starter-pack/SKILL.md", "Starter Pack instructions"],
+            ] satisfies Resource[])),
       ]
     : [
         [
           "/agent/start.md",
-          "Start here",
-          "The small entry point your agent reads first.",
+          "Agent entry point",
+          "The first file your agent reads after you send the starting prompt.",
         ],
         [
           "/skills/starter-pack/SKILL.md",
-          "Starter Pack skill",
-          "Guidance for moving through the pack and keeping your place.",
+          "Starter Pack instructions",
+          "How your agent guides you and keeps your place.",
         ],
         [
           "/skills/computer-setup/SKILL.md",
-          "Computer Setup skill",
-          "Inspect, plan, and set up a computer with your approval.",
+          "Computer Setup instructions",
+          "How your agent inspects and sets up a computer with your approval.",
         ],
         [
           "/skills/quick-build/SKILL.md",
-          "Quick Build skill",
-          "Turn an idea into an approved plan and a live project.",
+          "Quick Build instructions",
+          "How your agent turns an idea into an approved plan and a live project.",
         ],
-        [
-          "/artifacts/",
-          "Progress templates",
-          "Starter files for the progress record you and your agent keep.",
-        ],
-        [
-          "/agent/catalog.json",
-          "Resource catalog",
-          "Find the focused resource for the step you are on.",
-        ],
-        [
-          "/recommendations.json",
-          "Recommendations data",
-          "Tool choices, reasons, and checked dates.",
-        ],
-        [
-          "/prompts/get-started.txt",
-          "Starting prompt",
-          "A plain-text copy to save or share.",
-        ],
+        ["/agent/catalog.json", "Resource catalog"],
+        ["/recommendations.json", "Recommendations data"],
+        ["/guide.md", "Guide for your agent"],
+        ["/about.md", "About the pack for your agent"],
+        ["/guide.json", "Guide data"],
+        ["/about.json", "About data"],
+        ["/llms.txt", "Agent discovery index"],
       ];
+  if (phase) return <ResourceList items={items} />;
   return (
-    <div className="resource-list">
-      {links.map(([href, label, description]) => (
-        <a key={href} href={href}>
-          <span className="resource-symbol">
-            <Icon name={resourceIcon(href)} size={21} />
-          </span>
-          <span>
-            <strong>{label}</strong>
-            {description && <small>{description}</small>}
-          </span>
-          <Icon name="arrow-up-right" size={16} />
-        </a>
-      ))}
-    </div>
+    <>
+      <ResourceList items={items.slice(0, 4)} />
+      <details className="content-section agent-files">
+        <summary>Catalog and reference files</summary>
+        <ResourceList items={items.slice(4)} />
+      </details>
+    </>
   );
 }
 
-function PhaseAgentTip() {
+function AgentFiles({ phase }: { phase: number }) {
   return (
-    <span className="info-tip">
-      <button
-        className="info-tip-trigger"
-        type="button"
-        aria-label="How your agent can use this phase"
-        aria-describedby="phase-agent-tip"
-      >
-        ?
-      </button>
-      <span className="info-tip-content" id="phase-agent-tip" role="tooltip">
-        Link your agent to this page. It can understand the phase, guide you
-        through it, and access the focused files below.
-      </span>
-    </span>
+    <details className="content-section agent-files">
+      <summary>Files for your agent</summary>
+      <p className="muted">
+        Your agent follows these files from the prompt. If it asks for an
+        address, copy one here. On iPhone, you can also touch and hold the
+        address to select and copy it.
+      </p>
+      <Resources phase={phase} />
+    </details>
   );
 }
 
@@ -255,7 +332,7 @@ function RecommendationCard({
         </span>
       </div>
       <h2>
-        <a href={item.url}>
+        <ExternalLink href={item.url} label={item.name}>
           <span className="tool-mark">
             {isBrandName(item.id) ? (
               <BrandIcon name={item.id} size={27} />
@@ -265,7 +342,7 @@ function RecommendationCard({
           </span>
           <span>{item.name}</span>
           <Icon name="arrow-up-right" size={17} />
-        </a>
+        </ExternalLink>
       </h2>
       <p>{item.reason}</p>
       <div className="recommendation-meta">
@@ -302,10 +379,11 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
           <Icon name="terminal" size={18} />
           <div>
             <strong>One capable AI agent</strong>
-            <p>
-              Use the agent you already have. Common options include:
-            </p>
-            <ul className="rail-agent-options" aria-label="Common AI agent options">
+            <p>Use the agent you already have. Common options include:</p>
+            <ul
+              className="rail-agent-options"
+              aria-label="Common AI agent options"
+            >
               {commonAgents.map(({ name, label }) => (
                 <li key={name}>
                   <BrandIcon name={name} size={20} />
@@ -340,7 +418,7 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
         </p>
         <a className="text-link" href="/recommendations">
           See the recommended tools
-          <Icon name="arrow-up-right" size={14} />
+          <Icon name="arrow-right" size={14} />
         </a>
       </section>
       <section>
@@ -417,7 +495,10 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
               Starter Pack
             </a>
             <span className="brand-attribution">
-              by <a href="https://devthomas.site">Devin Thomas</a>
+              by{" "}
+              <ExternalLink href="https://devthomas.site">
+                Devin Thomas <Icon name="arrow-up-right" size={12} />
+              </ExternalLink>
             </span>
           </div>
         </div>
@@ -482,7 +563,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                     your first working idea to a project you can put online.
                   </p>
                 </div>
-                <Prompt prompt={data.prompt} />
+                <Prompt prompt={data.prompt} home />
                 <a className="browse-link" href="/guide">
                   <Icon name="book-open" size={17} />
                   Prefer to look around? Browse the guide
@@ -524,15 +605,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   className="content-section prose"
                   dangerouslySetInnerHTML={{ __html: data.pages.guide }}
                 />
-                <p className="muted">
-                  <a className="text-link" href="/guide.md">
-                    Markdown
-                  </a>{" "}
-                  /{" "}
-                  <a className="text-link" href="/guide.json">
-                    JSON
-                  </a>
-                </p>
+
                 <Prompt prompt={data.prompt} />
               </>
             ) : phase ? (
@@ -551,18 +624,8 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                     </p>
                   </div>
                 )}
-                <article
-                  className="prose"
-                  dangerouslySetInnerHTML={{ __html: phase.html }}
-                />
-                <section className="content-section">
-                  <h2 className="icon-heading">
-                    <Icon name="terminal" size={22} />
-                    Share this phase with your agent
-                    <PhaseAgentTip />
-                  </h2>
-                  <Resources phase={phaseNumber} />
-                </section>
+                <PhaseContent phase={phase} data={data} />
+                <AgentFiles phase={phaseNumber} />
                 <div className="step-actions">
                   <a
                     href={
@@ -595,12 +658,18 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   title="Tools I would hand a friend."
                   description="Start with the required tools, choose one instant builder, and keep Vercel as an optional hosting path."
                 />
+                <p className="muted">
+                  Tool links open in a new tab so you can return to the pack.
+                </p>
                 <div className="recommendation-groups">
                   <section className="recommendation-group">
                     <div className="recommendation-group-heading">
                       <span className="eyebrow">REQUIRED</span>
                       <h2>Core accounts and tools</h2>
-                      <p>These are the foundations for the full Starter Pack path.</p>
+                      <p>
+                        These are the foundations for the full Starter Pack
+                        path.
+                      </p>
                     </div>
                     <div className="recommendation-list">
                       {data.recommendations
@@ -662,23 +731,71 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 <PageHeading
                   label="SKILLS + RESOURCES"
                   title="The pack behind your agent."
-                  description="Readable, focused guidance you can inspect, save, or share directly with your agent."
+                  description="These addresses are for your agent to read. Copy one when it asks for a specific file."
                 />
+                <p className="muted">
+                  Reading on your own?{" "}
+                  <a className="text-link" href="/guide">
+                    Open the guide
+                  </a>
+                  . To begin with an agent,{" "}
+                  <a className="text-link" href="/guide#starting-prompt">
+                    go to the starting prompt
+                  </a>
+                  .
+                </p>
+                <p className="muted">
+                  Addresses are selectable text. On iPhone, touch and hold an
+                  address to copy it, or use Copy address.
+                </p>
                 <Resources />
+                <p>
+                  <a className="text-link" href="/artifacts">
+                    Progress and planning templates{" "}
+                    <Icon name="arrow-right" size={15} />
+                  </a>
+                </p>
                 <section className="content-section">
                   <h2>Phase guides</h2>
                   {[1, 2, 3].map((number) => (
-                    <div className="phase-resource" key={number}>
-                      <h3>
+                    <details
+                      className="phase-resource agent-files"
+                      key={number}
+                    >
+                      <summary>
                         Phase {number}: {milestones[number - 1]}
-                      </h3>
+                      </summary>
+                      <p>
+                        <a className="text-link" href={`/phases/${number}`}>
+                          Read Phase {number}{" "}
+                          <Icon name="arrow-right" size={15} />
+                        </a>
+                      </p>
                       <Resources phase={number} />
-                    </div>
+                    </details>
                   ))}
                 </section>
-                <a className="text-link" href="/llms.txt">
-                  Agent discovery index
-                  <Icon name="arrow-up-right" size={15} />
+              </>
+            ) : normalized === "/artifacts" ? (
+              <>
+                <PageHeading
+                  label="FILES FOR YOUR AGENT"
+                  title="Progress and planning templates."
+                  description="Your agent uses these starter files to keep your progress and prepare your project. You review its summaries and decide what to do next."
+                />
+                <p className="muted">
+                  Copy an address into your agent if it asks for a template.
+                  Your completed progress and private project notes stay in your
+                  own storage.
+                </p>
+                <ResourceList items={templateResources} />
+                <p>
+                  <a className="text-link" href="/resources">
+                    All agent resources
+                  </a>
+                </p>
+                <a className="text-link" href="/guide#starting-prompt">
+                  Go to the starting prompt
                 </a>
               </>
             ) : normalized === "/about" ? (
@@ -692,15 +809,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   className="prose"
                   dangerouslySetInnerHTML={{ __html: data.pages.about }}
                 />
-                <p className="muted">
-                  <a className="text-link" href="/about.md">
-                    Markdown
-                  </a>{" "}
-                  /{" "}
-                  <a className="text-link" href="/about.json">
-                    JSON
-                  </a>
-                </p>
+
                 <a href="/" className="primary-action">
                   Get Started
                   <Icon name="arrow-right" size={16} />
@@ -740,7 +849,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
           ))}
           <a href="/prompts/get-started.txt" download>
             <Icon name="download" size={13} />
-            Prompt
+            Download prompt (.txt)
           </a>
         </nav>
       </footer>

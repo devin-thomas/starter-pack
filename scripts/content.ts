@@ -27,17 +27,54 @@ const headingIcons: Readonly<Record<string, string>> = {
   "Add complexity for a reason": "settings-2",
 };
 
-// Add visual cues only to rendered prose; downloadable source stays canonical.
-const proseMarkdown = new Marked({
-  renderer: {
-    heading({ text, tokens, depth }) {
-      const icon = headingIcons[text];
-      if (!icon || (depth !== 2 && depth !== 3)) return false;
-      const image = `url('/icons/interface/${icon}.svg')`;
-      return `<h${depth} class="has-heading-icon"><span class="ui-icon" aria-hidden="true" style="mask-image:${image};-webkit-mask-image:${image}"></span><span class="heading-label">${this.parser.parseInline(tokens)}</span></h${depth}>\n`;
+function escapeAttribute(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+// A fresh renderer keeps duplicate heading IDs deterministic within each page.
+async function renderProse(markdown: string) {
+  const headingIds = new Set<string>();
+  const proseMarkdown = new Marked({
+    renderer: {
+      heading({ text, tokens, depth }) {
+        const label = this.parser.parseInline(tokens);
+        const slug =
+          label
+            .replace(/<[^>]+>/g, "")
+            .toLowerCase()
+            .replace(/&[^;]+;/g, "")
+            .replace(/[^a-z0-9\s-]/g, "")
+            .trim()
+            .replace(/[\s-]+/g, "-") || "section";
+        let id = slug;
+        for (let suffix = 2; headingIds.has(id); suffix++) id = `${slug}-${suffix}`;
+        headingIds.add(id);
+        const icon = (depth === 2 || depth === 3) && headingIcons[text];
+        if (!icon) return `<h${depth} id="${id}">${label}</h${depth}>\n`;
+        const image = `url('/icons/interface/${icon}.svg')`;
+        return `<h${depth} id="${id}" class="has-heading-icon"><span class="ui-icon" aria-hidden="true" style="mask-image:${image};-webkit-mask-image:${image}"></span><span class="heading-label">${label}</span></h${depth}>\n`;
+      },
+      link({ href, title, tokens }) {
+        const url = new URL(href, origin);
+        if (/\.(md|json|txt)$/i.test(url.pathname))
+          throw new Error(
+            `Human prose links to a raw resource: ${href}. Link to a reading page or provide a copyable URL instead.`,
+          );
+        const attributes = `href="${escapeAttribute(href)}"${title ? ` title="${escapeAttribute(title)}"` : ""}`;
+        const label = this.parser.parseInline(tokens);
+        if (!/^https?:$/.test(url.protocol) || url.origin === origin)
+          return `<a ${attributes}>${label}</a>`;
+        const image = "url('/icons/interface/arrow-up-right.svg')";
+        return `<a ${attributes} target="_blank" rel="noopener noreferrer">${label}<span class="ui-icon external-link-icon" aria-hidden="true" style="mask-image:${image};-webkit-mask-image:${image}"></span><span class="sr-only"> (opens in a new tab)</span></a>`;
+      },
     },
-  },
-});
+  });
+  return await proseMarkdown.parse(markdown);
+}
 
 export const origin = "https://starter.devthomas.site";
 export const routes = [
@@ -48,6 +85,7 @@ export const routes = [
   "/phases/3",
   "/recommendations",
   "/resources",
+  "/artifacts",
   "/about",
 ];
 export async function write(destination: string, value: string) {
@@ -68,13 +106,13 @@ export async function files(directory: string): Promise<string[]> {
 }
 export async function loadContent(): Promise<SiteData> {
   const pages = {
-    guide: await proseMarkdown.parse(
+    guide: await renderProse(
       (await readFile("content/pages/guide.md", "utf8")).replace(
         /^# .+\r?\n/m,
         "",
       ),
     ),
-    about: await proseMarkdown.parse(
+    about: await renderProse(
       (await readFile("content/pages/about.md", "utf8")).replace(
         /^# .+\r?\n/m,
         "",
@@ -97,7 +135,7 @@ export async function loadContent(): Promise<SiteData> {
         summary: String(data.summary),
         status: String(data.status),
         order,
-        html: await proseMarkdown.parse(content.replace(/^# .+\r?\n/m, "")),
+        html: await renderProse(content.replace(/^# .+\r?\n/m, "")),
       };
     }),
   );
@@ -140,6 +178,7 @@ export async function loadContent(): Promise<SiteData> {
     pages,
     recommendations,
     prompt: (await readFile("public/prompts/get-started.txt", "utf8")).trim(),
+    phase2Prompt: (await readFile("public/prompts/phase-2.txt", "utf8")).trim(),
   };
 }
 export async function generateResources(data: SiteData, output: string) {
@@ -163,11 +202,35 @@ export async function generateResources(data: SiteData, output: string) {
   for (const phase of data.phases) {
     const raw = await readFile(`content/phases/${phase.order}.md`, "utf8");
     const parsed = matter(raw);
-    await write(`${output}/phases/${phase.order}.md`, raw);
+    // Keep learner prose canonical; annotate only generated agent representations.
+    const handoff = phase.order === 1 || phase.order === 2
+      ? [
+          "",
+          "",
+          "## Agent handoff resources",
+          "",
+          `Generated agent annotation: the copy controls described in this curriculum appear on the [human Phase ${phase.order} page](${origin}/phases/${phase.order}). Retrieve the prompt and instructions from the links below when reading this machine representation. Fetch only what the current action needs; do not ask the learner to open raw files or operate a copy control for you.`,
+          "",
+          `- [${phase.order === 1 ? "Starting prompt" : "Phase 2 handoff prompt"}](${origin}/prompts/${phase.order === 1 ? "get-started" : "phase-2"}.txt)`,
+          `- [Starter Pack instructions](${origin}/skills/starter-pack/SKILL.md)`,
+          ...(phase.order === 2 ? [
+            `- [Computer Setup instructions](${origin}/skills/computer-setup/SKILL.md)`,
+            `- [Quick Build instructions](${origin}/skills/quick-build/SKILL.md)`,
+            `- [Private progress repository instructions](${origin}/artifacts/progress/README.md)`,
+          ] : []),
+          `- [Progress template](${origin}/artifacts/progress/starter-progress.json)`,
+          "",
+        ].join("\n")
+      : "";
+    const markdown = handoff ? parsed.content.trimEnd() + handoff : parsed.content;
+    await write(
+      `${output}/phases/${phase.order}.md`,
+      handoff ? raw.trimEnd() + handoff : raw,
+    );
     await write(
       `${output}/phases/${phase.order}.json`,
       JSON.stringify(
-        { ...parsed.data, version: "0.1.0", markdown: parsed.content },
+        { ...parsed.data, version: "0.1.0", markdown },
         null,
         2,
       ),
