@@ -1,8 +1,43 @@
 import { readFile, readdir, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
-import { marked } from "marked";
+import { Marked } from "marked";
 import type { SiteData } from "../src/App";
+
+const headingIcons: Readonly<Record<string, string>> = {
+  "How the companion works": "compass",
+  "What you will own": "folder-git-2",
+  "What is available now": "route",
+  "Make something first": "blocks",
+  "Your work belongs to you": "shield-check",
+  "A living set of recommendations": "compass",
+  "Start with your agent": "terminal",
+  "Prepare your core accounts": "lock-keyhole",
+  "Make one app that does something": "blocks",
+  "Choose what happens to this first build": "route",
+  "Save your place": "file-json",
+  "Bring your progress with you": "folder-git-2",
+  "Complete Computer Setup": "monitor",
+  "Connect from your phone once": "smartphone",
+  "Have a short design conversation": "list-checks",
+  "Build and put it online": "rocket",
+  "Finish with something you can return to": "check",
+  "Choose the idea you want to grow": "sprout",
+  "Make decisions visible": "file-text",
+  "Add complexity for a reason": "settings-2",
+};
+
+// Add visual cues only to rendered prose; downloadable source stays canonical.
+const proseMarkdown = new Marked({
+  renderer: {
+    heading({ text, tokens, depth }) {
+      const icon = headingIcons[text];
+      if (!icon || (depth !== 2 && depth !== 3)) return false;
+      const image = `url('/icons/interface/${icon}.svg')`;
+      return `<h${depth} class="has-heading-icon"><span class="ui-icon" aria-hidden="true" style="mask-image:${image};-webkit-mask-image:${image}"></span><span class="heading-label">${this.parser.parseInline(tokens)}</span></h${depth}>\n`;
+    },
+  },
+});
 
 export const origin = "https://starter.devthomas.site";
 export const routes = [
@@ -33,13 +68,13 @@ export async function files(directory: string): Promise<string[]> {
 }
 export async function loadContent(): Promise<SiteData> {
   const pages = {
-    guide: await marked.parse(
+    guide: await proseMarkdown.parse(
       (await readFile("content/pages/guide.md", "utf8")).replace(
         /^# .+\r?\n/m,
         "",
       ),
     ),
-    about: await marked.parse(
+    about: await proseMarkdown.parse(
       (await readFile("content/pages/about.md", "utf8")).replace(
         /^# .+\r?\n/m,
         "",
@@ -62,7 +97,7 @@ export async function loadContent(): Promise<SiteData> {
         summary: String(data.summary),
         status: String(data.status),
         order,
-        html: await marked.parse(content.replace(/^# .+\r?\n/m, "")),
+        html: await proseMarkdown.parse(content.replace(/^# .+\r?\n/m, "")),
       };
     }),
   );

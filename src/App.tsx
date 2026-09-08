@@ -1,19 +1,12 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
-  ArrowRight,
-  ArrowUpRight,
-  BookOpen,
-  Check,
-  Clipboard,
-  Download,
-  FileText,
-  LockKeyhole,
-  Monitor,
-  ShieldCheck,
-  Smartphone,
-  Terminal,
-} from "lucide-react";
+  Icon,
+  AgentBrands,
+  BrandIcon,
+  isBrandName,
+  type IconName,
+} from "./Icons";
 
 export interface SiteData {
   pages: { guide: string; about: string };
@@ -44,6 +37,8 @@ const milestones = [
   "Build something meaningful",
   "Build something serious",
 ];
+const phaseIcons = ["sprout", "blocks", "compass"] as const;
+const phaseShortLabels = ["Make", "Build", "Go deeper"];
 const nav = [
   ["/guide", "Guide"],
   ["/recommendations", "Recommendations"],
@@ -69,19 +64,20 @@ function Prompt({ prompt }: { prompt: string }) {
     <section className="prompt-workbench" aria-labelledby="prompt-label">
       <div className="document-toolbar">
         <span>
-          <Terminal size={15} /> Your starting prompt
+          <Icon name="terminal" size={20} /> Your starting prompt
         </span>
-        <span className="metadata">ANY CAPABLE AGENT</span>
+        <span className="metadata">COPY + PASTE</span>
       </div>
-      <label id="prompt-label" className="sr-only" htmlFor="start-prompt">
-        Read or select the starting prompt
-      </label>
-      <textarea id="start-prompt" readOnly value={prompt} spellCheck={false} />
+      <AgentBrands />
       <div className="prompt-controls">
         <button className="primary-action" onClick={copy}>
-          {status === "copied" ? <Check size={17} /> : <Clipboard size={17} />}
+          {status === "copied" ? (
+            <Icon name="check" size={17} />
+          ) : (
+            <Icon name="clipboard" size={17} />
+          )}
           {status === "copied" ? "Prompt copied" : "Get Started"}
-          <ArrowRight size={17} />
+          <Icon name="arrow-right" size={17} />
         </button>
         <span>Copy, then paste into your agent.</span>
       </div>
@@ -90,7 +86,7 @@ function Prompt({ prompt }: { prompt: string }) {
           "Ready. Paste this into a new conversation with your agent."}
         {status === "failed" && (
           <>
-            Clipboard unavailable. Select the prompt above, or{" "}
+            Clipboard unavailable. Select the prompt below, or{" "}
             <a href="/prompts/get-started.txt" download>
               download the prompt
             </a>
@@ -98,6 +94,10 @@ function Prompt({ prompt }: { prompt: string }) {
           </>
         )}
       </div>
+      <label id="prompt-label" className="sr-only" htmlFor="start-prompt">
+        Read or select the starting prompt
+      </label>
+      <textarea id="start-prompt" readOnly value={prompt} spellCheck={false} />
       <details>
         <summary>What happens when I copy this?</summary>
         <p>
@@ -115,7 +115,14 @@ function PhaseCards() {
   return (
     <div className="phase-cards">
       {milestones.map((title, i) => (
-        <a href={`/phases/${i + 1}`} className="phase-card" key={title}>
+        <a
+          href={`/phases/${i + 1}`}
+          className={`phase-card phase-${i + 1}`}
+          key={title}
+        >
+          <span className="concept-icon">
+            <Icon name={phaseIcons[i]} size={24} />
+          </span>
           <span className="eyebrow">
             PHASE 0{i + 1}
             {i === 2 && " / PREVIEW"}
@@ -132,7 +139,7 @@ function PhaseCards() {
           </p>
           <span className="card-link">
             {i === 2 ? "Explore the preview" : "Open phase"}
-            <ArrowUpRight size={16} />
+            <Icon name="arrow-up-right" size={16} />
           </span>
         </a>
       ))}
@@ -198,16 +205,30 @@ function Resources({ phase }: { phase?: number }) {
     <div className="resource-list">
       {links.map(([href, label, description]) => (
         <a key={href} href={href}>
-          <FileText size={18} />
+          <span className="resource-symbol">
+            <Icon name={resourceIcon(href)} size={21} />
+          </span>
           <span>
             <strong>{label}</strong>
             {description && <small>{description}</small>}
           </span>
-          <ArrowUpRight size={16} />
+          <Icon name="arrow-up-right" size={16} />
         </a>
       ))}
     </div>
   );
+}
+
+function resourceIcon(href: string): IconName {
+  if (href.includes("computer-setup")) return "monitor";
+  if (href.includes("quick-build")) return "blocks";
+  if (href.includes("starter-pack") || href.includes("start.md"))
+    return "compass";
+  if (href.includes("artifacts")) return "folder-git-2";
+  if (href.includes("recommendations")) return "list-checks";
+  if (href.endsWith(".json")) return "file-json";
+  if (href.includes("prompts")) return "terminal";
+  return "file-text";
 }
 
 function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
@@ -223,8 +244,13 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
         <h2>One milestone at a time.</h2>
         <ol className="milestone-list">
           {milestones.map((title, i) => (
-            <li key={title} className={phase === i + 1 ? "current" : ""}>
-              <span className="rail-number">0{i + 1}</span>
+            <li
+              key={title}
+              className={`phase-${i + 1} ${phase === i + 1 ? "current" : ""}`}
+            >
+              <span className="rail-number">
+                <Icon name={phaseIcons[i]} size={17} />
+              </span>
               <div>
                 <strong>{title}</strong>
                 <small>
@@ -242,7 +268,11 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
       <section>
         <span className="eyebrow">WHAT YOU NEED</span>
         <div className="need-item">
-          {phase === 2 ? <Monitor size={18} /> : <Smartphone size={18} />}
+          {phase === 2 ? (
+            <Icon name="monitor" size={18} />
+          ) : (
+            <Icon name="smartphone" size={18} />
+          )}
           <div>
             <strong>
               {phase === 2
@@ -257,7 +287,7 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
           </div>
         </div>
         <div className="need-item">
-          <Terminal size={18} />
+          <Icon name="terminal" size={18} />
           <div>
             <strong>One capable AI agent</strong>
             <p>
@@ -272,11 +302,11 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
         </p>
         <a className="text-link" href="/recommendations">
           See the recommended tools
-          <ArrowUpRight size={14} />
+          <Icon name="arrow-up-right" size={14} />
         </a>
       </section>
       <section className="privacy-note">
-        <ShieldCheck size={20} />
+        <Icon name="shield-check" size={20} />
         <h2>No Starter Pack account.</h2>
         <p>
           Your agent tracks progress; this site does not. Your progress stays
@@ -309,13 +339,24 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
         Skip to content
       </a>
       <header className="brand-header">
-        <a className="brand" href="/" aria-label="Starter Pack home">
+        <div className="brand">
           <span className="brand-mark">
-            <img src="/uppercut-labs-logo.png" alt="" width="32" height="32" />
+            <img
+              src="/uppercut-labs-logo.png"
+              alt="Sol"
+              width="32"
+              height="32"
+            />
           </span>
-          <span className="brand-name">Starter Pack</span>
-          <span className="brand-attribution">UPPERCUT LABS</span>
-        </a>
+          <div className="brand-wordmark">
+            <a className="brand-name" href="/">
+              Starter Pack
+            </a>
+            <span className="brand-attribution">
+              by <a href="https://devthomas.site">Devin Thomas</a>
+            </span>
+          </div>
+        </div>
         <div className="header-status">
           <span className="status-dot" />
           Free to use
@@ -323,7 +364,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
           No account required
         </div>
         <a className="header-guide" href="/guide">
-          <BookOpen size={16} />
+          <Icon name="book-open" size={16} />
           Guide
         </a>
       </header>
@@ -332,17 +373,24 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
           <a
             href={`/phases/${index + 1}`}
             key={title}
-            className={phaseNumber === index + 1 ? "active" : ""}
+            className={`phase-${index + 1} ${phaseNumber === index + 1 ? "active" : ""}`}
             aria-current={phaseNumber === index + 1 ? "page" : undefined}
           >
-            <span className="step-number">0{index + 1}</span>
+            <span className="step-number">
+              <Icon name={phaseIcons[index]} size={22} />
+            </span>
             <span className="progress-label">
               <small>
                 {index === 2 ? "PHASE 3 / PREVIEW" : `PHASE ${index + 1}`}
               </small>
-              {title}
+              <span className="phase-full-label">{title}</span>
+              <span className="phase-short-label">
+                {phaseShortLabels[index]}
+              </span>
             </span>
-            {index === 2 && <LockKeyhole className="preview-icon" size={14} />}
+            {index === 2 && (
+              <Icon name="lock-keyhole" className="preview-icon" size={14} />
+            )}
           </a>
         ))}
       </nav>
@@ -357,7 +405,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
               <>
                 <div className="page-heading">
                   <span className="eyebrow">
-                    <span className="small-rule" />
+                    <Icon name="sprout" size={19} />
                     START HERE
                   </span>
                   <h1>
@@ -372,9 +420,9 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 </div>
                 <Prompt prompt={data.prompt} />
                 <a className="browse-link" href="/guide">
-                  <BookOpen size={17} />
+                  <Icon name="book-open" size={17} />
                   Prefer to look around? Browse the guide
-                  <ArrowRight size={16} />
+                  <Icon name="arrow-right" size={16} />
                 </a>
                 <section className="content-section">
                   <div className="section-heading">
@@ -384,7 +432,10 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   <PhaseCards />
                 </section>
                 <section className="content-section how-it-works">
-                  <h2>You bring the idea. Your agent helps you build.</h2>
+                  <h2 className="icon-heading">
+                    <Icon name="route" size={23} />
+                    You bring the idea. Your agent helps you build.
+                  </h2>
                   <p>
                     Paste the prompt into your agent. It figures out where you
                     are, reads the guidance for your next step, and keeps a
@@ -393,7 +444,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   </p>
                   <a className="text-link" href="/guide">
                     How the companion works
-                    <ArrowRight size={15} />
+                    <Icon name="arrow-right" size={15} />
                   </a>
                 </section>
               </>
@@ -429,7 +480,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 />
                 {phaseNumber === 3 && (
                   <div className="notice">
-                    <BookOpen size={18} />
+                    <Icon name="book-open" size={18} />
                     <p>
                       This is a preview. The complete Phase 3 curriculum is not
                       part of this release.
@@ -441,7 +492,10 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   dangerouslySetInnerHTML={{ __html: phase.html }}
                 />
                 <section className="content-section">
-                  <h2>For your agent</h2>
+                  <h2 className="icon-heading">
+                    <Icon name="terminal" size={22} />
+                    For your agent
+                  </h2>
                   <p className="muted">
                     Share the focused guidance for this phase.
                   </p>
@@ -468,7 +522,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                         ? "Phase 3 preview"
                         : "Continue to Phase 2"
                       : "Get Started"}
-                    <ArrowRight size={16} />
+                    <Icon name="arrow-right" size={16} />
                   </a>
                 </div>
               </>
@@ -486,7 +540,9 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                         <span className="eyebrow">
                           {item.category.replaceAll("_", " ")}
                         </span>
-                        <span className="requirement">
+                        <span
+                          className={`requirement requirement-${item.requirement}`}
+                        >
                           {item.status === "deprecated"
                             ? "Deprecated"
                             : item.requirement.replaceAll("_", " ")}
@@ -494,8 +550,15 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                       </div>
                       <h2>
                         <a href={item.url}>
-                          {item.name}
-                          <ArrowUpRight size={17} />
+                          <span className="tool-mark">
+                            {isBrandName(item.id) ? (
+                              <BrandIcon name={item.id} size={27} />
+                            ) : (
+                              <Icon name="blocks" size={25} />
+                            )}
+                          </span>
+                          <span>{item.name}</span>
+                          <Icon name="arrow-up-right" size={17} />
                         </a>
                       </h2>
                       <p>{item.reason}</p>
@@ -530,7 +593,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 </section>
                 <a className="text-link" href="/llms.txt">
                   Agent discovery index
-                  <ArrowUpRight size={15} />
+                  <Icon name="arrow-up-right" size={15} />
                 </a>
               </>
             ) : normalized === "/about" ? (
@@ -555,7 +618,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 </p>
                 <a href="/" className="primary-action">
                   Get Started
-                  <ArrowRight size={16} />
+                  <Icon name="arrow-right" size={16} />
                 </a>
               </>
             ) : (
@@ -567,7 +630,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 />
                 <a href="/guide" className="primary-action">
                   Open the guide
-                  <ArrowRight size={16} />
+                  <Icon name="arrow-right" size={16} />
                 </a>
               </>
             )}
@@ -591,7 +654,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
             </a>
           ))}
           <a href="/prompts/get-started.txt" download>
-            <Download size={13} />
+            <Icon name="download" size={13} />
             Prompt
           </a>
         </nav>
