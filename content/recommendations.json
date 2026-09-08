@@ -1,5 +1,57 @@
 [
   {
+    "id": "chatgpt",
+    "name": "ChatGPT / Codex",
+    "category": "primary-agent",
+    "requirement": "recommended",
+    "status": "recommended",
+    "recommended_by": "Devin Thomas",
+    "checked_at": "2026-09-08",
+    "reason": "ChatGPT is my first recommendation. For the way I work, the usage allowance feels generous and the connectivity is among the best. Most importantly, I like the interface. That is why I use Codex for development. Your actual limits depend on your plan and the work you give it.",
+    "url": "https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan",
+    "phase": "phase-1",
+    "kind": "recommendation"
+  },
+  {
+    "id": "claude",
+    "name": "Claude",
+    "category": "primary-agent",
+    "requirement": "recommended",
+    "status": "recommended",
+    "recommended_by": "Devin Thomas",
+    "checked_at": "2026-09-08",
+    "reason": "I think of Claude as the enterprise-oriented choice: a strong fit for large organizations and managed team workflows. My caution is cost, especially for heavy use. Compare the plan and any usage charges; the entry price alone does not tell you what your workload will cost.",
+    "url": "https://claude.com/pricing",
+    "phase": "phase-1",
+    "kind": "recommendation"
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "category": "primary-agent",
+    "requirement": "recommended",
+    "status": "recommended",
+    "recommended_by": "Devin Thomas",
+    "checked_at": "2026-09-08",
+    "reason": "I would point you toward Cursor if you are serious about getting into development as a whole, or interested in agents that work on longer tasks. It puts the editor and project workflow at the center. Check which cloud and long-running capabilities your plan includes.",
+    "url": "https://cursor.com/docs/cloud-agent",
+    "phase": "phase-1",
+    "kind": "recommendation"
+  },
+  {
+    "id": "antigravity",
+    "name": "Google / Gemini + Antigravity",
+    "category": "primary-agent",
+    "requirement": "recommended",
+    "status": "recommended",
+    "recommended_by": "Devin Thomas",
+    "checked_at": "2026-09-08",
+    "reason": "Google is the convenient choice if you are already paying for its storage or running your business in Workspace. Check what your existing plan includes before buying something else. Gemini, Spark, and Antigravity have different access rules; a storage or Workspace subscription does not automatically unlock all three.",
+    "url": "https://one.google.com/about/google-ai-plans/",
+    "phase": "phase-1",
+    "kind": "recommendation"
+  },
+  {
     "id": "github",
     "name": "GitHub",
     "category": "source",

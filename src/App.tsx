@@ -691,6 +691,24 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   Tool links open in a new tab so you can return to the pack.
                 </p>
                 <div className="recommendation-groups">
+                  <section id="choose-your-agent" className="recommendation-group">
+                    <div className="recommendation-group-heading">
+                      <span className="eyebrow">MY TAKE</span>
+                      <h2>Choose an agent you want to work with.</h2>
+                      <p>
+                        I use Codex. Here is how I would help a friend choose.
+                        These are my preferences, not a requirement to switch
+                        or pay for all four. Start with access you already have.
+                      </p>
+                    </div>
+                    <div className="recommendation-list">
+                      {data.recommendations
+                        .filter((item) => item.category === "primary-agent")
+                        .map((item) => (
+                          <RecommendationCard item={item} key={item.id} />
+                        ))}
+                    </div>
+                  </section>
                   <section className="recommendation-group">
                     <div className="recommendation-group-heading">
                       <span className="eyebrow">REQUIRED</span>
