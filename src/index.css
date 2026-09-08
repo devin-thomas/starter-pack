@@ -776,6 +776,31 @@ h3 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
+.recommendation-groups {
+  display: grid;
+  gap: 38px;
+}
+.recommendation-group {
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+}
+.recommendation-group:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.recommendation-group-heading {
+  margin-bottom: 18px;
+}
+.recommendation-group-heading h2 {
+  margin: 10px 0 7px;
+  font-size: 22px;
+}
+.recommendation-group-heading p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
 .recommendation {
   border: 1px solid var(--line);
   background: var(--surface);
@@ -784,6 +809,9 @@ h3 {
   display: flex;
   flex-direction: column;
   min-width: 0;
+}
+.recommendation-featured {
+  border-color: color-mix(in srgb, var(--phase-make) 48%, var(--line));
 }
 .recommendation-top {
   display: flex;
@@ -1016,6 +1044,9 @@ h3 {
   .recommendation-list {
     grid-template-columns: 1fr;
   }
+  .recommendation-groups {
+    gap: 30px;
+  }
   .site-footer {
     align-items: flex-start;
     flex-direction: column;
@@ -1188,6 +1219,9 @@ h3 {
   .phase-cards,
   .recommendation-list {
     grid-template-columns: 1fr;
+  }
+  .recommendation-group-heading h2 {
+    font-size: 19px;
   }
   .phase-card {
     padding: 20px;

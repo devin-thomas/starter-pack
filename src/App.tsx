@@ -216,6 +216,47 @@ function Resources({ phase }: { phase?: number }) {
   );
 }
 
+function RecommendationCard({
+  item,
+  featured = false,
+}: {
+  item: SiteData["recommendations"][number];
+  featured?: boolean;
+}) {
+  return (
+    <article
+      className={`recommendation${featured ? " recommendation-featured" : ""}`}
+    >
+      <div className="recommendation-top">
+        <span className="eyebrow">{item.category.replaceAll("_", " ")}</span>
+        <span className={`requirement requirement-${item.requirement}`}>
+          {item.status === "deprecated"
+            ? "Deprecated"
+            : item.requirement.replaceAll("_", " ")}
+        </span>
+      </div>
+      <h2>
+        <a href={item.url}>
+          <span className="tool-mark">
+            {isBrandName(item.id) ? (
+              <BrandIcon name={item.id} size={27} />
+            ) : (
+              <Icon name="blocks" size={25} />
+            )}
+          </span>
+          <span>{item.name}</span>
+          <Icon name="arrow-up-right" size={17} />
+        </a>
+      </h2>
+      <p>{item.reason}</p>
+      <div className="recommendation-meta">
+        <span>Recommended by {item.recommended_by || "Devin Thomas"}</span>
+        <span>Checked {item.checked_at}</span>
+      </div>
+    </article>
+  );
+}
+
 function resourceIcon(href: string): IconName {
   if (href.includes("computer-setup")) return "monitor";
   if (href.includes("quick-build")) return "blocks";
@@ -535,45 +576,68 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 <PageHeading
                   label="THE TOOLKIT"
                   title="Tools I would hand a friend."
-                  description="Devin Thomas's current picks, with a reason for each one. Your agent helps you use the tools that fit your next step."
+                  description="Start with the required tools, choose one instant builder, and keep Vercel as an optional hosting path."
                 />
-                <div className="recommendation-list">
-                  {data.recommendations.map((item) => (
-                    <article className="recommendation" key={item.id}>
-                      <div className="recommendation-top">
-                        <span className="eyebrow">
-                          {item.category.replaceAll("_", " ")}
-                        </span>
-                        <span
-                          className={`requirement requirement-${item.requirement}`}
-                        >
-                          {item.status === "deprecated"
-                            ? "Deprecated"
-                            : item.requirement.replaceAll("_", " ")}
-                        </span>
-                      </div>
-                      <h2>
-                        <a href={item.url}>
-                          <span className="tool-mark">
-                            {isBrandName(item.id) ? (
-                              <BrandIcon name={item.id} size={27} />
-                            ) : (
-                              <Icon name="blocks" size={25} />
-                            )}
-                          </span>
-                          <span>{item.name}</span>
-                          <Icon name="arrow-up-right" size={17} />
-                        </a>
-                      </h2>
-                      <p>{item.reason}</p>
-                      <div className="recommendation-meta">
-                        <span>
-                          Recommended by {item.recommended_by || "Devin Thomas"}
-                        </span>
-                        <span>Checked {item.checked_at}</span>
-                      </div>
-                    </article>
-                  ))}
+                <div className="recommendation-groups">
+                  <section className="recommendation-group">
+                    <div className="recommendation-group-heading">
+                      <span className="eyebrow">REQUIRED</span>
+                      <h2>Core accounts and tools</h2>
+                      <p>These are the foundations for the full Starter Pack path.</p>
+                    </div>
+                    <div className="recommendation-list">
+                      {data.recommendations
+                        .filter((item) => item.requirement === "required")
+                        .map((item) => (
+                          <RecommendationCard item={item} key={item.id} />
+                        ))}
+                    </div>
+                  </section>
+                  <section className="recommendation-group">
+                    <div className="recommendation-group-heading">
+                      <span className="eyebrow">INSTANT BUILDERS</span>
+                      <h2>Choose one instant builder</h2>
+                      <p>
+                        Google AI Studio is the recommended option. The others
+                        are alternatives for making your first working thing.
+                      </p>
+                    </div>
+                    <div className="recommendation-list">
+                      {data.recommendations
+                        .filter((item) => item.category === "instant-builder")
+                        .sort((a, b) =>
+                          a.id === "google-ai-studio"
+                            ? -1
+                            : b.id === "google-ai-studio"
+                              ? 1
+                              : 0,
+                        )
+                        .map((item) => (
+                          <RecommendationCard
+                            item={item}
+                            featured={item.id === "google-ai-studio"}
+                            key={item.id}
+                          />
+                        ))}
+                    </div>
+                  </section>
+                  <section className="recommendation-group">
+                    <div className="recommendation-group-heading">
+                      <span className="eyebrow">OPTIONAL</span>
+                      <h2>Vercel, if you want another hosting path</h2>
+                      <p>
+                        Vercel is an alternate deployment option, not a required
+                        account.
+                      </p>
+                    </div>
+                    <div className="recommendation-list">
+                      {data.recommendations
+                        .filter((item) => item.requirement === "optional")
+                        .map((item) => (
+                          <RecommendationCard item={item} key={item.id} />
+                        ))}
+                    </div>
+                  </section>
                 </div>
               </>
             ) : normalized === "/resources" ? (
