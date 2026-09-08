@@ -976,6 +976,59 @@ h3 {
   color: var(--phase-build);
   margin-top: 3px;
 }
+.info-tip {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.info-tip-trigger {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--muted);
+  background: transparent;
+  font: 650 13px/1 "Geist Variable", sans-serif;
+  cursor: help;
+}
+.info-tip-trigger:hover,
+.info-tip-trigger:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.info-tip-content {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  left: calc(100% + 10px);
+  width: min(310px, calc(100vw - 48px));
+  padding: 11px 13px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  box-shadow: 0 14px 28px rgb(0 0 0 / 22%);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-50%) translateY(4px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms ease;
+}
+.info-tip:hover .info-tip-content,
+.info-tip:focus-within .info-tip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%);
+}
 .prose .heading-label {
   min-width: 0;
 }
@@ -1222,6 +1275,16 @@ h3 {
   }
   .recommendation-group-heading h2 {
     font-size: 19px;
+  }
+  .info-tip-content {
+    top: calc(100% + 10px);
+    right: 0;
+    left: auto;
+    transform: translateY(4px);
+  }
+  .info-tip:hover .info-tip-content,
+  .info-tip:focus-within .info-tip-content {
+    transform: translateY(0);
   }
   .phase-card {
     padding: 20px;

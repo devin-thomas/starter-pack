@@ -216,6 +216,25 @@ function Resources({ phase }: { phase?: number }) {
   );
 }
 
+function PhaseAgentTip() {
+  return (
+    <span className="info-tip">
+      <button
+        className="info-tip-trigger"
+        type="button"
+        aria-label="How your agent can use this phase"
+        aria-describedby="phase-agent-tip"
+      >
+        ?
+      </button>
+      <span className="info-tip-content" id="phase-agent-tip" role="tooltip">
+        Link your agent to this page. It can understand the phase, guide you
+        through it, and access the focused files below.
+      </span>
+    </span>
+  );
+}
+
 function RecommendationCard({
   item,
   featured = false,
@@ -539,11 +558,9 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 <section className="content-section">
                   <h2 className="icon-heading">
                     <Icon name="terminal" size={22} />
-                    For your agent
+                    Share this phase with your agent
+                    <PhaseAgentTip />
                   </h2>
-                  <p className="muted">
-                    Share the focused guidance for this phase.
-                  </p>
                   <Resources phase={phaseNumber} />
                 </section>
                 <div className="step-actions">
