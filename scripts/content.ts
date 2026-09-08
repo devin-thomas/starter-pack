@@ -129,7 +129,11 @@ export async function loadContent(): Promise<SiteData> {
       }
       if (data.order !== order || data.id !== `phase-${order}` || !data.updated)
         throw new Error(`Invalid phase ${order} metadata`);
-      const html = await renderProse(content.replace(/^# .+\r?\n/m, ""));
+      let headingIndex = 0;
+      const html = (await renderProse(content.replace(/^# .+\r?\n/m, "")))
+        .replace(/<h[23]\b[^>]*>/g, (heading) =>
+          heading.replace(/>$/, ` data-accent="${headingIndex++ % 6}">`),
+        );
       const outline = [...html.matchAll(/<h([23])\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g)]
         .map((match) => ({
           id: match[2],

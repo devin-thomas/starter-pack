@@ -654,22 +654,44 @@ h3 {
 .phase-content :is(h2, h3) {
   scroll-margin-top: 24px;
 }
+.phase-content :is([data-accent="0"], .field-lesson:has(> [data-accent="0"])) {
+  --section-accent: #8fc7ff;
+}
+.phase-content :is([data-accent="1"], .field-lesson:has(> [data-accent="1"])) {
+  --section-accent: #f2c879;
+}
+.phase-content :is([data-accent="2"], .field-lesson:has(> [data-accent="2"])) {
+  --section-accent: #e9a2bb;
+}
+.phase-content :is([data-accent="3"], .field-lesson:has(> [data-accent="3"])) {
+  --section-accent: #8bd7cb;
+}
+.phase-content :is([data-accent="4"], .field-lesson:has(> [data-accent="4"])) {
+  --section-accent: #f3ad87;
+}
+.phase-content :is([data-accent="5"], .field-lesson:has(> [data-accent="5"])) {
+  --section-accent: #c1b7f5;
+}
+.phase-content .prose :is(h2, h3),
+.phase-content .prose .has-heading-icon > .ui-icon {
+  color: var(--section-accent);
+}
+.phase-content .prose h2 {
+  margin-top: 48px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line-strong);
+  line-height: 1.4;
+}
 .phase-outline {
   border-block: 1px solid var(--line);
   margin-bottom: 24px;
   font-size: 16px;
 }
-.phase-outline summary,
-.field-lesson summary,
-.phase-extra-credit > summary {
+.phase-outline summary {
   cursor: pointer;
   padding-block: 12px;
   color: var(--text);
   line-height: 1.5;
-}
-.phase-extra-credit {
-  margin-block: 20px;
-  border-block: 1px solid var(--line);
 }
 .phase-outline ol {
   list-style: none;
@@ -697,15 +719,15 @@ h3 {
   flex-shrink: 0;
 }
 .prose .field-lesson {
-  margin-block: 28px;
+  margin-block: 32px;
   padding: clamp(16px, 3vw, 26px);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--concept-color);
+  border-left: 3px solid var(--section-accent);
   border-radius: 7px;
   background: var(--surface-soft);
 }
 .field-lesson > .eyebrow {
-  color: var(--concept-color);
+  color: var(--section-accent);
   margin: 0;
   line-height: 1.6;
 }
@@ -720,10 +742,6 @@ h3 {
   border-left: 2px solid var(--line-strong);
   background: var(--surface-raised);
   color: var(--text);
-}
-.field-lesson details {
-  margin-top: 20px;
-  border-top: 1px solid var(--line);
 }
 .field-lesson > :last-child {
   margin-bottom: 0;
