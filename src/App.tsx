@@ -19,6 +19,7 @@ export interface SiteData {
     status: string;
     order: number;
     html: string;
+    outline: { id: string; labelHtml: string; lesson: boolean }[];
   }[];
   recommendations: {
     id: string;
@@ -135,7 +136,22 @@ function PhaseContent({
   if (phase.order < 3 && split < 0)
     throw new Error(`Missing phase ${phase.order} handoff position`);
   return (
-    <>
+    <div className={`phase-content phase-${phase.order}`}>
+      <nav className="phase-outline" aria-label="On this page">
+        <details>
+          <summary>Steps and lessons in this phase</summary>
+          <ol>
+            {phase.outline.map((item) => (
+              <li key={item.id} className={item.lesson ? "outline-lesson" : undefined}>
+                <a href={`#${item.id}`}>
+                  {item.lesson && <span className="outline-label">Lesson</span>}
+                  <span dangerouslySetInnerHTML={{ __html: item.labelHtml }} />
+                </a>
+              </li>
+            ))}
+          </ol>
+        </details>
+      </nav>
       <article
         className="prose"
         dangerouslySetInnerHTML={{
@@ -154,7 +170,7 @@ function PhaseContent({
           />
         </>
       )}
-    </>
+    </div>
   );
 }
 

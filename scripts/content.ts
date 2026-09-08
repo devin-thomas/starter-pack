@@ -129,13 +129,21 @@ export async function loadContent(): Promise<SiteData> {
       }
       if (data.order !== order || data.id !== `phase-${order}` || !data.updated)
         throw new Error(`Invalid phase ${order} metadata`);
+      const html = await renderProse(content.replace(/^# .+\r?\n/m, ""));
+      const outline = [...html.matchAll(/<h([23])\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g)]
+        .map((match) => ({
+          id: match[2],
+          labelHtml: match[3].replace(/<[^>]+>/g, ""),
+          lesson: match[1] === "3",
+        }));
       return {
         id: String(data.id),
         title: String(data.title),
         summary: String(data.summary),
         status: String(data.status),
         order,
-        html: await renderProse(content.replace(/^# .+\r?\n/m, "")),
+        html,
+        outline,
       };
     }),
   );
@@ -248,6 +256,11 @@ export async function generateResources(data: SiteData, output: string) {
     html: `/phases/${phase.order}`,
     markdown: `/phases/${phase.order}.md`,
     json: `/phases/${phase.order}.json`,
+    lessons: phase.outline.filter((item) => item.lesson).map((item) => ({
+      id: item.id,
+      title: item.labelHtml,
+      html: `/phases/${phase.order}#${item.id}`,
+    })),
   }));
   await write(
     `${output}/agent/catalog.json`,

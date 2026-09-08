@@ -140,6 +140,8 @@ async function destinationIds(file: string) {
     ids = new Set(
       [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => decodeHtml(match[1])),
     );
+    if (ids.size !== [...html.matchAll(/\bid="([^"]+)"/g)].length)
+      throw new Error(`Duplicate HTML IDs in ${file}`);
     htmlIds.set(file, ids);
   }
   return ids;
@@ -160,6 +162,13 @@ for (const file of outputFiles.filter(
       .replace(/\.html$/, "");
   const baseUrl = origin + basePath.replace(/^\/\//, "/");
   if (file.endsWith(".html")) {
+    const ids = await destinationIds(file);
+    for (const element of text.matchAll(/<[a-z][^>]*\baria-labelledby="([^"]+)"[^>]*>/gi)) {
+      for (const id of decodeHtml(element[1]).split(/\s+/)) {
+        if (!ids.has(id))
+          throw new Error(`${file}: missing accessible label target ${id}`);
+      }
+    }
     for (const anchor of text.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)) {
       const attrs = attributes(anchor[1]);
       const href = attrs.get("href");

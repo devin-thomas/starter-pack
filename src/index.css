@@ -651,6 +651,78 @@ h3 {
   color: var(--text);
   margin-top: 25px;
 }
+.phase-content :is(h2, h3) {
+  scroll-margin-top: 24px;
+}
+.phase-outline {
+  border-block: 1px solid var(--line);
+  margin-bottom: 24px;
+  font-size: 16px;
+}
+.phase-outline summary,
+.field-lesson summary {
+  cursor: pointer;
+  padding-block: 12px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.phase-outline ol {
+  list-style: none;
+  padding: 0 0 12px;
+  margin: 0;
+}
+.phase-outline a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 4px;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.phase-outline a:hover {
+  color: var(--concept-color);
+}
+.outline-lesson a {
+  padding-left: 16px;
+  color: var(--muted);
+}
+.outline-label {
+  color: var(--concept-color);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.prose .field-lesson {
+  margin-block: 28px;
+  padding: clamp(16px, 3vw, 26px);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--concept-color);
+  border-radius: 7px;
+  background: var(--surface-soft);
+}
+.field-lesson > .eyebrow {
+  color: var(--concept-color);
+  margin: 0;
+  line-height: 1.6;
+}
+.prose .field-lesson h3 {
+  margin-top: 10px;
+  font-size: 20px;
+  line-height: 1.4;
+}
+.field-lesson blockquote {
+  margin: 20px 0 0;
+  padding: 1px 16px;
+  border-left: 2px solid var(--line-strong);
+  background: var(--surface-raised);
+  color: var(--text);
+}
+.field-lesson details {
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.field-lesson > :last-child {
+  margin-bottom: 0;
+}
 .prose li {
   margin-bottom: 10px;
   padding-left: 4px;
