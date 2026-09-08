@@ -76,6 +76,13 @@ async function renderProse(markdown: string) {
   return await proseMarkdown.parse(markdown);
 }
 
+function accentHeadings(html: string) {
+  let headingIndex = 0;
+  return html.replace(/<h[23]\b[^>]*>/g, (heading) =>
+    heading.replace(/>$/, ` data-accent="${headingIndex++ % 6}">`),
+  );
+}
+
 export const origin = "https://starter.devthomas.site";
 export const routes = [
   "/",
@@ -87,6 +94,7 @@ export const routes = [
   "/resources",
   "/artifacts",
   "/about",
+  "/help/cloudflare-iphone",
 ];
 export async function write(destination: string, value: string) {
   await mkdir(path.dirname(destination), { recursive: true });
@@ -106,6 +114,9 @@ export async function files(directory: string): Promise<string[]> {
 }
 export async function loadContent(): Promise<SiteData> {
   const pages = {
+    cloudflareIphone: accentHeadings(await renderProse(
+      await readFile("content/pages/cloudflare-iphone.md", "utf8"),
+    )),
     guide: await renderProse(
       (await readFile("content/pages/guide.md", "utf8")).replace(
         /^# .+\r?\n/m,
@@ -129,11 +140,7 @@ export async function loadContent(): Promise<SiteData> {
       }
       if (data.order !== order || data.id !== `phase-${order}` || !data.updated)
         throw new Error(`Invalid phase ${order} metadata`);
-      let headingIndex = 0;
-      const html = (await renderProse(content.replace(/^# .+\r?\n/m, "")))
-        .replace(/<h[23]\b[^>]*>/g, (heading) =>
-          heading.replace(/>$/, ` data-accent="${headingIndex++ % 6}">`),
-        );
+      const html = accentHeadings(await renderProse(content.replace(/^# .+\r?\n/m, "")));
       const outline = [...html.matchAll(/<h([23])\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g)]
         .map((match) => ({
           id: match[2],
@@ -194,6 +201,11 @@ export async function loadContent(): Promise<SiteData> {
   };
 }
 export async function generateResources(data: SiteData, output: string) {
+  const helpMarkdown = await readFile("content/pages/cloudflare-iphone.md", "utf8");
+  await write(`${output}/help/cloudflare-iphone.md`, helpMarkdown);
+  await write(`${output}/help/cloudflare-iphone.json`, JSON.stringify({
+    id: "cloudflare-iphone", version: "0.1.0", markdown: helpMarkdown,
+  }, null, 2));
   for (const page of ["guide", "about"]) {
     const markdown = await readFile(`content/pages/${page}.md`, "utf8");
     await write(`${output}/${page}.md`, markdown);
@@ -275,7 +287,14 @@ export async function generateResources(data: SiteData, output: string) {
       {
         version: "0.1.0",
         updated_at: "2026-09-08",
-        resources: entries,
+        resources: [...entries, {
+          id: "cloudflare-iphone", kind: "help",
+          title: "Deploy a static site to Cloudflare from your iPhone",
+          summary: "Optional, agent-neutral static file upload using Files and Safari, with ten real screenshots.",
+          html: "/help/cloudflare-iphone",
+          markdown: "/help/cloudflare-iphone.md",
+          json: "/help/cloudflare-iphone.json",
+        }],
         skills: skillVersions.skills,
         recommendations: "/recommendations.json",
         artifacts: "/artifacts/",

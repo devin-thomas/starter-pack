@@ -52,6 +52,7 @@ const titles: Record<string, string> = {
   "/resources": "Skills and agent resources",
   "/artifacts": "Project templates",
   "/about": "About this pack",
+  "/help/cloudflare-iphone": "Deploy a static site to Cloudflare from your iPhone",
 };
 const analyticsConfig = JSON.parse(await readFile("analytics.json", "utf8"));
 const analyticsToken =
@@ -213,7 +214,7 @@ for (const file of outputFiles.filter(
     : file.endsWith(".json")
       ? [
           ...text.matchAll(
-            /"((?:\/|https:\/\/starter\.devthomas\.site\/)[^"\s]*)"/g,
+            /"((?:\/|https:\/\/starter\.devthomas\.site\/)[^"\\\s]*)\\?"/g,
           ),
         ].map((match) => match[1])
       : file.endsWith(".txt")

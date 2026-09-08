@@ -2,6 +2,14 @@
 
 Companion reference for the optional Phase 1 deployment step. Checked September 8, 2026. Keep the learner's next action short; fetch this resource when their chosen route needs it. Cloudflare remains the default host and Vercel remains optional. Deployment never blocks Phase 1 completion or replaces Phase 2 Computer Setup and its meaningful build.
 
+## Cloudflare: upload static files from an iPhone
+
+For a small HTML/CSS/JavaScript app, offer the [illustrated iPhone help page](https://starter.devthomas.site/help/cloudflare-iphone). Devin tested generation in ChatGPT, then used Files and Safari to upload an extracted folder through Workers & Pages > Create application > Upload your static files, name a Worker, and deploy. He verified the public app's buttons and sliders. This is a Cloudflare upload route, independent of which agent provides the files; it needs no connected Cloudflare app, GitHub repository, computer, terminal, desktop IDE or Wrangler.
+
+Provide a downloadable ZIP or separate static files when the current environment supports it. If it only returns code, help the learner save actual files using a file-capable tool; do not claim to have attached a download. Keep index.html at the root of the selected folder. Guide the learner through Safari's upload rather than requiring agent deployment permissions. Confirm the expected files in Cloudflare before they tap Deploy. Multi-account selection is outside the tested guide. This route covers ready-to-serve static files, not unbuilt framework source or server-side code. Keep the files as the learner's editable source; source control can remain an independent choice.
+
+Use the same signed-out URL and main-action checks described below. The public example's HTML, CSS and JavaScript were independently reachable over HTTPS; the physical iPhone interactions are Devin's reported test. Do not turn this optional route into a Phase 1 gate or assume it completes Phase 2 setup.
+
 ## Choose from actual capabilities
 
 Inspect tools exposed to this conversation and their permissions before requesting setup. Distinguish repository reading, file/commit writes, repository creation, and deployment. One missing action does not imply the others are unavailable. A connected service is not itself proof of authorization for a particular project. Do not create throwaway projects merely to test access.
@@ -45,4 +53,4 @@ For a Git-based hosting route, [Vercel's GitHub integration](https://vercel.com/
 5. If saving to GitHub was chosen, verify the repository, branch and source commit separately. Direct file deployment does not automatically create a GitHub backup or configure future Git deployments.
 6. Save nonsecret route, consent, link, source location when applicable, and checked versus reported results under `phase-1-deployment-extra-credit`. Record unresolved public access or setup as deferred with a resume point; never mark a login page as a working public app.
 
-For Gemini, keep Spark as the Phase 1 companion option and continue deployment through Antigravity as described in the phase guide.
+For Gemini, keep Spark as the Phase 1 companion option. The manual Cloudflare file upload works with files from any agent; use Antigravity for the separate agent-driven deployment route.

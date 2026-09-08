@@ -746,6 +746,77 @@ h3 {
 .field-lesson > :last-child {
   margin-bottom: 0;
 }
+.help-screenshots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 28px;
+  margin-block: 28px 40px;
+  max-width: 640px;
+  align-items: start;
+}
+.help-guide pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.case-study-feature {
+  margin-block: 32px 48px;
+  padding: clamp(16px, 3vw, 28px);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--surface-raised), var(--surface-soft));
+}
+.case-study-feature > .eyebrow {
+  margin-top: 0;
+}
+.phase-content .prose .case-study-feature h2 {
+  margin-top: 12px;
+  padding: 0;
+  border: 0;
+  font-size: clamp(26px, 4vw, 36px);
+}
+.case-study-feature > p > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 650;
+}
+.case-study-feature figure {
+  margin: 24px 0 0;
+}
+.case-study-feature img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+}
+.case-study-feature figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.help-screenshots figure {
+  width: 100%;
+  max-width: 300px;
+  margin: 0;
+}
+.help-screenshots a {
+  display: block;
+  border-radius: 12px;
+}
+.help-screenshots img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+}
+.help-screenshots figcaption {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
 .prose li {
   margin-bottom: 10px;
   padding-left: 4px;
@@ -988,9 +1059,6 @@ h3 {
   flex-direction: column;
   min-width: 0;
 }
-.recommendation-featured {
-  border-color: color-mix(in srgb, var(--phase-make) 48%, var(--line));
-}
 .recommendation-top {
   display: flex;
   justify-content: space-between;
@@ -1008,6 +1076,14 @@ h3 {
   padding: 3px 6px;
   color: var(--muted);
   text-transform: capitalize;
+}
+.devin-pick {
+  color: var(--text);
+  font-weight: 650;
+  border-color: transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(110deg, #f29b9b, #f2c879, #8bd7cb, #8fc7ff, #c1b7f5, #e9a2bb) border-box;
 }
 .recommendation h2 {
   font-size: 19px;

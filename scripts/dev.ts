@@ -17,6 +17,7 @@ server.middlewares.use(async (request, response, next) => {
     ) || "/";
   if (
     /^\/(guide|about)\.(md|json)$/.test(pathname) ||
+    /^\/help\/cloudflare-iphone\.(md|json)$/.test(pathname) ||
     /^\/phases\/[123]\.(md|json)$/.test(pathname) ||
     /^\/skills\/[a-z-]+\/SKILL\.md$/.test(pathname) ||
     [

@@ -11,7 +11,7 @@ import {
 } from "./Icons";
 
 export interface SiteData {
-  pages: { guide: string; about: string };
+  pages: { guide: string; about: string; cloudflareIphone: string };
   phases: {
     id: string;
     title: string;
@@ -330,19 +330,18 @@ function AgentFiles({ phase }: { phase: number }) {
 
 function RecommendationCard({
   item,
-  featured = false,
 }: {
   item: SiteData["recommendations"][number];
-  featured?: boolean;
 }) {
+  const devinsPick = item.id === "chatgpt" || item.id === "google-ai-studio";
   return (
-    <article
-      className={`recommendation${featured ? " recommendation-featured" : ""}`}
-    >
+    <article className="recommendation">
       <div className="recommendation-top">
         <span className="eyebrow">{item.category.replaceAll("_", " ")}</span>
-        <span className={`requirement requirement-${item.requirement}`}>
-          {item.status === "deprecated"
+        <span className={`requirement ${devinsPick ? "devin-pick" : `requirement-${item.requirement}`}`}>
+          {devinsPick
+            ? "Devin's Pick"
+            : item.status === "deprecated"
             ? "Deprecated"
             : item.requirement.replaceAll("_", " ")}
         </span>
@@ -637,6 +636,25 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
 
                 <Prompt prompt={data.prompt} />
               </>
+            ) : normalized === "/help/cloudflare-iphone" ? (
+              <>
+                <PageHeading
+                  label="EXTRA CREDIT / IPHONE"
+                  title="Deploy a static site to Cloudflare from your iPhone"
+                  description="Turn website files from your agent into a public site using Files and Safari."
+                />
+                <div className="phase-content help-guide">
+                  <article
+                    className="prose"
+                    dangerouslySetInnerHTML={{ __html: data.pages.cloudflareIphone }}
+                  />
+                </div>
+                <div className="step-actions">
+                  <a className="secondary-action" href="/phases/1#extra-credit-put-your-app-online">
+                    Back to Phase 1 extra credit
+                  </a>
+                </div>
+              </>
             ) : phase ? (
               <>
                 <PageHeading
@@ -731,8 +749,8 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                       <span className="eyebrow">INSTANT BUILDERS</span>
                       <h2>Choose one instant builder</h2>
                       <p>
-                        Google AI Studio is the recommended option. The others
-                        are alternatives for making your first working thing.
+                        Google AI Studio is my pick. These are all recommended
+                        options for making your first working thing.
                       </p>
                     </div>
                     <div className="recommendation-list">
@@ -748,7 +766,6 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                         .map((item) => (
                           <RecommendationCard
                             item={item}
-                            featured={item.id === "google-ai-studio"}
                             key={item.id}
                           />
                         ))}
