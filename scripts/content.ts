@@ -221,6 +221,9 @@ export async function generateResources(data: SiteData, output: string) {
           "",
           `- [${phase.order === 1 ? "Starting prompt" : "Phase 2 handoff prompt"}](${origin}/prompts/${phase.order === 1 ? "get-started" : "phase-2"}.txt)`,
           `- [Starter Pack instructions](${origin}/skills/starter-pack/SKILL.md)`,
+          ...(phase.order === 1 ? [
+            `- [Mobile deployment extra credit](${origin}/setup/mobile-deployment.md)`,
+          ] : []),
           ...(phase.order === 2 ? [
             `- [Computer Setup instructions](${origin}/skills/computer-setup/SKILL.md)`,
             `- [Quick Build instructions](${origin}/skills/quick-build/SKILL.md)`,

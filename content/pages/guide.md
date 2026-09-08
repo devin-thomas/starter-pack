@@ -9,7 +9,7 @@
 
 After Phase 1, you will have the accounts you need and something that performs a real action. After Phase 2, you will have a ready computer, a repository with your project and its plan, and a working public deployment.
 
-Phase 1 deployment is [extra credit](/phases/1#extra-credit-put-your-app-online) when you are confident in your idea, comfortable sharing it publicly, and already have a usable computer, remote harness, or supported cloud coding setup. Mobile-only learners can finish Phase 1 without it.
+Phase 1 deployment is [extra credit](/phases/1#extra-credit-put-your-app-online) when you are confident in your idea, comfortable sharing it publicly, and have a usable computer, remote harness, connected mobile deployment tools, or supported cloud coding setup. You can do it from a phone with the right connections, or finish Phase 1 without deploying.
 
 ## What is available now
 
