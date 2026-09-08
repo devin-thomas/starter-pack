@@ -11,10 +11,10 @@ dist/
 AGENTS.md
 *HANDOFF*.md
 *INTERNAL*.md
-PLAN.md
-SPEC.md
-DECISIONS.md
-TICKETS.md
+/PLAN.md
+/SPEC.md
+/DECISIONS.md
+/TICKETS.md
 diagrams/
 adrs/
 internal/

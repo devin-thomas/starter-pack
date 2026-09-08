@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-09-08T00:00:00Z",
+  "os": null,
+  "architecture": null,
+  "harness": null,
+  "status": "not_started",
+  "capabilities": {},
+  "remote_access": {
+    "tailscale_computer": false,
+    "tailscale_phone": false,
+    "device_name_verified": false,
+    "interaction_layer": null,
+    "phone_interaction_verified": false
+  },
+  "resume": {
+    "next_action": "Inspect the computer and existing tools.",
+    "requires_restart": false
+  },
+  "notes": []
+}

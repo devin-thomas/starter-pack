@@ -1,0 +1,190 @@
+{
+  "manifest_version": 1,
+  "id": "starter-pack-computer-setup",
+  "updated_at": "2026-09-08",
+  "policies": {
+    "inspect_first": true,
+    "idempotent": true,
+    "resumable": true,
+    "do_not_downgrade": true,
+    "resolve_installers_from_official_sources": true,
+    "required_batch_approval": true,
+    "optional_packs_separate_approval": true,
+    "pause_for_auth_admin_restart": true,
+    "verify_capabilities": true,
+    "never_store_secrets": true
+  },
+  "platforms": {
+    "windows": {
+      "support": "first_class",
+      "target": "Windows 11",
+      "package_manager_capability": "system-package-manager",
+      "extra_required": [
+        "powershell-7"
+      ],
+      "adapter": "https://starter.devthomas.site/setup/windows.md"
+    },
+    "macos": {
+      "support": "first_class",
+      "target": "current macOS",
+      "package_manager_capability": "homebrew",
+      "extra_required": [],
+      "adapter": "https://starter.devthomas.site/setup/macos.md"
+    },
+    "linux": {
+      "support": "best_effort",
+      "target": "agent-routed",
+      "extra_required": [],
+      "adapter": "https://starter.devthomas.site/setup/linux.md"
+    }
+  },
+  "required_capabilities": [
+    {
+      "id": "system-package-manager",
+      "version_policy": "current_supported"
+    },
+    {
+      "id": "selected-agentic-harness",
+      "version_policy": "current_supported"
+    },
+    {
+      "id": "git",
+      "version_policy": "current_stable"
+    },
+    {
+      "id": "github-cli",
+      "command": "gh",
+      "version_policy": "current_stable"
+    },
+    {
+      "id": "node",
+      "version_policy": "active_lts"
+    },
+    {
+      "id": "npm",
+      "provided_by": "node"
+    },
+    {
+      "id": "npx",
+      "provided_by": "node"
+    },
+    {
+      "id": "uv",
+      "version_policy": "current_stable"
+    },
+    {
+      "id": "python",
+      "provisioned_or_managed_by": "uv",
+      "version_policy": "current_stable"
+    },
+    {
+      "id": "ripgrep",
+      "command": "rg",
+      "version_policy": "current_stable"
+    },
+    {
+      "id": "fd",
+      "command": "fd",
+      "version_policy": "current_stable"
+    },
+    {
+      "id": "jq",
+      "command": "jq",
+      "version_policy": "current_stable"
+    },
+    {
+      "id": "curl",
+      "command": "curl",
+      "version_policy": "system_or_current"
+    },
+    {
+      "id": "tailscale-desktop",
+      "version_policy": "current_stable"
+    },
+    {
+      "id": "tailscale-phone",
+      "version_policy": "current_stable"
+    },
+    {
+      "id": "remote-interaction-layer",
+      "selection": "best_fit"
+    },
+    {
+      "id": "verified-phone-connection",
+      "verification": "learner_performs_one_successful_connection"
+    }
+  ],
+  "recommended_non_gate": [
+    {
+      "id": "fzf"
+    },
+    {
+      "id": "direnv"
+    },
+    {
+      "id": "make",
+      "selection": "when_project_invokes_it"
+    }
+  ],
+  "project_local_defaults": [
+    "typescript",
+    "vite-or-next",
+    "vitest",
+    "eslint",
+    "wrangler",
+    "playwright",
+    "neon-cli",
+    "vercel-cli",
+    "astro"
+  ],
+  "optional_packs": {
+    "containers": {
+      "tools": [
+        "docker-desktop"
+      ],
+      "install_order": "last",
+      "restart_aware": true,
+      "excluded": [
+        "orbstack",
+        "legacy-docker-compose"
+      ]
+    },
+    "alternate-js": {
+      "tools": [
+        "pnpm",
+        "bun",
+        "deno",
+        "corepack"
+      ],
+      "selection": "only_when_needed"
+    },
+    "cloud-networking": {
+      "tools": [
+        "cloudflared"
+      ],
+      "selection": "only_when_needed"
+    },
+    "media": {
+      "tools": [
+        "ffmpeg",
+        "ffprobe",
+        "yt-dlp"
+      ],
+      "selection": "only_when_needed"
+    },
+    "native-mobile": {
+      "tools": [
+        "cocoapods",
+        "cmake",
+        "ninja",
+        "meson",
+        "clang",
+        "llvm",
+        "pkg-config",
+        "java"
+      ],
+      "selection": "project_specific"
+    }
+  },
+  "state_path": "setup/computer.json"
+}
