@@ -26,6 +26,6 @@ The build generates semantic HTML, focused Markdown and JSON, and an agent catal
 
 Authenticate Wrangler to the Cloudflare account that owns the configured domain, then run `npm run deploy`. This also checks the site through the computer's normal DNS resolver; unresolved DNS is a failed release check even when the upload succeeded.
 
-The same deployment is also available at [the direct Cloudflare address](https://starter-pack.uppercut-labs.workers.dev). To recheck the primary domain without redeploying, run `npm run verify:deployment`.
+To recheck the domain without redeploying, run `npm run verify:deployment`.
 
 Public curriculum is in `content/`. Hosted skills, templates, and agent instructions are in `public/`. The website never accepts or stores learner progress, credentials, or project ideas.
