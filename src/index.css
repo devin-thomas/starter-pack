@@ -361,23 +361,6 @@ h3 {
 .document-toolbar .ui-icon {
   color: var(--accent);
 }
-.prompt-workbench textarea {
-  width: 100%;
-  display: block;
-  height: 172px;
-  resize: vertical;
-  border: 0;
-  padding: 20px;
-  background: transparent;
-  color: #cdd7e4;
-  font-family: monospace;
-  font-size: 13px;
-  line-height: 1.75;
-  overflow-wrap: anywhere;
-}
-.prompt-workbench textarea:focus-visible {
-  outline-offset: -3px;
-}
 .prompt-controls {
   display: flex;
   align-items: center;
@@ -431,20 +414,20 @@ h3 {
   text-decoration: underline;
   color: var(--accent);
 }
-.prompt-workbench details {
+.prompt-explainer {
   border-top: 1px solid var(--line);
   padding: 14px 18px;
   font-size: 13px;
   color: var(--muted);
 }
-summary {
-  cursor: pointer;
-  width: fit-content;
-}
-details[open] summary {
+.prompt-explainer h3 {
   color: var(--text);
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1.6;
+  margin: 0;
 }
-details p {
+.prompt-explainer p {
   margin: 12px 0 2px;
   max-width: 580px;
 }
@@ -983,10 +966,6 @@ details p {
 .text-link {
   min-height: 32px;
 }
-.prompt-workbench summary {
-  min-height: 24px;
-  line-height: 1.6;
-}
 @media (max-width: 1100px) {
   .agent-brands {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1164,11 +1143,6 @@ details p {
   .document-toolbar .metadata {
     display: none;
   }
-  .prompt-workbench textarea {
-    padding: 16px;
-    height: 160px;
-    font-size: 13px;
-  }
   .prompt-controls {
     flex-direction: column;
     align-items: stretch;
@@ -1183,7 +1157,7 @@ details p {
     width: 100%;
     min-height: 46px;
   }
-  .prompt-workbench details {
+  .prompt-explainer {
     padding: 14px;
   }
   .browse-link {

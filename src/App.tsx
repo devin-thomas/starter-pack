@@ -63,7 +63,7 @@ function Prompt({ prompt }: { prompt: string }) {
   return (
     <section className="prompt-workbench" aria-labelledby="prompt-label">
       <div className="document-toolbar">
-        <span>
+        <span id="prompt-label">
           <Icon name="terminal" size={20} /> Your starting prompt
         </span>
         <span className="metadata">COPY + PASTE</span>
@@ -86,27 +86,23 @@ function Prompt({ prompt }: { prompt: string }) {
           "Ready. Paste this into a new conversation with your agent."}
         {status === "failed" && (
           <>
-            Clipboard unavailable. Select the prompt below, or{" "}
+            Clipboard unavailable. Download the prompt instead: {" "}
             <a href="/prompts/get-started.txt" download>
-              download the prompt
+              get-started.txt
             </a>
             .
           </>
         )}
       </div>
-      <label id="prompt-label" className="sr-only" htmlFor="start-prompt">
-        Read or select the starting prompt
-      </label>
-      <textarea id="start-prompt" readOnly value={prompt} spellCheck={false} />
-      <details>
-        <summary>What happens when I copy this?</summary>
+      <div className="prompt-explainer" aria-labelledby="prompt-explainer-label">
+        <h3 id="prompt-explainer-label">What happens when I copy this?</h3>
         <p>
           Copying only puts this text on your clipboard. Once you paste it into
           your agent and send it, your agent reads the pack, finds your starting
           point, and guides you one step at a time. It asks before making
           changes to your computer.
         </p>
-      </details>
+      </div>
     </section>
   );
 }
