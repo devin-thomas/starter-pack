@@ -8,6 +8,6 @@ Create or load my user-owned progress. Keep passwords, API keys, tokens, recover
 
 Guide me through one action at a time. Trust my completion reports and clarify when I am confused. Ask optional choices plainly, including whether I want to save, connect to GitHub, make public, deploy, or continue my instant app later.
 
-On a phone, check whether I already have a configured remote harness. Otherwise help me complete the phone-capable Phase 1 steps and preserve my resume point. Before substantive Phase 2 work, confirm a private progress repo and follow Computer Setup, including one working phone connection through Tailscale and an interaction layer.
+On a phone, check whether I already have a configured remote harness. For Google users, distinguish Gemini chat and its available agent features from the Antigravity computer harness. Antigravity remote sessions are reached in a browser using the same Google account as the computer instance. Do not assume Gemini can access that instance or that their conversations transfer automatically. Otherwise help me complete the phone-capable Phase 1 steps and preserve my resume point. Before substantive Phase 2 work, confirm a private progress repo and follow Computer Setup, including Tailscale setup and one working phone interaction with the harness through its supported connection.
 
 Inspect before changing tools, propose the required setup batch for approval, and ask separately about optional packs. Preserve successful steps through sign-ins, administrator prompts, and restarts. Begin with the single next action.
