@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "retrieved_at_utc": "2026-09-08T15:18:49.4529218Z",
+  "notes": [
+    "Curated SVGs only. No full icon pack or dependency was downloaded.",
+    "Original SVG paths and colors are preserved. Mono assets are intended for CSS masks on dark surfaces.",
+    "Collection licenses do not transfer ownership of third-party trademarks. Marks identify the named products.",
+    "Byte totals describe exact file contents, not allocated filesystem blocks, network transfer, or compressed web transfer."
+  ],
+  "icon_count": 12,
+  "icon_bytes": 16732.0,
+  "downloaded_payload_bytes": 28969.0,
+  "downloaded_payload_files": [
+    {
+      "file": "antigravity.svg",
+      "bytes": 7634,
+      "sha256": "652128cf55a28bb958563ee372d0bd00208d9e6fd446f523f77aafd811eef8ca"
+    },
+    {
+      "file": "chatgpt.svg",
+      "bytes": 1687,
+      "sha256": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186"
+    },
+    {
+      "file": "claude.svg",
+      "bytes": 1696,
+      "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364"
+    },
+    {
+      "file": "cloudflare.svg",
+      "bytes": 1073,
+      "sha256": "cee35d3f0ecb7925ce0a89aeaff8b907cadae7c3fe44a23e4001cc8d5ee57502"
+    },
+    {
+      "file": "cursor.svg",
+      "bytes": 547,
+      "sha256": "0cb51bddf264ae108926fd554c063ef40fc1aac3c5c921ddb39ad184e4e5d0ef"
+    },
+    {
+      "file": "DISCLAIMER-simple-icons.md",
+      "bytes": 4604,
+      "sha256": "5757a1f28eff735a8b5e7425478f367812d71e974530f5bedd01219480965f4a"
+    },
+    {
+      "file": "github.svg",
+      "bytes": 907,
+      "sha256": "1bd763b5d53ab1618e0afce72aacffc7e93d1249c395f713b3b055c087526625"
+    },
+    {
+      "file": "google-ai-studio.svg",
+      "bytes": 833,
+      "sha256": "ca05675a319ba0b530fe396150357f5dddd7f7bbb2d15ffe5e21178e568a167c"
+    },
+    {
+      "file": "LICENSE-lobe-icons.txt",
+      "bytes": 1064,
+      "sha256": "add9d7531d1b21646317a8958e38fc727506fa39d24bdecb44154d943c82753a"
+    },
+    {
+      "file": "LICENSE-simple-icons.txt",
+      "bytes": 6569,
+      "sha256": "9046848b63a5c92bff14e4accca80bd987e0623b74adf9226ce5198d312b79d5"
+    },
+    {
+      "file": "lovable.svg",
+      "bytes": 801,
+      "sha256": "ab3b36b92ef69561b00f963eb3edaef9afdd598d67424991d74157419cd1d44e"
+    },
+    {
+      "file": "neon.svg",
+      "bytes": 193,
+      "sha256": "5750d31d5f07d3e5bcf7db3d7202111f863d39cb2f78aeeec0987a427819387e"
+    },
+    {
+      "file": "replit.svg",
+      "bytes": 506,
+      "sha256": "7d803ffdfc0d46aec134f656fd3c8815ee936a6726295eea5173d7122007eae5"
+    },
+    {
+      "file": "tailscale.svg",
+      "bytes": 630,
+      "sha256": "80ecdde08c2a4cddaa64447fcbfafab81326864671cd33b7fc3d40c4c8661dfc"
+    },
+    {
+      "file": "vercel.svg",
+      "bytes": 225,
+      "sha256": "4874d52d8b2ce7c309cbd10c424fee123b2c9483e76d76ad0dca41794483eb24"
+    }
+  ],
+  "icons": [
+    {
+      "file": "chatgpt.svg",
+      "collection": "Lobe Icons",
+      "license": "MIT",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/openai.svg",
+      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
+      "rendering": "monochrome-mask",
+      "modified": false,
+      "bytes": 1687,
+      "sha256": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186"
+    },
+    {
+      "file": "claude.svg",
+      "collection": "Lobe Icons",
+      "license": "MIT",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/claude-color.svg",
+      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
+      "rendering": "original-color-image",
+      "modified": false,
+      "bytes": 1696,
+      "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364"
+    },
+    {
+      "file": "antigravity.svg",
+      "collection": "Lobe Icons",
+      "license": "MIT",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/antigravity-color.svg",
+      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
+      "rendering": "original-color-image",
+      "modified": false,
+      "bytes": 7634,
+      "sha256": "652128cf55a28bb958563ee372d0bd00208d9e6fd446f523f77aafd811eef8ca"
+    },
+    {
+      "file": "cursor.svg",
+      "collection": "Lobe Icons",
+      "license": "MIT",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/cursor.svg",
+      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
+      "rendering": "monochrome-mask",
+      "modified": false,
+      "bytes": 547,
+      "sha256": "0cb51bddf264ae108926fd554c063ef40fc1aac3c5c921ddb39ad184e4e5d0ef"
+    },
+    {
+      "file": "github.svg",
+      "collection": "Lobe Icons",
+      "license": "MIT",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/github.svg",
+      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
+      "rendering": "monochrome-mask",
+      "modified": false,
+      "bytes": 907,
+      "sha256": "1bd763b5d53ab1618e0afce72aacffc7e93d1249c395f713b3b055c087526625"
+    },
+    {
+      "file": "cloudflare.svg",
+      "collection": "Lobe Icons",
+      "license": "MIT",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/cloudflare-color.svg",
+      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
+      "rendering": "original-color-image",
+      "modified": false,
+      "bytes": 1073,
+      "sha256": "cee35d3f0ecb7925ce0a89aeaff8b907cadae7c3fe44a23e4001cc8d5ee57502"
+    },
+    {
+      "file": "google-ai-studio.svg",
+      "collection": "Lobe Icons",
+      "license": "MIT",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/aistudio.svg",
+      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
+      "rendering": "monochrome-mask",
+      "modified": false,
+      "bytes": 833,
+      "sha256": "ca05675a319ba0b530fe396150357f5dddd7f7bbb2d15ffe5e21178e568a167c"
+    },
+    {
+      "file": "lovable.svg",
+      "collection": "Lobe Icons",
+      "license": "MIT",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/lovable-color.svg",
+      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
+      "rendering": "original-color-image",
+      "modified": false,
+      "bytes": 801,
+      "sha256": "ab3b36b92ef69561b00f963eb3edaef9afdd598d67424991d74157419cd1d44e"
+    },
+    {
+      "file": "replit.svg",
+      "collection": "Lobe Icons",
+      "license": "MIT",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/replit-color.svg",
+      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
+      "rendering": "original-color-image",
+      "modified": false,
+      "bytes": 506,
+      "sha256": "7d803ffdfc0d46aec134f656fd3c8815ee936a6726295eea5173d7122007eae5"
+    },
+    {
+      "file": "vercel.svg",
+      "collection": "Lobe Icons",
+      "license": "MIT",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/vercel.svg",
+      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
+      "rendering": "monochrome-mask",
+      "modified": false,
+      "bytes": 225,
+      "sha256": "4874d52d8b2ce7c309cbd10c424fee123b2c9483e76d76ad0dca41794483eb24"
+    },
+    {
+      "file": "neon.svg",
+      "collection": "Simple Icons",
+      "license": "CC0-1.0 collection; individual trademark rights retained",
+      "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/777807a262bb7384ff406fd4b35fdcd02e9514c3/icons/neon.svg",
+      "brand_source": "https://neon.com/brand",
+      "brand_color": "#34D59A",
+      "revision": "777807a262bb7384ff406fd4b35fdcd02e9514c3",
+      "rendering": "monochrome-mask",
+      "modified": false,
+      "bytes": 193,
+      "sha256": "5750d31d5f07d3e5bcf7db3d7202111f863d39cb2f78aeeec0987a427819387e"
+    },
+    {
+      "file": "tailscale.svg",
+      "collection": "Simple Icons",
+      "license": "CC0-1.0 collection; individual trademark rights retained",
+      "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/777807a262bb7384ff406fd4b35fdcd02e9514c3/icons/tailscale.svg",
+      "brand_source": "https://tailscale.com/press",
+      "brand_color": "#242424",
+      "revision": "777807a262bb7384ff406fd4b35fdcd02e9514c3",
+      "rendering": "monochrome-mask",
+      "modified": false,
+      "bytes": 630,
+      "sha256": "80ecdde08c2a4cddaa64447fcbfafab81326864671cd33b7fc3d40c4c8661dfc"
+    }
+  ]
+}
