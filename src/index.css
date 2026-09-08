@@ -596,6 +596,27 @@ h3 {
   color: var(--muted);
   margin: 7px 0 0;
 }
+.rail-agent-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+  list-style: none;
+  margin: 13px 0 0;
+  padding: 0;
+}
+.rail-agent-options li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 26px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 550;
+}
+.rail-agent-options .brand-icon {
+  width: 20px;
+  height: 20px;
+}
 .privacy-note > .ui-icon {
   color: var(--accent);
 }

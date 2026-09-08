@@ -4,6 +4,7 @@ import {
   Icon,
   AgentBrands,
   BrandIcon,
+  commonAgents,
   isBrandName,
   type IconName,
 } from "./Icons";
@@ -236,6 +237,53 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
   return (
     <aside className="context-rail" aria-label="Your starting point">
       <section>
+        <span className="eyebrow">WHAT YOU NEED</span>
+        <div className="need-item">
+          <Icon name="terminal" size={18} />
+          <div>
+            <strong>One capable AI agent</strong>
+            <p>
+              Use the agent you already have. Common options include:
+            </p>
+            <ul className="rail-agent-options" aria-label="Common AI agent options">
+              {commonAgents.map(({ name, label }) => (
+                <li key={name}>
+                  <BrandIcon name={name} size={20} />
+                  <span>{label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className="need-item">
+          {phase === 2 ? (
+            <Icon name="monitor" size={18} />
+          ) : (
+            <Icon name="smartphone" size={18} />
+          )}
+          <div>
+            <strong>
+              {phase === 2
+                ? "A computer + your phone"
+                : "Start on your phone. Finish on a computer."}
+            </strong>
+            <p>
+              {phase === 2
+                ? "Phase 2 is computer-based; your phone can connect remotely."
+                : "Phase 1 works from a phone. Phase 2 requires a computer or a reliable remote connection to one."}
+            </p>
+          </div>
+        </div>
+        <p className="account-summary">
+          Account checklist: GitHub, Cloudflare, Neon, your primary agent, and
+          one instant app builder.
+        </p>
+        <a className="text-link" href="/recommendations">
+          See the recommended tools
+          <Icon name="arrow-up-right" size={14} />
+        </a>
+      </section>
+      <section>
         <span className="eyebrow">THE PATH</span>
         <h2>One milestone at a time.</h2>
         <ol className="milestone-list">
@@ -260,46 +308,6 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
             </li>
           ))}
         </ol>
-      </section>
-      <section>
-        <span className="eyebrow">WHAT YOU NEED</span>
-        <div className="need-item">
-          {phase === 2 ? (
-            <Icon name="monitor" size={18} />
-          ) : (
-            <Icon name="smartphone" size={18} />
-          )}
-          <div>
-            <strong>
-              {phase === 2
-                ? "A computer + your phone"
-                : "A phone or a computer"}
-            </strong>
-            <p>
-              {phase === 2
-                ? "Windows 11 or current macOS. Linux support is best-effort."
-                : "Start on the device you have. You will need a computer for Phase 2."}
-            </p>
-          </div>
-        </div>
-        <div className="need-item">
-          <Icon name="terminal" size={18} />
-          <div>
-            <strong>One capable AI agent</strong>
-            <p>
-              Your agent helps you choose what fits and handles the technical
-              details.
-            </p>
-          </div>
-        </div>
-        <p className="account-summary">
-          Account checklist: GitHub, Cloudflare, Neon, your primary agent, and
-          one instant app builder.
-        </p>
-        <a className="text-link" href="/recommendations">
-          See the recommended tools
-          <Icon name="arrow-up-right" size={14} />
-        </a>
       </section>
       <section className="privacy-note">
         <Icon name="shield-check" size={20} />

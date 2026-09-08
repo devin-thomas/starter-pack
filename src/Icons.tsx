@@ -67,6 +67,13 @@ const brands = {
 };
 export type BrandName = keyof typeof brands;
 
+export const commonAgents = [
+  { name: "chatgpt", label: "ChatGPT" },
+  { name: "claude", label: "Claude" },
+  { name: "antigravity", label: "Antigravity" },
+  { name: "cursor", label: "Cursor" },
+] as const;
+
 export function isBrandName(name: string): name is BrandName {
   return Object.hasOwn(brands, name);
 }
@@ -103,15 +110,14 @@ export function BrandIcon({
 }
 
 export function AgentBrands() {
-  const agents = ["chatgpt", "claude", "antigravity", "cursor"] as const;
   return (
     <div className="agent-destinations">
       <p>Use this prompt in your agent</p>
       <ul className="agent-brands" aria-label="Agents for your starting prompt">
-        {agents.map((name) => (
+        {commonAgents.map(({ name, label }) => (
           <li key={name}>
             <BrandIcon name={name} />
-            <span>{brands[name].name}</span>
+            <span>{label}</span>
           </li>
         ))}
       </ul>
