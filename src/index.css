@@ -660,11 +660,16 @@ h3 {
   font-size: 16px;
 }
 .phase-outline summary,
-.field-lesson summary {
+.field-lesson summary,
+.phase-extra-credit > summary {
   cursor: pointer;
   padding-block: 12px;
   color: var(--text);
   line-height: 1.5;
+}
+.phase-extra-credit {
+  margin-block: 20px;
+  border-block: 1px solid var(--line);
 }
 .phase-outline ol {
   list-style: none;

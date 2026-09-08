@@ -21,6 +21,8 @@ The [schema](https://starter.devthomas.site/schemas/starter-progress.schema.json
 
 Required steps marked deferred, skipped, or not applicable do not count as complete. Overall phase status is `not_started`, `in_progress`, or `completed`. Phase 3 remains a curriculum preview.
 
+Phase 1 deployment is extra credit. If offered, record it as `phase-1-deployment-extra-credit`: `skipped` when declined, `deferred` when accepted but postponed, or `completed` only after the live app's main action is verified. Keep the route, destination, visibility decision, and live link in nonsecret notes. Skipped or deferred extra credit does not prevent Phase 1 completion and does not satisfy the Phase 2 project milestone.
+
 ## What to record
 
 Keep nonsecret choices, completed actions, project links, blockers, and the next action. Never store passwords, API keys, access tokens, recovery codes, cookies, connection strings, private keys, or environment-file contents. Store credentials in a password manager or the provider's supported secret store. A private repository still needs this boundary.
