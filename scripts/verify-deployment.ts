@@ -51,6 +51,20 @@ await Promise.all([
 const start = await read("/agent/start.md", /text\/(plain|markdown)/);
 if (!start.includes("Starter Pack skill"))
   throw new Error("The agent start resource is missing.");
+const workbenchManifest = JSON.parse(await read("/artifacts/progress-workbench/manifest.json", /application\/json/));
+if (!/^[a-f0-9]{64}$/.test(workbenchManifest.sha256) || !Number.isSafeInteger(workbenchManifest.bytes) || workbenchManifest.bytes <= 0)
+  throw new Error("Workbench integrity manifest is invalid.");
+for (const route of ["/artifacts/progress-workbench/index.html", "/artifacts/progress-workbench/", "/artifacts/progress-workbench"]) {
+  const response = await fetch(new URL(route, base), { signal: AbortSignal.timeout(15_000) });
+  if (!response.ok || !response.headers.get("content-type")?.includes("application/octet-stream") || !response.headers.get("content-disposition")?.includes('attachment; filename="index.html"'))
+    throw new Error(`${route}: Workbench must be served as a file download.`);
+  const bytes = Buffer.from(await response.arrayBuffer());
+  if (bytes.length !== workbenchManifest.bytes || createHash("sha256").update(bytes).digest("hex") !== workbenchManifest.sha256)
+    throw new Error(`${route}: Workbench download differs from its published integrity manifest.`);
+}
+const workbenchCatalog = await fetch(new URL("/artifacts/progress-workbench/catalog.json", base), { headers: { Origin: "http://127.0.0.1:8000" }, signal: AbortSignal.timeout(15_000) });
+if (!workbenchCatalog.ok || workbenchCatalog.headers.get("access-control-allow-origin") !== "*")
+  throw new Error("Workbench guide labels must support anonymous cross-origin reads.");
 for (const [collection, manifest] of [
   ["brands", brandManifest],
   ["interface", interfaceManifest],
@@ -68,5 +82,5 @@ for (const [collection, manifest] of [
   );
 }
 console.log(
-  `Verified ${base.origin}: normal DNS, HTTPS, rendered homepage, JS/CSS, agent resources, and all 35 icon hashes. Browser interaction acceptance is separate.`,
+  `Verified ${base.origin}: normal DNS, HTTPS, rendered homepage, JS/CSS, agent resources, all 35 icon hashes, exact Workbench download bytes, and catalog CORS. Browser interaction acceptance is separate.`,
 );

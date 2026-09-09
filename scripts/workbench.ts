@@ -1,4 +1,5 @@
 import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { build } from "esbuild";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
@@ -42,4 +43,5 @@ export async function buildWorkbench(output: string, data: SiteData) {
   await mkdir(base, { recursive: true });
   await writeFile(`${base}/index.html`, html);
   await writeFile(`${base}/catalog.json`, JSON.stringify(catalog, null, 2));
+  await writeFile(`${base}/manifest.json`, JSON.stringify({ version: "0.1.0", filename: "index.html", bytes: Buffer.byteLength(html), sha256: createHash("sha256").update(html).digest("hex") }, null, 2));
 }

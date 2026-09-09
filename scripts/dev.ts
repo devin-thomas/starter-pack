@@ -17,11 +17,11 @@ server.middlewares.use(async (request, response, next) => {
       "",
     ) || "/";
   if (
-    ["/artifacts/progress-workbench/index.html", "/artifacts/progress-workbench/catalog.json"].includes(pathname)
+    ["/artifacts/progress-workbench/index.html", "/artifacts/progress-workbench/catalog.json", "/artifacts/progress-workbench/manifest.json"].includes(pathname)
   ) {
     try {
       await buildWorkbench(".generated", await loadContent());
-      response.setHeader("Content-Type", pathname.endsWith(".json") ? "application/json" : "text/html; charset=utf-8");
+      response.setHeader("Content-Type", pathname.endsWith(".json") ? "application/json" : "application/octet-stream");
       if (pathname.endsWith(".html")) response.setHeader("Content-Disposition", 'attachment; filename="index.html"');
       else response.setHeader("Access-Control-Allow-Origin", "*");
       response.end(await readFile(path.join(".generated", pathname)));
