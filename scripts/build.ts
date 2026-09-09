@@ -93,7 +93,7 @@ await write(
 );
 await write(
   "dist/_headers",
-  "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n\n/artifacts/progress-workbench/index.html\n  Content-Disposition: attachment; filename=\"index.html\"\n  Content-Type: application/octet-stream\n  Cache-Control: no-transform\n\n/artifacts/progress-workbench/\n  Content-Disposition: attachment; filename=\"index.html\"\n  Content-Type: application/octet-stream\n  Cache-Control: no-transform\n\n/artifacts/progress-workbench\n  Content-Disposition: attachment; filename=\"index.html\"\n  Content-Type: application/octet-stream\n  Cache-Control: no-transform\n\n/artifacts/progress-workbench/catalog.json\n  Access-Control-Allow-Origin: *\n",
+  "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n\n/*.md\n  Content-Type: text/plain; charset=utf-8\n  Cache-Control: no-transform\n\n/artifacts/progress-workbench/index.html\n  Content-Disposition: attachment; filename=\"index.html\"\n  Content-Type: application/octet-stream\n  Cache-Control: no-transform\n\n/artifacts/progress-workbench/\n  Content-Disposition: attachment; filename=\"index.html\"\n  Content-Type: application/octet-stream\n  Cache-Control: no-transform\n\n/artifacts/progress-workbench\n  Content-Disposition: attachment; filename=\"index.html\"\n  Content-Type: application/octet-stream\n  Cache-Control: no-transform\n\n/artifacts/progress-workbench/catalog.json\n  Access-Control-Allow-Origin: *\n",
 );
 
 // Resolve local resources and enforce the human-facing link contract before publishing.

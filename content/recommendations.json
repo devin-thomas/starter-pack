@@ -20,7 +20,7 @@
     "status": "recommended",
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-08",
-    "reason": "I think of Claude as the enterprise-oriented choice: a strong fit for large organizations and managed team workflows. My caution is cost, especially for heavy use. Compare the plan and any usage charges; the entry price alone does not tell you what your workload will cost.",
+    "reason": "Claude read this guide without trouble in my phone test. If Gemini or Spark cannot load the pack, Claude is my Phase 1 fallback: Sonnet 4.6 with Medium effort has been enough within the free allowance in my testing. Use those settings when available; models and limits can vary. For larger teams I still see Claude as a strong enterprise option, where heavy usage and paid-plan costs need a separate look.",
     "url": "https://claude.com/pricing",
     "phase": "phase-1",
     "kind": "recommendation"
@@ -46,7 +46,7 @@
     "status": "recommended",
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-08",
-    "reason": "Google is the convenient choice if you are already paying for its storage or running your business in Workspace. Check what your existing plan includes before buying something else. Gemini, Spark, and Antigravity have different access rules; a storage or Workspace subscription does not automatically unlock all three.",
+    "reason": "Google is the convenient choice if you are already paying for its storage or running your business in Workspace. Check what your existing plan includes before buying something else. Gemini and Spark could not read this guide in my latest phone tests; a final text-only route is still being checked. Use Claude for Phase 1 if access fails, and keep Antigravity as your computer option. These products have separate access rules; storage or Workspace does not automatically unlock all three.",
     "url": "https://one.google.com/about/google-ai-plans/",
     "phase": "phase-1",
     "kind": "recommendation"
