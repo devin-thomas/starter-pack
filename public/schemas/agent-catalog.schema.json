@@ -20,6 +20,10 @@
       "type": "string",
       "format": "date"
     },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
     "resources": {
       "type": "array",
       "items": {

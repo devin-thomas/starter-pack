@@ -220,6 +220,7 @@ async function instructionPacket() {
   ].join("\n\n");
 }
 export async function generateResources(data: SiteData, output: string) {
+  const generatedAt = new Date().toISOString();
   await write(`${output}/agent/phase-1-packet.txt`, data.instructionPacket);
   const helpMarkdown = await readFile("content/pages/cloudflare-iphone.md", "utf8");
   await write(`${output}/help/cloudflare-iphone.md`, helpMarkdown);
@@ -307,7 +308,8 @@ export async function generateResources(data: SiteData, output: string) {
     JSON.stringify(
       {
         version: "0.1.0",
-        updated_at: "2026-09-08",
+        updated_at: generatedAt.slice(0, 10),
+        generated_at: generatedAt,
         resources: [...entries, {
           id: "cloudflare-iphone", kind: "help",
           title: "Deploy a static site to Cloudflare from your iPhone",
