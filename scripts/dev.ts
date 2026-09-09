@@ -35,6 +35,7 @@ server.middlewares.use(async (request, response, next) => {
     /^\/skills\/[a-z-]+\/SKILL\.md$/.test(pathname) ||
     [
       "/agent/catalog.json",
+      "/agent/phase-1-packet.txt",
       "/recommendations.json",
       "/llms.txt",
       "/robots.txt",

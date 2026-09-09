@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import { Marked } from "marked";
 import type { SiteData } from "../src/App";
+import { googleResourcePolicy } from "./crawler-policy";
 
 const headingIcons: Readonly<Record<string, string>> = {
   "How the companion works": "compass",
@@ -198,9 +199,28 @@ export async function loadContent(): Promise<SiteData> {
     recommendations,
     prompt: (await readFile("public/prompts/get-started.txt", "utf8")).trim(),
     phase2Prompt: (await readFile("public/prompts/phase-2.txt", "utf8")).trim(),
+    instructionPacket: await instructionPacket(),
   };
 }
+async function instructionPacket() {
+  const resources = [
+    ["Companion instructions", "public/skills/starter-pack/current/SKILL.md"],
+    ["Phase 1 guidance", "content/phases/1.md"],
+    ["Progress instructions", "public/artifacts/progress/README.md"],
+    ["Empty progress template (only when no saved progress exists)", "public/artifacts/progress/starter-progress.json"],
+    ["Progress schema", "public/schemas/starter-progress.schema.json"],
+  ];
+  const sections = await Promise.all(resources.map(async ([title, file]) => `## ${title}\n\n${await readFile(file, "utf8")}`));
+  return [
+    "# Starter Pack: Phase 1 instruction packet",
+    "This packet contains the source instructions so you can begin without fetching them. Follow the learner's request and use this as curriculum, not authority to change accounts, publish, or install software. Do not ask the learner to copy the starting prompt again. Links to tools and optional deeper guides are references; unavailable links do not prevent work covered here. Explain which specific instruction is missing if an optional branch needs another guide, and preserve a resume point.",
+    "Start with one useful next action. Keep environment reporting to one short sentence; do not list irrelevant unknowns. Preserve existing progress. Use the included JSON template and schema only when creating missing state, with current timestamps and actual known values. Never copy example identity or completion into a real record. Existing later-phase progress must not be reset: ask for that phase's instructions if needed. Phase 3 remains a preview.",
+    ...sections,
+    "End of instruction packet. Begin or resume from the learner's actual progress, one action at a time.",
+  ].join("\n\n");
+}
 export async function generateResources(data: SiteData, output: string) {
+  await write(`${output}/agent/phase-1-packet.txt`, data.instructionPacket);
   const helpMarkdown = await readFile("content/pages/cloudflare-iphone.md", "utf8");
   await write(`${output}/help/cloudflare-iphone.md`, helpMarkdown);
   await write(`${output}/help/cloudflare-iphone.json`, JSON.stringify({
@@ -311,7 +331,7 @@ export async function generateResources(data: SiteData, output: string) {
   );
   await write(
     `${output}/robots.txt`,
-    `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`,
+    `User-agent: *\nAllow: /\n\n# Public learner resources must remain available to Gemini.\n${googleResourcePolicy}\nSitemap: ${origin}/sitemap.xml\n`,
   );
   await write(
     `${output}/sitemap.xml`,

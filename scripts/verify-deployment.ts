@@ -2,6 +2,8 @@ import { lookup } from "node:dns/promises";
 import { createHash } from "node:crypto";
 import brandManifest from "../public/icons/brands/manifest.json";
 import interfaceManifest from "../public/icons/interface/manifest.json";
+import { assertGoogleResourceAccess } from "./crawler-policy";
+import { readFile } from "node:fs/promises";
 
 const base = new URL(process.argv[2] || "https://starter.devthomas.site");
 if (base.protocol !== "https:")
@@ -49,6 +51,11 @@ await Promise.all([
   }),
 ]);
 const start = await read("/agent/start.md", /text\/(plain|markdown)/);
+assertGoogleResourceAccess(await read("/robots.txt", /text\/plain/));
+const packet = await read("/agent/phase-1-packet.txt", /text\/plain/);
+if (packet !== await readFile("dist/agent/phase-1-packet.txt", "utf8")) throw new Error("Instruction packet differs from the built curriculum.");
+for (const route of ["/prompts/get-started.txt", "/agent/start.md", "/skills/starter-pack/current/SKILL.md"])
+  if (await read(route, /text\/(plain|markdown)/) !== await readFile(`dist${route}`, "utf8")) throw new Error(`Live startup instructions differ: ${route}`);
 if (!start.includes("Starter Pack skill"))
   throw new Error("The agent start resource is missing.");
 const workbenchManifest = JSON.parse(await read("/artifacts/progress-workbench/manifest.json", /application\/json/));
@@ -82,5 +89,5 @@ for (const [collection, manifest] of [
   );
 }
 console.log(
-  `Verified ${base.origin}: normal DNS, HTTPS, rendered homepage, JS/CSS, agent resources, all 35 icon hashes, exact Workbench download bytes, and catalog CORS. Browser interaction acceptance is separate.`,
+  `Verified ${base.origin}: normal DNS, HTTPS, rendered homepage, JS/CSS, agent resources, Google learner-resource robots policy, exact startup packet and prompts, all 35 icon hashes, exact Workbench download bytes, and catalog CORS. Provider-app acceptance is separate.`,
 );

@@ -2,7 +2,9 @@ Help me complete Devin Thomas's Starter Pack for Agentic Development.
 
 Start at https://starter.devthomas.site/agent/start.md
 
-Infer your harness, my visible device and operating system, available tools, filesystem access, and existing setup where possible. Tell me what you detected and what remains unknown. Read only the focused resource for my current step.
+If that fetch fails, try https://starter-pack.uppercut-labs.workers.dev/agent/start.md once. For a failed linked resource, try its same path on that alternate host once. Report the actual error briefly; do not guess that DNS, a firewall, or my device caused it. If neither host works, try https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/agent/start.md once, then follow its GitHub source mapping for the current resource. If that also fails, tell me to return to https://starter.devthomas.site/#starting-prompt and use "Copy instruction packet" or download and attach that packet. It contains the Phase 1 guidance, companion rules, and progress format. Use an attached or pasted packet directly without requiring its URLs to load again. Do not invent missing instructions or a progress schema. If I am resuming a later phase, preserve my existing state and ask for that phase's instructions rather than restarting Phase 1.
+
+Infer your harness, my visible device and operating system, available tools, filesystem access, and existing setup where possible. Keep any environment summary to one short sentence; ask about unknowns only when they affect the next action. Do not claim to see my device or tools you cannot inspect. Read only the focused resource for my current step.
 
 Create or load my user-owned progress. Keep passwords, API keys, tokens, recovery codes, cookies, and other secrets outside it. If you cannot save files, give me portable progress I can copy or download for later.
 

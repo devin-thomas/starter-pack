@@ -30,6 +30,10 @@ To recheck the domain without redeploying, run `npm run verify:deployment`.
 
 Public curriculum is in `content/`. Hosted skills, templates, and agent instructions are in `public/`. The website never accepts or stores learner progress, credentials, or project ideas.
 
+Startup instructions try the custom domain, the Workers hostname, then the public GitHub source before asking for manual content. The starting-prompt section offers a copyable/downloadable Phase 1 instruction packet generated from the canonical companion, curriculum and progress files. A packet supports starting Phase 1 without URL fetching; it does not replace later-phase instructions or authorize resetting progress.
+
+Cloudflare can prepend managed robots rules to the generated file. `scripts/crawler-policy.ts` explicitly allows Google-Extended only on public curriculum/resource paths so those instructions remain eligible for Gemini grounding. Google uses this control for training as well as grounding. The production check parses the combined live robots rules and verifies the startup packet and prompt bytes; a successful check does not prove any specific chat app can fetch them. Do not disable unrelated WAF or bot protections to make a smoke test pass.
+
 Each phase includes lessons adapted from Devin's projects: Domain Expansion, Daily Combo Trials, and Perfect Playlist. The stories and practice prompts live beside the relevant phase steps in canonical Markdown and appear in the generated HTML, Markdown, and JSON. The agent catalog links directly to each lesson. Phase 3 remains a preview.
 
 ## Progress Workbench

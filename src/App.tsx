@@ -34,6 +34,7 @@ export interface SiteData {
   }[];
   prompt: string;
   phase2Prompt: string;
+  instructionPacket: string;
 }
 
 const milestones = [
@@ -54,10 +55,12 @@ function Prompt({
   prompt,
   phase2 = false,
   home = false,
+  instructionPacket,
 }: {
   prompt: string;
   phase2?: boolean;
   home?: boolean;
+  instructionPacket?: string;
 }) {
   return (
     <section
@@ -94,6 +97,14 @@ function Prompt({
             Your agent reads the pack and helps you take one step at a time. It
             asks before changing your computer.
           </p>
+        </div>
+      )}
+      {!phase2 && instructionPacket && (
+        <div className="prompt-explainer">
+          <h3><Icon name="file-text" size={19} /> Chat can't open the guide?</h3>
+          <p>Copy the Phase 1 instructions into your chat, or download the packet and attach it.</p>
+          <CopyText text={instructionPacket} label="Phase 1 instruction packet" buttonLabel="Copy instruction packet" copiedLabel="Instruction packet copied" instruction="Paste into the same chat. Keep your existing progress." download="/agent/phase-1-packet.txt" />
+          <a className="text-link" href="/agent/phase-1-packet.txt" download="starter-pack-phase-1.txt"><Icon name="download" size={17} /> Download instruction packet (.txt)</a>
         </div>
       )}
     </section>
@@ -163,6 +174,7 @@ function PhaseContent({
           <Prompt
             prompt={phase.order === 1 ? data.prompt : data.phase2Prompt}
             phase2={phase.order === 2}
+            instructionPacket={data.instructionPacket}
           />
           <article
             className="prose"
@@ -596,7 +608,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                     your first working idea to a project you can put online.
                   </p>
                 </div>
-                <Prompt prompt={data.prompt} home />
+                <Prompt prompt={data.prompt} instructionPacket={data.instructionPacket} home />
                 <a className="browse-link" href="/guide">
                   <Icon name="book-open" size={17} />
                   Prefer to look around? Browse the guide
@@ -639,7 +651,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   dangerouslySetInnerHTML={{ __html: data.pages.guide }}
                 />
 
-                <Prompt prompt={data.prompt} />
+                <Prompt prompt={data.prompt} instructionPacket={data.instructionPacket} />
               </>
             ) : normalized === "/help/cloudflare-iphone" ? (
               <>
