@@ -1,6 +1,34 @@
 # Your private progress repository
 
-Version: 0.1.1. Your companion keeps this record for you; the website does not store it. During Phase 1 and the start of Phase 2 Computer Setup, use existing local or portable progress. A private repository is not required to begin installing the tools that enable GitHub access.
+Version: 0.1.2. Updated September 9, 2026. Your companion keeps this record for you; the website does not store it. During Phase 1 and the start of Phase 2 Computer Setup, use existing local or portable progress. A private repository is not required to begin installing the tools that enable GitHub access.
+
+## Read progress in the local Workbench
+
+At Computer Setup start, follow the [Workbench lifecycle](https://starter.devthomas.site/artifacts/progress-workbench/README.md) to place the downloadable [index.html](https://starter.devthomas.site/artifacts/progress-workbench/index.html) beside the existing canonical `starter-progress.json`. Create the HTML only if missing; preserve a customized viewer and existing progress, including unknown fields. The same progress file remains the source of truth. Do not make a second JSON state for the local view.
+
+As soon as Python is verified, serve this exact absolute progress folder using the resolved interpreter with `-m http.server PORT --bind 127.0.0.1 --directory ABS_PROGRESS_FOLDER`. Use port 8000 first, then 8001 through 8010 if occupied. Inspect a running listener before reuse: it must serve the correct directory over loopback. Keep unrelated processes running, never expose a broader workspace or bind to the LAN, and follow the lifecycle for launch verification, process records, resume, and stop behavior. This is a private local view; the phone's localhost cannot address the computer's server.
+
+After the agent saves progress, refresh the Workbench or allow the visible HTTP view to reload data on its five-second polling cycle. In file mode, select the saved JSON again to reload it. The Workbench is the default visualization, works before GitHub is ready, and never counts as a completion milestone or blocks a phase.
+
+Hosting a protected copy is optional later work, lower priority than deploying the learner's instant app for extra credit. Follow [Workbench publishing](https://starter.devthomas.site/setup/workbench-publishing.md), confirm the Access email, and publish only its allowlisted snapshot. Never upload the private progress repository root as a website.
+
+## Record development email choices
+
+At Computer Setup entry, ask one concise question if these choices are missing and have not already been declined or deferred: "Which email should we use for development accounts and notifications? You can use the same address for both." Store only values the learner explicitly confirms. Do not infer an email from Git author settings, change Git identity, or assume account and notification addresses match.
+
+Merge this object into `choices.development_email`, preserving other choices and existing fields:
+
+```json
+{
+  "account_email": null,
+  "notification_email": null,
+  "access_email": null,
+  "service_overrides": {},
+  "notes": []
+}
+```
+
+The account email is the default for development-service accounts; the notification email is the default destination for service notices. They may be the same with explicit confirmation. Preserve service-specific exceptions in `service_overrides`. Unanswered choices may remain null or absent; note a decline or deferral so another session does not ask again unnecessarily. These choices never block the curriculum. Ask about reusing an address for Access only when an optional protected deployment is relevant, then save the confirmed `access_email`. Treat these addresses as personal progress data and keep them out of public examples and public source repositories.
 
 ## Move progress to GitHub during setup
 

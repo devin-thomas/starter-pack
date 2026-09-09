@@ -3,15 +3,15 @@
   "skills": [
     {
       "id": "starter-pack",
-      "version": "0.1.8",
+      "version": "0.1.9",
       "current": "/skills/starter-pack/current/SKILL.md",
-      "versioned": "/skills/starter-pack/0.1.8/SKILL.md"
+      "versioned": "/skills/starter-pack/0.1.9/SKILL.md"
     },
     {
       "id": "computer-setup",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "current": "/skills/computer-setup/current/SKILL.md",
-      "versioned": "/skills/computer-setup/0.1.1/SKILL.md"
+      "versioned": "/skills/computer-setup/0.1.2/SKILL.md"
     },
     {
       "id": "quick-build",

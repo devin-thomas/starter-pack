@@ -2,6 +2,10 @@
 
 Use with the [Computer Setup skill](https://starter.devthomas.site/skills/computer-setup/current/SKILL.md).
 
+At setup start, follow the [Workbench lifecycle](https://starter.devthomas.site/artifacts/progress-workbench/README.md) to place the generic `index.html` beside canonical `starter-progress.json`, preserving existing HTML and progress. Ask for missing development account and notification email choices once, using the [progress guide](https://starter.devthomas.site/artifacts/progress/README.md); record only confirmed choices and do not change Git identity. The local viewer starts independently of GitHub and never gates setup.
+
+As soon as Python is verified, invoke its resolved interpreter with `-m http.server PORT --bind 127.0.0.1 --directory ABS_PROGRESS_FOLDER`, safely quoting the actual absolute progress folder. Inspect an existing listener and reuse it only if the directory and loopback binding match; otherwise select the first free port from 8000 through 8010. Follow the lifecycle for background launch, verification, process records, and resume. Do not stop unrelated servers, expose a broader workspace, or bind to the LAN. Refresh after progress writes; the visible HTTP view also polls every five seconds, while file mode requires choosing the saved JSON again. A viewer failure is a follow-up rather than a setup blocker.
+
 Begin with existing local or portable progress; a GitHub repository is not an entry prerequisite. Prioritize Git and GitHub CLI after their prerequisites, then guide sign-in. As soon as GitHub write access works, follow the [progress guide](https://starter.devthomas.site/artifacts/progress/README.md) to create or confirm a private repository, save progress, and verify the remote files. An already-working connector can save progress sooner. Preserve checkpoints through interruptions; a failed remote save blocks Quick Build, not independent setup work.
 
 1. Inspect macOS version, `uname -m`, command paths, Homebrew state, selected harness, and prior setup results. Current macOS is the first-class target. Retain healthy installations and respect Apple Silicon versus Intel paths.
