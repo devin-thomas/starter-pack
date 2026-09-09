@@ -2,7 +2,7 @@
 
 1. **[Go to the starting prompt](/guide#starting-prompt).** Use **Copy prompt**, then paste it into your agent and send the message. It checks what device and tools you already have, then helps you find the right starting point.
 2. **Take the next useful step.** Your agent reads focused guidance as you need it. You do not need to learn every tool before making something.
-3. **Keep your own record.** Your agent records completed, skipped, and deferred steps in a progress file. By Phase 2, that file belongs in your private GitHub repo.
+3. **Keep your own record.** Your agent records completed, skipped, and deferred steps in a progress file. During Phase 2 setup, it saves that file to your private GitHub repo as soon as access is ready, before Quick Build begins.
 4. **Pick up where you left off.** Attach your saved progress file, or paste your saved progress text, into your agent when you return. Tell it what you have done and ask for clarification whenever you need it.
 
 ## What you will own

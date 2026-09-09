@@ -8,7 +8,7 @@ Starter Pack for Agentic Development brings my current recommendations and a pra
 
 ## Your work belongs to you
 
-There is no Starter Pack profile or progress dashboard. Your agent keeps progress in files you control and, by Phase 2, your own private GitHub repository. Keep passwords, access tokens, and other secrets out of those files.
+There is no Starter Pack profile or progress dashboard. Your agent keeps progress in files you control. During Phase 2 setup, it saves that progress to your own private GitHub repository as soon as GitHub access is ready, before Quick Build begins. Keep passwords, access tokens, and other secrets out of those files.
 
 This site uses aggregate analytics. Your setup progress stays with you and your agent.
 

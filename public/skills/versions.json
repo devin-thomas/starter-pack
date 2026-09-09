@@ -3,21 +3,21 @@
   "skills": [
     {
       "id": "starter-pack",
-      "version": "0.1.7",
+      "version": "0.1.8",
       "current": "/skills/starter-pack/current/SKILL.md",
-      "versioned": "/skills/starter-pack/0.1.7/SKILL.md"
+      "versioned": "/skills/starter-pack/0.1.8/SKILL.md"
     },
     {
       "id": "computer-setup",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "current": "/skills/computer-setup/current/SKILL.md",
-      "versioned": "/skills/computer-setup/0.1.0/SKILL.md"
+      "versioned": "/skills/computer-setup/0.1.1/SKILL.md"
     },
     {
       "id": "quick-build",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "current": "/skills/quick-build/current/SKILL.md",
-      "versioned": "/skills/quick-build/0.1.0/SKILL.md"
+      "versioned": "/skills/quick-build/0.1.1/SKILL.md"
     }
   ]
 }
