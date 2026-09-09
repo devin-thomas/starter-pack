@@ -56,6 +56,11 @@ await Promise.all([
     const catalog = JSON.parse(body);
     if (!Array.isArray(catalog.resources) || catalog.resources.length < 3)
       throw new Error("Agent catalog is incomplete.");
+    const expectedPacket = await readFile("dist/agent/phase-1-packet.txt", "utf8");
+    const packetHash = createHash("sha256").update(expectedPacket).digest("hex").slice(0, 16);
+    const expectedUrl = `https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/agent/packets/phase-1-${packetHash}.md`;
+    if (catalog.bootstrap !== expectedUrl || await read(expectedUrl, /text\/plain/) !== expectedPacket)
+      throw new Error("GitHub startup packet is missing or differs from this release.");
   }),
 ]);
 const start = await read("/agent/start.md", /text\/plain/);

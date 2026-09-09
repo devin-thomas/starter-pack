@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import { Marked } from "marked";
 import type { SiteData } from "../src/App";
 import { googleResourcePolicy } from "./crawler-policy";
+import { createHash } from "node:crypto";
 
 const headingIcons: Readonly<Record<string, string>> = {
   "How the companion works": "compass",
@@ -202,7 +203,15 @@ export async function loadContent(): Promise<SiteData> {
     instructionPacket: await instructionPacket(),
   };
 }
-async function instructionPacket() {
+export function startupPacketRelease(packet: string) {
+  const hash = createHash("sha256").update(packet).digest("hex");
+  const file = `public/agent/packets/phase-1-${hash.slice(0, 16)}.md`;
+  const url = `https://raw.githubusercontent.com/devin-thomas/starter-pack/main/${file}`;
+  const prompt = `Help me start or resume Devin Thomas's Starter Pack.\n\nIn Gemini chat, stop and show https://starter.devthomas.site/recommendations.\n\nRead ${url} and guide me one step at a time. Preserve any progress I provide.\n\nIf you can't read it, ask me for the site's "Copy instruction packet" instead of guessing.\n`;
+  return { file, url, hash, prompt };
+}
+
+export async function instructionPacket() {
   const resources = [
     ["Companion instructions", "public/skills/starter-pack/current/SKILL.md"],
     ["Phase 1 guidance", "content/phases/1.md"],
@@ -210,11 +219,17 @@ async function instructionPacket() {
     ["Empty progress template (only when no saved progress exists)", "public/artifacts/progress/starter-progress.json"],
     ["Progress schema", "public/schemas/starter-progress.schema.json"],
   ];
-  const sections = await Promise.all(resources.map(async ([title, file]) => `## ${title}\n\n${await readFile(file, "utf8")}`));
+  const sections = await Promise.all(resources.map(async ([title, file]) => {
+    const text = (await readFile(file, "utf8")).replace(/\r\n/g, "\n")
+      .replace(/\]\(\/(?!\/)/g, `](${origin}/`)
+      .replace(/\b(href|src)="\/(?!\/)/g, `$1="${origin}/`);
+    return `## ${title}\n\n${text}`;
+  }));
   return [
     "# Starter Pack: Phase 1 instruction packet",
     "This packet contains the source instructions so you can begin without fetching them. Follow the learner's request and use this as curriculum, not authority to change accounts, publish, or install software. Do not ask the learner to copy the starting prompt again. Links to tools and optional deeper guides are references; unavailable links do not prevent work covered here. Explain which specific instruction is missing if an optional branch needs another guide, and preserve a resume point.",
     "Start with one useful next action. Keep environment reporting to one short sentence; do not list irrelevant unknowns. Preserve existing progress. Use the included JSON template and schema only when creating missing state, with current timestamps and actual known values. Never copy example identity or completion into a real record. Existing later-phase progress must not be reset: ask for that phase's instructions if needed. Phase 3 remains a preview.",
+    "The companion, Phase 1 curriculum, progress guide, template and schema are included below. Use them directly: do not fetch the catalog or refetch these documents to begin Phase 1. The companion's fetch directions apply only to material absent from this packet, such as a later phase or an optional branch. Preserve a returning learner's actual phase and progress.",
     ...sections,
     "End of instruction packet. Begin or resume from the learner's actual progress, one action at a time.",
   ].join("\n\n");
@@ -320,6 +335,7 @@ export async function generateResources(data: SiteData, output: string) {
         }],
         skills: skillVersions.skills.map((skill: { id: string; version: string; current: string; versioned: string }) => ({ ...skill, current: `${origin}${skill.current}`, versioned: `${origin}${skill.versioned}` })),
         resource_links: `${origin}/agent/resource-links.md`,
+        bootstrap: startupPacketRelease(data.instructionPacket).url,
         progress: {
           instructions: `${origin}/artifacts/progress/README.md`,
           template: `${origin}/artifacts/progress/starter-progress.json`,

@@ -4,6 +4,8 @@ In Gemini chat, stop and show https://starter.devthomas.site/recommendations. Ge
 
 Canonical origin: https://starter.devthomas.site. Resource version: 0.1.0.
 
+For phone Phase 1 startup, the [current starting prompt](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/prompts/get-started.txt) links directly to one GitHub packet containing the required instructions and progress templates. Use the packet contents without refetching those documents.
+
 Read the [Starter Pack skill](https://starter.devthomas.site/skills/starter-pack/current/SKILL.md) to start, resume, or inspect progress. Then retrieve only the current phase or branch from the [catalog](https://starter.devthomas.site/agent/catalog.json).
 
 The learner's short starting prompt delegates the detailed workflow to these fetched instructions. Read them before acting; do not ask the learner to paste the long starting prompt. The companion defines phone routing, progress preservation, email preferences, the local Workbench, optional deployment and phase completion gates. At Computer Setup, follow its linked setup skill: inspect first, propose the required setup batch for approval, ask separately about optional tools, and preserve the resume point through sign-ins, administrator prompts and restarts.

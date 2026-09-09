@@ -3,6 +3,20 @@ import assert from "node:assert/strict";
 import { readFile, stat } from "node:fs/promises";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
+import { instructionPacket, startupPacketRelease } from "./content";
+
+test("startup packet contains Phase 1 state without another fetch and changes URL with content", async () => {
+  const packet = await instructionPacket();
+  const release = startupPacketRelease(packet);
+  assert.notEqual(startupPacketRelease(packet + "\n").url, release.url);
+  assert.equal(await readFile(release.file, "utf8"), packet);
+  assert.ok(release.prompt.includes(release.url));
+  assert.ok(release.prompt.split(/\s+/).length < 75);
+  for (const section of ["## Companion instructions", "## Phase 1 guidance", "## Progress instructions", "## Empty progress template", "## Progress schema"])
+    assert.ok(packet.includes(section), section);
+  assert.ok(packet.includes("do not fetch the catalog or refetch these documents"));
+  assert.doesNotMatch(packet, /\]\(\/(?!\/)|\b(?:href|src)="\/(?!\/)/);
+});
 
 test("catalog resource URLs reject relative paths", async () => {
   const ajv = new Ajv2020();
