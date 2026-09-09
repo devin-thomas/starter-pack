@@ -81,8 +81,8 @@ for (const [collection, manifest] of [
   await Promise.all(
     manifest.icons.map(async (icon) => {
       const route = `/icons/${collection}/${icon.file}`;
-      const svg = await read(route, /image\/svg\+xml/);
-      if (createHash("sha256").update(svg).digest("hex") !== icon.sha256) {
+      const bytes = await read(route, icon.file.endsWith(".png") ? /image\/png/ : /image\/svg\+xml/);
+      if (createHash("sha256").update(bytes).digest("hex") !== icon.sha256) {
         throw new Error(
           `${route}: deployed icon differs from the source manifest`,
         );

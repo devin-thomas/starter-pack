@@ -2,14 +2,14 @@
   "schema_version": 1,
   "retrieved_at_utc": "2026-09-08T15:18:49.4529218Z",
   "notes": [
-    "Curated SVGs only. No full icon pack or dependency was downloaded.",
-    "Original SVG paths and colors are preserved. Mono assets are intended for CSS masks on dark surfaces.",
+    "Curated assets only. Google AI Studio uses the official Google product logo; other marks retain their recorded sources.",
+    "Original asset bytes and colors are preserved. Mono SVGs are intended for CSS masks on dark surfaces.",
     "Collection licenses do not transfer ownership of third-party trademarks. Marks identify the named products.",
     "Byte totals describe exact file contents, not allocated filesystem blocks, network transfer, or compressed web transfer."
   ],
   "icon_count": 12,
-  "icon_bytes": 16732.0,
-  "downloaded_payload_bytes": 28969.0,
+  "icon_bytes": 21200,
+  "downloaded_payload_bytes": 33437,
   "downloaded_payload_files": [
     {
       "file": "antigravity.svg",
@@ -47,9 +47,9 @@
       "sha256": "1bd763b5d53ab1618e0afce72aacffc7e93d1249c395f713b3b055c087526625"
     },
     {
-      "file": "google-ai-studio.svg",
-      "bytes": 833,
-      "sha256": "ca05675a319ba0b530fe396150357f5dddd7f7bbb2d15ffe5e21178e568a167c"
+      "file": "google-ai-studio.png",
+      "bytes": 5301,
+      "sha256": "f4aaba05c020e9cba9e8b38ba8dff69f1e2aee9efc20dcd205dc1eaea8f7f643"
     },
     {
       "file": "LICENSE-lobe-icons.txt",
@@ -155,15 +155,16 @@
       "sha256": "cee35d3f0ecb7925ce0a89aeaff8b907cadae7c3fe44a23e4001cc8d5ee57502"
     },
     {
-      "file": "google-ai-studio.svg",
-      "collection": "Lobe Icons",
-      "license": "MIT",
-      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/a94750e3f5f8fc33757b839d85030e742284e43a/packages/static-svg/icons/aistudio.svg",
-      "revision": "a94750e3f5f8fc33757b839d85030e742284e43a",
-      "rendering": "monochrome-mask",
+      "file": "google-ai-studio.png",
+      "collection": "Google product logos",
+      "license": "Google trademark; product identification",
+      "source": "https://www.gstatic.com/images/branding/productlogos/ai_studio/v1/web-96dp/logo_ai_studio_color_1x_web_96dp.png",
+      "revision": "v1",
+      "rendering": "original-color-image",
       "modified": false,
-      "bytes": 833,
-      "sha256": "ca05675a319ba0b530fe396150357f5dddd7f7bbb2d15ffe5e21178e568a167c"
+      "bytes": 5301,
+      "sha256": "f4aaba05c020e9cba9e8b38ba8dff69f1e2aee9efc20dcd205dc1eaea8f7f643",
+      "retrieved_at_utc": "2026-09-09T21:32:13.863Z"
     },
     {
       "file": "lovable.svg",

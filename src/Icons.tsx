@@ -59,7 +59,7 @@ const brands = {
   github: { name: "GitHub", color: false },
   cloudflare: { name: "Cloudflare", color: true },
   neon: { name: "Neon", color: false },
-  "google-ai-studio": { name: "Google AI Studio", color: false },
+  "google-ai-studio": { name: "Google AI Studio", color: true },
   lovable: { name: "Lovable", color: true },
   replit: { name: "Replit", color: true },
   vercel: { name: "Vercel", color: false },
@@ -85,7 +85,7 @@ export function BrandIcon({
   name: BrandName;
   size?: number;
 }) {
-  const src = `/icons/brands/${name}.svg`;
+  const src = `/icons/brands/${name}.${name === "google-ai-studio" ? "png" : "svg"}`;
   const style: CSSProperties = { width: size, height: size };
   return brands[name].color ? (
     <img
@@ -117,7 +117,7 @@ export function AgentBrands() {
         {commonAgents.filter(({ name }) => name !== "antigravity").map(({ name, label }) => (
           <li key={name}>
             <BrandIcon name={name} />
-            <strong>{label}</strong>
+            <span>{label}</span>
           </li>
         ))}
       </ul>

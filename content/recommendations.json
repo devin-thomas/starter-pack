@@ -46,7 +46,7 @@
     "status": "recommended",
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-08",
-    "reason": "Antigravity is a Phase 2 computer option, especially if you already use Google services. Check what your plan includes. Gemini is not a supported companion for this pack; Google AI Studio remains an instant builder.",
+    "reason": "Antigravity is a Phase 2 computer option, especially if you already use Google services. Check what your plan includes. Gemini is not a supported companion for this pack.",
     "url": "https://one.google.com/about/google-ai-plans/",
     "phase": "phase-1",
     "kind": "recommendation"

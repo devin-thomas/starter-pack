@@ -41,10 +41,12 @@ export async function buildWorkbench(output: string, data: SiteData) {
   for (const [collection, names] of [["interface", interfaceIcons], ["workbench", extraIcons], ["brands", brandIcons]] as const) {
     const manifest = JSON.parse(await readFile(`public/icons/${collection}/manifest.json`, "utf8"));
     for (const name of names) {
-      const source = manifest.icons.find((entry: { file: string }) => entry.file === `${name}.svg`);
-      const bytes = await readFile(`public/icons/${collection}/${name}.svg`);
-      if (!source || createHash("sha256").update(bytes).digest("hex") !== source.sha256) throw new Error(`Workbench icon integrity mismatch: ${name}`);
-      const uri = `url("data:image/svg+xml;base64,${bytes.toString("base64")}")`;
+      const source = manifest.icons.find((entry: { file: string }) => entry.file === `${name}.svg` || entry.file === `${name}.png`);
+      if (!source) throw new Error(`Missing Workbench icon: ${name}`);
+      const bytes = await readFile(`public/icons/${collection}/${source.file}`);
+      if (createHash("sha256").update(bytes).digest("hex") !== source.sha256) throw new Error(`Workbench icon integrity mismatch: ${name}`);
+      const mime = source.file.endsWith(".png") ? "image/png" : "image/svg+xml";
+      const uri = `url("data:${mime};base64,${bytes.toString("base64")}")`;
       const color = source.rendering === "original-color-image";
       iconCss.push(`[data-icon="${name}"]::before{${color ? `background:transparent ${uri} center/contain no-repeat` : `mask-image:${uri};-webkit-mask-image:${uri}`} }`);
       iconSources.push({ ...source, collection: manifest.collection ?? source.collection });
