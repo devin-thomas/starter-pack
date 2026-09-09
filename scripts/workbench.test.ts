@@ -29,6 +29,23 @@ test("email choices allow distinct services and deferral without requiring ident
   data.choices = { development_email: { account_email: "not an email" } };
   assert.equal(validate(data), false);
 });
+
+test("account checkpoint is optional, preserves service handles, and permits declining", () => {
+  const data = state();
+  assert.ok(validate(data));
+  data.artifacts = { account_profile: { github_username: "example-learner", service_usernames: { vercel: "example-team" }, status: "recorded", notes: [], custom: "preserve" } };
+  data.choices = { development_email: { account_email: "learner@example.com", notification_email: null, access_email: null } };
+  const before = JSON.stringify(data);
+  assert.ok(validate(data));
+  summary(data, catalog);
+  assert.equal(JSON.stringify(data), before);
+  for (const status of ["declined", "deferred"]) {
+    data.artifacts = { account_profile: { status, github_username: null } };
+    assert.ok(validate(data));
+  }
+  data.artifacts = { account_profile: { status: "recorded", service_usernames: ["ambiguous"] } };
+  assert.equal(validate(data), false);
+});
 test("schema rejects corrupt statuses and supports explicit custom step routing", () => {
   const data = state();
   data.steps.custom = { status: "deferred", phase: "phase-2", next_action: "Retry sign-in", blocker: "Awaiting access" };

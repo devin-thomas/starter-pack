@@ -12,6 +12,14 @@ After the agent saves progress, refresh the Workbench or allow the visible HTTP 
 
 Hosting a protected copy is optional later work, lower priority than deploying the learner's instant app for extra credit. Follow [Workbench publishing](https://starter.devthomas.site/setup/workbench-publishing.md), confirm the Access email, and publish only its allowlisted snapshot. Never upload the private progress repository root as a website.
 
+## Remember account details once
+
+After confirming the phone companion and authenticator, offer one optional checkpoint for the learner's GitHub username, development account email and any existing service handles they want remembered. Reuse details they already supplied. This checkpoint is not a completion requirement, and declining it does not stop setup.
+
+Store confirmed handles in `artifacts.account_profile` with `github_username` (string or null), `service_usernames` (an object keyed by service), `status` (`recorded`, `declined` or `deferred`), and `notes` (an array). Preserve unknown fields and existing service handles when merging. Do not ask the intake again after a recorded decision; clarify a missing value only when the current task needs it.
+
+Keep the primary development email in the existing `choices.development_email.account_email` field, not a second copy in the profile. A supplied development email does not automatically authorize using it for notifications or Cloudflare Access. At Computer Setup, ask only for still-unaddressed email purposes. Never infer identity from an example or from the author's account. These are personal details: keep them in private or portable learner progress, never in the public app or a public example. Passwords, tokens and recovery codes do not belong in this record.
+
 ## Record development email choices
 
 At Computer Setup entry, ask one concise question if these choices are missing and have not already been declined or deferred: "Which email should we use for development accounts and notifications? You can use the same address for both." Store only values the learner explicitly confirms. Do not infer an email from Git author settings, change Git identity, or assume account and notification addresses match.

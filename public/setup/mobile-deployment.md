@@ -10,6 +10,14 @@ Provide a downloadable ZIP or separate static files when the current environment
 
 Use the same signed-out URL and main-action checks described below. The public example's HTML, CSS and JavaScript were independently reachable over HTTPS; the physical iPhone interactions are Devin's reported test. Do not turn this optional route into a Phase 1 gate or assume it completes Phase 2 setup.
 
+## AI Studio to GitHub to Vercel: completed learner session
+
+In his September 9, 2026 Claude mobile companion session, Devin reports shipping [Resample Studio Lite](https://resample-studio-lite.vercel.app) from AI Studio through [its GitHub repository](https://github.com/devin-thomas/resample-studio-lite) to Vercel. Vercel emailed an import offer after the GitHub push; he accepted it and deployed in the Vercel interface without manually configuring that project. This is a reported learner-driven route, not a test of Claude's Vercel connector.
+
+If the learner receives a matching import offer, use it after confirming the repository, account/team and intended public destination. Otherwise continue with [Vercel's normal GitHub import](https://vercel.com/docs/git/vercel-for-github); an email is not required or guaranteed. Inspect any project settings presented rather than assuming every app needs none. Cloudflare remains the default, and this Vercel route remains optional.
+
+Suggest a visible version label updated for each release. Compare it on the public production URL, then test the main behavior on the actual target device. The label helps identify which release loaded; it does not replace interaction checks or establish that every asset is current. In the reported Resample session, iPhone playback testing caught a bug and prompted a focused fix.
+
 ## Choose from actual capabilities
 
 Inspect tools exposed to this conversation and their permissions before requesting setup. Distinguish repository reading, file/commit writes, repository creation, and deployment. One missing action does not imply the others are unavailable. A connected service is not itself proof of authorization for a particular project. Do not create throwaway projects merely to test access.
