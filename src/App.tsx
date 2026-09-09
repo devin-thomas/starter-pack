@@ -38,12 +38,12 @@ export interface SiteData {
 }
 
 const milestones = [
-  "Make something",
-  "Build something meaningful",
-  "Build something serious",
+  "Make something new",
+  "Harness your power",
+  "Build something great",
 ];
 const phaseIcons = ["sprout", "blocks", "compass"] as const;
-const phaseShortLabels = ["Make", "Build", "Go deeper"];
+const phaseShortLabels = ["Make", "Harness", "Build"];
 const nav = [
   ["/guide", "Guide"],
   ["/recommendations", "Recommendations"],
