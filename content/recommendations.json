@@ -1,8 +1,8 @@
 [
   {
     "id": "chatgpt",
-    "name": "ChatGPT / Codex",
-    "category": "primary-agent",
+    "name": "Codex",
+    "category": "harness",
     "requirement": "recommended",
     "status": "recommended",
     "recommended_by": "Devin Thomas",
@@ -14,13 +14,13 @@
   },
   {
     "id": "claude",
-    "name": "Claude",
-    "category": "primary-agent",
+    "name": "Claude Code",
+    "category": "harness",
     "requirement": "recommended",
     "status": "recommended",
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-08",
-    "reason": "My default for Phase 1 is Claude with Sonnet 4.6 at Medium effort. It read this guide without trouble, and the free allowance has been enough in my testing. Use those settings when available; models and limits can vary.",
+    "reason": "Claude Code is the development harness for working on your project. I see it as a strong enterprise-oriented option; compare paid-plan costs for heavier use. The Claude phone companion is a separate role, covered below.",
     "url": "https://claude.com/pricing",
     "phase": "phase-1",
     "kind": "recommendation"
@@ -28,7 +28,7 @@
   {
     "id": "cursor",
     "name": "Cursor",
-    "category": "primary-agent",
+    "category": "harness",
     "requirement": "recommended",
     "status": "recommended",
     "recommended_by": "Devin Thomas",
@@ -41,13 +41,26 @@
   {
     "id": "antigravity",
     "name": "Google Antigravity",
-    "category": "primary-agent",
+    "category": "harness",
     "requirement": "recommended",
     "status": "recommended",
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-08",
     "reason": "Antigravity is a Phase 2 computer option, especially if you already use Google services. Check what your plan includes. Gemini and Spark are not supported companions for this pack; Google AI Studio remains an instant builder.",
     "url": "https://one.google.com/about/google-ai-plans/",
+    "phase": "phase-1",
+    "kind": "recommendation"
+  },
+  {
+    "id": "primary-ai-phone-app",
+    "name": "Your companion agent on your phone",
+    "category": "phone-app",
+    "requirement": "required",
+    "status": "recommended",
+    "recommended_by": "Devin Thomas",
+    "checked_at": "2026-09-09",
+    "reason": "Required for Phase 1: a signed-in AI companion on your phone that can send a message. This is separate from your development harness. ChatGPT, Claude, and Cursor are explicitly supported. Gemini and Spark are not supported; other companions may vary. My default is Claude with Sonnet 4.6 at Medium effort when available; the free allowance has been enough in my testing.",
+    "url": "https://starter.devthomas.site/phases/1#prepare-your-apps-and-accounts",
     "phase": "phase-1",
     "kind": "recommendation"
   },

@@ -120,15 +120,16 @@ function ExternalLink({
   children: ReactNode;
   label?: string;
 }) {
+  const internal = new URL(href, resourceOrigin).origin === resourceOrigin;
   return (
     <a
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label ? `${label} (opens in a new tab)` : undefined}
+      target={internal ? undefined : "_blank"}
+      rel={internal ? undefined : "noopener noreferrer"}
+      aria-label={label ? internal ? label : `${label} (opens in a new tab)` : undefined}
     >
       {children}
-      <span className="sr-only"> (opens in a new tab)</span>
+      {!internal && <span className="sr-only"> (opens in a new tab)</span>}
     </a>
   );
 }
@@ -351,6 +352,7 @@ function RecommendationCard({
   item: SiteData["recommendations"][number];
 }) {
   const devinsPick = item.id === "chatgpt" || item.id === "google-ai-studio";
+  const internal = new URL(item.url, resourceOrigin).origin === resourceOrigin;
   return (
     <article className="recommendation">
       <div className="recommendation-top">
@@ -371,7 +373,7 @@ function RecommendationCard({
             ) : (
               <Icon
                 name={
-                  item.id === "github-mobile"
+                  item.category === "phone-app"
                     ? "smartphone"
                     : item.id === "authenticator"
                       ? "shield-check"
@@ -382,7 +384,7 @@ function RecommendationCard({
             )}
           </span>
           <span>{item.name}</span>
-          <Icon name="arrow-up-right" size={17} />
+          <Icon name={internal ? "arrow-right" : "arrow-up-right"} size={17} />
         </ExternalLink>
       </h2>
       <p>{item.reason}</p>
@@ -419,13 +421,13 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
         <div className="need-item">
           <Icon name="terminal" size={18} />
           <div>
-            <strong>One capable AI agent</strong>
-            <p>Use the agent you already have. Common options include:</p>
+            <strong>{phase === 2 ? "One development harness" : "An AI companion on your phone"}</strong>
+            <p>{phase === 2 ? "Choose a harness for your project work." : "Supported phone companions:"}</p>
             <ul
               className="rail-agent-options"
               aria-label="Common AI agent options"
             >
-              {commonAgents.map(({ name, label }) => (
+              {commonAgents.filter(({ name }) => phase === 2 || name !== "antigravity").map(({ name, label }) => (
                 <li key={name}>
                   <BrandIcon name={name} size={20} />
                   <span>{label}</span>
@@ -458,7 +460,7 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
           authenticator.
         </p>
         <p className="account-summary">
-          Account checklist: GitHub, Cloudflare, Neon, your primary agent, and
+          Account checklist: GitHub, Cloudflare, Neon, your phone companion, and
           one instant app builder.
         </p>
         <a className="text-link" href="/recommendations">
@@ -728,17 +730,17 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 <div className="recommendation-groups">
                   <section id="choose-your-agent" className="recommendation-group">
                     <div className="recommendation-group-heading">
-                      <span className="eyebrow">MY TAKE</span>
-                      <h2>Choose an agent you want to work with.</h2>
+                      <span className="eyebrow">HARNESS</span>
+                      <h2>Choose your development harness</h2>
                       <p>
-                        I use Codex. Here is how I would help a friend choose.
-                        These are my preferences, not a requirement to switch
-                        or pay for all four. Start with access you already have.
+                        Your harness is where your agent works on project files
+                        and runs development tools during Phase 2. I use Codex.
+                        Your phone companion is a separate choice below.
                       </p>
                     </div>
                     <div className="recommendation-list">
                       {data.recommendations
-                        .filter((item) => item.category === "primary-agent")
+                        .filter((item) => item.category === "harness")
                         .map((item) => (
                           <RecommendationCard item={item} key={item.id} />
                         ))}
@@ -749,8 +751,8 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                       <span className="eyebrow">REQUIRED</span>
                       <h2>Core accounts and tools</h2>
                       <p>
-                        Your primary AI phone app is required. Use the provider
-                        you already have, and prepare these apps and accounts.
+                        Start with a companion on your phone, then prepare
+                        these apps and accounts.
                       </p>
                     </div>
                     <div className="recommendation-list">
