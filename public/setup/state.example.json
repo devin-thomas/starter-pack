@@ -17,5 +17,13 @@
     "next_action": "Inspect the computer and existing tools.",
     "requires_restart": false
   },
-  "notes": []
+  "notes": [],
+  "ide": {
+    "id": null,
+    "version": null,
+    "status": "not_started",
+    "configuration": {},
+    "verification": {},
+    "notes": []
+  }
 }

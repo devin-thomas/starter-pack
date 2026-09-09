@@ -10,7 +10,12 @@
     "reason": "ChatGPT is my personal preference for development. For the way I work, the usage allowance feels generous and the connectivity is among the best. Most importantly, I like the interface. That is why I use Codex for development. Your actual limits depend on your plan and the work you give it.",
     "url": "https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan",
     "phase": "phase-1",
-    "kind": "recommendation"
+    "kind": "recommendation",
+    "ide": {
+      "id": "vscode",
+      "setup": "https://starter.devthomas.site/setup/ide.md",
+      "agent_installs_and_configures": true
+    }
   },
   {
     "id": "claude",
@@ -23,7 +28,12 @@
     "reason": "Claude Code is the development harness for working on your project. I see it as a strong enterprise-oriented option; compare paid-plan costs for heavier use. The Claude phone companion is a separate role, covered below.",
     "url": "https://claude.com/pricing",
     "phase": "phase-1",
-    "kind": "recommendation"
+    "kind": "recommendation",
+    "ide": {
+      "id": "vscode",
+      "setup": "https://starter.devthomas.site/setup/ide.md",
+      "agent_installs_and_configures": true
+    }
   },
   {
     "id": "cursor",
@@ -36,7 +46,12 @@
     "reason": "I would point you toward Cursor if you are serious about getting into development as a whole, or interested in agents that work on longer tasks. It puts the editor and project workflow at the center. Check which cloud and long-running capabilities your plan includes.",
     "url": "https://cursor.com/docs/cloud-agent",
     "phase": "phase-1",
-    "kind": "recommendation"
+    "kind": "recommendation",
+    "ide": {
+      "id": "cursor",
+      "setup": "https://starter.devthomas.site/setup/ide.md",
+      "agent_installs_and_configures": true
+    }
   },
   {
     "id": "antigravity",
@@ -49,7 +64,12 @@
     "reason": "Antigravity is a Phase 2 computer option, especially if you already use Google services. Check what your plan includes. Gemini is not a supported companion for this pack.",
     "url": "https://one.google.com/about/google-ai-plans/",
     "phase": "phase-1",
-    "kind": "recommendation"
+    "kind": "recommendation",
+    "ide": {
+      "id": "antigravity",
+      "setup": "https://starter.devthomas.site/setup/ide.md",
+      "agent_installs_and_configures": true
+    }
   },
   {
     "id": "primary-ai-phone-app",

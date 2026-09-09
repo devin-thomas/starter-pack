@@ -746,6 +746,18 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                         ))}
                     </div>
                   </section>
+                  <section id="choose-your-ide" className="recommendation-group">
+                    <div className="recommendation-group-heading">
+                      <span className="eyebrow">COMPUTER SETUP</span>
+                      <h2>Your IDE follows your harness</h2>
+                      <p>Your agent installs and configures it as part of the approved setup batch.</p>
+                    </div>
+                    <ul>
+                      <li><strong>Antigravity:</strong> <ExternalLink href="https://antigravity.google/download">Antigravity IDE</ExternalLink></li>
+                      <li><strong>Cursor:</strong> <ExternalLink href="https://cursor.com/download">Cursor</ExternalLink></li>
+                      <li><strong>All other routes, including ChatGPT/Codex and Claude Code:</strong> <ExternalLink href="https://code.visualstudio.com/">VS Code</ExternalLink></li>
+                    </ul>
+                  </section>
                   <section className="recommendation-group">
                     <div className="recommendation-group-heading">
                       <span className="eyebrow">REQUIRED</span>

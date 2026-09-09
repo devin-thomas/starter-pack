@@ -215,3 +215,9 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Primary: [https://starter.devthomas.site/help/cloudflare-iphone.md](https://starter.devthomas.site/help/cloudflare-iphone.md)
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/help/cloudflare-iphone.md](https://starter-pack.uppercut-labs.workers.dev/help/cloudflare-iphone.md)
 - GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/content/pages/cloudflare-iphone.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/content/pages/cloudflare-iphone.md)
+
+## /setup/ide.md
+
+- Primary: [https://starter.devthomas.site/setup/ide.md](https://starter.devthomas.site/setup/ide.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/ide.md](https://starter-pack.uppercut-labs.workers.dev/setup/ide.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/ide.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/ide.md)

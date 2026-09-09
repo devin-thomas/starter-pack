@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "id": "starter-pack-computer-setup",
-  "skill_version": "0.1.2",
+  "skill_version": "0.1.3",
   "updated_at": "2026-09-09",
   "workbench": {
     "role": "default_local_visualization",
@@ -16,7 +16,18 @@
     "server_module": "http.server",
     "bind": "127.0.0.1",
     "default_port": 8000,
-    "fallback_ports": [8001, 8002, 8003, 8004, 8005, 8006, 8007, 8008, 8009, 8010],
+    "fallback_ports": [
+      8001,
+      8002,
+      8003,
+      8004,
+      8005,
+      8006,
+      8007,
+      8008,
+      8009,
+      8010
+    ],
     "verify_directory_and_binding_before_reuse": true,
     "directory": "absolute_progress_folder",
     "visible_http_poll_seconds": 5,
@@ -79,6 +90,12 @@
     {
       "id": "selected-agentic-harness",
       "version_policy": "current_supported"
+    },
+    {
+      "id": "selected-ide",
+      "selection": "ide.harness_to_ide_or_default",
+      "version_policy": "current_supported",
+      "instructions": "https://starter.devthomas.site/setup/ide.md"
     },
     {
       "id": "git",
@@ -219,5 +236,30 @@
       "selection": "project_specific"
     }
   },
-  "state_path": "setup/computer.json"
+  "state_path": "setup/computer.json",
+  "ide": {
+    "required": true,
+    "lifecycle": "https://starter.devthomas.site/setup/ide.md",
+    "select_from": "development_harness_not_phone_companion",
+    "harness_to_ide": {
+      "antigravity": "antigravity",
+      "cursor": "cursor"
+    },
+    "default": "vscode",
+    "default_includes": [
+      "chatgpt",
+      "codex",
+      "claude-code"
+    ],
+    "install_and_configure": "agent_applies_approved_required_batch",
+    "reuse_working_installation": true,
+    "preserve_settings": true,
+    "state_path": "setup/computer.json",
+    "verification": [
+      "ide_launches",
+      "workspace_opens",
+      "integrated_terminal_runs_git",
+      "selected_harness_works_with_workspace"
+    ]
+  }
 }

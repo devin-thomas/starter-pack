@@ -5,6 +5,21 @@ import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { instructionPacket, startupPacketRelease } from "./content";
 
+test("IDE routing is required and consistent with harness recommendations", async () => {
+  const manifest = JSON.parse(await readFile("public/setup/computer-setup.manifest.json", "utf8"));
+  const recommendations = JSON.parse(await readFile("content/recommendations.json", "utf8"));
+  assert.deepEqual(manifest.ide.harness_to_ide, { antigravity: "antigravity", cursor: "cursor" });
+  assert.equal(manifest.ide.default, "vscode");
+  assert.equal(manifest.ide.select_from, "development_harness_not_phone_companion");
+  assert.equal(manifest.ide.required, true);
+  assert.ok(manifest.required_capabilities.some((item: { id: string }) => item.id === "selected-ide"));
+  for (const item of recommendations.filter((item: { category: string }) => item.category === "harness")) {
+    assert.equal(item.ide.id, manifest.ide.harness_to_ide[item.id] ?? manifest.ide.default);
+    assert.equal(item.ide.agent_installs_and_configures, true);
+  }
+  assert.equal(await readFile(`public/skills/computer-setup/${manifest.skill_version}/SKILL.md`, "utf8"), await readFile("public/skills/computer-setup/current/SKILL.md", "utf8"));
+});
+
 test("startup packet contains Phase 1 state without another fetch and changes URL with content", async () => {
   const packet = await instructionPacket();
   const release = startupPacketRelease(packet);
