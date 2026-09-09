@@ -19,7 +19,7 @@ try {
   );
 }
 
-async function read(route: string, expectedType: RegExp) {
+async function readBytes(route: string, expectedType: RegExp) {
   const url = new URL(route, base);
   const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
   if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
@@ -28,8 +28,14 @@ async function read(route: string, expectedType: RegExp) {
       `${url}: unexpected content type ${response.headers.get("content-type")}`,
     );
   }
-  const body = await response.text();
-  if (!body.trim()) throw new Error(`${url}: empty response`);
+  const body = Buffer.from(await response.arrayBuffer());
+  if (!body.length) throw new Error(`${url}: empty response`);
+  return body;
+}
+
+async function read(route: string, expectedType: RegExp) {
+  const body = (await readBytes(route, expectedType)).toString("utf8");
+  if (!body.trim()) throw new Error(`${route}: empty text response`);
   return body;
 }
 
@@ -81,7 +87,7 @@ for (const [collection, manifest] of [
   await Promise.all(
     manifest.icons.map(async (icon) => {
       const route = `/icons/${collection}/${icon.file}`;
-      const bytes = await read(route, icon.file.endsWith(".png") ? /image\/png/ : /image\/svg\+xml/);
+      const bytes = await readBytes(route, icon.file.endsWith(".png") ? /image\/png/ : /image\/svg\+xml/);
       if (createHash("sha256").update(bytes).digest("hex") !== icon.sha256) {
         throw new Error(
           `${route}: deployed icon differs from the source manifest`,
