@@ -7,7 +7,7 @@
     "status": "recommended",
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-08",
-    "reason": "ChatGPT is my first recommendation. For the way I work, the usage allowance feels generous and the connectivity is among the best. Most importantly, I like the interface. That is why I use Codex for development. Your actual limits depend on your plan and the work you give it.",
+    "reason": "ChatGPT is my personal preference for development. For the way I work, the usage allowance feels generous and the connectivity is among the best. Most importantly, I like the interface. That is why I use Codex for development. Your actual limits depend on your plan and the work you give it.",
     "url": "https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan",
     "phase": "phase-1",
     "kind": "recommendation"
@@ -20,7 +20,7 @@
     "status": "recommended",
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-08",
-    "reason": "Claude read this guide without trouble in my phone test. If Gemini or Spark cannot load the pack, Claude is my Phase 1 fallback: Sonnet 4.6 with Medium effort has been enough within the free allowance in my testing. Use those settings when available; models and limits can vary. For larger teams I still see Claude as a strong enterprise option, where heavy usage and paid-plan costs need a separate look.",
+    "reason": "My default for Phase 1 is Claude with Sonnet 4.6 at Medium effort. It read this guide without trouble, and the free allowance has been enough in my testing. Use those settings when available; models and limits can vary.",
     "url": "https://claude.com/pricing",
     "phase": "phase-1",
     "kind": "recommendation"
@@ -40,13 +40,13 @@
   },
   {
     "id": "antigravity",
-    "name": "Google / Gemini + Antigravity",
+    "name": "Google Antigravity",
     "category": "primary-agent",
     "requirement": "recommended",
     "status": "recommended",
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-08",
-    "reason": "Google is the convenient choice if you are already paying for its storage or running your business in Workspace. Check what your existing plan includes before buying something else. Gemini and Spark could not read this guide in my latest phone tests; a final text-only route is still being checked. Use Claude for Phase 1 if access fails, and keep Antigravity as your computer option. These products have separate access rules; storage or Workspace does not automatically unlock all three.",
+    "reason": "Antigravity is a Phase 2 computer option, especially if you already use Google services. Check what your plan includes. Gemini and Spark are not supported companions for this pack; Google AI Studio remains an instant builder.",
     "url": "https://one.google.com/about/google-ai-plans/",
     "phase": "phase-1",
     "kind": "recommendation"

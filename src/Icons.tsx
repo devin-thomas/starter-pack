@@ -68,9 +68,9 @@ const brands = {
 export type BrandName = keyof typeof brands;
 
 export const commonAgents = [
-  { name: "chatgpt", label: "ChatGPT" },
   { name: "claude", label: "Claude" },
-  { name: "antigravity", label: "Gemini / Antigravity" },
+  { name: "chatgpt", label: "ChatGPT" },
+  { name: "antigravity", label: "Antigravity" },
   { name: "cursor", label: "Cursor" },
 ] as const;
 

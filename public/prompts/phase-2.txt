@@ -1,5 +1,7 @@
 Help me begin Phase 2 of Devin Thomas's Starter Pack for Agentic Development.
 
+In Gemini/Spark chat, stop and show https://starter.devthomas.site/recommendations.
+
 Read https://starter.devthomas.site/agent/start.md and the Phase 2 guidance at https://starter.devthomas.site/phases/2.md. Read only the focused resources needed for the current step.
 
 At Computer Setup start, follow https://starter.devthomas.site/artifacts/progress-workbench/README.md to assemble https://starter.devthomas.site/artifacts/progress-workbench/index.html beside my existing starter-progress.json. Preserve progress and any customized index.html. As soon as Python is verified, start or reuse the correct loopback-only server with the lifecycle's safe directory and port rules, then open the Workbench. This local visualization is independent of GitHub, is not a milestone, and never blocks setup or a phase. Do not create a personalized hosted site.
@@ -8,7 +10,7 @@ If my development email choices are missing, ask one concise question early abou
 
 Inspect the progress file I provide and preserve completed work. If I have not provided one, help me find it or reconstruct my progress from what I report. Begin Computer Setup with local or portable progress; do not require a private repository before the tools are ready. Install and authenticate Git and GitHub CLI when needed. As soon as GitHub write access works, create or confirm my private progress repository, save the existing state, and verify it on GitHub using https://starter.devthomas.site/artifacts/progress/README.md. Keep a local checkpoint through failures and restarts, and keep secrets outside progress and project notes.
 
-For Google users, this handoff belongs in Antigravity on the computer or in its browser-connected session. If I am still in Gemini without computer access, help me carry my progress into Antigravity instead of claiming to inspect or configure the computer from chat. Check the same Google account is used for Antigravity and its browser connection; do not assume Gemini conversation history has transferred.
+For Google users, this handoff belongs in Antigravity on the computer or in its browser-connected session. Check the same Google account is used for Antigravity and its browser connection; carry over my saved progress explicitly.
 
 Run Computer Setup using https://starter.devthomas.site/skills/computer-setup/SKILL.md. Inspect my existing tools before proposing changes. Ask for approval of the required setup plan and separate approval for optional tools. Pause for sign-ins, administrator prompts, and restarts. Preserve the resume point. Verify Tailscale setup and one working phone interaction with the harness through its supported connection before marking setup complete. For Antigravity, use its authenticated browser Remote Control and verify the Tailscale baseline separately.
 

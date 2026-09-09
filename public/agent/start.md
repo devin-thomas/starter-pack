@@ -1,5 +1,7 @@
 # Start or resume Starter Pack
 
+In Gemini/Spark chat, stop and show https://starter.devthomas.site/recommendations. These chats are not supported for this pack.
+
 Canonical origin: https://starter.devthomas.site. Resource version: 0.1.0.
 
 Read the [Starter Pack skill](https://starter.devthomas.site/skills/starter-pack/current/SKILL.md) to start, resume, or inspect progress. Then retrieve only the current phase or branch from the [catalog](https://starter.devthomas.site/agent/catalog.json).
