@@ -32,6 +32,12 @@ Public curriculum is in `content/`. Hosted skills, templates, and agent instruct
 
 Each phase includes lessons adapted from Devin's projects: Domain Expansion, Daily Combo Trials, and Perfect Playlist. The stories and practice prompts live beside the relevant phase steps in canonical Markdown and appear in the generated HTML, Markdown, and JSON. The agent catalog links directly to each lesson. Phase 3 remains a preview.
 
+## Progress Workbench
+
+The [templates page](https://starter.devthomas.site/artifacts) provides a downloadable, self-contained HTML viewer. Learners use it locally beside their canonical progress JSON; the Starter Pack site does not accept or personalize itself with that data. Computer Setup assembles the viewer and serves it on loopback as soon as Python is ready. Viewer use is not a completion gate.
+
+Source lives in `src/workbench/`; `scripts/workbench.ts` builds the single HTML file with embedded styles, Geist font/license, vanilla JavaScript, guide labels, and validation compiled from the progress schema. Learners need no build tools. The public catalog contains guide metadata only and allows anonymous cross-origin reads. The template response is an attachment, with a shared-host guard as a fallback. `npm run check` includes focused Workbench contract tests. Agent lifecycle and optional Cloudflare Access hosting instructions are in `public/artifacts/progress-workbench/README.md` and `public/setup/workbench-publishing.md`.
+
 ## Icon artwork
 
 The site vendors a small SVG selection from Lucide (ISC/MIT), Lobe Icons (MIT), and Simple Icons (CC0). Provider marks identify their respective products. Original colors and shapes are preserved; names remain visible alongside decorative marks.

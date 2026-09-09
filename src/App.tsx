@@ -214,6 +214,11 @@ const resourceOrigin = "https://starter.devthomas.site";
 type Resource = readonly [path: string, label: string, description?: string];
 const templateResources: Resource[] = [
   [
+    "/artifacts/progress-workbench/README.md",
+    "Progress Workbench instructions",
+    "Your agent assembles and runs your local progress dashboard during setup.",
+  ],
+  [
     "/artifacts/progress/README.md",
     "Progress repository template",
     "Your agent uses this to keep a private record of completed work.",
@@ -852,6 +857,11 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   Your completed progress and private project notes stay in your
                   own storage.
                 </p>
+                <section className="field-lesson" aria-labelledby="workbench-download">
+                  <h2 id="workbench-download">See your progress on your own computer</h2>
+                  <p>Download the Workbench, then open it with your saved progress JSON. Your agent keeps the record up to date. This site stays a shared guide.</p>
+                  <a className="primary-action" href="/artifacts/progress-workbench/index.html" download="index.html">Download Progress Workbench <Icon name="download" size={18} /></a>
+                </section>
                 <ResourceList items={templateResources} />
                 <p>
                   <a className="text-link" href="/resources">

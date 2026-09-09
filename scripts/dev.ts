@@ -4,6 +4,7 @@ import path from "node:path";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { generateResources, loadContent, routes } from "./content";
+import { buildWorkbench } from "./workbench";
 
 const server = await createServer({
   server: { host: "127.0.0.1" },
@@ -15,6 +16,18 @@ server.middlewares.use(async (request, response, next) => {
       /\/$/,
       "",
     ) || "/";
+  if (
+    ["/artifacts/progress-workbench/index.html", "/artifacts/progress-workbench/catalog.json"].includes(pathname)
+  ) {
+    try {
+      await buildWorkbench(".generated", await loadContent());
+      response.setHeader("Content-Type", pathname.endsWith(".json") ? "application/json" : "text/html; charset=utf-8");
+      if (pathname.endsWith(".html")) response.setHeader("Content-Disposition", 'attachment; filename="index.html"');
+      else response.setHeader("Access-Control-Allow-Origin", "*");
+      response.end(await readFile(path.join(".generated", pathname)));
+    } catch (error) { next(error); }
+    return;
+  }
   if (
     /^\/(guide|about)\.(md|json)$/.test(pathname) ||
     /^\/help\/cloudflare-iphone\.(md|json)$/.test(pathname) ||

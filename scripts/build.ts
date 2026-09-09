@@ -4,6 +4,7 @@ import { build } from "vite";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import App from "../src/App";
+import { buildWorkbench } from "./workbench";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import {
@@ -18,6 +19,7 @@ import {
 const data = await loadContent();
 await build();
 await generateResources(data, "dist");
+await buildWorkbench("dist", data);
 const ajv = new Ajv2020({ allErrors: true });
 addFormats(ajv);
 for (const [schemaName, instancePaths] of [
@@ -91,7 +93,7 @@ await write(
 );
 await write(
   "dist/_headers",
-  "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n",
+  "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n\n/artifacts/progress-workbench/index.html\n  Content-Disposition: attachment; filename=\"index.html\"\n\n/artifacts/progress-workbench/\n  Content-Disposition: attachment; filename=\"index.html\"\n\n/artifacts/progress-workbench\n  Content-Disposition: attachment; filename=\"index.html\"\n\n/artifacts/progress-workbench/catalog.json\n  Access-Control-Allow-Origin: *\n",
 );
 
 // Resolve local resources and enforce the human-facing link contract before publishing.
@@ -179,7 +181,9 @@ for (const file of outputFiles.filter(
         invalidLinks.add(
           `${file}: raw resource link ${href} must be a copyable URL or an explicit download`,
         );
-      const external = /^https?:$/.test(url.protocol) && url.origin !== origin;
+      // Downloaded Workbench links leave the learner's local viewer, even for our guide.
+      const downloadableWorkbench = path.resolve(file) === path.resolve("dist/artifacts/progress-workbench/index.html");
+      const external = /^https?:$/.test(url.protocol) && (url.origin !== origin || (downloadableWorkbench && /^https?:/.test(href)));
       const opensNewTab = attrs.get("target")?.toLowerCase() === "_blank";
       if (external && !opensNewTab)
         invalidLinks.add(

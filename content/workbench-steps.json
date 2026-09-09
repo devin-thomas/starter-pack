@@ -1,0 +1,17 @@
+{
+  "get-started": { "title": "Start with your agent", "phase": "phase-1" },
+  "primary-ai-phone-app": { "title": "Your AI phone app", "phase": "phase-1" },
+  "authenticator": { "title": "Authenticator", "phase": "phase-1" },
+  "github-mobile": { "title": "GitHub on your phone", "phase": "phase-1" },
+  "core-accounts": { "title": "Your development accounts", "phase": "phase-1" },
+  "instant-build": { "title": "Make one app that works", "phase": "phase-1" },
+  "phase-1-deployment-extra-credit": { "title": "Publish your instant build (extra credit)", "phase": "phase-1" },
+  "computer-setup": { "title": "Set up your computer", "phase": "phase-2" },
+  "private-progress-repository": { "title": "Save progress to your private repository", "phase": "phase-2" },
+  "development-email": { "title": "Choose development email preferences", "phase": "phase-2" },
+  "progress-workbench": { "title": "Open your Progress Workbench", "phase": "phase-2" },
+  "verified-phone-connection": { "title": "Connect from your phone", "phase": "phase-2" },
+  "quick-build": { "title": "Shape and build your project", "phase": "phase-2" },
+  "live-deployment": { "title": "Verify your live project", "phase": "phase-2" },
+  "workbench-publishing-extra-credit": { "title": "Publish your private Workbench (extra credit)", "phase": "phase-2" }
+}

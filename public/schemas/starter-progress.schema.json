@@ -77,6 +77,11 @@
           "status"
         ],
         "properties": {
+          "phase": {
+            "enum": ["phase-1", "phase-2", "phase-3"]
+          },
+          "next_action": { "type": "string" },
+          "blocker": { "type": "string" },
           "status": {
             "enum": [
               "not_started",
@@ -102,6 +107,30 @@
     },
     "choices": {
       "type": "object",
+      "properties": {
+        "development_email": {
+          "type": "object",
+          "properties": {
+            "account_email": { "type": ["string", "null"], "format": "email" },
+            "notification_email": { "type": ["string", "null"], "format": "email" },
+            "access_email": { "type": ["string", "null"], "format": "email" },
+            "service_overrides": {
+              "type": "object",
+              "additionalProperties": { "type": "string", "format": "email" }
+            },
+            "notes": { "type": "array", "items": { "type": "string" } }
+          },
+          "additionalProperties": true
+        },
+        "workbench": {
+          "type": "object",
+          "properties": {
+            "learner_name": { "type": "string" },
+            "next_step_id": { "type": ["string", "null"] }
+          },
+          "additionalProperties": true
+        }
+      },
       "additionalProperties": true
     },
     "artifacts": {

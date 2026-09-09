@@ -1,0 +1,45 @@
+import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { build } from "esbuild";
+import { Ajv2020 } from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
+import standaloneCode from "ajv/dist/standalone/index.js";
+import type { SiteData } from "../src/App";
+import { validCatalog } from "../src/workbench/model";
+
+export async function buildWorkbench(output: string, data: SiteData) {
+  const base = `${output}/artifacts/progress-workbench`;
+  const steps = JSON.parse(await readFile("content/workbench-steps.json", "utf8"));
+  const version = JSON.parse(await readFile("public/skills/versions.json", "utf8")).current;
+  const catalog = {
+    version,
+    phases: data.phases.map(phase => ({ id: phase.id, title: phase.title, url: `https://starter.devthomas.site/phases/${phase.order}`, preview: phase.order === 3 })),
+    steps: Object.fromEntries(Object.entries(steps).map(([id, value]) => {
+      if (!value || typeof value !== "object" || !("phase" in value) || !("title" in value) || typeof value.title !== "string" || !["phase-1", "phase-2", "phase-3"].includes(String(value.phase))) throw new Error(`Invalid workbench step: ${id}`);
+      return [id, { title: value.title, phase: value.phase, url: `https://starter.devthomas.site/phases/${String(value.phase).slice(-1)}` }];
+    })),
+  };
+  if (!validCatalog(catalog)) throw new Error("Invalid Progress Workbench catalog");
+  const ajv = new Ajv2020({ code: { source: true }, allErrors: true });
+  addFormats(ajv);
+  const validate = ajv.compile(JSON.parse(await readFile("public/schemas/starter-progress.schema.json", "utf8")));
+  const validator = standaloneCode(ajv, validate);
+  const script = await build({
+    entryPoints: ["src/workbench/app.ts"], bundle: true, write: false, format: "iife", target: "es2022", minify: true,
+    define: { __WORKBENCH_CATALOG__: JSON.stringify(catalog) },
+    plugins: [{ name: "progress-schema", setup(builder) {
+      builder.onResolve({ filter: /^progress-validator$/ }, () => ({ path: "progress-validator", namespace: "schema" }));
+      builder.onLoad({ filter: /.*/, namespace: "schema" }, () => ({ contents: validator, resolveDir: process.cwd(), loader: "js" }));
+    } }],
+  });
+  const font = await readFile("node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2");
+  const license = await readFile("node_modules/@fontsource-variable/geist/LICENSE", "utf8");
+  const validatorLicenses = await Promise.all(["ajv", "ajv-formats"].map(async name => `${name}\n${await readFile(`node_modules/${name}/LICENSE`, "utf8")}`));
+  const css = (await readFile("src/workbench/style.css", "utf8")).replace("WORKBENCH_FONT", font.toString("base64"));
+  const html = (await readFile("src/workbench/index.html", "utf8"))
+    .replace("/* WORKBENCH_STYLE */", css)
+    .replace("/* WORKBENCH_SCRIPT */", script.outputFiles[0].text.replace(/<\/script/gi, "<\\/script"))
+    .replace("<!-- WORKBENCH_LICENSE -->", `<!-- Embedded font and validation code licenses\n${[license, ...validatorLicenses].join("\n\n").replace(/--/g, "- -")}\n-->`);
+  await mkdir(base, { recursive: true });
+  await writeFile(`${base}/index.html`, html);
+  await writeFile(`${base}/catalog.json`, JSON.stringify(catalog, null, 2));
+}
