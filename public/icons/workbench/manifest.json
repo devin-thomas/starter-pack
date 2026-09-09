@@ -1,0 +1,50 @@
+{
+  "revision": "b442632ee6fe6250bf24fef026e44244a33812c9",
+  "icons": [
+    {
+      "bytes": 330,
+      "source": "https://github.com/lucide-icons/lucide/blob/b442632ee6fe6250bf24fef026e44244a33812c9/icons/mail.svg",
+      "file": "mail.svg",
+      "sha256": "c77cc62335f29e9910c78767367da53bf8dc0bb31b2538b009b69e1887b3e788",
+      "svg_content_modified": false
+    },
+    {
+      "bytes": 408,
+      "source": "https://github.com/lucide-icons/lucide/blob/b442632ee6fe6250bf24fef026e44244a33812c9/icons/refresh-cw.svg",
+      "file": "refresh-cw.svg",
+      "sha256": "fe5399e58e8cdceb64d64a33f3a00942d62b7889b19f75bedfb4a1af65014eee",
+      "svg_content_modified": false
+    },
+    {
+      "bytes": 285,
+      "source": "https://github.com/lucide-icons/lucide/blob/b442632ee6fe6250bf24fef026e44244a33812c9/icons/clock.svg",
+      "file": "clock.svg",
+      "sha256": "e90d3294b13703b0db498272f8198c97aaa54aa73c02c2fe1d7bdf368992c863",
+      "svg_content_modified": false
+    },
+    {
+      "bytes": 257,
+      "source": "https://github.com/lucide-icons/lucide/blob/b442632ee6fe6250bf24fef026e44244a33812c9/icons/circle.svg",
+      "file": "circle.svg",
+      "sha256": "4d0929b6658bcdd7f2cb41c894d25b1aa6a9df58555377e181d49c12d5f44c9e",
+      "svg_content_modified": false
+    },
+    {
+      "bytes": 245,
+      "source": "https://github.com/lucide-icons/lucide/blob/b442632ee6fe6250bf24fef026e44244a33812c9/icons/minus.svg",
+      "file": "minus.svg",
+      "sha256": "4479adf4ac7effde850681e1409f02ea2df669b03edcf1f067c2ca07ac6d2e9e",
+      "svg_content_modified": false
+    },
+    {
+      "bytes": 347,
+      "source": "https://github.com/lucide-icons/lucide/blob/b442632ee6fe6250bf24fef026e44244a33812c9/icons/skip-forward.svg",
+      "file": "skip-forward.svg",
+      "sha256": "2b18773c6802bf4a77388d7361e5495bc3c11157f7532999f51b97635ac8a0c3",
+      "svg_content_modified": false
+    }
+  ],
+  "license": "ISC; Feather-derived icons MIT (full notices in ../interface/LICENSE-lucide.txt)",
+  "collection": "Lucide",
+  "schema_version": 1
+}

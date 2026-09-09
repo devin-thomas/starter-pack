@@ -12,10 +12,10 @@
 </head>
 <body>
 <a class="skip-link" href="#workspace">Skip to progress</a>
-<header><a href="https://starter.devthomas.site/" target="_blank" rel="noopener noreferrer">Starter Pack<span class="sr-only"> (opens in a new tab)</span></a><span id="workbench-title">Progress Workbench</span><span class="readonly">Read only</span></header>
+<header><a href="https://starter.devthomas.site/" target="_blank" rel="noopener noreferrer"><span class="icon" data-icon="blocks" aria-hidden="true"></span>Starter Pack<span class="sr-only"> (opens in a new tab)</span></a><span id="workbench-title">Progress Workbench</span><span class="readonly"><span class="icon" data-icon="lock-keyhole" aria-hidden="true"></span>Read only</span></header>
 <div class="toolbar" id="file-tools">
-  <label class="button primary" for="progress-file">Open progress file<input id="progress-file" type="file" accept=".json,application/json"></label>
-  <button id="refresh" type="button">Refresh progress</button>
+  <label class="button primary" for="progress-file"><span class="icon" data-icon="file-json" aria-hidden="true"></span>Open progress file<input id="progress-file" type="file" accept=".json,application/json"></label>
+  <button id="refresh" type="button"><span class="icon" data-icon="refresh-cw" aria-hidden="true"></span>Refresh progress</button>
   <span id="source">Select starter-progress.json. It stays in this browser.</span>
 </div>
 <p id="notice" class="notice" role="status" aria-live="polite"></p>
@@ -23,17 +23,17 @@
 <div id="drop-zone" class="layout">
   <nav id="phases" aria-label="Progress by phase"></nav>
   <main id="workspace" tabindex="-1">
-    <section id="welcome" class="welcome"><span class="eyebrow">YOUR WORK, IN VIEW</span><h1>Pick up where you left off.</h1><p>Open or drop your saved progress file to see your next step, setup, and projects.</p><p class="muted">Your agent updates the JSON. This page shows what it has recorded.</p></section>
+    <section id="welcome" class="welcome"><span class="icon icon-badge" data-icon="list-checks" aria-hidden="true"></span><span class="eyebrow">YOUR WORK, IN VIEW</span><h1>Pick up where you left off.</h1><p>Open or drop your saved progress file to see your next step, setup, and projects.</p><p class="muted">Your agent updates the JSON. This page shows what it has recorded.</p></section>
     <div id="progress" hidden>
-      <div class="workspace-heading"><div><span id="phase-label" class="eyebrow"></span><h1 id="phase-title"></h1></div><button id="copy-summary" type="button">Copy summary</button></div>
+      <div class="workspace-heading"><div><span id="phase-label" class="eyebrow"></span><h1 id="phase-title"></h1></div><button id="copy-summary" type="button"><span class="icon" data-icon="clipboard" aria-hidden="true"></span>Copy summary</button></div>
       <p id="updated" class="muted"></p>
       <section id="current" class="current" aria-labelledby="current-title"></section>
-      <div class="section-heading"><h2>Recorded steps</h2><span id="step-count" class="muted"></span></div>
+      <div class="section-heading"><h2><span class="icon" data-icon="list-checks" aria-hidden="true"></span>Recorded steps</h2><span id="step-count" class="muted"></span></div>
       <div id="steps" class="steps"></div>
-      <section id="unassigned" hidden><h2>Other recorded steps</h2><p class="muted">These steps do not have a phase recorded yet.</p><div id="other-steps" class="steps"></div></section>
+      <section id="unassigned" hidden><h2><span class="icon" data-icon="file-text" aria-hidden="true"></span>Other recorded steps</h2><p class="muted">These steps do not have a phase recorded yet.</p><div id="other-steps" class="steps"></div></section>
     </div>
   </main>
-  <aside id="context" aria-label="Your setup and projects"><section><h2>Your setup</h2><p class="muted">Your saved setup and project links will appear here.</p></section></aside>
+  <aside id="context" aria-label="Your setup and projects"><section><h2><span class="icon icon-badge" data-icon="settings-2" aria-hidden="true"></span>Your setup</h2><p class="muted">Your saved setup and project links will appear here.</p></section></aside>
 </div>
 <footer><span id="catalog-state">Bundled guide labels · available offline</span><span id="pack-version"></span></footer>
 <dialog id="copy-dialog"><h2>Copy this text</h2><textarea id="copy-fallback" readonly aria-label="Text to copy"></textarea><button id="close-copy" type="button">Close</button></dialog>

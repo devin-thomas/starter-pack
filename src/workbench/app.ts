@@ -1,4 +1,5 @@
 import validate from "progress-validator";
+import { icon, type IconName, phaseIcons, providerIcon, statusIcons } from "./icons";
 import { type Catalog, type Phase, type Progress, type Step, currentStep, humanize, phaseFor, record, safeLink, statuses, summary, validCatalog } from "./model";
 
 declare const __WORKBENCH_CATALOG__: Catalog;
@@ -27,14 +28,16 @@ function node<K extends keyof HTMLElementTagNameMap>(tag: K, text?: string, clas
 }
 function link(text: string, url: string) {
   const result = node("a", text);
+  result.append(icon("arrow-up-right"));
   result.href = url;
   result.target = "_blank";
   result.rel = "noopener noreferrer";
   result.setAttribute("aria-label", `${text} (opens in a new tab)`);
   return result;
 }
-function action(text: string, callback: () => void) {
+function action(text: string, callback: () => void, symbol?: IconName) {
   const button = node("button", text);
+  if (symbol) button.prepend(icon(symbol));
   button.type = "button";
   button.addEventListener("click", callback);
   return button;
@@ -60,11 +63,19 @@ function rows(target: HTMLElement, values: [string, unknown][]) {
   const list = node("dl");
   for (const [label, value] of values) {
     if (value === undefined || value === null || value === "") continue;
-    list.append(node("dt", label));
+    const term = node("dt", label);
+    const rowIcons: Record<string, IconName> = { Harness: "terminal", Computer: "monitor", Device: "smartphone", "Remote access": "route", Account: "mail", Notifications: "mail", "Cloudflare Access": "shield-check", Repository: "folder-git-2", "Live url": "rocket", Path: "file-text", "Saved reference": "file-text" };
+    const deviceIcon = label === "Device" && typeof value === "string" && /computer|desktop|laptop/i.test(value) ? "monitor" : undefined;
+    term.prepend(icon(deviceIcon ?? providerIcon(label) ?? rowIcons[label] ?? "file-text"));
+    list.append(term);
     const cell = node("dd");
     if (typeof value === "string") {
       const url = safeLink(value);
       cell.append(url ? link(value, url) : node("span", value));
+      if (label === "Harness") {
+        const brand = providerIcon(value);
+        if (brand) { cell.prepend(icon(brand, true)); cell.classList.add("provider"); }
+      }
     } else if (typeof value === "boolean") cell.textContent = value ? "Yes" : "No";
     else if (typeof value === "number") cell.textContent = String(value);
     else cell.textContent = JSON.stringify(value, null, 2);
@@ -75,7 +86,11 @@ function rows(target: HTMLElement, values: [string, unknown][]) {
 function stepCard(id: string, step: Step) {
   const card = node("article", undefined, "step");
   const heading = node("div", undefined, "step-heading");
-  heading.append(node("h3", title(id)), node("span", statuses[step.status], `status ${step.status}`));
+  const stepTitle = node("h3", title(id));
+  stepTitle.prepend(icon(stepIcon(id), true));
+  const status = node("span", statuses[step.status], `status ${step.status}`);
+  status.prepend(icon(statusIcons[step.status]));
+  heading.append(stepTitle, status);
   card.append(heading);
   if (step.updated_at) card.append(node("p", date(step.updated_at), "muted"));
   for (const note of step.notes ?? []) card.append(node("p", note));
@@ -83,11 +98,26 @@ function stepCard(id: string, step: Step) {
   if (step.blocker) card.append(node("p", `Blocker: ${step.blocker}`, "blocker"));
   return card;
 }
+function stepIcon(id: string): IconName {
+  if (/computer|setup/.test(id)) return "monitor";
+  if (/phone|mobile/.test(id)) return "smartphone";
+  if (/repo|github/.test(id)) return "folder-git-2";
+  if (/deploy|publish|domain/.test(id)) return "rocket";
+  if (/workbench|progress/.test(id)) return "list-checks";
+  if (/build/.test(id)) return "blocks";
+  return "file-text";
+}
+function sectionTitle(text: string, symbol: IconName) {
+  const heading = node("h2", text);
+  heading.prepend(icon(symbol, true));
+  return heading;
+}
 function render() {
   const rail = element("phases");
   rail.replaceChildren();
   for (const phase of catalog.phases) {
     const button = action("", () => { selectedPhase = phase.id; render(); element("phase-title").focus(); });
+    button.append(icon(phaseIcons[phase.id], true));
     button.append(node("span", phase.id.replace("-", " "), "eyebrow"), node("span", phase.title, "phase-name"));
     const recorded = Object.entries(progress?.steps ?? {}).filter(([id, step]) => phaseFor(id, step, catalog) === phase.id);
     const complete = recorded.filter(([, step]) => step.status === "completed").length;
@@ -106,8 +136,11 @@ function render() {
   const phase = catalog.phases.find(item => item.id === selectedPhase) ?? catalog.phases[0];
   element("phase-label").textContent = phase.preview ? "PHASE 3 · PREVIEW" : phase.id.replace("-", " ");
   element("phase-title").textContent = phase.title;
+  element("phase-title").prepend(icon(phaseIcons[phase.id], true));
+  element("workspace").dataset.phase = phase.id;
   element("phase-title").tabIndex = -1;
   element("updated").textContent = `Progress saved ${date(progress.updated_at)}`;
+  element("updated").prepend(icon("clock"));
   element("pack-version").textContent = `Progress: ${progress.starter_pack_version} · Guide: ${catalog.version}`;
   const versionNotice = element("version-notice");
   versionNotice.hidden = progress.starter_pack_version === catalog.version;
@@ -130,13 +163,14 @@ function render() {
     heading.textContent = progress.phase.status === "completed" ? "Phase recorded as complete" : "Choose the next step with your agent";
     current.append(heading, node("p", "Your saved record does not name an unfinished step to continue."));
   }
+  heading.prepend(icon(phase.id === progress.phase.current && entry ? stepIcon(entry[0]) : phaseIcons[phase.id], true));
   const actions = node("div", undefined, "actions");
   actions.append(action("Ask my agent", () => {
     if (!progress) return;
     const next = currentStep(progress, catalog);
     const details = next ? `Current recorded step: ${title(next[0])}.\n${next[1].next_action ?? ""}\n${next[1].blocker ? `Blocker: ${next[1].blocker}` : ""}` : "Help me choose the next action from my saved progress.";
     void copy(`Continue my Starter Pack from starter-progress.json, saved ${progress.updated_at}.\n${details}\nRead the current file before acting, preserve completed work, and update it as we go. Refer back to my local Progress Workbench to show the result.`);
-  }), link("Open phase guidance", phase.url));
+  }, "terminal"), link("Open phase guidance", phase.url));
   current.append(actions);
   const steps = element("steps");
   steps.replaceChildren();
@@ -151,25 +185,27 @@ function render() {
   const context = element("context");
   context.replaceChildren();
   const setup = node("section");
-  setup.append(node("h2", "Your setup"));
+  setup.append(sectionTitle("Your setup", "settings-2"));
   const environment = progress.environment ?? {};
   rows(setup, [["Harness", environment.harness], ["Computer", environment.os], ["Device", environment.device], ["Remote access", environment.remote_access_ready === undefined ? "Not recorded" : environment.remote_access_ready ? "Recorded as ready" : "Not ready"]]);
   context.append(setup);
   if (record(progress.choices?.development_email)) {
     const email = node("section");
-    email.append(node("h2", "Development email"));
+    email.append(sectionTitle("Development email", "mail"));
     const prefs = progress.choices.development_email;
     rows(email, [["Account", prefs.account_email], ["Notifications", prefs.notification_email], ["Cloudflare Access", prefs.access_email]]);
     if (record(prefs.service_overrides)) rows(email, Object.entries(prefs.service_overrides).map(([key,value]) => [humanize(key),value]));
     context.append(email);
   }
   const builds = node("section");
-  builds.append(node("h2", "Your projects and files"));
+  builds.append(sectionTitle("Your projects and files", "folder-git-2"));
   const artifacts = Object.entries(progress.artifacts ?? {}).filter(([id]) => id !== "progress_workbench");
   if (!artifacts.length) builds.append(node("p", "No project links recorded yet.", "muted"));
   for (const [id, value] of artifacts) {
     const artifact = node("div", undefined, "artifact");
-    artifact.append(node("h3", record(value) && typeof value.name === "string" ? value.name : humanize(id)));
+    const artifactTitle = node("h3", record(value) && typeof value.name === "string" ? value.name : humanize(id));
+    artifactTitle.prepend(icon("blocks"));
+    artifact.append(artifactTitle);
     rows(artifact, record(value) ? Object.entries(value).filter(([key]) => key !== "name").map(([key,val]) => [humanize(key),val]) : [["Saved reference", value]]);
     builds.append(artifact);
   }

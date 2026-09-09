@@ -1,6 +1,6 @@
 # Progress Workbench
 
-Version: 0.1.0. A downloadable, read-only view of the learner's `starter-progress.json`. The Starter Pack website remains a shared guide; it never loads or personalizes itself with learner progress. The learner's agent writes the canonical JSON and uses the local Workbench as its default visual reference. No Starter Pack account, backend, browser storage, npm, or learner build step is needed.
+Version: 0.1.1. A downloadable, read-only view of the learner's `starter-progress.json`. The Starter Pack website remains a shared guide; it never loads or personalizes itself with learner progress. The learner's agent writes the canonical JSON and uses the local Workbench as its default visual reference. No Starter Pack account, backend, browser storage, npm, or learner build step is needed.
 
 ## Assemble at the start of Computer Setup
 
@@ -75,8 +75,8 @@ Before optional Cloudflare Access setup, propose the saved `access_email`, other
 
 ## Optional customization and publishing
 
-Personalize the Workbench only when it helps display real project information and the learner wants it. Preserve canonical JSON, phase navigation, read-only behavior, and the data contract. A learner/project name or useful artifact links may be enough. Never customize the shared Starter Pack site for an individual learner.
+Personalize the Workbench only when it helps display real project information and the learner wants it. Preserve canonical JSON, phase navigation, read-only behavior, and the data contract. Keep the icon-led layout: prominent phase badges, recognizable step and status icons, labeled controls, and icons for setup, email, and project sections. Keep visible text beside icons and preserve accessible names. Reuse the embedded set when customizing; do not introduce a network dependency for icons. A learner/project name or useful artifact links may be enough. Never customize the shared Starter Pack site for an individual learner.
 
 Workbench publishing is optional extra credit and lower priority than publishing the learner's instant build. Ask plainly before creating a separate hosting repository or an externally reachable site. Follow the [Cloudflare Access publishing recipe](https://starter.devthomas.site/setup/workbench-publishing.md) for deliberate account/domain selection, confirmed email access, protected placeholder verification, and allowlisted snapshot deployment. Never upload the private repository or canonical JSON to a public static host by default. A hosted snapshot must be refreshed deliberately; the local JSON stays canonical.
 
-The embedded Geist font retains its SIL Open Font License inside the HTML. The artifact has no runtime dependency downloads or build requirements.
+The HTML embeds 35 curated SVG icons from the Starter Pack site and its Lucide collection, including provider marks when a saved harness is recognized. Icons require no extra files or network access. Original color marks retain their colors; interface icons follow the current section color. The build verifies source hashes and includes Lucide, Lobe Icons, and Simple Icons licenses and provenance in the download. The embedded Geist font retains its SIL Open Font License inside the HTML. The artifact has no runtime dependency downloads or build requirements.
