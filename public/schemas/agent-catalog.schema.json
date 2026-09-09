@@ -6,7 +6,11 @@
   "required": [
     "version",
     "updated_at",
-    "resources"
+    "resources",
+    "skills",
+    "resource_links",
+    "progress",
+    "workbench"
   ],
   "properties": {
     "version": {
@@ -38,21 +42,35 @@
             "type": "string"
           },
           "markdown": {
-            "type": "string"
+            "$ref": "#/$defs/resourceUrl"
           },
           "json": {
-            "type": "string"
+            "$ref": "#/$defs/resourceUrl"
           },
           "lessons": {
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["id", "title", "html"],
+              "required": [
+                "id",
+                "title",
+                "html"
+              ],
               "additionalProperties": false,
               "properties": {
-                "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-                "title": { "type": "string", "minLength": 1 },
-                "html": { "type": "string", "pattern": "^/phases/[123]#[a-z0-9-]+$" }
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9-]+$"
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "html": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https://starter\\.devthomas\\.site/phases/[123]#[a-z0-9-]+$"
+                }
               }
             }
           },
@@ -61,9 +79,96 @@
             "items": {
               "type": "string"
             }
+          },
+          "html": {
+            "$ref": "#/$defs/resourceUrl"
           }
         }
       }
+    },
+    "recommendations": {
+      "$ref": "#/$defs/resourceUrl"
+    },
+    "artifacts": {
+      "$ref": "#/$defs/resourceUrl"
+    },
+    "resource_links": {
+      "$ref": "#/$defs/resourceUrl"
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "version",
+          "current",
+          "versioned"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "current": {
+            "$ref": "#/$defs/resourceUrl"
+          },
+          "versioned": {
+            "$ref": "#/$defs/resourceUrl"
+          }
+        }
+      }
+    },
+    "workbench": {
+      "type": "object",
+      "required": [
+        "download",
+        "instructions",
+        "catalog"
+      ],
+      "properties": {
+        "download": {
+          "$ref": "#/$defs/resourceUrl"
+        },
+        "instructions": {
+          "$ref": "#/$defs/resourceUrl"
+        },
+        "catalog": {
+          "$ref": "#/$defs/resourceUrl"
+        }
+      }
+    },
+    "progress": {
+      "type": "object",
+      "required": [
+        "instructions",
+        "template",
+        "schema",
+        "example"
+      ],
+      "properties": {
+        "instructions": {
+          "$ref": "#/$defs/resourceUrl"
+        },
+        "template": {
+          "$ref": "#/$defs/resourceUrl"
+        },
+        "schema": {
+          "$ref": "#/$defs/resourceUrl"
+        },
+        "example": {
+          "$ref": "#/$defs/resourceUrl"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "resourceUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://starter\\.devthomas\\.site/"
     }
   }
 }

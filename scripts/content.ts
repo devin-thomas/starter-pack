@@ -293,13 +293,13 @@ export async function generateResources(data: SiteData, output: string) {
     kind: "phase",
     title: phase.title,
     summary: phase.summary,
-    html: `/phases/${phase.order}`,
-    markdown: `/phases/${phase.order}.md`,
-    json: `/phases/${phase.order}.json`,
+    html: `${origin}/phases/${phase.order}`,
+    markdown: `${origin}/phases/${phase.order}.md`,
+    json: `${origin}/phases/${phase.order}.json`,
     lessons: phase.outline.filter((item) => item.lesson).map((item) => ({
       id: item.id,
       title: item.labelHtml,
-      html: `/phases/${phase.order}#${item.id}`,
+      html: `${origin}/phases/${phase.order}#${item.id}`,
     })),
   }));
   await write(
@@ -312,17 +312,24 @@ export async function generateResources(data: SiteData, output: string) {
           id: "cloudflare-iphone", kind: "help",
           title: "Deploy a static site to Cloudflare from your iPhone",
           summary: "Optional, agent-neutral static file upload using Files and Safari, with ten real screenshots.",
-          html: "/help/cloudflare-iphone",
-          markdown: "/help/cloudflare-iphone.md",
-          json: "/help/cloudflare-iphone.json",
+          html: `${origin}/help/cloudflare-iphone`,
+          markdown: `${origin}/help/cloudflare-iphone.md`,
+          json: `${origin}/help/cloudflare-iphone.json`,
         }],
-        skills: skillVersions.skills,
-        recommendations: "/recommendations.json",
-        artifacts: "/artifacts/",
+        skills: skillVersions.skills.map((skill: { id: string; version: string; current: string; versioned: string }) => ({ ...skill, current: `${origin}${skill.current}`, versioned: `${origin}${skill.versioned}` })),
+        resource_links: `${origin}/agent/resource-links.md`,
+        progress: {
+          instructions: `${origin}/artifacts/progress/README.md`,
+          template: `${origin}/artifacts/progress/starter-progress.json`,
+          schema: `${origin}/schemas/starter-progress.schema.json`,
+          example: `${origin}/artifacts/progress/starter-progress.example.json`,
+        },
+        recommendations: `${origin}/recommendations.json`,
+        artifacts: `${origin}/artifacts/`,
         workbench: {
-          download: "/artifacts/progress-workbench/index.html",
-          instructions: "/artifacts/progress-workbench/README.md",
-          catalog: "/artifacts/progress-workbench/catalog.json",
+          download: `${origin}/artifacts/progress-workbench/index.html`,
+          instructions: `${origin}/artifacts/progress-workbench/README.md`,
+          catalog: `${origin}/artifacts/progress-workbench/catalog.json`,
         },
       },
       null,
@@ -339,6 +346,6 @@ export async function generateResources(data: SiteData, output: string) {
   );
   await write(
     `${output}/llms.txt`,
-    `# Starter Pack\n\nA guide by Devin Thomas at Uppercut Labs. Fetch only the resource needed for the current action.\n\n- [Start](${origin}/agent/start.md)\n- [Catalog](${origin}/agent/catalog.json)\n${entries.map((entry) => `- [${entry.title}](${origin}${entry.markdown})`).join("\n")}\n- [Recommendations](${origin}/recommendations.json)\n`,
+    `# Starter Pack\n\nA guide by Devin Thomas at Uppercut Labs. Fetch only the resource needed for the current action.\n\n- [Start](${origin}/agent/start.md)\n- [Catalog](${origin}/agent/catalog.json)\n${entries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n- [Recommendations](${origin}/recommendations.json)\n`,
   );
 }

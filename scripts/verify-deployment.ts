@@ -60,7 +60,7 @@ const start = await read("/agent/start.md", /text\/plain/);
 assertGoogleResourceAccess(await read("/robots.txt", /text\/plain/));
 const packet = await read("/agent/phase-1-packet.txt", /text\/plain/);
 if (packet !== await readFile("dist/agent/phase-1-packet.txt", "utf8")) throw new Error("Instruction packet differs from the built curriculum.");
-for (const route of ["/prompts/get-started.txt", "/agent/start.md", "/skills/starter-pack/current/SKILL.md"])
+for (const route of ["/prompts/get-started.txt", "/agent/start.md", "/agent/resource-links.md", "/skills/starter-pack/current/SKILL.md"])
   if (await read(route, /text\/plain/) !== await readFile(`dist${route}`, "utf8")) throw new Error(`Live startup instructions differ: ${route}`);
 for (const route of ["/phases/1.md", "/artifacts/progress/README.md"])
   await read(route, /text\/plain/);
