@@ -116,5 +116,5 @@ if (mode !== "--prepare") {
     const result = await get(route);
     if (result.status !== 404) throw new Error(`Excluded mirror path ${route} returned ${result.status}.`);
   }
-  console.log(`Verified ${origin}${packetRoute}: ${packet.length} exact bytes, SHA-256 ${sha256}, plain text/no-transform, manifest/index/robots, and ${excluded.length} excluded paths. Gemini/Spark acceptance is separate.`);
+  console.log(`Verified ${origin}${packetRoute}: ${packet.length} exact bytes, SHA-256 ${sha256}, plain text/no-transform, manifest/index/robots, and ${excluded.length} excluded paths. Gemini acceptance is separate.`);
 }

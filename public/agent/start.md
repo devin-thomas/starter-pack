@@ -1,6 +1,6 @@
 # Start or resume Starter Pack
 
-In Gemini/Spark chat, stop and show https://starter.devthomas.site/recommendations. These chats are not supported for this pack.
+In Gemini chat, stop and show https://starter.devthomas.site/recommendations. Gemini chat is not supported for this pack.
 
 Canonical origin: https://starter.devthomas.site. Resource version: 0.1.0.
 

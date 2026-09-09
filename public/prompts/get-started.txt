@@ -1,6 +1,6 @@
 Help me start or resume Devin Thomas's Starter Pack.
 
-In Gemini/Spark chat, stop and show https://starter.devthomas.site/recommendations.
+In Gemini chat, stop and show https://starter.devthomas.site/recommendations.
 
 Read https://starter.devthomas.site/agent/start.md and guide me one step at a time. Preserve any progress I provide.
 

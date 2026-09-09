@@ -53,4 +53,4 @@ For a Git-based hosting route, [Vercel's GitHub integration](https://vercel.com/
 5. If saving to GitHub was chosen, verify the repository, branch and source commit separately. Direct file deployment does not automatically create a GitHub backup or configure future Git deployments.
 6. Save nonsecret route, consent, link, source location when applicable, and checked versus reported results under `phase-1-deployment-extra-credit`. Record unresolved public access or setup as deferred with a resume point; never mark a login page as a working public app.
 
-Gemini and Spark are not supported companions for this pack. Use Claude for Phase 1; Antigravity remains the Google computer route. Manual Cloudflare upload is agent-neutral.
+Gemini is not a supported companion for this pack. Free Claude Sonnet is a Phase 1 workaround for Antigravity users or those with untested or unsupported harnesses; Antigravity remains the Google computer route. Manual Cloudflare upload is agent-neutral.

@@ -46,7 +46,7 @@
     "status": "recommended",
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-08",
-    "reason": "Antigravity is a Phase 2 computer option, especially if you already use Google services. Check what your plan includes. Gemini and Spark are not supported companions for this pack; Google AI Studio remains an instant builder.",
+    "reason": "Antigravity is a Phase 2 computer option, especially if you already use Google services. Check what your plan includes. Gemini is not a supported companion for this pack; Google AI Studio remains an instant builder.",
     "url": "https://one.google.com/about/google-ai-plans/",
     "phase": "phase-1",
     "kind": "recommendation"
@@ -59,7 +59,7 @@
     "status": "recommended",
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-09",
-    "reason": "Required for Phase 1: a signed-in AI companion on your phone that can send a message. This is separate from your development harness. ChatGPT, Claude, and Cursor are explicitly supported. Gemini and Spark are not supported; other companions may vary. My default is Claude with Sonnet 4.6 at Medium effort when available; the free allowance has been enough in my testing.",
+    "reason": "Required: a signed-in companion on your phone, separate from your development harness.\n\nSupported: ChatGPT, Claude, and Cursor. Gemini is not supported; other companions may vary.\n\nFor Antigravity users or those with untested or unsupported harnesses, free Claude Sonnet is a Phase 1 workaround. Sonnet 4.6 at Medium effort has been enough within the free allowance in my testing; use those settings when available.",
     "url": "https://starter.devthomas.site/phases/1#prepare-your-apps-and-accounts",
     "phase": "phase-1",
     "kind": "recommendation"

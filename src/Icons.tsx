@@ -112,12 +112,12 @@ export function BrandIcon({
 export function AgentBrands() {
   return (
     <div className="agent-destinations">
-      <p>Use this prompt in your agent</p>
+      <p>Supported chat agents</p>
       <ul className="agent-brands" aria-label="Agents for your starting prompt">
-        {commonAgents.map(({ name, label }) => (
+        {commonAgents.filter(({ name }) => name !== "antigravity").map(({ name, label }) => (
           <li key={name}>
             <BrandIcon name={name} />
-            <span>{label}</span>
+            <strong>{label}</strong>
           </li>
         ))}
       </ul>

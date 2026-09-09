@@ -90,22 +90,12 @@ function Prompt({
         }
         download={phase2 ? "/prompts/phase-2.txt" : "/prompts/get-started.txt"}
       />
-      {!phase2 && (
-        <div className="prompt-explainer">
-          <h3>What happens next?</h3>
-          <p>
-            Your agent reads the pack and helps you take one step at a time. It
-            asks before changing your computer.
-          </p>
-        </div>
-      )}
       {!phase2 && instructionPacket && (
-        <div className="prompt-explainer">
-          <h3><Icon name="file-text" size={19} /> Chat can't open the guide?</h3>
-          <p>Copy the Phase 1 instructions into your chat, or download the packet and attach it.</p>
+        <details className="prompt-explainer packet-recovery">
+          <summary>Chat can't open the guide?</summary>
           <CopyText text={instructionPacket} label="Phase 1 instruction packet" buttonLabel="Copy instruction packet" copiedLabel="Instruction packet copied" instruction="Paste into the same chat. Keep your existing progress." download="/agent/phase-1-packet.txt" />
           <a className="text-link" href="/agent/phase-1-packet.txt" download="starter-pack-phase-1.txt"><Icon name="download" size={17} /> Download instruction packet (.txt)</a>
-        </div>
+        </details>
       )}
     </section>
   );
@@ -387,7 +377,17 @@ function RecommendationCard({
           <Icon name={internal ? "arrow-right" : "arrow-up-right"} size={17} />
         </ExternalLink>
       </h2>
-      <p>{item.reason}</p>
+      {item.reason.split("\n\n").map((paragraph, index) => (
+        <p key={index}>
+          {item.id === "primary-ai-phone-app"
+            ? paragraph.split(/(ChatGPT|Claude|Cursor)/g).map((part, partIndex) =>
+                /^(ChatGPT|Claude|Cursor)$/.test(part)
+                  ? <strong key={partIndex}>{part}</strong>
+                  : part,
+              )
+            : paragraph}
+        </p>
+      ))}
       <div className="recommendation-meta">
         <span>Recommended by {item.recommended_by || "Devin Thomas"}</span>
         <span>Checked {item.checked_at}</span>

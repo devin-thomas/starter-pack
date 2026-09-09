@@ -419,6 +419,10 @@ h3 {
   font-size: 13px;
   color: var(--muted);
 }
+.packet-recovery > summary {
+  cursor: pointer;
+  color: var(--text);
+}
 .prompt-explainer h3 {
   color: var(--text);
   font-size: 13px;
@@ -1190,9 +1194,9 @@ h3 {
   font-size: 13px;
 }
 .agent-brands {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
   list-style: none;
   margin: 0;
   padding: 0 0 18px;
