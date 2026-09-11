@@ -1,8 +1,11 @@
 {
   "manifest_version": 1,
   "id": "starter-pack-computer-setup",
-  "skill_version": "0.1.3",
-  "updated_at": "2026-09-09",
+  "skill_version": "0.2.0",
+  "updated_at": "2026-09-10",
+  "requirements": "https://starter.devthomas.site/agent/requirements.json",
+  "requirements_revision": "2026-09-10",
+  "requirements_role": "canonical_phase_gates; this manifest specifies setup implementation and evidence only",
   "workbench": {
     "role": "default_local_visualization",
     "phase_gate": false,
@@ -33,6 +36,8 @@
     "visible_http_poll_seconds": 5,
     "file_mode_reload": "choose_saved_json_again",
     "optional_publishing": "https://starter.devthomas.site/setup/workbench-publishing.md",
+    "optional_private_access": "https://starter.devthomas.site/setup/private-workbench.md",
+    "remote_share_boundary": "isolated_allowlisted_snapshot_with_approved_progress_projection",
     "publishing_priority": "after_instant_app_deployment_extra_credit"
   },
   "development_email": {
@@ -42,6 +47,9 @@
     "allow_same_account_and_notification_email": true,
     "allow_service_overrides": true,
     "allow_unanswered": true,
+    "phase_gate": false,
+    "service_auth_path": "choices.service_auth",
+    "legacy_non_email_overrides": "preserve_as_sign_in_notes",
     "change_git_identity": false,
     "infer_from_git_author": false,
     "confirm_access_email_separately": true
@@ -56,13 +64,21 @@
     "optional_packs_separate_approval": true,
     "pause_for_auth_admin_restart": true,
     "verify_capabilities": true,
-    "never_store_secrets": true
+    "never_store_secrets": true,
+    "prefer_healthy_existing_capability": true,
+    "compare_supported_binary_and_package_manager_routes": true,
+    "avoid_source_build_when_supported_binary_exists": true,
+    "package_manager_is_not_a_gate_when_supported_direct_tools_suffice": true,
+    "managed_recoverable_installer_jobs_only": true,
+    "no_conflicting_parallel_installers": true,
+    "preserve_profiles_and_environment": true,
+    "git_privacy_preflight_before_first_push": true
   },
   "platforms": {
     "windows": {
       "support": "first_class",
       "target": "Windows 11",
-      "package_manager_capability": "system-package-manager",
+      "preferred_install_support": "verified_winget_or_supported_vendor_binary",
       "extra_required": [
         "powershell-7"
       ],
@@ -71,7 +87,7 @@
     "macos": {
       "support": "first_class",
       "target": "current macOS",
-      "package_manager_capability": "homebrew",
+      "preferred_install_support": "healthy_homebrew_or_supported_vendor_binary",
       "extra_required": [],
       "adapter": "https://starter.devthomas.site/setup/macos.md"
     },
@@ -84,8 +100,8 @@
   },
   "required_capabilities": [
     {
-      "id": "system-package-manager",
-      "version_policy": "current_supported"
+      "id": "installation-support",
+      "verification": "trusted_supported_install_update_and_repair_route_for_missing_tools; no named_package_manager_gate"
     },
     {
       "id": "selected-agentic-harness",
@@ -124,7 +140,7 @@
     },
     {
       "id": "python",
-      "provisioned_or_managed_by": "uv",
+      "provisioned_or_discovered_by": "uv; reuse_healthy_existing_interpreter",
       "version_policy": "current_stable"
     },
     {
@@ -148,7 +164,12 @@
       "version_policy": "system_or_current"
     },
     {
-      "id": "tailscale-desktop",
+      "id": "cli-contexts",
+      "verification": "cli_verification; per-tool ordinary resolution in each applicable execution context"
+    },
+    {
+      "id": "tailscale-computer",
+      "legacy_capability_ids": ["tailscale-desktop"],
       "version_policy": "current_stable"
     },
     {
@@ -156,12 +177,30 @@
       "version_policy": "current_stable"
     },
     {
+      "id": "private-network-identity",
+      "verification": "remote_access.checks.device_identity; intended devices and permitted private connectivity confirmed"
+    },
+    {
+      "id": "tailscale-network",
+      "verification": "derived from registry.steps.tailscale-network.completion; never an independent summary-flag gate"
+    },
+    {
+      "id": "phone-to-computer-file",
+      "verification": "benign_file_received_in_actual_client_destination_and_contents_confirmed",
+      "instructions": "https://starter.devthomas.site/setup/file-transfer.md"
+    },
+    {
+      "id": "computer-to-phone-file",
+      "verification": "returned_benign_file_opened_on_phone_and_contents_confirmed",
+      "instructions": "https://starter.devthomas.site/setup/file-transfer.md"
+    },
+    {
       "id": "remote-interaction-layer",
       "selection": "best_fit"
     },
     {
       "id": "verified-phone-connection",
-      "verification": "learner_performs_one_successful_connection"
+      "verification": "phone_action_reaches_intended_running_computer_harness; independent_of_file_transfer"
     }
   ],
   "recommended_non_gate": [
@@ -194,6 +233,10 @@
       ],
       "install_order": "last",
       "restart_aware": true,
+      "phase_gate": false,
+      "verify_current_license_and_host_suitability": true,
+      "rosetta": "only_if_actual_architecture_and_selected_feature_require_it_with_approval",
+      "instructions": "https://starter.devthomas.site/setup/tool-troubleshooting.md",
       "excluded": [
         "orbstack",
         "legacy-docker-compose"
@@ -237,6 +280,35 @@
     }
   },
   "state_path": "setup/computer.json",
+  "cli_verification": {
+    "applies_to": "all_required_and_later_selected_system_or_user_CLIs",
+    "contexts": ["current_shell", "new_terminal", "ide_terminal", "harness_subprocess", "alternate_shell_or_wsl_if_selected"],
+    "outcomes": ["passed", "failed", "not_tested", "not_applicable"],
+    "record": ["version", "resolved_path", "scope", "install_source", "architecture", "verified_at", "contexts", "next_action"],
+    "use_ordinary_resolution": true,
+    "project_local_tools": "verify_through_repository_runner; never_add_project_node_modules_bin_to_global_PATH",
+    "instructions": "https://starter.devthomas.site/setup/tool-troubleshooting.md"
+  },
+  "progress_mapping": {
+    "selected-agentic-harness": "capabilities.selected-agentic-harness",
+    "selected-ide": "capabilities.selected-ide and ide.verification",
+    "system-cli-baseline": "capabilities; applicable baseline tools are installed and usable",
+    "cli-contexts": "capabilities.*.contexts; all applicable cli_verification contexts pass for each relevant CLI",
+    "tailscale-computer": "remote_access.checks.tailscale_computer",
+    "tailscale-phone": "remote_access.checks.tailscale_phone",
+    "private-network-identity": "remote_access.checks.device_identity",
+    "tailscale-network": "derived from registry.steps.tailscale-network.completion; preserve leaf evidence separately",
+    "phone-to-computer-file": "remote_access.checks.phone_to_computer_file",
+    "computer-to-phone-file": "remote_access.checks.computer_to_phone_file",
+    "verified-phone-connection": "remote_access.checks.phone_harness_interaction",
+    "private-progress-repository": "private_save; actual approved remote commit and private visibility verified"
+  },
+  "focused_guides": {
+    "authentication": "https://starter.devthomas.site/setup/authentication.md",
+    "file_transfer": "https://starter.devthomas.site/setup/file-transfer.md",
+    "private_workbench": "https://starter.devthomas.site/setup/private-workbench.md",
+    "troubleshooting": "https://starter.devthomas.site/setup/tool-troubleshooting.md"
+  },
   "ide": {
     "required": true,
     "lifecycle": "https://starter.devthomas.site/setup/ide.md",
@@ -258,7 +330,8 @@
     "verification": [
       "ide_launches",
       "workspace_opens",
-      "integrated_terminal_runs_git",
+      "markdown_displays",
+      "integrated_terminal_resolves_applicable_baseline_tools",
       "selected_harness_works_with_workspace"
     ]
   }

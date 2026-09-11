@@ -1,6 +1,8 @@
-# Optional: your private Workbench online
+# Optional: host your Workbench behind Cloudflare Access
 
 Computer Setup prepares your downloaded Workbench for local use. Hosting it is optional and lower priority than deploying your instant app. Keep using the local viewer if hosting would interrupt your build; it does not block a phase or Computer Setup.
+
+If you only want phone access over your existing private network, consider the separately approved [Tailscale Serve snapshot](https://starter.devthomas.site/setup/private-workbench.md). That path does not require a public hostname or Cloudflare Access email. Do not substitute Funnel or public deployment for private-network viewing. Choose one intended route rather than enabling both automatically.
 
 This recipe gives your agent a repeatable way to host a read-only progress snapshot on a custom domain behind Cloudflare Access. The address is reachable on the Internet, but the viewer and its JSON require your approved sign-in. Your required private progress repository stays private. A separate hosting repository is optional: Wrangler can deploy a local staging folder directly.
 
@@ -88,7 +90,9 @@ If either the sign-out block or allowed-email check fails, keep the harmless dep
 
 ## 4. Publish the reviewed snapshot
 
-Once the protection checks pass, replace the placeholder with the downloaded Workbench `index.html`. Copy only the reviewed current `starter-progress.json` snapshot alongside it. Retain `_headers`; check the complete staging file list before deploying. Do not add other progress files merely because they are nearby. Inspect the snapshot for secrets and unnecessary personal material without printing its contents into public logs.
+Once the protection checks pass, replace the placeholder with the verified Workbench `index.html`, preserving the learner's original/customized file. Generate an explicitly approved progress projection as `starter-progress.json` alongside it; do not copy the full canonical record by default. Follow the [snapshot field allowlist](https://starter.devthomas.site/setup/private-workbench.md#build-a-separate-allowlisted-snapshot): retain the valid version/timestamp/phase and approved known step statuses, omit private identifiers, email/auth metadata, local paths, unknown extensions and unrelated artifacts unless individually reviewed and approved. Validate the projection without inventing outcomes. The private canonical file stays unchanged.
+
+Retain `_headers`; enumerate the complete staging file list, including hidden entries, before deploying. Only the reviewed files belong there: no `.git`, `.env`, reports, symlinks, junctions, directory copies or backups. Do not add files merely because they are nearby. Inspect without printing personal contents into public logs. With authorized access, verify private/unlisted paths and raw traversal probes cannot return private data or directory listings. A login challenge alone is not proof that the post-login asset boundary is safe.
 
 Deploy the same workspace to the same protected Worker. Repeat the signed-out root and JSON checks and the alternate-URL checks. In the allowed-email session, confirm the viewer loads the intended snapshot and its current progress. If a private response is exposed, disable the serving route immediately, restore the harmless assets, and investigate before another upload; do not remove Access while private assets remain deployed.
 

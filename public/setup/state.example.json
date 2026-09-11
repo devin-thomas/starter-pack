@@ -1,9 +1,12 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-08T00:00:00Z",
+  "skill_version": "0.2.0",
+  "requirements_revision": "2026-09-10",
+  "updated_at": "2026-09-10T00:00:00Z",
   "os": null,
   "architecture": null,
   "harness": null,
+  "execution_environment": null,
   "status": "not_started",
   "capabilities": {},
   "remote_access": {
@@ -11,11 +14,77 @@
     "tailscale_phone": false,
     "device_name_verified": false,
     "interaction_layer": null,
-    "phone_interaction_verified": false
+    "phone_interaction_verified": false,
+    "checks": {
+      "tailscale_computer": {
+        "status": "not_tested",
+        "verified_at": null,
+        "source": null,
+        "evidence": null,
+        "next_action": null
+      },
+      "tailscale_phone": {
+        "status": "not_tested",
+        "verified_at": null,
+        "source": null,
+        "evidence": null,
+        "next_action": null
+      },
+      "device_identity": {
+        "status": "not_tested",
+        "verified_at": null,
+        "source": null,
+        "evidence": null,
+        "next_action": null
+      },
+      "phone_to_computer_file": {
+        "status": "not_tested",
+        "verified_at": null,
+        "source": null,
+        "evidence": null,
+        "next_action": null
+      },
+      "computer_to_phone_file": {
+        "status": "not_tested",
+        "verified_at": null,
+        "source": null,
+        "evidence": null,
+        "next_action": null
+      },
+      "phone_harness_interaction": {
+        "status": "not_tested",
+        "verified_at": null,
+        "source": null,
+        "evidence": null,
+        "next_action": null
+      }
+    },
+    "private_workbench": {
+      "selected": false,
+      "status": "not_tested",
+      "audience": null,
+      "audience_verification": "not_tested",
+      "snapshot_generated_at": null,
+      "url": null,
+      "source_boundary": null,
+      "denied_paths_verification": "not_tested",
+      "persistent": false,
+      "stop_action": null
+    }
   },
+  "private_save": {
+    "status": "not_tested",
+    "private_visibility_verified": false,
+    "remote_files_verified": false,
+    "verified_at": null,
+    "next_action": null
+  },
+  "skills": [],
+  "session_report": null,
   "resume": {
     "next_action": "Inspect the computer and existing tools.",
-    "requires_restart": false
+    "requires_restart": false,
+    "relaunch_targets": []
   },
   "notes": [],
   "ide": {
