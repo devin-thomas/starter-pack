@@ -4,6 +4,10 @@ A free guide from Devin Thomas at Uppercut Labs for making and deploying softwar
 
 Visit [Starter Pack](https://starter.devthomas.site).
 
+## Feedback
+
+Found a confusing step or something that does not work? [Report a problem](https://github.com/devin-thomas/starter-pack/issues/new?template=bug_report.yml) with the page or phase, what you tried, and your device/browser/AI app. Reports are public: do not attach private progress files, conversations, account details, or credentials.
+
 ## Run locally
 
 Use a current Node.js LTS release.
@@ -21,6 +25,8 @@ npm run preview
 ```
 
 The build generates semantic HTML, focused Markdown and JSON, and an agent catalog from the public curriculum. `dist/` is generated and is not committed.
+
+GitHub runs `npm ci` and `npm run check` on Node.js 24 for pushes to `main` and pull requests. These checks do not deploy the site; production deployment remains explicit.
 
 ## Deploy
 

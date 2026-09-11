@@ -1,0 +1,38 @@
+name: Report a problem
+description: Tell us where you got stuck or what did not work.
+title: "[Feedback] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This report is public. Do not attach your progress JSON, private conversations, passwords, account details, or access tokens. Remove personal information from screenshots.
+  - type: input
+    id: location
+    attributes:
+      label: Page or phase
+      description: Paste the Starter Pack page address or name the step.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: What did you try?
+      description: List the actions that led to the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Device, browser, and AI app
+      placeholder: iPhone, Safari, ChatGPT
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: Optional screenshot or short error message with personal information removed.
