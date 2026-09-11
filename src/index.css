@@ -1104,6 +1104,15 @@ h3 {
   font-size: 13px;
   color: var(--muted);
 }
+.recommendation-referral {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.recommendation-referral a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .recommendation-meta {
   font-size: 13px;
   color: var(--muted);

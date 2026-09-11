@@ -62,6 +62,15 @@
       "type": "string",
       "format": "uri"
     },
+    "referral": {
+      "type": "object",
+      "required": ["url", "disclosure"],
+      "properties": {
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "disclosure": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
     "works_with": {
       "type": "array",
       "items": {

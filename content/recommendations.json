@@ -9,6 +9,10 @@
     "checked_at": "2026-09-08",
     "reason": "ChatGPT is my personal preference for development. For the way I work, the usage allowance feels generous and the connectivity is among the best. Most importantly, I like the interface. That is why I use Codex for development. Your actual limits depend on your plan and the work you give it.",
     "url": "https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan",
+    "referral": {
+      "url": "https://chatgpt.com/accept-referral?referral_context=eyJyZWZlcnJhbF9pZCI6IjZhYTM0MmY2MThjYzgxOTE5OGNkYmJhZGMyYzcxM2Y1IiwicmVmZXJyYWxfdHlwZSI6InBlcnNvbmFsX2NyZWRpdHMiLCJpbnZpdGVfcGFnZV9iZW5lZml0X3RleHQiOiIxMDAwIGNyZWRpdHMgZm9yIHlvdXIgYWNjb3VudCIsImhhc19yZXdhcmRzIjp0cnVlLCJlbWFpbF9yZWZlcnJlZF90byI6ImFpQGRldnRob21hcy5zaXRlIiwid29ya3NwYWNlX2lkIjpudWxsLCJ3b3Jrc3BhY2VfbmFtZSI6bnVsbCwicmVkZW1wdGlvbl9hY3Rpb24iOiJjb2RleF90dXJuIn0",
+      "disclosure": "Using this referral link supports me. It is optional and is not required to use Starter Pack."
+    },
     "phase": "phase-1",
     "kind": "recommendation",
     "ide": {

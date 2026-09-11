@@ -31,6 +31,7 @@ export interface SiteData {
     checked_at: string;
     reason: string;
     url: string;
+    referral?: { url: string; disclosure: string };
   }[];
   prompt: string;
   phase2Prompt: string;
@@ -388,6 +389,17 @@ function RecommendationCard({
             : paragraph}
         </p>
       ))}
+      {item.referral && (
+        <div className="recommendation-referral">
+          <p>No AI subscription yet? If you decide to try ChatGPT, you can use my optional referral link.</p>
+          <p>
+            <ExternalLink href={item.referral.url}>Use my ChatGPT referral</ExternalLink>
+            {" or "}
+            <ExternalLink href="https://chatgpt.com/">go directly to ChatGPT</ExternalLink>.
+          </p>
+          <p>{item.referral.disclosure}</p>
+        </div>
+      )}
       <div className="recommendation-meta">
         <span>Recommended by {item.recommended_by || "Devin Thomas"}</span>
         <span>Checked {item.checked_at}</span>
