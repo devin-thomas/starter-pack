@@ -42,6 +42,8 @@ let selectedPhase: Phase | undefined;
 let mode: "file" | "http" = location.protocol === "file:" ? "file" : "http";
 let snapshot: ProgressSnapshot | undefined;
 let lastSource = "";
+let lastAcceptedRaw: string | undefined;
+let loadFailed = false;
 let diagnostics: string[] = [];
 let epoch = 0;
 let busy = false;
@@ -69,6 +71,10 @@ function action(text: string, callback: () => void, symbol?: IconName) {
   button.type = "button";
   button.addEventListener("click", callback);
   return button;
+}
+
+function updateRefreshLabel() {
+  element("refresh").replaceChildren(icon("refresh-cw"), document.createTextNode(mode === "http" ? "Refresh progress" : "Reopen progress file"));
 }
 
 function date(value: string) {
@@ -132,8 +138,8 @@ function rows(target: HTMLElement, values: [string, unknown][]) {
 function stepCard(id: string, step: Step) {
   const card = node("article", undefined, "step");
   const heading = node("div", undefined, "step-heading");
-  const stepTitle = node("h3", titleFor(id, catalog));
-  stepTitle.prepend(icon(stepIcon(id), true));
+  const stepTitle = node("h3");
+  stepTitle.append(icon(stepIcon(id), true), node("span", titleFor(id, catalog), "heading-text"));
   const definition = catalog.steps[id] ?? catalog.steps[canonicalId(id, catalog)];
   if (definition?.requirement) stepTitle.append(node("span", humanize(definition.requirement), "requirement"));
   const status = node("span", statuses[step.status], `status ${step.status}`);
@@ -228,6 +234,7 @@ function render() {
       render();
       element("phase-title").focus();
     });
+    button.disabled = !progress;
     button.append(icon(phaseIcons[phase.id], true));
     button.append(node("span", phase.id.replace("-", " "), "eyebrow"), node("span", phase.title, "phase-name"));
     const recorded = Object.entries(progress?.steps ?? {}).filter(([id, step]) => phaseFor(id, step, catalog) === phase.id);
@@ -298,7 +305,7 @@ function render() {
   }
   heading.prepend(icon(phase.id === progress.phase.current && entry ? stepIcon(entry[0]) : phaseIcons[phase.id], true));
   const actions = node("div", undefined, "actions");
-  actions.append(action("Ask my agent", () => {
+  actions.append(action(phase.id === progress.phase.current ? "Ask my agent" : "Continue current phase", () => {
     if (!progress) return;
     const next = currentStep(progress, catalog);
     const details = next ? `Current recorded step: ${titleFor(next[0], catalog)}.\n${next[1].next_action ?? ""}\n${next[1].blocker ? `Blocker: ${next[1].blocker}` : ""}` : "Check the current phase requirements and help me close out or choose the next action from my saved progress.";
@@ -337,8 +344,8 @@ function render() {
   if (!artifacts.length) builds.append(node("p", "No project links recorded yet.", "muted"));
   for (const [id, value] of artifacts) {
     const artifact = node("div", undefined, "artifact");
-    const artifactTitle = node("h3", record(value) && typeof value.name === "string" ? value.name : humanize(id));
-    artifactTitle.prepend(icon("blocks"));
+    const artifactTitle = node("h3");
+    artifactTitle.append(icon("blocks"), node("span", record(value) && typeof value.name === "string" ? value.name : humanize(id), "heading-text"));
     artifact.append(artifactTitle);
     rows(artifact, record(value) ? Object.entries(value).filter(([key]) => key !== "name").map(([key, val]) => [humanize(key), val]) : [["Saved reference", value]]);
     builds.append(artifact);
@@ -347,6 +354,8 @@ function render() {
 }
 
 function accept(raw: string, source: string, newFile = false) {
+  // Keep focused controls intact during unchanged polls, but retry after any load failure.
+  if (!newFile && !loadFailed && raw === lastAcceptedRaw) return;
   if (raw.length > maxBytes) throw new Error("This progress file is too large. Ask your agent to keep screenshots and large artifacts outside the JSON.");
   const parsed = readProgress(raw, snapshot);
   diagnostics = parsed.diagnostics;
@@ -377,12 +386,15 @@ function accept(raw: string, source: string, newFile = false) {
     throw new Error("This progress update could not be displayed. Keep the previous file and ask your agent to inspect the update.", { cause: error });
   }
   snapshot = parsed;
+  lastAcceptedRaw = raw;
+  loadFailed = false;
   lastSource = source;
   notice.textContent = parsed.coreValid ? "" : "Limited preview · completion is withheld until the core progress data is repaired.";
   element("source").textContent = source;
 }
 
 function fail(error: unknown) {
+  loadFailed = true;
   const message = error instanceof Error ? error.message : "The progress file could not be read.";
   notice.textContent = `${message}${progress ? " Showing the last successfully loaded record." : " Open a valid progress file to begin."}`;
   if (progress && lastSource) element("source").textContent = `${lastSource} · Last successfully loaded copy`;
@@ -396,6 +408,7 @@ async function loadFile(file: File) {
     if (requestEpoch !== epoch) return;
     accept(raw, `${file.name} · Reopen after your agent saves changes.`, true);
     mode = "file";
+    updateRefreshLabel();
   } catch (error) {
     if (requestEpoch === epoch) fail(error);
   }
@@ -437,6 +450,7 @@ if (["starter.devthomas.site", "starter-pack.uppercut-labs.workers.dev"].include
   element("file-tools").hidden = true;
   element("drop-zone").replaceChildren(node("p", "Download this HTML file from Starter Pack's templates page, then open it on your own computer."));
 } else {
+  updateRefreshLabel();
   render();
   picker.addEventListener("change", () => {
     const file = picker.files?.[0];
