@@ -12,6 +12,12 @@ Copyright (c) 2026 Devin Thomas. All rights reserved. You may read, examine, ref
 
 Found a confusing step or something that does not work? [Report a problem](https://github.com/devin-thomas/starter-pack/issues/new?template=bug_report.yml) with the page or phase, what you tried, and your device/browser/AI app. Reports are public: do not attach private progress files, conversations, account details, or credentials.
 
+For private feedback, feature requests, and project stories, use [the contact form](https://starter.devthomas.site/contact) or email starter@devthomas.site. Story submissions include an optional permission-to-feature checkbox; nothing is published automatically.
+
+`src/worker.ts` handles only `/api/feedback`; all other site content remains static. It validates bounded JSON, checks origin, applies per-IP and overall per-location rate limits, and forwards escaped notification content to a private Make webhook. Make sends only to the owner's fixed recipient and responds with `{"ok":true}` after Gmail accepts the notification. No visitor-controlled recipient or automatic reply is used. Failures preserve the form text and never claim confirmed delivery. Cloudflare's rate limits are approximate per location, not a global spending cap.
+
+Configure `FEEDBACK_WEBHOOK_URL` with `npx wrangler secret put FEEDBACK_WEBHOOK_URL`; never place it in source, client code, or public build variables. The webhook URL is a credential. Make must remain active and return the JSON acknowledgement after sending; its default `Accepted` response is insufficient. Notification content can remain in Make history and Gmail. Do not log request bodies or attach learner progress. Local validation uses synthetic submissions and mocked delivery; a real submission is needed to verify the complete notification path after deployment.
+
 ## Run locally
 
 Use a current Node.js LTS release.
@@ -38,7 +44,7 @@ Authenticate Wrangler to the Cloudflare account that owns the configured domain,
 
 To recheck the domain without redeploying, run `npm run verify:deployment`.
 
-Public curriculum is in `content/`. Hosted skills, templates, and agent instructions are in `public/`. The website never accepts or stores learner progress, credentials, or project ideas.
+Public curriculum is in `content/`. Hosted skills, templates, and agent instructions are in `public/`. The website has no learner progress storage. The optional contact form processes the message and project details a visitor deliberately submits; its privacy explanation is on the About page.
 
 The short starting prompt reads a single GitHub-hosted Phase 1 packet containing the canonical companion, curriculum, progress guide, template and schema. Its filename includes a content hash and changes whenever those sources change. After editing packet sources, run `npm run prepare:startup`, then commit the new `public/agent/packets/` learner resource and updated prompt before deployment. These reviewed public learner releases are intentionally tracked; preserve earlier packets for existing sessions. `npm run check` rejects a stale packet or prompt. The starting-prompt section also offers the same packet for copy/download if fetching fails. Other resources retain the exact primary, Workers and GitHub links in the resource directory. A packet supports starting Phase 1 without URL fetching; it does not replace later-phase instructions or authorize resetting progress.
 

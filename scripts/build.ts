@@ -56,6 +56,7 @@ const titles: Record<string, string> = {
   "/resources": "Skills and agent resources",
   "/artifacts": "Project templates",
   "/about": "About this pack",
+  "/contact": "Feedback and project stories",
   "/help/cloudflare-iphone": "Deploy a static site to Cloudflare from your iPhone",
 };
 const analyticsConfig = JSON.parse(await readFile("analytics.json", "utf8"));

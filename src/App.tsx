@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 import { CopyText } from "./CopyText";
+import { Feedback } from "./Feedback";
 import { motion, useReducedMotion } from "motion/react";
 import {
   Icon,
@@ -50,6 +51,7 @@ const nav = [
   ["/recommendations", "Recommendations"],
   ["/resources", "Agent resources"],
   ["/about", "About"],
+  ["/contact", "Share feedback"],
 ];
 
 function Prompt({
@@ -910,6 +912,8 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   Go to the starting prompt
                 </a>
               </>
+            ) : normalized === "/contact" ? (
+              <Feedback />
             ) : normalized === "/about" ? (
               <>
                 <PageHeading

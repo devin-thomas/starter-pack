@@ -97,6 +97,7 @@ export const routes = [
   "/resources",
   "/artifacts",
   "/about",
+  "/contact",
   "/help/cloudflare-iphone",
 ];
 export async function write(destination: string, value: string) {

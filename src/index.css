@@ -1613,3 +1613,145 @@ h3 {
     transform: none;
   }
 }
+
+.feedback-page {
+  max-width: 760px;
+}
+.feedback-contact {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.feedback-contact a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.feedback-form {
+  padding: clamp(18px, 4vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.feedback-form fieldset {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.feedback-form label {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1.5;
+}
+.feedback-form input,
+.feedback-form select,
+.feedback-form textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 11px 12px;
+  color: var(--text);
+  background: var(--surface-soft);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.feedback-form textarea {
+  resize: vertical;
+}
+.feedback-form input::placeholder,
+.feedback-form textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+.feedback-form select:focus-visible,
+.feedback-status:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.feedback-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.feedback-story {
+  display: grid;
+  gap: 20px;
+}
+.feedback-help,
+.feedback-privacy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.feedback-help {
+  margin-top: -12px;
+}
+.feedback-privacy {
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.feedback-form .feedback-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-weight: 400;
+}
+.feedback-consent input {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+  margin: 2px 0;
+  accent-color: var(--accent);
+}
+.feedback-form .primary-action {
+  justify-self: start;
+}
+.feedback-form fieldset:disabled {
+  opacity: 0.65;
+}
+.feedback-form button:disabled {
+  cursor: wait;
+  transform: none;
+}
+.feedback-status:not(:empty) {
+  margin: 0 0 20px;
+  padding: 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.feedback-status--error {
+  color: var(--danger);
+}
+.feedback-status--success {
+  color: var(--success);
+}
+.feedback-trap,
+.feedback-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .feedback-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .feedback-form .primary-action {
+    width: 100%;
+  }
+}
