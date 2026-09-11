@@ -769,6 +769,11 @@ h3 {
   border-radius: 10px;
   background: linear-gradient(135deg, var(--surface-raised), var(--surface-soft));
 }
+.case-study-feature-compact {
+  max-width: 760px;
+  margin-block: 24px 40px;
+  padding: clamp(14px, 2.4vw, 22px);
+}
 .case-study-feature > .eyebrow {
   margin-top: 0;
 }
@@ -778,6 +783,9 @@ h3 {
   border: 0;
   font-size: clamp(26px, 4vw, 36px);
 }
+.phase-content .prose .case-study-feature-compact h2 {
+  font-size: clamp(24px, 3.2vw, 32px);
+}
 .case-study-feature > p > a {
   display: inline-flex;
   align-items: center;
@@ -786,6 +794,9 @@ h3 {
 }
 .case-study-feature figure {
   margin: 24px 0 0;
+}
+.case-study-feature-compact figure {
+  margin-top: 18px;
 }
 .case-study-feature img {
   display: block;
