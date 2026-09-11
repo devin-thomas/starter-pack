@@ -124,7 +124,7 @@ test("streamed body without content-length is bounded and cancelled", async () =
 
 test("HTTP failures, Make Accepted text, and false acknowledgements never report success", async (t) => {
   t.mock.method(console, "error", () => {});
-  for (const response of [() => new Response("failed", { status: 500 }), () => new Response("Accepted"), () => Response.json({ ok: false }), () => Response.json({ ok: "true" }), () => Response.json(null)]) {
+  for (const response of [() => new Response("failed", { status: 500 }), () => new Response('{"ok":true}', { status: 302, headers: { Location: "https://evil.example/" } }), () => new Response("Accepted"), () => Response.json({ ok: false }), () => Response.json({ ok: "true" }), () => Response.json(null)]) {
     const h = harness({ response });
     const result = await handleFeedback(request(), h.env, h.send);
     assert.equal(result.status, 502);
@@ -151,7 +151,7 @@ test("explicit JSON acknowledgement delivers normalized data and reports success
   assert.equal(result.headers.get("Cache-Control"), "no-store");
   assert.equal(h.calls.length, 1);
   assert.deepEqual(h.limits, ["ip:192.0.2.1", "total:feedback"]);
-  assert.equal(h.calls[0].init?.redirect, "error");
+  assert.equal(h.calls[0].init?.redirect, "manual");
   const delivered = JSON.parse(String(h.calls[0].init?.body));
   assert.equal(delivered.email, "ada@example.com");
   assert.equal(delivered.allowFeature, false);

@@ -68,7 +68,7 @@ async function readBounded(request: Request) {
   return JSON.parse(text + decoder.decode());
 }
 
-export async function handleFeedback(request: Request, env: FeedbackEnv, send: typeof fetch = fetch): Promise<Response> {
+export async function handleFeedback(request: Request, env: FeedbackEnv, send: typeof fetch = (input, init) => globalThis.fetch(input, init)): Promise<Response> {
   if (request.method !== "POST") return reply(405, "Use the contact form to send feedback.");
   const url = new URL(request.url);
   if (!origins.has(url.origin) || request.headers.get("Origin") !== url.origin) return reply(403, "Please submit from the Starter Pack site.");
@@ -84,16 +84,19 @@ export async function handleFeedback(request: Request, env: FeedbackEnv, send: t
   try { data = parseSubmission(await readBounded(request)); }
   catch (error) { return reply(400, error instanceof SyntaxError ? "Invalid submission." : error instanceof Error ? error.message : "Invalid submission."); }
   const submissionId = crypto.randomUUID();
+  let deliveryStage = "configuration";
   try {
     const hook = new URL(env.FEEDBACK_WEBHOOK_URL);
     if (hook.protocol !== "https:" || hook.hostname !== "hook.us2.make.com") throw new Error("Invalid notification configuration.");
+    deliveryStage = "request";
     const response = await send(hook, { method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...data, submissionId, receivedAt: new Date().toISOString(), ...notification(data, submissionId) }),
-      redirect: "error", signal: AbortSignal.timeout(20_000) });
+      redirect: "manual", signal: AbortSignal.timeout(20_000) });
+    deliveryStage = `acknowledgement-${response.status}`;
     if (!response.ok || (await response.json() as { ok?: unknown }).ok !== true) throw new Error("Notification not confirmed.");
     return reply(200);
   } catch {
-    console.error("feedback_notification_unconfirmed", submissionId);
+    console.error("feedback_notification_unconfirmed", submissionId, deliveryStage);
     return reply(502, "We couldn't confirm delivery. Your text is still here. Please try later or email starter@devthomas.site; a delayed notification may still arrive.");
   }
 }
