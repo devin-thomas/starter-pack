@@ -758,7 +758,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                         ))}
                     </div>
                   </section>
-                  <section id="choose-your-ide" className="recommendation-group">
+                  <section id="choose-your-ide" className="recommendation-group sr-only">
                     <div className="recommendation-group-heading">
                       <span className="eyebrow">COMPUTER SETUP</span>
                       <h2>Your IDE follows your harness</h2>
