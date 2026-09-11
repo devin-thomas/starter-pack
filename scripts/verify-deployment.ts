@@ -6,6 +6,7 @@ import { assertGoogleResourceAccess } from "./crawler-policy";
 import { readFile } from "node:fs/promises";
 import { validCatalog } from "../src/workbench/model";
 import { parseRegistry } from "../src/workbench/registry";
+import { assertSameAgentCatalog } from "./deployment-catalog";
 
 const base = new URL(process.argv[2] || "https://starter.devthomas.site");
 const local = process.argv.includes("--local");
@@ -55,8 +56,7 @@ await Promise.all([
   read(script[1], /javascript/),
   read(stylesheet[1], /text\/css/),
   read("/agent/catalog.json", /application\/json/).then(async (body) => {
-    if (body !== await readFile("dist/agent/catalog.json", "utf8"))
-      throw new Error("Live agent catalog differs from this build; it may be stale or from another release.");
+    assertSameAgentCatalog(body, await readFile("dist/agent/catalog.json", "utf8"));
     const catalog = JSON.parse(body);
     if (!Array.isArray(catalog.resources) || catalog.resources.length < 3)
       throw new Error("Agent catalog is incomplete.");
