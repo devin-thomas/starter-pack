@@ -6,20 +6,17 @@ import addFormats from "ajv-formats";
 import standaloneCode from "ajv/dist/standalone/index.js";
 import type { SiteData } from "../src/App";
 import { validCatalog } from "../src/workbench/model";
+import { parseRegistry, projectCatalog, phaseIds } from "../src/workbench/registry";
 import { interfaceIcons, extraIcons, brandIcons } from "../src/workbench/icons";
 
 export async function buildWorkbench(output: string, data: SiteData) {
   const base = `${output}/artifacts/progress-workbench`;
-  const steps = JSON.parse(await readFile("content/workbench-steps.json", "utf8"));
-  const version = JSON.parse(await readFile("public/skills/versions.json", "utf8")).current;
-  const catalog = {
-    version,
-    phases: data.phases.map(phase => ({ id: phase.id, title: phase.title, url: `https://starter.devthomas.site/phases/${phase.order}`, preview: phase.order === 3 })),
-    steps: Object.fromEntries(Object.entries(steps).map(([id, value]) => {
-      if (!value || typeof value !== "object" || !("phase" in value) || !("title" in value) || typeof value.title !== "string" || !["phase-1", "phase-2", "phase-3"].includes(String(value.phase))) throw new Error(`Invalid workbench step: ${id}`);
-      return [id, { title: value.title, phase: value.phase, url: `https://starter.devthomas.site/phases/${String(value.phase).slice(-1)}` }];
-    })),
-  };
+  const registry = parseRegistry(JSON.parse(await readFile("content/workbench-steps.json", "utf8")));
+  const catalog = projectCatalog(registry, phaseIds.map(id => {
+    const page = data.phases.find(page => page.id === id);
+    if (!page) throw new Error(`Missing Workbench phase page: ${id}`);
+    return { id, title: page.title, url: `https://starter.devthomas.site/phases/${page.order}`, preview: registry.phases[id].preview === true };
+  }));
   if (!validCatalog(catalog)) throw new Error("Invalid Progress Workbench catalog");
   const ajv = new Ajv2020({ code: { source: true }, allErrors: true });
   addFormats(ajv);
@@ -61,5 +58,5 @@ export async function buildWorkbench(output: string, data: SiteData) {
   await mkdir(base, { recursive: true });
   await writeFile(`${base}/index.html`, html);
   await writeFile(`${base}/catalog.json`, JSON.stringify(catalog, null, 2));
-  await writeFile(`${base}/manifest.json`, JSON.stringify({ version: "0.1.1", filename: "index.html", bytes: Buffer.byteLength(html), sha256: createHash("sha256").update(html).digest("hex") }, null, 2));
+  await writeFile(`${base}/manifest.json`, JSON.stringify({ version: registry.version, requirements_revision: registry.requirements_revision, filename: "index.html", bytes: Buffer.byteLength(html), sha256: createHash("sha256").update(html).digest("hex") }, null, 2));
 }

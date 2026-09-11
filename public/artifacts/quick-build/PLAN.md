@@ -6,6 +6,14 @@ Status: awaiting approval
 
 [Who this helps, the problem it solves, and the main thing a user can do.]
 
+## First use
+
+[First meaningful action; useful empty state; whose content is used and how it arrives. Do not invent uploads where unnecessary. For creator tools, prioritize the user's input and controls; demos are explicit choices, never unrelated autoplay.]
+
+## Devices and evidence
+
+[Actual target phones/computers and the controls that must stay reachable. Identify platform promises needing real-device evidence, who will check them, and what remains pending. Preserve zoom, readability, and accessibility.]
+
 ## Included
 
 [Smallest complete set of behaviors.]
@@ -22,7 +30,7 @@ Status: awaiting approval
 
 ## Completion
 
-[Observable primary flow, durable source destination, live destination, and any human review.]
+[Observable primary flow, durable source destination, live destination/visibility, and any human review. Cloudflare is the default; record the reason and learner choice for an alternative. Separate build, availability, layout, and behavioral checks. Final private progress closeout follows the canonical requirements and progress guide.]
 
 ## Approval
 

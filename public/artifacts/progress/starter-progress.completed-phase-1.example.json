@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "starter_pack_version": "0.2.0",
+  "updated_at": "2026-09-10T12:00:00Z",
+  "environment": {
+    "device": "phone",
+    "os": null,
+    "harness": null,
+    "remote_access_ready": false
+  },
+  "phase": {
+    "current": "phase-1",
+    "status": "completed",
+    "requirements_revision": "2026-09-10",
+    "completed_at": "2026-09-10T12:00:00Z"
+  },
+  "steps": {
+    "primary-ai-phone-app": {
+      "status": "completed",
+      "notes": ["Synthetic learner report: sent a message from the signed-in phone companion."]
+    },
+    "github-mobile": {
+      "status": "completed",
+      "notes": ["Synthetic learner report: opened the signed-in GitHub Mobile profile."]
+    },
+    "authenticator": {
+      "status": "completed",
+      "notes": ["Synthetic learner report: authenticator installed, opened, and ready. No enrollment secrets recorded."]
+    },
+    "github": {"status": "completed", "notes": ["Synthetic learner report: existing account ready."]},
+    "cloudflare": {"status": "completed", "notes": ["Synthetic learner report: existing account ready."]},
+    "neon": {"status": "completed", "notes": ["Synthetic learner report: existing account ready through GitHub sign-in."]},
+    "google-ai-studio": {"status": "completed", "notes": ["Synthetic learner report: selected builder opens and accepts a prompt."]},
+    "instant-build": {
+      "status": "completed",
+      "notes": ["Synthetic learner report: entered three meal names and the app selected one when the main button was pressed on the phone."]
+    },
+    "phase-1-deployment-extra-credit": {
+      "status": "skipped",
+      "notes": ["Synthetic learner declined deployment. This does not block Phase 1."]
+    }
+  },
+  "choices": {
+    "workbench": {"next_step_id": null},
+    "development_email": {"notes": ["Synthetic learner declined optional email intake."]}
+  },
+  "artifacts": {
+    "phase_history": [
+      {
+        "phase": "phase-1",
+        "status": "completed",
+        "requirements_revision": "2026-09-10",
+        "recorded_at": "2026-09-10T12:00:00Z",
+        "evidence_summary": "Synthetic example only: phone apps ready, core accounts and one builder ready, meal picker action reported working. Complete portable JSON returned; no desktop or private remote save claimed.",
+        "source": "learner_report"
+      }
+    ]
+  }
+}

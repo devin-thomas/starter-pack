@@ -6,9 +6,11 @@
   "required": [
     "version",
     "updated_at",
+    "requirements_revision",
     "resources",
     "skills",
     "resource_links",
+    "requirements",
     "progress",
     "workbench"
   ],
@@ -23,6 +25,10 @@
     "generated_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "requirements_revision": {
+      "type": "string",
+      "minLength": 1
     },
     "resources": {
       "type": "array",
@@ -97,6 +103,9 @@
       "$ref": "#/$defs/resourceUrl"
     },
     "resource_links": {
+      "$ref": "#/$defs/resourceUrl"
+    },
+    "requirements": {
       "$ref": "#/$defs/resourceUrl"
     },
     "skills": {

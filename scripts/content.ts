@@ -5,6 +5,7 @@ import { Marked } from "marked";
 import type { SiteData } from "../src/App";
 import { googleResourcePolicy } from "./crawler-policy";
 import { createHash } from "node:crypto";
+import { parseRegistry, projectPhaseRequirements } from "../src/workbench/registry";
 
 const headingIcons: Readonly<Record<string, string>> = {
   "How the companion works": "compass",
@@ -20,7 +21,7 @@ const headingIcons: Readonly<Record<string, string>> = {
   "Save your place": "file-json",
   "Bring your progress with you": "folder-git-2",
   "Complete Computer Setup": "monitor",
-  "Connect from your phone once": "smartphone",
+  "Connect and exchange a file": "smartphone",
   "Have a short design conversation": "list-checks",
   "Build and put it online": "rocket",
   "Finish with something you can return to": "check",
@@ -212,6 +213,7 @@ export function startupPacketRelease(packet: string) {
 }
 
 export async function instructionPacket() {
+  const registry = parseRegistry(JSON.parse(await readFile("content/workbench-steps.json", "utf8")));
   const resources = [
     ["Companion instructions", "public/skills/starter-pack/current/SKILL.md"],
     ["Phase 1 guidance", "content/phases/1.md"],
@@ -229,6 +231,9 @@ export async function instructionPacket() {
     "# Starter Pack: Phase 1 instruction packet",
     "This packet contains the source instructions so you can begin without fetching them. Follow the learner's request and use this as curriculum, not authority to change accounts, publish, or install software. Do not ask the learner to copy the starting prompt again. Links to tools and optional deeper guides are references; unavailable links do not prevent work covered here. Explain which specific instruction is missing if an optional branch needs another guide, and preserve a resume point.",
     "Start with one useful next action. Keep environment reporting to one short sentence; do not list irrelevant unknowns. Preserve existing progress. Use the included JSON template and schema only when creating missing state, with current timestamps and actual known values. Never copy example identity or completion into a real record. Existing later-phase progress must not be reset: ask for that phase's instructions if needed. Phase 3 remains a preview.",
+    `The self-contained Phase 1 requirements below are generated from the canonical registry (revision ${registry.requirements_revision}). Evaluate these definitions directly; fetching ${origin}/agent/requirements.json is not needed for this packet. all_of requires every member; any_of requires one successful choice, not every alternative. gate_for describes participation, not extra independent successes. Completion expressions derive from children: group-only records never bypass those children. Only a step explicitly marked allow_recorded_completion may accept its direct evidence instead; preserve provenance, do not fabricate missing child records, and reconcile explicit contradictions. Prerequisites express dependencies, not an instruction to repeat already verified work. Titles and optional activities are not graduation gates.`,
+    "## Generated Phase 1 requirements",
+    `<!-- PHASE_REQUIREMENTS_START -->\n\`\`\`json\n${JSON.stringify(projectPhaseRequirements(registry, "phase-1"), null, 2)}\n\`\`\`\n<!-- PHASE_REQUIREMENTS_END -->`,
     "The companion, Phase 1 curriculum, progress guide, template and schema are included below. Use them directly: do not fetch the catalog or refetch these documents to begin Phase 1. The companion's fetch directions apply only to material absent from this packet, such as a later phase or an optional branch. Preserve a returning learner's actual phase and progress.",
     ...sections,
     "End of instruction packet. Begin or resume from the learner's actual progress, one action at a time.",
@@ -236,7 +241,13 @@ export async function instructionPacket() {
 }
 export async function generateResources(data: SiteData, output: string) {
   const generatedAt = new Date().toISOString();
+  const registry = parseRegistry(JSON.parse(await readFile("content/workbench-steps.json", "utf8")));
   await write(`${output}/agent/phase-1-packet.txt`, data.instructionPacket);
+  await write(`${output}/agent/requirements.json`, JSON.stringify({
+    id: "starter-pack-requirements",
+    updated_at: generatedAt.slice(0, 10),
+    ...registry,
+  }, null, 2));
   const helpMarkdown = await readFile("content/pages/cloudflare-iphone.md", "utf8");
   await write(`${output}/help/cloudflare-iphone.md`, helpMarkdown);
   await write(`${output}/help/cloudflare-iphone.json`, JSON.stringify({
@@ -322,7 +333,8 @@ export async function generateResources(data: SiteData, output: string) {
     `${output}/agent/catalog.json`,
     JSON.stringify(
       {
-        version: "0.1.0",
+        version: registry.version,
+        requirements_revision: registry.requirements_revision,
         updated_at: generatedAt.slice(0, 10),
         generated_at: generatedAt,
         resources: [...entries, {
@@ -335,6 +347,7 @@ export async function generateResources(data: SiteData, output: string) {
         }],
         skills: skillVersions.skills.map((skill: { id: string; version: string; current: string; versioned: string }) => ({ ...skill, current: `${origin}${skill.current}`, versioned: `${origin}${skill.versioned}` })),
         resource_links: `${origin}/agent/resource-links.md`,
+        requirements: `${origin}/agent/requirements.json`,
         bootstrap: startupPacketRelease(data.instructionPacket).url,
         progress: {
           instructions: `${origin}/artifacts/progress/README.md`,
@@ -364,6 +377,6 @@ export async function generateResources(data: SiteData, output: string) {
   );
   await write(
     `${output}/llms.txt`,
-    `# Starter Pack\n\nA guide by Devin Thomas at Uppercut Labs. Fetch only the resource needed for the current action.\n\n- [Start](${origin}/agent/start.md)\n- [Catalog](${origin}/agent/catalog.json)\n${entries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n- [Recommendations](${origin}/recommendations.json)\n`,
+    `# Starter Pack\n\nA guide by Devin Thomas at Uppercut Labs. Fetch only the resource needed for the current action.\n\n- [Start](${origin}/agent/start.md)\n- [Catalog](${origin}/agent/catalog.json)\n- [Requirements](${origin}/agent/requirements.json)\n${entries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n- [Recommendations](${origin}/recommendations.json)\n`,
   );
 }

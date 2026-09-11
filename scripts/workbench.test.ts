@@ -18,9 +18,24 @@ function state(): Progress {
   return { schema_version: 1, starter_pack_version: "0.1.0", updated_at: "2026-09-09T00:00:00Z", phase: { current: "phase-2", status: "in_progress" }, steps: {} };
 }
 test("existing portable records remain valid without Workbench fields", async () => {
-  for (const file of ["starter-progress.json", "starter-progress.example.json"]) {
+  for (const file of ["starter-progress.json", "starter-progress.example.json", "starter-progress.completed-phase-1.example.json"]) {
     assert.ok(validate(JSON.parse(await readFile(`public/artifacts/progress/${file}`, "utf8"))));
   }
+});
+test("OAuth notes are legacy strings while structured emails remain validated", () => {
+  const data = state();
+  data.choices = { development_email: { service_overrides: { neon: "GitHub OAuth" } }, service_auth: { neon: { method: "oauth", provider: "github", account_handle: "example-learner", account_email: null, source: "learner_report" } } };
+  assert.ok(validate(data));
+  data.choices = { service_auth: { neon: { account_email: "GitHub OAuth" } } };
+  assert.equal(validate(data), false);
+  assert.equal(validate({ ...data, schema_version: 2 }), false);
+});
+test("new history requires phase, status, revision and provenance but not invented old timestamps", () => {
+  const data = state();
+  data.artifacts = { phase_history: [{ phase: "phase-1", status: "completed", requirements_revision: "2026-09-10", source: "learner_report" }] };
+  assert.ok(validate(data));
+  data.artifacts = { phase_history: [{ status: "completed" }] };
+  assert.equal(validate(data), false);
 });
 test("email choices allow distinct services and deferral without requiring identity", () => {
   const data = state();

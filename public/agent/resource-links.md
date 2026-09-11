@@ -9,6 +9,17 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Primary: [https://starter.devthomas.site/agent/catalog.json](https://starter.devthomas.site/agent/catalog.json)
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/agent/catalog.json](https://starter-pack.uppercut-labs.workers.dev/agent/catalog.json)
 
+## /agent/requirements.json
+
+- Primary: [https://starter.devthomas.site/agent/requirements.json](https://starter.devthomas.site/agent/requirements.json)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/agent/requirements.json](https://starter-pack.uppercut-labs.workers.dev/agent/requirements.json)
+
+## /artifacts/progress/starter-progress.completed-phase-1.example.json
+
+- Primary: [https://starter.devthomas.site/artifacts/progress/starter-progress.completed-phase-1.example.json](https://starter.devthomas.site/artifacts/progress/starter-progress.completed-phase-1.example.json)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/artifacts/progress/starter-progress.completed-phase-1.example.json](https://starter-pack.uppercut-labs.workers.dev/artifacts/progress/starter-progress.completed-phase-1.example.json)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/progress/starter-progress.completed-phase-1.example.json](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/progress/starter-progress.completed-phase-1.example.json)
+
 ## /recommendations.json
 
 - Primary: [https://starter.devthomas.site/recommendations.json](https://starter.devthomas.site/recommendations.json)
@@ -85,6 +96,30 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Primary: [https://starter.devthomas.site/setup/remote-access.md](https://starter.devthomas.site/setup/remote-access.md)
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/remote-access.md](https://starter-pack.uppercut-labs.workers.dev/setup/remote-access.md)
 - GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/remote-access.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/remote-access.md)
+
+## /setup/file-transfer.md
+
+- Primary: [https://starter.devthomas.site/setup/file-transfer.md](https://starter.devthomas.site/setup/file-transfer.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/file-transfer.md](https://starter-pack.uppercut-labs.workers.dev/setup/file-transfer.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/file-transfer.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/file-transfer.md)
+
+## /setup/authentication.md
+
+- Primary: [https://starter.devthomas.site/setup/authentication.md](https://starter.devthomas.site/setup/authentication.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/authentication.md](https://starter-pack.uppercut-labs.workers.dev/setup/authentication.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/authentication.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/authentication.md)
+
+## /setup/private-workbench.md
+
+- Primary: [https://starter.devthomas.site/setup/private-workbench.md](https://starter.devthomas.site/setup/private-workbench.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/private-workbench.md](https://starter-pack.uppercut-labs.workers.dev/setup/private-workbench.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/private-workbench.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/private-workbench.md)
+
+## /setup/tool-troubleshooting.md
+
+- Primary: [https://starter.devthomas.site/setup/tool-troubleshooting.md](https://starter.devthomas.site/setup/tool-troubleshooting.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/tool-troubleshooting.md](https://starter-pack.uppercut-labs.workers.dev/setup/tool-troubleshooting.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/tool-troubleshooting.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/tool-troubleshooting.md)
 
 ## /setup/state.example.json
 
@@ -187,6 +222,12 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Primary: [https://starter.devthomas.site/schemas/starter-progress.schema.json](https://starter.devthomas.site/schemas/starter-progress.schema.json)
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/schemas/starter-progress.schema.json](https://starter-pack.uppercut-labs.workers.dev/schemas/starter-progress.schema.json)
 - GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/schemas/starter-progress.schema.json](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/schemas/starter-progress.schema.json)
+
+## /schemas/requirements.schema.json
+
+- Primary: [https://starter.devthomas.site/schemas/requirements.schema.json](https://starter.devthomas.site/schemas/requirements.schema.json)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/schemas/requirements.schema.json](https://starter-pack.uppercut-labs.workers.dev/schemas/requirements.schema.json)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/schemas/requirements.schema.json](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/schemas/requirements.schema.json)
 
 ## /prompts/get-started.txt
 

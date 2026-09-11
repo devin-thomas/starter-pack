@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="dark">
+<meta name="darkreader-lock">
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="data:,">
 <title>Your progress | Starter Pack</title>
@@ -19,6 +20,7 @@
   <span id="source">Select starter-progress.json. It stays in this browser.</span>
 </div>
 <p id="notice" class="notice" role="status" aria-live="polite"></p>
+<div id="diagnostics" class="diagnostics" role="status" aria-live="polite" hidden></div>
 <p id="version-notice" class="notice" hidden></p>
 <div id="drop-zone" class="layout">
   <nav id="phases" aria-label="Progress by phase"></nav>
@@ -27,6 +29,7 @@
     <div id="progress" hidden>
       <div class="workspace-heading"><div><span id="phase-label" class="eyebrow"></span><h1 id="phase-title"></h1></div><button id="copy-summary" type="button"><span class="icon" data-icon="clipboard" aria-hidden="true"></span>Copy summary</button></div>
       <p id="updated" class="muted"></p>
+      <p id="gate-status" class="gate-status"></p>
       <section id="current" class="current" aria-labelledby="current-title"></section>
       <div class="section-heading"><h2><span class="icon" data-icon="list-checks" aria-hidden="true"></span>Recorded steps</h2><span id="step-count" class="muted"></span></div>
       <div id="steps" class="steps"></div>

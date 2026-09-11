@@ -1,0 +1,312 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starter.devthomas.site/schemas/requirements.schema.json",
+  "title": "Starter Pack requirements registry",
+  "description": "Structural contract for the canonical registry and generated public envelope. The registry parser also validates references, dependency cycles, alias uniqueness and phase-gate membership. all_of and any_of are registry operators, not JSON Schema validation keywords.",
+  "type": "object",
+  "required": [
+    "version",
+    "requirements_revision",
+    "phases",
+    "groups",
+    "steps",
+    "aliases"
+  ],
+  "properties": {
+    "id": {
+      "const": "starter-pack-requirements"
+    },
+    "version": {
+      "$ref": "#/$defs/text"
+    },
+    "requirements_revision": {
+      "$ref": "#/$defs/text"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "phases": {
+      "type": "object",
+      "required": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "properties": {
+        "phase-1": {
+          "$ref": "#/$defs/releasedPhase"
+        },
+        "phase-2": {
+          "$ref": "#/$defs/releasedPhase"
+        },
+        "phase-3": {
+          "$ref": "#/$defs/previewPhase"
+        }
+      },
+      "additionalProperties": false
+    },
+    "groups": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/group"
+      }
+    },
+    "steps": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "properties": {
+        "core-accounts": {
+          "$ref": "#/$defs/step"
+        },
+        "instant-builder": {
+          "$ref": "#/$defs/step"
+        }
+      },
+      "additionalProperties": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/step"
+          },
+          {
+          "not": {
+            "type": "object",
+            "required": [
+                "allow_recorded_completion"
+              ],
+              "properties": {
+                "allow_recorded_completion": {}
+              }
+            }
+          }
+        ]
+      }
+    },
+    "aliases": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/id"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^(?!(?:constructor|prototype)$)[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/id"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "phaseId": {
+      "enum": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    "expression": {
+      "type": "object",
+      "properties": {
+        "all_of": {
+          "$ref": "#/$defs/members"
+        },
+        "any_of": {
+          "$ref": "#/$defs/members"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "all_of"
+          ],
+          "properties": { "all_of": {} }
+        },
+        {
+          "required": [
+            "any_of"
+          ],
+          "properties": { "any_of": {} }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "phase": {
+      "type": "object",
+      "properties": {
+        "gate": {
+          "$ref": "#/$defs/expression"
+        },
+        "optional": {
+          "$ref": "#/$defs/ids"
+        },
+        "preview": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "releasedPhase": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/phase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "gate"
+          ],
+          "properties": {
+            "gate": {},
+            "preview": {
+              "const": false
+            }
+          }
+        }
+      ]
+    },
+    "previewPhase": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/phase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "preview"
+          ],
+          "properties": {
+            "preview": {
+              "const": true
+            },
+            "gate": false
+          }
+        }
+      ]
+    },
+    "group": {
+      "type": "object",
+      "required": [
+        "semantics",
+        "members"
+      ],
+      "properties": {
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "semantics": {
+          "enum": [
+            "all_of",
+            "any_of"
+          ]
+        },
+        "members": {
+          "$ref": "#/$defs/members"
+        }
+      },
+      "additionalProperties": false
+    },
+    "step": {
+      "type": "object",
+      "required": [
+        "title",
+        "phase",
+        "requirement",
+        "gate_for",
+        "prerequisites",
+        "completion_meaning",
+        "evidence"
+      ],
+      "properties": {
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "phase": {
+          "$ref": "#/$defs/phaseId"
+        },
+        "requirement": {
+          "enum": [
+            "required",
+            "recommended",
+            "optional"
+          ]
+        },
+        "gate_for": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/phaseId"
+          },
+          "uniqueItems": true
+        },
+        "prerequisites": {
+          "$ref": "#/$defs/ids"
+        },
+        "completion_meaning": {
+          "$ref": "#/$defs/text"
+        },
+        "completion": {
+          "$ref": "#/$defs/expression"
+        },
+        "allow_recorded_completion": {
+          "type": "boolean"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "guide": {
+          "type": "string",
+          "pattern": "^/[a-zA-Z0-9_-]+(?:/[a-zA-Z0-9_.-]+)*(?:#[a-zA-Z0-9_-]+)?$",
+          "not": {
+            "pattern": "/\\.\\.?(?:/|#|$)"
+          }
+        },
+        "aliases": {
+          "$ref": "#/$defs/ids"
+        },
+        "internal": {
+          "type": "boolean"
+        },
+        "legacy": {
+          "type": "boolean"
+        }
+      },
+      "dependentRequired": {
+        "allow_recorded_completion": [
+          "completion"
+        ]
+      },
+      "additionalProperties": false
+    }
+  }
+}

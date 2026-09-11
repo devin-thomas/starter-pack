@@ -1,17 +1,664 @@
 {
-  "get-started": { "title": "Start with your agent", "phase": "phase-1" },
-  "primary-ai-phone-app": { "title": "Your AI phone app", "phase": "phase-1" },
-  "authenticator": { "title": "Authenticator", "phase": "phase-1" },
-  "github-mobile": { "title": "GitHub on your phone", "phase": "phase-1" },
-  "core-accounts": { "title": "Your development accounts", "phase": "phase-1" },
-  "instant-build": { "title": "Make one app that works", "phase": "phase-1" },
-  "phase-1-deployment-extra-credit": { "title": "Publish your instant build (extra credit)", "phase": "phase-1" },
-  "computer-setup": { "title": "Set up your computer", "phase": "phase-2" },
-  "private-progress-repository": { "title": "Save progress to your private repository", "phase": "phase-2" },
-  "development-email": { "title": "Choose development email preferences", "phase": "phase-2" },
-  "progress-workbench": { "title": "Open your Progress Workbench", "phase": "phase-2" },
-  "verified-phone-connection": { "title": "Connect from your phone", "phase": "phase-2" },
-  "quick-build": { "title": "Shape and build your project", "phase": "phase-2" },
-  "live-deployment": { "title": "Verify your live project", "phase": "phase-2" },
-  "workbench-publishing-extra-credit": { "title": "Publish your private Workbench (extra credit)", "phase": "phase-2" }
+  "version": "0.2.0",
+  "requirements_revision": "2026-09-10",
+  "phases": {
+    "phase-1": {
+      "gate": {
+        "all_of": [
+          "primary-ai-phone-app",
+          "github-mobile",
+          "authenticator",
+          "core-accounts",
+          "instant-build"
+        ]
+      },
+      "optional": [
+        "phase-1-deployment-extra-credit"
+      ]
+    },
+    "phase-2": {
+      "gate": {
+        "all_of": [
+          "computer-setup",
+          "private-progress-repository",
+          "phase-2-remote-baseline",
+          "quick-build",
+          "live-deployment",
+          "final-progress-save"
+        ]
+      },
+      "optional": [
+        "development-email",
+        "progress-workbench",
+        "workbench-publishing-extra-credit"
+      ]
+    },
+    "phase-3": {
+      "preview": true
+    }
+  },
+  "groups": {
+    "core-account-services": {
+      "title": "Core development accounts",
+      "semantics": "all_of",
+      "members": [
+        "github",
+        "cloudflare",
+        "neon",
+        "instant-builder"
+      ]
+    },
+    "instant-builder-choice": {
+      "title": "One instant builder",
+      "semantics": "any_of",
+      "members": [
+        "google-ai-studio",
+        "lovable",
+        "replit",
+        "base44"
+      ]
+    },
+    "computer-baseline": {
+      "title": "Computer and editor baseline",
+      "semantics": "all_of",
+      "members": [
+        "selected-agentic-harness",
+        "selected-ide",
+        "system-cli-baseline",
+        "cli-contexts"
+      ]
+    },
+    "phase-2-remote-baseline": {
+      "title": "Private network, file movement, and harness control",
+      "semantics": "all_of",
+      "members": [
+        "tailscale-network",
+        "phone-to-computer-file",
+        "computer-to-phone-file",
+        "verified-phone-connection"
+      ]
+    },
+    "tailscale-devices-and-network": {
+      "title": "Both devices and private network identity",
+      "semantics": "all_of",
+      "members": [
+        "tailscale-computer",
+        "tailscale-phone",
+        "private-network-identity"
+      ]
+    }
+  },
+  "steps": {
+    "get-started": {
+      "title": "Start with your agent",
+      "phase": "phase-1",
+      "requirement": "recommended",
+      "gate_for": [],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report",
+        "agent_observation"
+      ],
+      "guide": "/agent/start.md",
+      "completion_meaning": "The companion has begun or resumed from the learner's actual progress, with one useful next action."
+    },
+    "primary-ai-phone-app": {
+      "title": "Your AI phone app",
+      "phase": "phase-1",
+      "requirement": "required",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/phases/1",
+      "completion_meaning": "The selected primary AI phone companion app is signed in and can complete a useful chat interaction."
+    },
+    "authenticator": {
+      "title": "Authenticator",
+      "phase": "phase-1",
+      "requirement": "required",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/phases/1",
+      "completion_meaning": "An authenticator is available and ready for account security without sharing recovery codes or secret keys with the agent."
+    },
+    "github-mobile": {
+      "title": "GitHub on your phone",
+      "phase": "phase-1",
+      "requirement": "required",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/phases/1",
+      "completion_meaning": "GitHub Mobile is installed and signed in to the intended GitHub account."
+    },
+    "github": {
+      "title": "GitHub account",
+      "phase": "phase-1",
+      "requirement": "required",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/phases/1",
+      "internal": true,
+      "completion_meaning": "The learner can sign in to the intended GitHub account; a working existing account counts."
+    },
+    "cloudflare": {
+      "title": "Cloudflare account",
+      "phase": "phase-1",
+      "requirement": "required",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/phases/1",
+      "internal": true,
+      "completion_meaning": "The learner can sign in to the intended Cloudflare account; deployment is not required here."
+    },
+    "neon": {
+      "title": "Neon account",
+      "phase": "phase-1",
+      "requirement": "required",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/phases/1",
+      "internal": true,
+      "completion_meaning": "The learner can sign in to the intended Neon account; an existing account or supported OAuth sign-in counts."
+    },
+    "instant-builder": {
+      "title": "One instant builder",
+      "phase": "phase-1",
+      "requirement": "required",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "completion": {
+        "any_of": [
+          "instant-builder-choice"
+        ]
+      },
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/phases/1",
+      "internal": true,
+      "completion_meaning": "One selected instant builder is usable. A clear direct record of this chosen capability counts without fabricating which alternative was used or requiring the other builders.",
+      "allow_recorded_completion": true
+    },
+    "google-ai-studio": {
+      "title": "Google AI Studio",
+      "phase": "phase-1",
+      "requirement": "optional",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/recommendations",
+      "internal": true,
+      "completion_meaning": "If selected, Google AI Studio is signed in and ready to create the instant app; other builder alternatives are not required."
+    },
+    "lovable": {
+      "title": "Lovable",
+      "phase": "phase-1",
+      "requirement": "optional",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/recommendations",
+      "internal": true,
+      "completion_meaning": "If selected, Lovable is signed in and ready to create the instant app; other builder alternatives are not required."
+    },
+    "replit": {
+      "title": "Replit",
+      "phase": "phase-1",
+      "requirement": "optional",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/recommendations",
+      "internal": true,
+      "completion_meaning": "If selected, Replit is signed in and ready to create the instant app; other builder alternatives are not required."
+    },
+    "base44": {
+      "title": "Base44",
+      "phase": "phase-1",
+      "requirement": "optional",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/recommendations",
+      "internal": true,
+      "completion_meaning": "If selected, Base44 is signed in and ready to create the instant app; other builder alternatives are not required."
+    },
+    "core-accounts": {
+      "title": "Your development accounts",
+      "phase": "phase-1",
+      "requirement": "required",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [],
+      "completion": {
+        "all_of": [
+          "core-account-services"
+        ]
+      },
+      "evidence": [
+        "learner_report",
+        "agent_check",
+        "legacy_record"
+      ],
+      "guide": "/phases/1",
+      "completion_meaning": "GitHub, Cloudflare, Neon and one instant builder are ready. A completed historical aggregate can count with its provenance without inventing missing child records; explicit contradictory evidence needs reconciliation.",
+      "allow_recorded_completion": true
+    },
+    "instant-build": {
+      "title": "Make one app that works",
+      "phase": "phase-1",
+      "requirement": "required",
+      "gate_for": [
+        "phase-1"
+      ],
+      "prerequisites": [
+        "instant-builder"
+      ],
+      "evidence": [
+        "learner_report",
+        "agent_check"
+      ],
+      "guide": "/phases/1",
+      "completion_meaning": "One instant app performs an observable intended behavior on the learner's phone. Source publication, a desktop, a private progress repository and deployment are not required."
+    },
+    "phase-1-deployment-extra-credit": {
+      "title": "Publish your instant build (extra credit)",
+      "phase": "phase-1",
+      "requirement": "optional",
+      "gate_for": [],
+      "prerequisites": [
+        "instant-build"
+      ],
+      "evidence": [
+        "learner_report",
+        "agent_check"
+      ],
+      "guide": "/setup/mobile-deployment.md",
+      "completion_meaning": "If the learner chooses this extra credit, the instant app is published and its intended behavior is checked at the chosen public URL; declining does not block Phase 1."
+    },
+    "computer-setup": {
+      "title": "Set up your computer",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [],
+      "completion": {
+        "all_of": [
+          "computer-baseline"
+        ]
+      },
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/skills/computer-setup/current/SKILL.md",
+      "completion_meaning": "All current-revision computer-baseline children are verified: selected harness, appropriate IDE, required system tools and command resolution in every intended context. A summary-only completion cannot waive a missing child."
+    },
+    "selected-agentic-harness": {
+      "title": "Selected agentic harness",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "agent_check"
+      ],
+      "guide": "/setup/ide.md",
+      "internal": true,
+      "completion_meaning": "The selected primary harness is installed, signed in and can perform a harmless action in the intended local workspace; an editor extension alone does not substitute for the selected agent surface."
+    },
+    "selected-ide": {
+      "title": "Selected editor",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [
+        "selected-agentic-harness"
+      ],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/setup/ide.md",
+      "internal": true,
+      "completion_meaning": "The appropriate IDE opens the workspace for human file and Markdown inspection: VS Code for Codex or Claude Code, Antigravity IDE separately from its agent app, or the existing Cursor editor for Cursor."
+    },
+    "system-cli-baseline": {
+      "title": "System command baseline",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "agent_check"
+      ],
+      "guide": "/setup/computer-setup.manifest.json",
+      "internal": true,
+      "completion_meaning": "The required supported computer tools, including Python, are usable. Reuse healthy installations; a specific package manager, Docker or optional media tools are not independent gates."
+    },
+    "private-progress-repository": {
+      "title": "Save progress to your private repository",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "agent_check",
+        "remote_check"
+      ],
+      "guide": "/artifacts/progress/README.md",
+      "completion_meaning": "An intended progress commit has actually reached the learner's intended private GitHub repository, with account, visibility and saved remote revision checked. Perform this early when Git and authentication are ready; completing the entire setup is not a prerequisite."
+    },
+    "development-email": {
+      "title": "Choose development email preferences",
+      "phase": "phase-2",
+      "requirement": "optional",
+      "gate_for": [],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/artifacts/progress/README.md",
+      "completion_meaning": "If volunteered, distinct email and sign-in preferences are recorded without inferring identity or reuse permission. Omission, deferral or refusal does not block work or graduation."
+    },
+    "progress-workbench": {
+      "title": "Open your Progress Workbench",
+      "phase": "phase-2",
+      "requirement": "recommended",
+      "gate_for": [],
+      "prerequisites": [],
+      "evidence": [
+        "agent_check"
+      ],
+      "guide": "/artifacts/progress-workbench/README.md",
+      "completion_meaning": "If chosen, a private read-only Workbench displays the learner's progress without overwriting a customized copy; its absence or failure does not block setup, saving or graduation."
+    },
+    "tailscale-network": {
+      "title": "Verify private Tailscale networking",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/setup/remote-access.md",
+      "completion_meaning": "Both device readiness records and the intended private-network identity and connectivity check are verified. A summary-only record cannot replace these independent outcomes.",
+      "completion": {
+        "all_of": [
+          "tailscale-devices-and-network"
+        ]
+      }
+    },
+    "phone-to-computer-file": {
+      "title": "Send a file from your phone to your computer",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [
+        "tailscale-network"
+      ],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/setup/file-transfer.md",
+      "completion_meaning": "A benign artifact sent from the phone is actually received at the computer's client-specific inbox and located and read by the agent. A send notification alone does not prove receipt; do not automatically execute or extract an arriving archive."
+    },
+    "computer-to-phone-file": {
+      "title": "Open a returned file on your phone",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [
+        "tailscale-network"
+      ],
+      "evidence": [
+        "learner_report"
+      ],
+      "guide": "/setup/file-transfer.md",
+      "completion_meaning": "A benign result sent from the computer is received and opened on the intended phone. Record this direction independently from phone-to-computer receipt and preserve either successful direction if the other fails."
+    },
+    "verified-phone-connection": {
+      "title": "Connect from your phone",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [
+        "selected-agentic-harness"
+      ],
+      "evidence": [
+        "learner_report",
+        "agent_check"
+      ],
+      "guide": "/setup/remote-access.md",
+      "completion_meaning": "One real phone-to-harness interaction performs a harmless action in the selected computer session through the selected supported route. A phone chatbot login, Tailscale connection or file transfer alone cannot satisfy harness control; native harness control can pass independently of them."
+    },
+    "quick-build": {
+      "title": "Shape and build your project",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [
+        "computer-setup",
+        "private-progress-repository",
+        "phase-2-remote-baseline"
+      ],
+      "evidence": [
+        "agent_check",
+        "learner_report",
+        "remote_check"
+      ],
+      "guide": "/skills/quick-build/current/SKILL.md",
+      "completion_meaning": "The harness has built the learner-approved meaningful project after the explicit go decision, with its intended main flow working and durable source saved to the intended source repository. A disposable demo, build-only pass or progress repository without project source is insufficient."
+    },
+    "live-deployment": {
+      "title": "Verify your live project",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [
+        "quick-build"
+      ],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/skills/quick-build/current/SKILL.md",
+      "completion_meaning": "The intended deployed application performs its primary user behavior at the live URL, with clear agent-tested or learner-reported evidence and target-device gaps stated honestly. HTTP 200, a login page, a screenshot or a successful build alone is not behavioral verification."
+    },
+    "workbench-publishing-extra-credit": {
+      "title": "Publish your private Workbench (extra credit)",
+      "phase": "phase-2",
+      "requirement": "optional",
+      "gate_for": [],
+      "prerequisites": [
+        "progress-workbench"
+      ],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/setup/private-workbench.md",
+      "completion_meaning": "If explicitly chosen, an isolated allowlisted Workbench view is reachable by its intended audience and its access boundary and denied private paths are verified. Do not claim untested access, overwrite customizations, expose the repository or reset unrelated routes."
+    },
+    "phase-2-project": {
+      "title": "Historical Phase 2 project record",
+      "phase": "phase-2",
+      "requirement": "recommended",
+      "gate_for": [],
+      "prerequisites": [],
+      "evidence": [
+        "legacy_record"
+      ],
+      "guide": "/phases/2",
+      "legacy": true,
+      "completion_meaning": "Preserve this historical aggregate and its evidence as recorded activity, not an automatic alias for Quick Build, verified live behavior or the final private progress save."
+    },
+    "cli-contexts": {
+      "title": "Commands work in the intended contexts",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [
+        "selected-agentic-harness",
+        "selected-ide",
+        "system-cli-baseline"
+      ],
+      "evidence": [
+        "agent_check"
+      ],
+      "guide": "/skills/computer-setup/current/SKILL.md",
+      "internal": true,
+      "completion_meaning": "Each relevant CLI resolves in the current shell, a fresh terminal, the IDE terminal and the actual harness subprocess. Repeat this per-tool check for later additions; native and WSL contexts stay distinct, and project-local tools use their project runner without global .bin PATH entries."
+    },
+    "tailscale-computer": {
+      "title": "Tailscale on your computer",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/setup/remote-access.md",
+      "internal": true,
+      "completion_meaning": "Tailscale is installed, signed in and active on the intended computer; installation alone or phone-side readiness does not prove this device is connected."
+    },
+    "tailscale-phone": {
+      "title": "Tailscale on your phone",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report",
+        "agent_observation"
+      ],
+      "guide": "/setup/remote-access.md",
+      "internal": true,
+      "completion_meaning": "Tailscale is installed, signed in and active on the intended phone. A clear learner report counts with its provenance and does not imply a file-transfer or harness-control test occurred."
+    },
+    "private-network-identity": {
+      "title": "Verify the intended private network",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [
+        "tailscale-computer",
+        "tailscale-phone"
+      ],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/setup/remote-access.md",
+      "internal": true,
+      "completion_meaning": "The intended phone and computer identities are confirmed on the intended private Tailscale network and permitted private connectivity is verified. Tailnet membership alone does not prove an owner-only access boundary or either file-transfer direction."
+    },
+    "final-progress-save": {
+      "title": "Save your completed work",
+      "phase": "phase-2",
+      "requirement": "required",
+      "gate_for": [
+        "phase-2"
+      ],
+      "prerequisites": [
+        "computer-setup",
+        "private-progress-repository",
+        "phase-2-remote-baseline",
+        "quick-build",
+        "live-deployment"
+      ],
+      "evidence": [
+        "agent_check",
+        "remote_check"
+      ],
+      "guide": "/artifacts/progress/README.md",
+      "completion_meaning": "The final reconciled progress, actual evidence and completion record have reached the intended private GitHub repository and the saved remote revision is verified. Preserve local success and mark this save pending on push failure; an earlier setup save is not the final save. Repeat closeout without empty commits or storing the containing commit's own SHA recursively."
+    }
+  },
+  "aliases": {
+    "instant-app": "instant-build"
+  }
 }

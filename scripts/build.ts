@@ -29,8 +29,10 @@ for (const [schemaName, instancePaths] of [
     [
       "dist/artifacts/progress/starter-progress.json",
       "dist/artifacts/progress/starter-progress.example.json",
+      "dist/artifacts/progress/starter-progress.completed-phase-1.example.json",
     ],
   ],
+  ["requirements", ["dist/agent/requirements.json"]],
   ["recommendation", ["dist/recommendations.json"]],
 ] as const) {
   const validate = ajv.compile(
