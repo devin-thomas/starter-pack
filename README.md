@@ -4,6 +4,10 @@ A free guide from Devin Thomas at Uppercut Labs for making and deploying softwar
 
 Visit [Starter Pack](https://starter.devthomas.site).
 
+## Use and reuse
+
+Copyright (c) 2026 Devin Thomas. All rights reserved. You may read, examine, reference, and follow Starter Pack for your own learning. You may not resell, commercially reuse, redistribute, or create a copied or adapted version of the kit or course without written permission. Giving credit does not grant reuse rights. See [LICENSE](LICENSE) for the limited learner-workflow permissions, your rights in your own original projects, and the third-party and legal exceptions. Public source access does not make this an open-source project.
+
 ## Feedback
 
 Found a confusing step or something that does not work? [Report a problem](https://github.com/devin-thomas/starter-pack/issues/new?template=bug_report.yml) with the page or phase, what you tried, and your device/browser/AI app. Reports are public: do not attach private progress files, conversations, account details, or credentials.
