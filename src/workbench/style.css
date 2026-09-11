@@ -29,4 +29,3 @@ aside h2{display:flex;align-items:center;color:var(--blue)}aside section:nth-chi
 .heading-text{min-width:0;overflow-wrap:anywhere}.step-heading h3{min-width:0;flex:1;flex-wrap:wrap;row-gap:6px}.step-heading .heading-text{flex:1 1 120px}.artifact h3{min-width:0;align-items:flex-start}.artifact .heading-text{flex:1}
 .requirement{display:inline-flex;flex-shrink:0;white-space:nowrap;margin-left:9px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;color:var(--muted);font-size:.66rem;font-weight:500;vertical-align:middle}
 @media(max-width:680px){.diagnostics{margin:0 16px 12px}.step-heading h3{flex-basis:100%}.requirement{font-size:.6rem}}
-
