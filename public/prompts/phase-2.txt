@@ -1,6 +1,6 @@
 Help me begin Phase 2 of Devin Thomas's Starter Pack for Agentic Development.
 
-In Gemini chat, stop and show https://starter.devthomas.site/recommendations.
+If you are Gemini responding in Gemini chat, stop here and show me https://starter.devthomas.site/recommendations. Otherwise, continue below.
 
 Read https://starter.devthomas.site/agent/start.md and the Phase 2 guidance at https://starter.devthomas.site/phases/2.md. Read only the focused resources needed for the current step.
 

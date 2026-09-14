@@ -1,7 +1,7 @@
 Help me start or resume Devin Thomas's Starter Pack.
 
-In Gemini chat, stop and show https://starter.devthomas.site/recommendations.
+If you are Gemini responding in Gemini chat, stop here and show me https://starter.devthomas.site/recommendations. Otherwise, continue below.
 
-Read https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/agent/packets/phase-1-a675b49e9e964136.md and guide me one step at a time. Preserve any progress I provide.
+Read https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/agent/packets/phase-1-d73eb8b8dd3627a9.md and guide me one step at a time. Preserve any progress I provide.
 
 If you can't read it, ask me for the site's "Copy instruction packet" instead of guessing.

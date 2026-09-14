@@ -1,6 +1,6 @@
 # Start or resume Starter Pack
 
-In Gemini chat, stop and show https://starter.devthomas.site/recommendations. Gemini chat is not supported for this pack.
+If you are Gemini responding in Gemini chat, stop here and show the learner https://starter.devthomas.site/recommendations because Gemini chat is not supported for this pack. Otherwise, continue below.
 
 Canonical origin: https://starter.devthomas.site. Resource version: 0.2.0; requirements revision: 2026-09-10.
 

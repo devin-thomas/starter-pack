@@ -209,7 +209,7 @@ export function startupPacketRelease(packet: string) {
   const hash = createHash("sha256").update(packet).digest("hex");
   const file = `public/agent/packets/phase-1-${hash.slice(0, 16)}.md`;
   const url = `https://raw.githubusercontent.com/devin-thomas/starter-pack/main/${file}`;
-  const prompt = `Help me start or resume Devin Thomas's Starter Pack.\n\nIn Gemini chat, stop and show https://starter.devthomas.site/recommendations.\n\nRead ${url} and guide me one step at a time. Preserve any progress I provide.\n\nIf you can't read it, ask me for the site's "Copy instruction packet" instead of guessing.\n`;
+  const prompt = `Help me start or resume Devin Thomas's Starter Pack.\n\nIf you are Gemini responding in Gemini chat, stop here and show me https://starter.devthomas.site/recommendations. Otherwise, continue below.\n\nRead ${url} and guide me one step at a time. Preserve any progress I provide.\n\nIf you can't read it, ask me for the site's "Copy instruction packet" instead of guessing.\n`;
   return { file, url, hash, prompt };
 }
 
