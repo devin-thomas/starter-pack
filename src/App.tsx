@@ -785,9 +785,9 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
           <span className="status-divider" />
           No account required
         </div>
-        <a className="header-guide" href="/guide">
+        <a className="header-guide" href="/skills">
           <Icon name="book-open" size={16} />
-          Guide
+          Skills
         </a>
       </header>
       <nav className="progress-rail" aria-label="The three phases">
