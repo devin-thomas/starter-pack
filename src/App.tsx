@@ -11,6 +11,32 @@ import {
   type IconName,
 } from "./Icons";
 
+export interface SkillEntry {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  category: string;
+  order: number;
+  sourceRepo: string;
+  sourcePath: string;
+  sourceVersion: string | null;
+  sourceRevision: string;
+  sourceRef: string;
+  public: boolean;
+  ownedBy: string;
+  relatedSkills: string[];
+  prerequisites: { skillId?: string; platform?: string; application?: string; reason?: string }[];
+  recommendationOnly: boolean;
+}
+
+export interface SkillLesson {
+  skillId: string;
+  updated: string;
+  html: string;
+  video?: { url: string; title?: string };
+}
+
 export interface SiteData {
   pages: { guide: string; about: string; cloudflareIphone: string };
   phases: {
@@ -34,6 +60,10 @@ export interface SiteData {
     url: string;
     referral?: { url: string; disclosure: string };
   }[];
+  skills: {
+    manifest: SkillEntry[];
+    lessons: Record<string, SkillLesson>;
+  };
   prompt: string;
   phase2Prompt: string;
   instructionPacket: string;
@@ -529,12 +559,104 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
   );
 }
 
+const categoryLabels: Record<string, string> = {
+  plan: "Plan", build: "Build", specialized: "Specialized", fun: "Fun",
+};
+
+function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; lesson: SkillLesson; manifest: SkillEntry[]; lessons: Record<string, SkillLesson> }) {
+  const sourceUrl = `https://github.com/${entry.sourceRepo}/blob/${entry.sourceRef}/${entry.sourcePath}`;
+  const relatedEntries = entry.relatedSkills
+    .map((id) => manifest.find((s) => s.id === id))
+    .filter((s): s is SkillEntry => s != null && s.public && !s.recommendationOnly);
+  const skillPrereqs = entry.prerequisites.filter((p) => p.skillId);
+  const platformPrereqs = entry.prerequisites.filter((p) => p.platform || p.application);
+
+  return (
+    <>
+      <PageHeading
+        label={categoryLabels[entry.category] || entry.category}
+        title={entry.title}
+        description={entry.summary}
+      />
+      {lesson.video && (
+        <div className="skill-video">
+          <video controls src={lesson.video.url}>
+            {lesson.video.title && <track kind="captions" label={lesson.video.title} />}
+          </video>
+        </div>
+      )}
+      <article className="prose" dangerouslySetInnerHTML={{ __html: lesson.html }} />
+      {platformPrereqs.length > 0 && (
+        <section className="skill-meta-section">
+          <h2>Compatibility</h2>
+          <ul>
+            {platformPrereqs.map((p, i) => (
+              <li key={i}>{p.reason || p.platform || p.application}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {(skillPrereqs.length > 0 || relatedEntries.length > 0) && (
+        <section className="skill-meta-section">
+          {skillPrereqs.length > 0 && (
+            <>
+              <h2>Prerequisites</h2>
+              <ul>
+                {skillPrereqs.map((p) => {
+                  const linked = manifest.find((s) => s.id === p.skillId);
+                  return (
+                    <li key={p.skillId}>
+                      {linked && lessons[linked.slug] ? <a href={`/skills/${linked.slug}`}>{linked.title}</a> : linked ? <strong>{linked.title}</strong> : p.skillId}
+                      {p.reason && ` — ${p.reason}`}
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )}
+          {relatedEntries.length > 0 && (
+            <>
+              <h2>Related skills</h2>
+              <ul>
+                {relatedEntries.map((s) => (
+                  <li key={s.id}>
+                    {lessons[s.slug] ? <a href={`/skills/${s.slug}`}>{s.title}</a> : <strong>{s.title}</strong>} — {s.summary}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </section>
+      )}
+      <section className="skill-meta-section skill-source">
+        <h2>Source</h2>
+        <p>
+          Canonical implementation: <a href={`https://github.com/${entry.sourceRepo}/tree/${entry.sourceRef}/${entry.sourcePath.replace(/\/[^/]+$/, "")}`} target="_blank" rel="noopener noreferrer">
+            {entry.sourceRepo}<Icon name="arrow-up-right" size={13} /><span className="sr-only"> (opens in a new tab)</span>
+          </a>
+          {entry.sourceVersion && <span className="metadata"> v{entry.sourceVersion}</span>}
+        </p>
+      </section>
+      <a href="/resources" className="text-link">
+        All skills and resources
+        <Icon name="arrow-right" size={15} />
+      </a>
+    </>
+  );
+}
+
 export default function App({ path, data }: { path: string; data: SiteData }) {
   const normalized = path.replace(/\/$/, "") || "/";
   const phaseNumber = /^\/phases\/[123]$/.test(normalized)
     ? Number(normalized.at(-1))
     : 0;
   const phase = data.phases.find((item) => item.order === phaseNumber);
+  const skillSlug = normalized.startsWith("/skills/") ? normalized.slice("/skills/".length) : null;
+  const skillPage = skillSlug ? (() => {
+    const entry = data.skills.manifest.find((s) => s.slug === skillSlug && s.public && !s.recommendationOnly);
+    const lesson = entry ? data.skills.lessons[entry.id] : undefined;
+    return entry && lesson ? { entry, lesson } : null;
+  })() : null;
   const reducedMotion = useReducedMotion();
   return (
     <div className="app-shell">
@@ -931,6 +1053,8 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   <Icon name="arrow-right" size={16} />
                 </a>
               </>
+            ) : normalized.startsWith("/skills/") && skillPage ? (
+              <SkillPage entry={skillPage.entry} lesson={skillPage.lesson} manifest={data.skills.manifest} lessons={data.skills.lessons} />
             ) : (
               <>
                 <PageHeading

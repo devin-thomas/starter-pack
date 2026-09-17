@@ -66,7 +66,9 @@ if (analyticsToken && !/^[a-f0-9]{32}$/i.test(analyticsToken))
   throw new Error("Invalid Cloudflare Web Analytics token");
 for (const route of routes) {
   const phase = data.phases.find((item) => route === `/phases/${item.order}`);
-  const title = phase?.title || titles[route];
+  const skillSlug = route.startsWith("/skills/") ? route.slice("/skills/".length) : null;
+  const skillEntry = skillSlug ? data.skills.manifest.find((s) => s.slug === skillSlug) : null;
+  const title = phase?.title || (skillEntry ? skillEntry.title : null) || titles[route];
   const html = template
     .replace(
       "<!--app-html-->",

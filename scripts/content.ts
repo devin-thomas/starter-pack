@@ -87,7 +87,7 @@ function accentHeadings(html: string) {
 }
 
 export const origin = "https://starter.devthomas.site";
-export const routes = [
+const staticRoutes = [
   "/",
   "/guide",
   "/phases/1",
@@ -100,6 +100,10 @@ export const routes = [
   "/contact",
   "/help/cloudflare-iphone",
 ];
+export let routes = [...staticRoutes];
+export function addSkillRoutes(slugs: string[]) {
+  routes = [...staticRoutes, ...slugs.map((s) => `/skills/${s}`)];
+}
 export async function write(destination: string, value: string) {
   await mkdir(path.dirname(destination), { recursive: true });
   await writeFile(destination, value);
@@ -196,10 +200,46 @@ export async function loadContent(): Promise<SiteData> {
     )
       throw new Error(`Refresh recommendation ${recommendation.id}`);
   }
+  // Load skill manifest and lessons
+  const skillManifestRaw = JSON.parse(await readFile("content/skills/manifest.json", "utf8"));
+  const skillManifest = skillManifestRaw.skills as SiteData["skills"]["manifest"];
+  const skillLessons: SiteData["skills"]["lessons"] = {};
+  const lessonFiles = (await readdir("content/skills")).filter((f) => f.endsWith(".md"));
+  const seenSkillIds = new Set<string>();
+  for (const file of lessonFiles) {
+    const raw = await readFile(`content/skills/${file}`, "utf8");
+    const { data: fm, content } = matter(raw);
+    if (typeof fm.skill_id !== "string" || !fm.skill_id.trim())
+      throw new Error(`content/skills/${file}: missing or empty skill_id in frontmatter`);
+    if (!fm.updated)
+      throw new Error(`content/skills/${file}: missing updated in frontmatter`);
+    const entry = skillManifest.find((s) => s.id === fm.skill_id && s.public && !s.recommendationOnly);
+    if (!entry)
+      throw new Error(`content/skills/${file}: skill_id "${fm.skill_id}" not found in owned public manifest`);
+    if (seenSkillIds.has(fm.skill_id))
+      throw new Error(`content/skills/${file}: duplicate lesson for skill_id "${fm.skill_id}"`);
+    seenSkillIds.add(fm.skill_id);
+    const html = accentHeadings(await renderProse(content.replace(/^# .+\r?\n/m, "")));
+    const lesson: SiteData["skills"]["lessons"][string] = {
+      skillId: fm.skill_id,
+      updated: String(fm.updated),
+      html,
+    };
+    if (fm.video && typeof fm.video === "object" && fm.video.url)
+      lesson.video = { url: fm.video.url, ...(fm.video.title ? { title: fm.video.title } : {}) };
+    skillLessons[fm.skill_id] = lesson;
+  }
+
+  addSkillRoutes(Object.keys(skillLessons).map((id) => {
+    const entry = skillManifest.find((s) => s.id === id);
+    return entry ? entry.slug : id;
+  }));
+
   return {
     phases,
     pages,
     recommendations,
+    skills: { manifest: skillManifest, lessons: skillLessons },
     prompt: (await readFile("public/prompts/get-started.txt", "utf8")).trim(),
     phase2Prompt: (await readFile("public/prompts/phase-2.txt", "utf8")).trim(),
     instructionPacket: await instructionPacket(),
