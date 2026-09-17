@@ -1,0 +1,165 @@
+[
+  {
+    "group": "Alignment and discovery",
+    "description": "Turn a rough idea into shared understanding before writing code.",
+    "items": [
+      {
+        "name": "grill-me",
+        "title": "Grill Me",
+        "description": "An intensive interview that drills into plans and designs until all branches are resolved.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "grill-with-docs",
+        "title": "Grill with Docs",
+        "description": "Conducts alignment interviews while building domain models and updating context and architecture decision records.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "domain-modeling",
+        "title": "Domain Modeling",
+        "description": "Actively builds and sharpens project domain models and terminology.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "research",
+        "title": "Research",
+        "description": "Investigates questions against primary sources and captures findings as cited Markdown.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      }
+    ]
+  },
+  {
+    "group": "Planning and specification",
+    "description": "Structure decisions into specs and actionable tickets.",
+    "items": [
+      {
+        "name": "to-spec",
+        "title": "To Spec",
+        "description": "Synthesizes conversations into published specs and PRDs for issue trackers.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "to-tickets",
+        "title": "To Tickets",
+        "description": "Breaks plans into tracer-bullet tickets with blocking dependency edges.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "wayfinder",
+        "title": "Wayfinder",
+        "description": "Plans large work across multiple sessions as decision tickets.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      }
+    ]
+  },
+  {
+    "group": "Building and quality",
+    "description": "Build from specs with tests, reviews, and structured debugging.",
+    "items": [
+      {
+        "name": "implement",
+        "title": "Implement",
+        "description": "Builds work from specs and tickets using TDD with code review gates.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "tdd",
+        "title": "TDD",
+        "description": "Red-green-refactor test-driven development cycles.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "code-review",
+        "title": "Code Review",
+        "description": "Two-axis review covering standards compliance and spec adherence.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "diagnosing-bugs",
+        "title": "Diagnosing Bugs",
+        "description": "A structured debugging loop for hard bugs and performance regressions.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "prototype",
+        "title": "Prototype",
+        "description": "Creates throwaway HTML and UI prototypes to answer design questions quickly.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      }
+    ]
+  },
+  {
+    "group": "Architecture and maintenance",
+    "description": "Keep the codebase and issue list healthy as the project grows.",
+    "items": [
+      {
+        "name": "improve-codebase-architecture",
+        "title": "Improve Codebase Architecture",
+        "description": "Scans codebases for architectural deepening opportunities with visual reports.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "codebase-design",
+        "title": "Codebase Design",
+        "description": "Establishes discipline for designing deep, testable modules with minimal interfaces.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "triage",
+        "title": "Triage",
+        "description": "Moves issues through a state-machine of triage roles to work through backlogs.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "resolving-merge-conflicts",
+        "title": "Resolving Merge Conflicts",
+        "description": "Works through merge conflicts hunk-by-hunk, by intent.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      }
+    ]
+  },
+  {
+    "group": "Communication and handoff",
+    "description": "Move context between sessions, people, and agents without losing signal.",
+    "items": [
+      {
+        "name": "handoff",
+        "title": "Handoff",
+        "description": "Compacts conversations into handoff documents for other agents or people.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "teach",
+        "title": "Teach",
+        "description": "Multi-session skill teaching using project directories as workspaces.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      },
+      {
+        "name": "writing-for-agents",
+        "title": "Writing for Agents",
+        "description": "Guidelines for writing agent-readable documentation.",
+        "author": "Matt Pocock",
+        "url": "https://github.com/mattpocock/skills"
+      }
+    ]
+  }
+]

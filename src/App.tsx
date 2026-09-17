@@ -63,6 +63,7 @@ export interface SiteData {
   skills: {
     manifest: SkillEntry[];
     lessons: Record<string, SkillLesson>;
+    recommendations: { group: string; description: string; items: { name: string; title: string; description: string; author: string; url: string }[] }[];
   };
   prompt: string;
   phase2Prompt: string;
@@ -78,6 +79,7 @@ const phaseIcons = ["sprout", "blocks", "compass"] as const;
 const phaseShortLabels = ["Make", "Harness", "Build"];
 const nav = [
   ["/guide", "Guide"],
+  ["/skills", "Skills"],
   ["/recommendations", "Recommendations"],
   ["/resources", "Agent resources"],
   ["/about", "About"],
@@ -637,8 +639,100 @@ function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; le
           {entry.sourceVersion && <span className="metadata"> v{entry.sourceVersion}</span>}
         </p>
       </section>
-      <a href="/resources" className="text-link">
-        All skills and resources
+      <a href="/skills" className="text-link">
+        All skills
+        <Icon name="arrow-right" size={15} />
+      </a>
+    </>
+  );
+}
+
+function SkillsHub({ data }: { data: SiteData }) {
+  const categories = data.skills.manifest[0] ? [...new Set(data.skills.manifest.map((s) => s.category))] : [];
+  const orderedCategories = ["plan", "build", "specialized", "fun"].filter((c) => categories.includes(c));
+  return (
+    <>
+      <PageHeading
+        label="SKILLS"
+        title="Tools for every stage of a build."
+        description="Agent skills that help you plan, build, maintain, and ship. Pick what fits your current job."
+      />
+      <p className="muted">
+        Skills are reusable instructions your agent follows. You do not need all of them. Start with the one that matches your next step.
+      </p>
+      {orderedCategories.map((cat) => (
+        <section key={cat} className="content-section">
+          <h2>{categoryLabels[cat] || cat}</h2>
+          <div className="recommendation-list">
+            {data.skills.manifest
+              .filter((s) => s.category === cat && s.public && !s.recommendationOnly)
+              .sort((a, b) => a.order - b.order)
+              .map((s) => {
+                const hasLesson = !!data.skills.lessons[s.id];
+                return hasLesson ? (
+                  <a key={s.id} href={`/skills/${s.slug}`} className="recommendation skill-card">
+                    <h3>{s.title}</h3>
+                    <p>{s.summary}</p>
+                  </a>
+                ) : (
+                  <div key={s.id} className="recommendation skill-card">
+                    <h3>{s.title}</h3>
+                    <p>{s.summary}</p>
+                  </div>
+                );
+              })}
+          </div>
+        </section>
+      ))}
+      <section className="content-section">
+        <h2>Third-party recommendations</h2>
+        <p>Skills and resources from other authors that complement this collection.</p>
+        <a className="text-link" href="/skills/recommendations">
+          Browse recommendations
+          <Icon name="arrow-right" size={15} />
+        </a>
+      </section>
+    </>
+  );
+}
+
+function SkillRecommendations({ data }: { data: SiteData }) {
+  return (
+    <>
+      <PageHeading
+        label="SKILL RECOMMENDATIONS"
+        title="Worth learning from."
+        description="Third-party skills and resources that complement the Starter Pack collection. These are not authored or maintained by Devin."
+      />
+      {data.skills.recommendations.map((group) => (
+        <section key={group.group} className="content-section">
+          <div className="section-heading">
+            <h2>{group.group}</h2>
+            <p className="muted">{group.description}</p>
+          </div>
+          <div className="recommendation-list">
+            {group.items.map((item) => (
+              <div key={item.name} className="recommendation skill-card">
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+                <span className="metadata">By {item.author}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+      <p className="muted">
+        All skills above are authored by their respective creators. Source and installation:{" "}
+        <ExternalLink href="https://github.com/mattpocock/skills">
+          mattpocock/skills<Icon name="arrow-up-right" size={12} />
+        </ExternalLink>{" "}
+        and{" "}
+        <ExternalLink href="https://aihero.dev/skills">
+          aihero.dev<Icon name="arrow-up-right" size={12} />
+        </ExternalLink>
+      </p>
+      <a href="/skills" className="text-link">
+        Back to all skills
         <Icon name="arrow-right" size={15} />
       </a>
     </>
@@ -1053,6 +1147,10 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   <Icon name="arrow-right" size={16} />
                 </a>
               </>
+            ) : normalized === "/skills" ? (
+              <SkillsHub data={data} />
+            ) : normalized === "/skills/recommendations" ? (
+              <SkillRecommendations data={data} />
             ) : normalized.startsWith("/skills/") && skillPage ? (
               <SkillPage entry={skillPage.entry} lesson={skillPage.lesson} manifest={data.skills.manifest} lessons={data.skills.lessons} />
             ) : (

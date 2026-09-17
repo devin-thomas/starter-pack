@@ -1100,6 +1100,27 @@ h3 {
     linear-gradient(var(--surface), var(--surface)) padding-box,
     linear-gradient(110deg, #f29b9b, #f2c879, #8bd7cb, #8fc7ff, #c1b7f5, #e9a2bb) border-box;
 }
+a.skill-card {
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+a.skill-card:hover {
+  border-color: var(--line-strong);
+}
+.skill-card h3 {
+  font-size: 16px;
+  margin: 0 0 6px;
+}
+.skill-card p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+.skill-card .metadata {
+  margin-top: auto;
+  padding-top: 8px;
+}
 .recommendation h2 {
   font-size: 19px;
 }

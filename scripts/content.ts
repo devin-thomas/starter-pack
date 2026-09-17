@@ -102,7 +102,7 @@ const staticRoutes = [
 ];
 export let routes = [...staticRoutes];
 export function addSkillRoutes(slugs: string[]) {
-  routes = [...staticRoutes, ...slugs.map((s) => `/skills/${s}`)];
+  routes = [...staticRoutes, "/skills", "/skills/recommendations", ...slugs.map((s) => `/skills/${s}`)];
 }
 export async function write(destination: string, value: string) {
   await mkdir(path.dirname(destination), { recursive: true });
@@ -230,6 +230,10 @@ export async function loadContent(): Promise<SiteData> {
     skillLessons[fm.skill_id] = lesson;
   }
 
+  const skillRecommendations: SiteData["skills"]["recommendations"] = JSON.parse(
+    await readFile("content/skills/recommendations.json", "utf8"),
+  );
+
   addSkillRoutes(Object.keys(skillLessons).map((id) => {
     const entry = skillManifest.find((s) => s.id === id);
     return entry ? entry.slug : id;
@@ -239,7 +243,7 @@ export async function loadContent(): Promise<SiteData> {
     phases,
     pages,
     recommendations,
-    skills: { manifest: skillManifest, lessons: skillLessons },
+    skills: { manifest: skillManifest, lessons: skillLessons, recommendations: skillRecommendations },
     prompt: (await readFile("public/prompts/get-started.txt", "utf8")).trim(),
     phase2Prompt: (await readFile("public/prompts/phase-2.txt", "utf8")).trim(),
     instructionPacket: await instructionPacket(),
