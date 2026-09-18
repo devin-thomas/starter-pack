@@ -4,6 +4,18 @@ A free guide from Devin Thomas at Uppercut Labs for making and deploying softwar
 
 Visit [Starter Pack](https://starter.devthomas.site).
 
+## Public style guides
+
+The site now also publishes in-progress coding style guides under [`/style`](https://starter.devthomas.site/style). The first guide is [TypeScript](https://starter.devthomas.site/style/TypeScript).
+
+Agent-readable forms are generated with the human page:
+
+- `https://starter.devthomas.site/style/TypeScript.md`
+- `https://starter.devthomas.site/style/TypeScript.json`
+- `https://starter.devthomas.site/style/catalog.json`
+
+The public guide contains only accepted rules. Private deliberation and rejected alternatives remain outside this repository's published surface.
+
 ## Use and reuse
 
 Copyright (c) 2026 Devin Thomas. All rights reserved. You may read, examine, reference, and follow Starter Pack for your own learning. You may not resell, commercially reuse, redistribute, or create a copied or adapted version of the kit or course without written permission. Giving credit does not grant reuse rights. See [LICENSE](LICENSE) for the limited learner-workflow permissions, your rights in your own original projects, and the third-party and legal exceptions. Public source access does not make this an open-source project.
@@ -34,7 +46,7 @@ npm run check
 npm run preview
 ```
 
-The build generates semantic HTML, focused Markdown and JSON, and an agent catalog from the public curriculum. `dist/` is generated and is not committed.
+The build generates semantic HTML, focused Markdown and JSON, public style-guide resources, and an agent catalog from the public curriculum. `dist/` is generated and is not committed.
 
 GitHub runs `npm ci` and `npm run check` on Node.js 24 for pushes to `main` and pull requests. These checks do not deploy the site; production deployment remains explicit.
 
