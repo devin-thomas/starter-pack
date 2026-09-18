@@ -32,6 +32,7 @@ server.middlewares.use(async (request, response, next) => {
     /^\/(guide|about)\.(md|json)$/.test(pathname) ||
     /^\/help\/cloudflare-iphone\.(md|json)$/.test(pathname) ||
     /^\/phases\/[123]\.(md|json)$/.test(pathname) ||
+    /^\/style\/(?:TypeScript\.(?:md|json)|catalog\.json)$/.test(pathname) ||
     /^\/skills\/[a-z-]+\/SKILL\.md$/.test(pathname) ||
     [
       "/agent/catalog.json",
