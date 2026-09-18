@@ -48,6 +48,10 @@ const html = await read("/", /text\/html/);
 if (!html.includes('id="site-data"') || !html.includes("Your first build")) {
   throw new Error("The response is not the rendered Starter Pack homepage.");
 }
+const styleHtml = await read("/style/TypeScript", /text\/html/);
+if (!styleHtml.includes("TypeScript") || !styleHtml.includes("Agent access") || !styleHtml.includes("In progress")) {
+  throw new Error("The TypeScript style guide page is incomplete.");
+}
 const script = html.match(/<script\b[^>]*\bsrc="([^\"]+\.js)"/);
 const stylesheet = html.match(/<link\b[^>]*\bhref="([^\"]+\.css)"/);
 if (!script || !stylesheet)
@@ -71,14 +75,14 @@ const start = await read("/agent/start.md", /text\/plain/);
 assertGoogleResourceAccess(await read("/robots.txt", /text\/plain/));
 const packet = await read("/agent/phase-1-packet.txt", /text\/plain/);
 if (packet !== await readFile("dist/agent/phase-1-packet.txt", "utf8")) throw new Error("Instruction packet differs from the built curriculum.");
-for (const route of ["/prompts/get-started.txt", "/agent/start.md", "/agent/resource-links.md", "/skills/starter-pack/current/SKILL.md"])
+for (const route of ["/prompts/get-started.txt", "/agent/start.md", "/agent/resource-links.md", "/skills/starter-pack/current/SKILL.md", "/style/TypeScript.md"])
   if (await read(route, /text\/plain/) !== await readFile(`dist${route}`, "utf8")) throw new Error(`Live startup instructions differ: ${route}`);
 for (const route of ["/phases/1.md", "/phases/2.md", "/artifacts/progress/README.md", "/artifacts/progress-workbench/README.md", "/skills/computer-setup/current/SKILL.md", "/skills/quick-build/current/SKILL.md", "/setup/file-transfer.md", "/setup/authentication.md", "/setup/private-workbench.md", "/setup/tool-troubleshooting.md"])
   if (await read(route, /text\/plain/) !== await readFile(`dist${route}`, "utf8")) throw new Error(`Live instructions differ: ${route}`);
 const requirementsBody = await read("/agent/requirements.json", /application\/json/);
 if (requirementsBody !== await readFile("dist/agent/requirements.json", "utf8")) throw new Error("Live requirements differ from this build.");
 const requirements = parseRegistry(JSON.parse(requirementsBody));
-for (const route of ["/schemas/requirements.schema.json", "/schemas/starter-progress.schema.json", "/setup/computer-setup.manifest.json", "/skills/versions.json"])
+for (const route of ["/schemas/requirements.schema.json", "/schemas/starter-progress.schema.json", "/setup/computer-setup.manifest.json", "/skills/versions.json", "/style/TypeScript.json", "/style/catalog.json"])
   if (await read(route, /application\/json/) !== await readFile(`dist${route}`, "utf8")) throw new Error(`Live contract differs: ${route}`);
 if (!start.includes("Starter Pack skill"))
   throw new Error("The agent start resource is missing.");
@@ -121,5 +125,5 @@ for (const [collection, manifest] of [
   );
 }
 console.log(
-  `Verified ${base.origin}: ${local ? "local HTTP asset routing (not deployment; GitHub packet fetch skipped)" : "normal DNS, HTTPS and GitHub packet"}, rendered homepage, JS/CSS, exact current skills/setup/schema/requirements resources, Google learner-resource robots policy, exact startup packet and prompts, all 35 icon hashes, exact Workbench download bytes, catalog CORS, and six private-path denials. Provider-app acceptance is separate.`,
+  `Verified ${base.origin}: ${local ? "local HTTP asset routing (not deployment; GitHub packet fetch skipped)" : "normal DNS, HTTPS and GitHub packet"}, rendered homepage and TypeScript style guide, JS/CSS, exact current skills/style/setup/schema/requirements resources, Google learner-resource robots policy, exact startup packet and prompts, all 35 icon hashes, exact Workbench download bytes, catalog CORS, and six private-path denials. Provider-app acceptance is separate.`,
 );
