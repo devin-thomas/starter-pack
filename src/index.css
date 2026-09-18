@@ -1320,19 +1320,20 @@ a.skill-card:hover {
   max-width: 1280px;
 }
 .style-workspace .workspace-main > div {
-  max-width: 1040px;
+  max-width: 1000px;
 }
 .style-guide-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 14px;
+  gap: 12px;
+  max-width: 560px;
 }
 .style-guide-card {
   display: flex;
-  min-height: 220px;
-  flex-direction: column;
-  gap: 10px;
-  padding: 24px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 82px;
+  padding: 18px 20px;
   border: 1px solid var(--line);
   border-radius: 9px;
   background: var(--surface);
@@ -1343,93 +1344,93 @@ a.skill-card:hover {
   background: var(--surface-raised);
 }
 .style-guide-card h2 {
-  margin: 6px 0 0;
-  font-size: 24px;
-}
-.style-guide-card p {
-  margin: 0 0 10px;
-  color: var(--muted);
-  line-height: 1.65;
-}
-.style-guide-card .text-link {
-  margin-top: auto;
-}
-.style-guide-card-top,
-.style-status-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 14px;
-}
-.style-guide-card-top {
-  justify-content: space-between;
+  margin: 0;
+  font-size: 22px;
 }
 .style-status {
   display: inline-flex;
   align-items: center;
-  min-height: 28px;
-  padding: 4px 9px;
+  min-height: 26px;
+  padding: 3px 8px;
   border: 1px solid color-mix(in srgb, var(--phase-grow) 45%, var(--line));
   border-radius: 999px;
   color: var(--phase-grow);
   background: color-mix(in srgb, var(--phase-grow) 8%, var(--surface));
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 .style-hub-note {
-  margin-top: 18px;
+  margin-top: 16px;
 }
 .style-status-bar {
-  margin: -8px 0 30px;
-  padding: 14px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: -8px 0 28px;
+  padding: 11px 0;
   border-block: 1px solid var(--line);
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
 }
-.style-status-bar .style-status {
-  margin-right: 2px;
+.style-agent-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 12px;
 }
-.style-agent-panel {
-  margin-bottom: 34px;
-  padding: 20px;
-  border: 1px solid var(--line-strong);
-  border-radius: 9px;
-  background: var(--surface-soft);
+.style-agent-inline button,
+.style-agent-inline a {
+  border: 0;
+  padding: 2px 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
-.style-agent-panel .section-heading {
-  margin-bottom: 8px;
+.style-agent-inline button:hover,
+.style-agent-inline a:hover {
+  color: var(--text);
 }
-.style-agent-panel .muted {
-  margin: 0 0 16px;
+.style-guide-intro {
+  max-width: 760px;
+  margin-bottom: 30px;
 }
-.style-agent-links {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+.style-guide-intro h2 {
+  margin: 0 0 12px;
+  font-size: 21px;
+}
+.style-guide-intro p {
+  margin: 0 0 12px;
+}
+.style-rules-label {
+  max-width: 860px;
+  margin-top: 38px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line-strong);
 }
 .style-guide-prose {
   max-width: 860px;
 }
-.style-guide-prose > blockquote:first-child {
-  margin: 0 0 28px;
-  padding: 16px 18px;
-  border-left: 3px solid var(--phase-grow);
-  background: var(--surface-raised);
-  color: var(--text);
-}
-.style-guide-prose > blockquote:first-child p {
-  margin: 0;
-}
-.style-guide-prose h2 {
-  margin-top: 52px;
-  padding-top: 28px;
+.style-guide-prose > h2 {
+  margin-top: 48px;
+  padding-top: 26px;
   border-top: 1px solid var(--line-strong);
   scroll-margin-top: 24px;
 }
+.style-guide-prose > h2:first-child {
+  margin-top: 18px;
+  padding-top: 0;
+  border-top: 0;
+}
 .style-guide-prose h3 {
-  margin-top: 34px;
+  margin-top: 32px;
   scroll-margin-top: 24px;
 }
 .style-guide-prose pre code {
@@ -1522,19 +1523,20 @@ a.skill-card:hover {
 
 @media (max-width: 720px) {
   .style-guide-card {
-    min-height: 0;
-    padding: 20px;
-  }
-  .style-status-bar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-  .style-agent-panel {
+    min-height: 72px;
     padding: 16px;
   }
-  .style-agent-links {
-    grid-template-columns: 1fr;
+  .style-guide-card h2 {
+    font-size: 20px;
   }
+  .style-status-bar {
+    gap: 8px 12px;
+  }
+  .style-agent-inline {
+    width: 100%;
+    margin-left: 0;
+  }
+  .style-guide-intro,
   .style-guide-prose {
     font-size: 15px;
   }
