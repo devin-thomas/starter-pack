@@ -262,3 +262,20 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Primary: [https://starter.devthomas.site/setup/ide.md](https://starter.devthomas.site/setup/ide.md)
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/ide.md](https://starter-pack.uppercut-labs.workers.dev/setup/ide.md)
 - GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/ide.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/ide.md)
+
+## /style/TypeScript.md
+
+- Primary: [https://starter.devthomas.site/style/TypeScript.md](https://starter.devthomas.site/style/TypeScript.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/style/TypeScript.md](https://starter-pack.uppercut-labs.workers.dev/style/TypeScript.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/content/style/typescript.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/content/style/typescript.md)
+
+## /style/TypeScript.json
+
+- Primary: [https://starter.devthomas.site/style/TypeScript.json](https://starter.devthomas.site/style/TypeScript.json)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/style/TypeScript.json](https://starter-pack.uppercut-labs.workers.dev/style/TypeScript.json)
+
+## /style/catalog.json
+
+- Primary: [https://starter.devthomas.site/style/catalog.json](https://starter.devthomas.site/style/catalog.json)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/style/catalog.json](https://starter-pack.uppercut-labs.workers.dev/style/catalog.json)
+
