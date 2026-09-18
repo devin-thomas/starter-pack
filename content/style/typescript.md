@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D011
-version: 0.1.0
+accepted_through: D012
+version: 0.1.1
 route: /style/TypeScript
 ---
 
@@ -353,8 +353,52 @@ type ReplayIdParseResult =
 
 Do not force one validation API to solve every case.
 
+## D012 — Untrusted values start as `unknown`
+
+Raw external data starts as `unknown` until the program has actually established what it contains.
+
+```ts
+const payload: unknown =
+  await response.json();
+
+const providerEvent: ProviderEventDto =
+  parseProviderEvent(payload);
+```
+
+Do not give unvalidated data the type you merely expect it to have. A type annotation does not validate a runtime value.
+
+`any` is not a normal first-party modeling tool. If a third-party library forces `any`, contain it at that boundary and restore a checked type immediately:
+
+```ts
+const sdkResult: any =
+  legacySdk.getResult();
+
+const payload: unknown =
+  sdkResult;
+
+const result: ProviderResult =
+  parseProviderResult(payload);
+```
+
+A concrete DTO type is appropriate when a real trusted layer—such as a validator, generated client, or framework contract—has already established that shape.
+
+A useful flow is:
+
+```ts
+const rawPayload: unknown =
+  await getProviderPayload();
+
+const providerEvent: ProviderEventDto =
+  parseProviderEvent(rawPayload);
+
+const event: AgentEvent =
+  normalizeProviderEvent(providerEvent);
+```
+
+Each type should communicate how much the program actually knows at that point.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled areas include untrusted external values, `unknown` and `any`, assertions and `satisfies`, function and generic conventions, readonly utilities, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
+This guide is intentionally incomplete. Unsettled areas include assertions and `satisfies`, function and generic conventions, readonly utilities, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
