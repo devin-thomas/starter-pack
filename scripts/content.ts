@@ -90,6 +90,8 @@ export const origin = "https://starter.devthomas.site";
 const staticRoutes = [
   "/",
   "/guide",
+  "/style",
+  "/style/TypeScript",
   "/phases/1",
   "/phases/2",
   "/phases/3",
@@ -138,6 +140,39 @@ export async function loadContent(): Promise<SiteData> {
       ),
     ),
   };
+  const styleGuides: SiteData["styles"]["guides"] = await Promise.all(
+    ["typescript"].map(async (id) => {
+      const raw = await readFile(`content/style/${id}.md`, "utf8");
+      const { data, content } = matter(raw);
+      for (const field of ["id", "title", "summary", "status", "accepted_through", "version", "route"]) {
+        if (typeof data[field] !== "string" || !data[field].trim())
+          throw new Error(`Style guide ${id}: missing ${field}`);
+      }
+      if (!data.updated || !String(data.route).startsWith("/style/"))
+        throw new Error(`Invalid style guide metadata: ${id}`);
+      const html = accentHeadings(
+        await renderProse(content.replace(/^# .+\r?\n/m, "")),
+      );
+      const outline = [...html.matchAll(/<h2\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)]
+        .map((match) => ({
+          id: match[1],
+          labelHtml: match[2].replace(/<[^>]+>/g, ""),
+        }));
+      return {
+        id: String(data.id),
+        title: String(data.title),
+        summary: String(data.summary),
+        status: String(data.status),
+        updated: String(data.updated),
+        acceptedThrough: String(data.accepted_through),
+        version: String(data.version),
+        route: String(data.route),
+        html,
+        outline,
+      };
+    }),
+  );
+  const styles = { guides: styleGuides };
   const phases = await Promise.all(
     [1, 2, 3].map(async (order) => {
       const raw = await readFile(`content/phases/${order}.md`, "utf8");
@@ -244,6 +279,7 @@ export async function loadContent(): Promise<SiteData> {
     pages,
     recommendations,
     skills: { manifest: skillManifest, lessons: skillLessons, recommendations: skillRecommendations },
+    styles,
     prompt: (await readFile("public/prompts/get-started.txt", "utf8")).trim(),
     phase2Prompt: (await readFile("public/prompts/phase-2.txt", "utf8")).trim(),
     instructionPacket: await instructionPacket(),
@@ -306,6 +342,55 @@ export async function generateResources(data: SiteData, output: string) {
       JSON.stringify({ id: page, version: "0.1.0", markdown }, null, 2),
     );
   }
+  const styleCatalog = data.styles.guides.map((guide) => ({
+    id: guide.id,
+    title: guide.title,
+    summary: guide.summary,
+    status: guide.status,
+    updated: guide.updated,
+    accepted_through: guide.acceptedThrough,
+    version: guide.version,
+    html: `${origin}${guide.route}`,
+    markdown: `${origin}${guide.route}.md`,
+    json: `${origin}${guide.route}.json`,
+  }));
+  for (const guide of data.styles.guides) {
+    const raw = await readFile(`content/style/${guide.id}.md`, "utf8");
+    const parsed = matter(raw);
+    const markdown = parsed.content.trimStart();
+    await write(`${output}${guide.route}.md`, markdown);
+    await write(
+      `${output}${guide.route}.json`,
+      JSON.stringify(
+        {
+          id: guide.id,
+          title: guide.title,
+          summary: guide.summary,
+          status: guide.status,
+          updated: guide.updated,
+          accepted_through: guide.acceptedThrough,
+          version: guide.version,
+          route: guide.route,
+          markdown,
+        },
+        null,
+        2,
+      ),
+    );
+  }
+  await write(
+    `${output}/style/catalog.json`,
+    JSON.stringify(
+      {
+        id: "style-guides",
+        status: "in-progress",
+        guides: styleCatalog,
+      },
+      null,
+      2,
+    ),
+  );
+
   const skillVersions = JSON.parse(
     await readFile("public/skills/versions.json", "utf8"),
   );
@@ -374,6 +459,15 @@ export async function generateResources(data: SiteData, output: string) {
       html: `${origin}/phases/${phase.order}#${item.id}`,
     })),
   }));
+  const styleEntries = data.styles.guides.map((guide) => ({
+    id: `style-${guide.id}`,
+    kind: "style-guide",
+    title: `${guide.title} Style Guide`,
+    summary: guide.summary,
+    html: `${origin}${guide.route}`,
+    markdown: `${origin}${guide.route}.md`,
+    json: `${origin}${guide.route}.json`,
+  }));
   await write(
     `${output}/agent/catalog.json`,
     JSON.stringify(
@@ -389,7 +483,7 @@ export async function generateResources(data: SiteData, output: string) {
           html: `${origin}/help/cloudflare-iphone`,
           markdown: `${origin}/help/cloudflare-iphone.md`,
           json: `${origin}/help/cloudflare-iphone.json`,
-        }],
+        }, ...styleEntries],
         skills: skillVersions.skills.map((skill: { id: string; version: string; current: string; versioned: string }) => ({ ...skill, current: `${origin}${skill.current}`, versioned: `${origin}${skill.versioned}` })),
         resource_links: `${origin}/agent/resource-links.md`,
         requirements: `${origin}/agent/requirements.json`,
@@ -401,6 +495,7 @@ export async function generateResources(data: SiteData, output: string) {
           example: `${origin}/artifacts/progress/starter-progress.example.json`,
         },
         recommendations: `${origin}/recommendations.json`,
+        style_guides: `${origin}/style/catalog.json`,
         artifacts: `${origin}/artifacts/`,
         workbench: {
           download: `${origin}/artifacts/progress-workbench/index.html`,
@@ -422,6 +517,6 @@ export async function generateResources(data: SiteData, output: string) {
   );
   await write(
     `${output}/llms.txt`,
-    `# Starter Pack\n\nA guide by Devin Thomas at Uppercut Labs. Fetch only the resource needed for the current action.\n\n- [Start](${origin}/agent/start.md)\n- [Catalog](${origin}/agent/catalog.json)\n- [Requirements](${origin}/agent/requirements.json)\n${entries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n- [Recommendations](${origin}/recommendations.json)\n`,
+    `# Starter Pack\n\nA guide by Devin Thomas at Uppercut Labs. Fetch only the resource needed for the current action.\n\n- [Start](${origin}/agent/start.md)\n- [Catalog](${origin}/agent/catalog.json)\n- [Requirements](${origin}/agent/requirements.json)\n${entries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n${styleEntries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n- [Style guide catalog](${origin}/style/catalog.json)\n- [Recommendations](${origin}/recommendations.json)\n`,
   );
 }
