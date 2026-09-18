@@ -806,10 +806,6 @@ function StyleAgentLinks({ guide }: { guide: StyleGuideEntry }) {
       <button type="button" onClick={copyAgentLink}>
         {copied ? "Agent link copied" : "Copy for agent"}
       </button>
-      <span aria-hidden="true">·</span>
-      <a href={`${guide.route}.md`}>Markdown</a>
-      <span aria-hidden="true">·</span>
-      <a href={`${guide.route}.json`}>JSON</a>
     </span>
   );
 }
