@@ -426,15 +426,15 @@ const routes = {
     path: "/",
     requiresAuth: false,
   },
-  account: {
-    path: "/account",
+  guide: {
+    path: "/guide",
     requiresAuth: true,
   },
 } satisfies Readonly<Record<string, RouteDefinition>>;
 
 type RouteName =
   keyof typeof routes;
-// "home" | "account"
+// "home" | "guide"
 ```
 
 A direct annotation with `Record<string, RouteDefinition>` would broaden those known keys to `string`. Here, `satisfies` earns its place because the literal key information remains useful.
