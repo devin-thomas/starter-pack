@@ -52,6 +52,8 @@ const template = await readFile("dist/index.html", "utf8");
 const titles: Record<string, string> = {
   "/": "Starter Pack",
   "/guide": "Browse the guide",
+  "/style": "Style guides",
+  "/style/TypeScript": "TypeScript Style Guide",
   "/recommendations": "Recommendations",
   "/resources": "Skills and agent resources",
   "/artifacts": "Project templates",
@@ -70,7 +72,9 @@ for (const route of routes) {
   const phase = data.phases.find((item) => route === `/phases/${item.order}`);
   const skillSlug = route.startsWith("/skills/") ? route.slice("/skills/".length) : null;
   const skillEntry = skillSlug ? data.skills.manifest.find((s) => s.slug === skillSlug) : null;
-  const title = phase?.title || (skillEntry ? skillEntry.title : null) || titles[route];
+  const styleGuide = data.styles.guides.find((guide) => guide.route === route);
+  const title = phase?.title || (skillEntry ? skillEntry.title : null) || (styleGuide ? `${styleGuide.title} Style Guide` : null) || titles[route];
+  const description = styleGuide?.summary || "Make your first working app, then build and deploy something meaningful with your own agent.";
   const html = template
     .replace(
       "<!--app-html-->",
@@ -86,7 +90,7 @@ for (const route of routes) {
     )
     .replace(
       "</head>",
-      `<link rel="canonical" href="${origin}${route}" /><meta name="description" content="Make your first working app, then build and deploy something meaningful with your own agent." /></head>`,
+      `<link rel="canonical" href="${origin}${route}" /><meta name="description" content="${description.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" /></head>`,
     )
     .replace(
       "</body>",
