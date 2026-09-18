@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { CopyText } from "./CopyText";
 import { Feedback } from "./Feedback";
 import { motion, useReducedMotion } from "motion/react";
@@ -70,11 +70,13 @@ export interface SiteData {
       id: string;
       title: string;
       summary: string;
+      humanSummary: string;
       status: string;
       updated: string;
       acceptedThrough: string;
       version: string;
       route: string;
+      introHtml: string;
       html: string;
       outline: { id: string; labelHtml: string }[];
     }[];
@@ -764,28 +766,51 @@ function StyleHub({ data }: { data: SiteData }) {
       <PageHeading
         label="STYLE GUIDES"
         title="Style guides."
-        description="Public house rules for code I write and agent work I direct."
+        description="The coding conventions I use for my own projects and agent-directed work."
       />
       <div className="style-guide-grid">
         {data.styles.guides.map((guide) => (
           <a className="style-guide-card" href={guide.route} key={guide.id}>
-            <div className="style-guide-card-top">
-              <span className="style-status">{guide.status === "in-progress" ? "In progress" : guide.status.replaceAll("-", " ")}</span>
-              <span className="metadata">{guide.acceptedThrough}</span>
-            </div>
             <h2>{guide.title}</h2>
-            <p>{guide.summary}</p>
-            <span className="text-link">
-              Read guide
-              <Icon name="arrow-right" size={15} />
+            <span className="style-status">
+              {guide.status === "in-progress"
+                ? "In progress"
+                : guide.status.replaceAll("-", " ")}
             </span>
           </a>
         ))}
       </div>
       <p className="muted style-hub-note">
-        More language guides will appear here as their rules are developed.
+        More languages will appear here as their guides take shape.
       </p>
     </>
+  );
+}
+
+function StyleAgentLinks({ guide }: { guide: StyleGuideEntry }) {
+  const [copied, setCopied] = useState<boolean>(false);
+  const markdownUrl: string = `${resourceOrigin}${guide.route}.md`;
+
+  async function copyAgentLink(): Promise<void> {
+    try {
+      if (!navigator.clipboard) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(markdownUrl);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  }
+
+  return (
+    <span className="style-agent-inline">
+      <button type="button" onClick={copyAgentLink}>
+        {copied ? "Agent link copied" : "Copy for agent"}
+      </button>
+      <span aria-hidden="true">·</span>
+      <a href={`${guide.route}.md`}>Markdown</a>
+      <span aria-hidden="true">·</span>
+      <a href={`${guide.route}.json`}>JSON</a>
+    </span>
   );
 }
 
@@ -795,38 +820,27 @@ function StyleGuidePage({ guide }: { guide: StyleGuideEntry }) {
       <PageHeading
         label="STYLE GUIDE"
         title={guide.title}
-        description={guide.summary}
+        description={guide.humanSummary}
       />
       <div className="style-status-bar" aria-label="Guide status">
-        <span className="style-status">{guide.status === "in-progress" ? "In progress" : guide.status.replaceAll("-", " ")}</span>
-        <span>{guide.acceptedThrough}</span>
+        <span className="style-status">
+          {guide.status === "in-progress"
+            ? "In progress"
+            : guide.status.replaceAll("-", " ")}
+        </span>
         <span>Updated {guide.updated}</span>
+        <StyleAgentLinks guide={guide} />
       </div>
-      <section className="style-agent-panel" aria-labelledby="style-agent-access">
-        <div className="section-heading">
-          <h2 id="style-agent-access">Agent access</h2>
-          <span className="metadata">MARKDOWN + JSON</span>
-        </div>
-        <p className="muted">
-          Give an agent the Markdown address when you want it to follow this style guide.
-        </p>
-        <div className="style-agent-links">
-          <CopyText
-            text={`${resourceOrigin}${guide.route}.md`}
-            label="Style guide Markdown address"
-            alwaysVisible
-            buttonLabel="Copy Markdown address"
-            copiedLabel="Markdown address copied"
-          />
-          <CopyText
-            text={`${resourceOrigin}${guide.route}.json`}
-            label="Style guide JSON address"
-            alwaysVisible
-            buttonLabel="Copy JSON address"
-            copiedLabel="JSON address copied"
-          />
-        </div>
-      </section>
+      <article
+        className="prose style-guide-intro"
+        dangerouslySetInnerHTML={{ __html: guide.introHtml }}
+      />
+      <div className="style-rules-label">
+        <span className="eyebrow">
+          <span className="small-rule" />
+          THE STYLE
+        </span>
+      </div>
       <article
         className="prose style-guide-prose"
         dangerouslySetInnerHTML={{ __html: guide.html }}
