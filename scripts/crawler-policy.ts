@@ -1,5 +1,5 @@
 // Google-Extended covers both training and grounding. Limit permission to public curriculum.
-export const googleResourcePaths = ["/agent/", "/skills/", "/phases/", "/artifacts/", "/setup/", "/prompts/", "/schemas/", "/help/", "/recommendations.json", "/guide.md", "/about.md", "/llms.txt"];
+export const googleResourcePaths = ["/agent/", "/skills/", "/style/", "/phases/", "/artifacts/", "/setup/", "/prompts/", "/schemas/", "/help/", "/recommendations.json", "/guide.md", "/about.md", "/llms.txt"];
 export const googleResourcePolicy = `User-agent: Google-Extended\n${googleResourcePaths.map(path => `Allow: ${path}`).join("\n")}\n`;
 
 export function assertGoogleResourceAccess(robots: string) {
