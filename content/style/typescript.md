@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D019
-version: 0.1.8
+accepted_through: D020
+version: 0.1.9
 route: /style/TypeScript
 ---
 
@@ -665,8 +665,80 @@ Generalize later if a second legitimate use actually appears.
 
 At call sites, inference is fine when the concrete type is already obvious from typed arguments and the declared result. Write an explicit type argument when choosing that type is itself meaningful information or resolves ambiguity.
 
+## D020 — Prefer data and functions; classes represent continuing runtime objects
+
+Use plain typed data plus named functions for ordinary domain values and transformations.
+
+```ts
+type PlayerState = {
+  readonly playerId: string;
+  readonly maxHealth: number;
+  health: number;
+};
+
+function applyDamage(
+  player: PlayerState,
+  damage: number,
+): PlayerState {
+  return {
+    ...player,
+    health: Math.max(
+      0,
+      player.health - damage,
+    ),
+  };
+}
+```
+
+A class must earn its place by representing a continuing runtime object whose meaning depends on something more than serializable public data—such as a live resource, private evolving state, lifecycle, temporal invariants, or a stateful behavioral implementation contract.
+
+A useful heuristic is:
+
+> If you could serialize the value, reconstruct it from its fields, and still have the same kind of thing, it probably wants to be data. If its meaning depends on something live that cannot be captured by those fields alone, it may want to be a class.
+
+For example, a worker client can justify a class because the instance owns a live `Worker`, pending requests, sequencing state, listeners, and cleanup responsibilities:
+
+```ts
+interface WorkerClient {
+  request(
+    message: WorkerRequest,
+  ): Promise<WorkerResponse>;
+
+  close(): void;
+}
+
+class BrowserWorkerClient
+  implements WorkerClient {
+  private readonly worker: Worker;
+  private readonly pending:
+    Map<number, PendingRequest>;
+
+  constructor(
+    worker: Worker,
+  ) {
+    this.worker = worker;
+    this.pending =
+      new Map<number, PendingRequest>();
+  }
+
+  async request(
+    message: WorkerRequest,
+  ): Promise<WorkerResponse> {
+    throw new Error("Example");
+  }
+
+  close(): void {
+    // Release this instance's runtime resources.
+  }
+}
+```
+
+Do not create a class merely because the concept is a domain noun, related functions operate on its data, a constructor can validate it, or methods would be convenient to group. Validation alone belongs in a parser or factory when the result is still fundamentally data.
+
+Classes should be relatively uncommon, but they remain appropriate for things like sockets, workers, audio engines, database connections, media sessions, watchers, transactions, and device managers where continuing runtime identity is real.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled release-critical areas include classes versus data/functions, errors/results, async code, modules/imports/exports, naming, and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
+This guide is intentionally incomplete. Unsettled release-critical areas include errors/results, async code, modules/imports/exports, naming, and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
