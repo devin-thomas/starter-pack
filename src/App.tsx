@@ -770,7 +770,7 @@ function StyleHub({ data }: { data: SiteData }) {
         {data.styles.guides.map((guide) => (
           <a className="style-guide-card" href={guide.route} key={guide.id}>
             <div className="style-guide-card-top">
-              <span className="style-status">{guide.status.replaceAll("-", " ")}</span>
+              <span className="style-status">{guide.status === "in-progress" ? "In progress" : guide.status.replaceAll("-", " ")}</span>
               <span className="metadata">{guide.acceptedThrough}</span>
             </div>
             <h2>{guide.title}</h2>
@@ -798,7 +798,7 @@ function StyleGuidePage({ guide }: { guide: StyleGuideEntry }) {
         description={guide.summary}
       />
       <div className="style-status-bar" aria-label="Guide status">
-        <span className="style-status">{guide.status.replaceAll("-", " ")}</span>
+        <span className="style-status">{guide.status === "in-progress" ? "In progress" : guide.status.replaceAll("-", " ")}</span>
         <span>{guide.acceptedThrough}</span>
         <span>Updated {guide.updated}</span>
       </div>
