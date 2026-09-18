@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D016
-version: 0.1.5
+accepted_through: D017
+version: 0.1.6
 route: /style/TypeScript
 ---
 
@@ -543,8 +543,44 @@ Do not use `as const` merely to make something "more readonly," and do not deriv
 
 Also remember that `as const` is a TypeScript type-level operation. It does not freeze the JavaScript object at runtime.
 
+## D017 — Do not use non-null assertions
+
+Do not use the postfix non-null assertion operator to make `null` or `undefined` disappear from a type.
+
+Avoid:
+
+```ts
+const player: Player =
+  players.find(
+    (candidate: Player): boolean =>
+      candidate.id === playerId,
+  )!;
+```
+
+The `!` changes what TypeScript believes without adding any runtime proof.
+
+Prefer visible narrowing:
+
+```ts
+const player: Player | undefined =
+  players.find(
+    (candidate: Player): boolean =>
+      candidate.id === playerId,
+  );
+
+if (player === undefined) {
+  throw new Error("Player not found");
+}
+
+usePlayer(player);
+```
+
+If the same invariant appears repeatedly, centralize the check in a helper that returns the proven type.
+
+The goal is to make the transition from `Player | undefined` to `Player` visible to the developer, compiler, and coding agent rather than hiding it behind a convenience assertion.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled areas include non-null assertions, generic conventions, React/component conventions, readonly utilities, runtime freezing, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
+This guide is intentionally incomplete. Unsettled areas include generic conventions, React/component conventions, readonly utilities, runtime freezing, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
