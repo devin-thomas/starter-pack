@@ -17,7 +17,7 @@ export function assertGoogleResourceAccess(robots: string) {
   }
   const exact = groups.filter(group => group.agents.includes("google-extended"));
   const rules = (exact.length ? exact : groups.filter(group => group.agents.includes("*"))).flatMap(group => group.rules);
-  for (const path of [...googleResourcePaths, "/agent/start.md", "/agent/catalog.json", "/agent/phase-1-packet.txt", "/prompts/get-started.txt", "/skills/starter-pack/current/SKILL.md", "/phases/1.md", "/artifacts/progress/README.md", "/artifacts/progress/starter-progress.json", "/schemas/starter-progress.schema.json"]) {
+  for (const path of [...googleResourcePaths, "/agent/start.md", "/agent/catalog.json", "/agent/phase-1-packet.txt", "/prompts/get-started.txt", "/skills/starter-pack/current/SKILL.md", "/phases/1.md", "/artifacts/progress/README.md", "/artifacts/progress/starter-progress.json", "/schemas/starter-progress.schema.json", "/style/TypeScript.md", "/style/catalog.json"]) {
     // Our policy is literal. Reject unknown pattern rules for manual review instead of guessing.
     if (rules.some(rule => /[*$]/.test(rule.path))) throw new Error("Review Google-Extended wildcard policy before declaring learner resources reachable.");
     const matched = rules.filter(rule => path.startsWith(rule.path)).sort((a,b) => b.path.length - a.path.length || Number(b.allow) - Number(a.allow));
