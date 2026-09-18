@@ -65,6 +65,20 @@ export interface SiteData {
     lessons: Record<string, SkillLesson>;
     recommendations: { group: string; description: string; items: { name: string; title: string; description: string; author: string; url: string }[] }[];
   };
+  styles: {
+    guides: {
+      id: string;
+      title: string;
+      summary: string;
+      status: string;
+      updated: string;
+      acceptedThrough: string;
+      version: string;
+      route: string;
+      html: string;
+      outline: { id: string; labelHtml: string }[];
+    }[];
+  };
   prompt: string;
   phase2Prompt: string;
   instructionPacket: string;
@@ -80,6 +94,7 @@ const phaseShortLabels = ["Make", "Harness", "Build"];
 const nav = [
   ["/guide", "Guide"],
   ["/skills", "Skills"],
+  ["/style", "Style guides"],
   ["/recommendations", "Recommendations"],
   ["/resources", "Agent resources"],
   ["/about", "About"],
@@ -739,6 +754,85 @@ function SkillRecommendations({ data }: { data: SiteData }) {
   );
 }
 
+type StyleGuideEntry = SiteData["styles"]["guides"][number];
+
+function StyleHub({ data }: { data: SiteData }) {
+  return (
+    <>
+      <PageHeading
+        label="STYLE GUIDES"
+        title="Style guides."
+        description="Public house rules for code I write and agent work I direct."
+      />
+      <div className="style-guide-grid">
+        {data.styles.guides.map((guide) => (
+          <a className="style-guide-card" href={guide.route} key={guide.id}>
+            <div className="style-guide-card-top">
+              <span className="style-status">{guide.status.replaceAll("-", " ")}</span>
+              <span className="metadata">{guide.acceptedThrough}</span>
+            </div>
+            <h2>{guide.title}</h2>
+            <p>{guide.summary}</p>
+            <span className="text-link">
+              Read guide
+              <Icon name="arrow-right" size={15} />
+            </span>
+          </a>
+        ))}
+      </div>
+      <p className="muted style-hub-note">
+        More language guides will appear here as their rules are developed.
+      </p>
+    </>
+  );
+}
+
+function StyleGuidePage({ guide }: { guide: StyleGuideEntry }) {
+  return (
+    <>
+      <PageHeading
+        label="STYLE GUIDE"
+        title={guide.title}
+        description={guide.summary}
+      />
+      <div className="style-status-bar" aria-label="Guide status">
+        <span className="style-status">{guide.status.replaceAll("-", " ")}</span>
+        <span>{guide.acceptedThrough}</span>
+        <span>Updated {guide.updated}</span>
+      </div>
+      <section className="style-agent-panel" aria-labelledby="style-agent-access">
+        <div className="section-heading">
+          <h2 id="style-agent-access">Agent access</h2>
+          <span className="metadata">MARKDOWN + JSON</span>
+        </div>
+        <p className="muted">
+          Give an agent the Markdown address when you want it to follow this style guide.
+        </p>
+        <div className="style-agent-links">
+          <CopyText
+            text={`${resourceOrigin}${guide.route}.md`}
+            label="Style guide Markdown address"
+            alwaysVisible
+            buttonLabel="Copy Markdown address"
+            copiedLabel="Markdown address copied"
+          />
+          <CopyText
+            text={`${resourceOrigin}${guide.route}.json`}
+            label="Style guide JSON address"
+            alwaysVisible
+            buttonLabel="Copy JSON address"
+            copiedLabel="JSON address copied"
+          />
+        </div>
+      </section>
+      <article
+        className="prose style-guide-prose"
+        dangerouslySetInnerHTML={{ __html: guide.html }}
+      />
+    </>
+  );
+}
+
 export default function App({ path, data }: { path: string; data: SiteData }) {
   const normalized = path.replace(/\/$/, "") || "/";
   const phaseNumber = /^\/phases\/[123]$/.test(normalized)
@@ -751,6 +845,8 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
     const lesson = entry ? data.skills.lessons[entry.id] : undefined;
     return entry && lesson ? { entry, lesson } : null;
   })() : null;
+  const styleGuide = data.styles.guides.find((guide) => guide.route === normalized);
+  const styleRoute = normalized === "/style" || normalized.startsWith("/style/");
   const reducedMotion = useReducedMotion();
   return (
     <div className="app-shell">
@@ -785,11 +881,12 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
           <span className="status-divider" />
           No account required
         </div>
-        <a className="header-guide" href="/skills">
+        <a className="header-guide" href={styleRoute ? "/style" : "/skills"}>
           <Icon name="book-open" size={16} />
-          Skills
+          {styleRoute ? "Style guides" : "Skills"}
         </a>
       </header>
+      {!styleRoute && (
       <nav className="progress-rail" aria-label="The three phases">
         {milestones.map((title, index) => (
           <a
@@ -816,7 +913,8 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
           </a>
         ))}
       </nav>
-      <div className="workspace">
+      )}
+      <div className={`workspace${styleRoute ? " style-workspace" : ""}`}>
         <main id="main" className="workspace-main">
           <motion.div
             initial={false}
@@ -1051,6 +1149,10 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   </section>
                 </div>
               </>
+            ) : normalized === "/style" ? (
+              <StyleHub data={data} />
+            ) : styleGuide ? (
+              <StyleGuidePage guide={styleGuide} />
             ) : normalized === "/resources" ? (
               <>
                 <PageHeading
@@ -1168,7 +1270,7 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
             )}
           </motion.div>
         </main>
-        <ContextRail phase={phaseNumber} data={data} />
+        {!styleRoute && <ContextRail phase={phaseNumber} data={data} />}
       </div>
       <footer className="site-footer">
         <div>
