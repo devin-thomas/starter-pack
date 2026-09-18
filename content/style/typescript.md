@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D012
-version: 0.1.1
+accepted_through: D013
+version: 0.1.2
 route: /style/TypeScript
 ---
 
@@ -397,8 +397,56 @@ const event: AgentEvent =
 
 Each type should communicate how much the program actually knows at that point.
 
+## D013 — Explicit annotations by default; use `satisfies` when precision helps
+
+Write an explicit annotation when the declared contract itself is the important source information:
+
+```ts
+type ProviderConfig = {
+  readonly model: string;
+  readonly timeoutMs: number;
+};
+
+const config: ProviderConfig = {
+  model: "gpt-5",
+  timeoutMs: 30_000,
+};
+```
+
+Use `satisfies` when the value should be checked against a broader contract but keeping its more precise inferred keys or literals provides real value:
+
+```ts
+type RouteDefinition = {
+  readonly path: string;
+  readonly requiresAuth: boolean;
+};
+
+const routes = {
+  home: {
+    path: "/",
+    requiresAuth: false,
+  },
+  account: {
+    path: "/account",
+    requiresAuth: true,
+  },
+} satisfies Readonly<Record<string, RouteDefinition>>;
+
+type RouteName =
+  keyof typeof routes;
+// "home" | "account"
+```
+
+A direct annotation with `Record<string, RouteDefinition>` would broaden those known keys to `string`. Here, `satisfies` earns its place because the literal key information remains useful.
+
+Do not use `satisfies` merely as a stylistic replacement for ordinary annotations.
+
+Type assertions are different. `as Type` tells TypeScript to treat a value as that type; it does not validate the value. Reserve assertions for places where a real proof or external fact exists that TypeScript cannot express directly, such as the final step of a validator that already proved a runtime-only invariant.
+
+Do not use `as any` or `as unknown as TargetType` to force ordinary first-party code past a useful compiler error.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled areas include assertions and `satisfies`, function and generic conventions, readonly utilities, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
+This guide is intentionally incomplete. Unsettled areas include `as const`, non-null assertions, function and generic conventions, readonly utilities, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
