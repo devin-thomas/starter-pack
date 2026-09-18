@@ -144,15 +144,21 @@ export async function loadContent(): Promise<SiteData> {
     ["typescript"].map(async (id) => {
       const raw = await readFile(`content/style/${id}.md`, "utf8");
       const { data, content } = matter(raw);
-      for (const field of ["id", "title", "summary", "status", "accepted_through", "version", "route"]) {
+      for (const field of ["id", "title", "summary", "human_summary", "status", "accepted_through", "version", "route"]) {
         if (typeof data[field] !== "string" || !data[field].trim())
           throw new Error(`Style guide ${id}: missing ${field}`);
       }
       if (!data.updated || !String(data.route).startsWith("/style/"))
         throw new Error(`Invalid style guide metadata: ${id}`);
-      const html = accentHeadings(
-        await renderProse(content.replace(/^# .+\r?\n/m, "")),
-      );
+
+      const introMarkdown = await readFile(`content/style/${id}-intro.md`, "utf8");
+      const humanBody = content
+        .replace(/^# .+\r?\n+/m, "")
+        .replace(/^> \*\*In progress\.\*\*[^\n]*\r?\n+/m, "")
+        .replace(/^For agents:[^\n]*\r?\n+/m, "")
+        .replace(/^## D\d{3} — /gm, "## ");
+      const introHtml = accentHeadings(await renderProse(introMarkdown));
+      const html = accentHeadings(await renderProse(humanBody));
       const outline = [...html.matchAll(/<h2\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)]
         .map((match) => ({
           id: match[1],
@@ -162,11 +168,13 @@ export async function loadContent(): Promise<SiteData> {
         id: String(data.id),
         title: String(data.title),
         summary: String(data.summary),
+        humanSummary: String(data.human_summary),
         status: String(data.status),
         updated: String(data.updated),
         acceptedThrough: String(data.accepted_through),
         version: String(data.version),
         route: String(data.route),
+        introHtml,
         html,
         outline,
       };
