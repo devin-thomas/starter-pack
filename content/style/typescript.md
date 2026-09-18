@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D018
-version: 0.1.7
+accepted_through: D019
+version: 0.1.8
 route: /style/TypeScript
 ---
 
@@ -609,8 +609,64 @@ const config: Readonly<AgentConfig> =
 
 Remember that `Object.freeze()` is shallow. Deep freezing should be a deliberate boundary-level choice when an entire nested graph genuinely requires runtime enforcement, not a default utility applied to every immutable value.
 
+## D019 — Generics must earn their place
+
+Use a generic only when it preserves a real reusable type relationship.
+
+```ts
+function firstOrUndefined<T>(
+  values: readonly T[],
+): T | undefined {
+  return values[0];
+}
+```
+
+Here the generic is meaningful because the same implementation preserves the caller's element type across multiple legitimate uses.
+
+Constrain generic parameters when the implementation requires structure:
+
+```ts
+type Identified = {
+  readonly id: string;
+};
+
+function findById<T extends Identified>(
+  values: readonly T[],
+  id: string,
+): T | undefined {
+  return values.find(
+    (value: T): boolean =>
+      value.id === id,
+  );
+}
+```
+
+Do not preserve a generic abstraction for hypothetical reuse. If first-party code only has one real type instantiation, make the abstraction concrete.
+
+Prefer:
+
+```ts
+class PlayerRepository {
+  // ...
+}
+```
+
+over:
+
+```ts
+class Repository<T> {
+  // ...
+}
+```
+
+when `Repository<Player>` is the only real supported form.
+
+Generalize later if a second legitimate use actually appears.
+
+At call sites, inference is fine when the concrete type is already obvious from typed arguments and the declared result. Write an explicit type argument when choosing that type is itself meaningful information or resolves ambiguity.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled release-critical areas include generics, classes versus data/functions, errors/results, async code, modules/imports/exports, naming, and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
+This guide is intentionally incomplete. Unsettled release-critical areas include classes versus data/functions, errors/results, async code, modules/imports/exports, naming, and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
