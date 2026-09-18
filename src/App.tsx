@@ -358,6 +358,8 @@ function Resources({ phase }: { phase?: number }) {
         ["/about.md", "About the pack for your agent"],
         ["/guide.json", "Guide data"],
         ["/about.json", "About data"],
+        ["/style/TypeScript.md", "TypeScript style guide"],
+        ["/style/catalog.json", "Style guide catalog"],
         ["/llms.txt", "Agent discovery index"],
       ];
   if (phase) return <ResourceList items={items} />;
