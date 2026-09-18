@@ -3,7 +3,7 @@ id: typescript
 title: TypeScript
 summary: A strict, explicit TypeScript house style built around readable contracts, deliberate state modeling, and compiler-enforced clarity.
 status: in-progress
-updated: 2026-09-18
+updated: "2026-09-18"
 accepted_through: D011
 version: 0.1.0
 route: /style/TypeScript
