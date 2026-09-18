@@ -74,7 +74,7 @@ for (const route of routes) {
   const skillEntry = skillSlug ? data.skills.manifest.find((s) => s.slug === skillSlug) : null;
   const styleGuide = data.styles.guides.find((guide) => guide.route === route);
   const title = phase?.title || (skillEntry ? skillEntry.title : null) || (styleGuide ? `${styleGuide.title} Style Guide` : null) || titles[route];
-  const description = styleGuide?.summary || "Make your first working app, then build and deploy something meaningful with your own agent.";
+  const description = styleGuide?.humanSummary || "Make your first working app, then build and deploy something meaningful with your own agent.";
   const html = template
     .replace(
       "<!--app-html-->",
