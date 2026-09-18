@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D017
-version: 0.1.6
+accepted_through: D018
+version: 0.1.7
 route: /style/TypeScript
 ---
 
@@ -579,8 +579,38 @@ If the same invariant appears repeatedly, centralize the check in a helper that 
 
 The goal is to make the transition from `Player | undefined` to `Player` visible to the developer, compiler, and coding agent rather than hiding it behind a convenience assertion.
 
+## D018 — Freeze at runtime only when enforcement matters
+
+Use readonly types for normal first-party immutability:
+
+```ts
+type AgentConfig = {
+  readonly model: string;
+  readonly retries: number;
+};
+
+const config: AgentConfig = {
+  model: "gpt-5",
+  retries: 3,
+};
+```
+
+Do not add `Object.freeze()` merely because a value is readonly.
+
+Use runtime freezing when it materially changes what the running program can guarantee—for example, when an object crosses into untyped JavaScript, plugin code, or another boundary that may not honor the TypeScript contract:
+
+```ts
+const config: Readonly<AgentConfig> =
+  Object.freeze({
+    model: "gpt-5",
+    retries: 3,
+  });
+```
+
+Remember that `Object.freeze()` is shallow. Deep freezing should be a deliberate boundary-level choice when an entire nested graph genuinely requires runtime enforcement, not a default utility applied to every immutable value.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled areas include generic conventions, React/component conventions, readonly utilities, runtime freezing, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
+This guide is intentionally incomplete. Unsettled release-critical areas include generics, classes versus data/functions, errors/results, async code, modules/imports/exports, naming, and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
