@@ -2,6 +2,7 @@
 id: typescript
 title: TypeScript
 summary: A strict, explicit TypeScript house style built around readable contracts, deliberate state modeling, and compiler-enforced clarity.
+human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
 accepted_through: D011
