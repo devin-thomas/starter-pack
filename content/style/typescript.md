@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D014
-version: 0.1.3
+accepted_through: D015
+version: 0.1.4
 route: /style/TypeScript
 ---
 
@@ -479,8 +479,33 @@ Concise expression bodies are encouraged when the entire callback is one clear e
 
 Do not add braces and an explicit `return` when they communicate nothing additional. Use a block body when multiple statements, branching, or meaningful control flow make the structure useful.
 
+## D015 — Keep callback parameter and return types explicit
+
+Write callback parameter and return types even when TypeScript can infer them from the receiving API.
+
+```ts
+const visibleEnemies: readonly Enemy[] =
+  enemies.filter(
+    (enemy: Enemy): boolean =>
+      enemy.visible,
+  );
+```
+
+The goal is not only to tell the compiler what it already knows. The types tell the developer what the callback expects and intends to return at the exact point where that behavior is written.
+
+They also provide coding agents with stronger nearby semantic context about how a value should be used and what kind of value should be produced next. The style therefore optimizes source for human and agent understanding, not just compiler inference.
+
+This remains compatible with concise arrow functions:
+
+```ts
+(player: Player): boolean =>
+  player.active
+```
+
+Explicit types do not require braces. Keep the concise body when one expression fully communicates the behavior.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled areas include contextual callback typing, `as const`, non-null assertions, generic conventions, React/component conventions, readonly utilities, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
+This guide is intentionally incomplete. Unsettled areas include `as const`, non-null assertions, generic conventions, React/component conventions, readonly utilities, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
