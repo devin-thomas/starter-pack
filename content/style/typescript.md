@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D015
-version: 0.1.4
+accepted_through: D016
+version: 0.1.5
 route: /style/TypeScript
 ---
 
@@ -504,8 +504,47 @@ This remains compatible with concise arrow functions:
 
 Explicit types do not require braces. Keep the concise body when one expression fully communicates the behavior.
 
+## D016 — Use `as const` selectively for useful literal precision
+
+Use `as const` when preserving exact literal values or tuple structure materially benefits the program.
+
+Keep the semantic domain explicit:
+
+```ts
+type Direction =
+  | "up"
+  | "down"
+  | "left"
+  | "right";
+
+const DIRECTIONS = [
+  "up",
+  "down",
+  "left",
+  "right",
+] as const satisfies readonly Direction[];
+```
+
+Here, `Direction` remains the source-visible domain. `as const` preserves the exact runtime tuple, while `satisfies` checks that the tuple still conforms to the explicit semantic type.
+
+Another useful case is an exact tuple:
+
+```ts
+const ORIGIN = [0, 0] as const;
+```
+
+Its type is:
+
+```ts
+readonly [0, 0]
+```
+
+Do not use `as const` merely to make something "more readonly," and do not derive semantic types from runtime values when writing the type directly would be clearer.
+
+Also remember that `as const` is a TypeScript type-level operation. It does not freeze the JavaScript object at runtime.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled areas include `as const`, non-null assertions, generic conventions, React/component conventions, readonly utilities, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
+This guide is intentionally incomplete. Unsettled areas include non-null assertions, generic conventions, React/component conventions, readonly utilities, runtime freezing, classes, errors, async code, modules/imports, naming, formatting, linting, framework boundaries, testing, documentation, and repository/package conventions.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
