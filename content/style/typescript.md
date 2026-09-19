@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D020
-version: 0.1.9
+accepted_through: D021
+version: 0.1.10
 route: /style/TypeScript
 ---
 
@@ -737,8 +737,60 @@ Do not create a class merely because the concept is a domain noun, related funct
 
 Classes should be relatively uncommon, but they remain appropriate for things like sockets, workers, audio engines, database connections, media sessions, watchers, transactions, and device managers where continuing runtime identity is real.
 
+## D021 — Represent failure according to what it means
+
+Use `T | undefined` for ordinary absence or lookup misses:
+
+```ts
+function findPlayer(
+  players: readonly Player[],
+  playerId: string,
+): Player | undefined {
+  return players.find(
+    (player: Player): boolean =>
+      player.playerId === playerId,
+  );
+}
+```
+
+Use a named discriminated result union when failure is an expected recoverable domain outcome that callers are supposed to inspect:
+
+```ts
+type SaveSucceeded = {
+  readonly kind: "saved";
+  readonly revision: number;
+};
+
+type SaveConflict = {
+  readonly kind: "conflict";
+  readonly currentRevision: number;
+};
+
+type SaveResult =
+  | SaveSucceeded
+  | SaveConflict;
+```
+
+Throw when an invariant, required precondition, or exceptional runtime operation prevents the function from producing its promised normal result:
+
+```ts
+function requireSession(
+  session: Session | undefined,
+): Session {
+  if (session === undefined) {
+    throw new Error("Session is required");
+  }
+
+  return session;
+}
+```
+
+The key question is whether the caller is supposed to make a normal domain decision based on the outcome. If yes, put that outcome in the type. If no normal result can be produced and failure should propagate to an error boundary, throw or reject.
+
+Do not wrap every foreseeable failure in a result type, and do not hide meaningful expected domain alternatives exclusively behind exceptions. Custom `Error` subclasses must also earn their place; expected domain failure information should generally remain typed data.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled release-critical areas include errors/results, async code, modules/imports/exports, naming, and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
+This guide is intentionally incomplete. Unsettled release-critical areas include async code, modules/imports/exports, naming, and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
