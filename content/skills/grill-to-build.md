@@ -47,6 +47,17 @@ For Excalidraw specifically, the workflow creates an editable native Excalidraw 
 
 If the selected authoring path is unavailable, the agent should say so and use only the allowed fallback (normally Markdown/Mermaid unless you forbid it). It must not silently switch to image generation.
 
+### Chat tools and harness tools are different
+
+A diagram option can be available in one place and unavailable in another. Grill to Build should distinguish:
+
+- **Chat-native tools** — integrations and renderers available directly to the conversational agent.
+- **Harness/local tools** — CLIs and libraries available where the agent can execute code.
+
+The agent should inspect what it actually has before recommending a format. It should weigh speed, deterministic output, editability, portability, and collaboration needs rather than defaulting to the most elaborate integration.
+
+For system and architecture diagrams, **Graphviz DOT → SVG (+ optional PNG)** is a strong fast-path when Graphviz is available locally: DOT remains the editable, diffable source; SVG is the canonical rendered visual; PNG is convenient for previews. Mermaid, Excalidraw, diagrams.net, authored SVG, and Figma/FigJam remain valid choices when they better fit the user's preference and available tooling.
+
 ## Inputs
 
 - **A rough idea** — the product, feature, or architecture change you want to build
