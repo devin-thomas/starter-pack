@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D022
-version: 0.1.11
+accepted_through: D023
+version: 0.1.12
 route: /style/TypeScript
 ---
 
@@ -840,8 +840,61 @@ An established application-level task/error supervisor is also valid. A bare `vo
 
 Prefer `async`/`await` for ordinary sequential control flow. Promise chains remain available when the Promise itself is genuinely being transformed or composed as a value.
 
+## D023 — Keep module boundaries narrow and named
+
+Use named exports by default and export only declarations that intentionally belong to the module's public contract.
+
+```ts
+type PlayerRecord = {
+  readonly id: string;
+  readonly displayName: string;
+};
+
+function normalizePlayer(
+  record: PlayerRecord,
+): Player {
+  // ...
+}
+
+export async function loadPlayer(
+  playerId: string,
+): Promise<Player> {
+  // ...
+}
+```
+
+Here `PlayerRecord` and `normalizePlayer` remain private implementation details.
+
+Use `import type` when a dependency exists only in the type system:
+
+```ts
+import type {
+  Player,
+} from "./player";
+```
+
+Avoid default exports in ordinary first-party modules because importers can rename them arbitrarily. Preserve default exports when an external framework or API genuinely requires them.
+
+Avoid broad barrel files that merely re-export a directory. Curated re-export entry points are allowed when they define a real package, feature, or subsystem boundary:
+
+```ts
+export {
+  createSession,
+  closeSession,
+} from "./session";
+
+export type {
+  Session,
+  SessionConfig,
+} from "./types";
+```
+
+Keep side-effect-only imports rare and confined to deliberate bootstrap or composition modules.
+
+The rule is simple: `export` means "this is intentionally part of this module's public contract," not merely "something elsewhere happens to need access to it."
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled release-critical areas include modules/imports/exports, naming, and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
+This guide is intentionally incomplete. Unsettled release-critical areas include naming and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
