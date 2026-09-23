@@ -39,7 +39,7 @@ Grill to Build maintains five living artifacts and runs a structured pipeline:
 
 ## Diagram format is a contract
 
-Grill to Build asks once which living-model format to use: Markdown/Mermaid, Figma/FigJam, Excalidraw, diagrams.net, or no diagram. An explicit choice is binding for the workflow.
+Grill to Build asks once which living-model format to use: Graphviz DOT, Markdown/Mermaid, Figma/FigJam, Excalidraw, diagrams.net, or no diagram. An explicit choice is binding for the workflow.
 
 The agent must **not** substitute an AI-generated raster image for the selected diagram format. Image generation is used only when you explicitly choose generated imagery as the diagram source or output method.
 
