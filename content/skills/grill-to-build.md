@@ -1,6 +1,6 @@
 ---
 skill_id: grill-to-build
-updated: 2026-09-17
+updated: 2026-09-23
 ---
 
 # Grill to Build
@@ -36,6 +36,16 @@ Grill to Build maintains five living artifacts and runs a structured pipeline:
 - **Ideas.md** — Valuable work deliberately deferred from current scope
 - **SPEC.md** — Implementation contract, created only after discovery stabilizes
 - **tickets/*.md** — Ordered work units, created only after the specification stabilizes
+
+## Diagram format is a contract
+
+Grill to Build asks once which living-model format to use: Markdown/Mermaid, Figma/FigJam, Excalidraw, diagrams.net, or no diagram. An explicit choice is binding for the workflow.
+
+The agent must **not** substitute an AI-generated raster image for the selected diagram format. Image generation is used only when you explicitly choose generated imagery as the diagram source or output method.
+
+For Excalidraw specifically, the workflow creates an editable native Excalidraw scene through a supported authoring path or SDK. If you request a PNG or SVG preview, that preview is rendered or exported **from the Excalidraw scene**. “Excalidraw to PNG” therefore means native scene first, rendered preview second — not an image-model imitation of Excalidraw.
+
+If the selected authoring path is unavailable, the agent should say so and use only the allowed fallback (normally Markdown/Mermaid unless you forbid it). It must not silently switch to image generation.
 
 ## Inputs
 
