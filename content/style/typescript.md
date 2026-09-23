@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D021
-version: 0.1.10
+accepted_through: D022
+version: 0.1.11
 route: /style/TypeScript
 ---
 
@@ -789,8 +789,59 @@ The key question is whether the caller is supposed to make a normal domain decis
 
 Do not wrap every foreseeable failure in a result type, and do not hide meaningful expected domain alternatives exclusively behind exceptions. Custom `Error` subclasses must also earn their place; expected domain failure information should generally remain typed data.
 
+## D022 — Async structure should expose causality
+
+Give every async function an explicit `Promise<T>` return type:
+
+```ts
+async function loadProfile(
+  userId: string,
+): Promise<UserProfile> {
+  // ...
+}
+```
+
+Use `await` when the current operation depends on completion:
+
+```ts
+const profile: UserProfile =
+  await loadProfile(userId);
+```
+
+When operations are genuinely independent, express that deliberate concurrency with the Promise combinator that matches the intended behavior:
+
+```ts
+const [
+  profile,
+  preferences,
+]: readonly [
+  UserProfile,
+  UserPreferences,
+] = await Promise.all([
+  loadProfile(userId),
+  loadPreferences(userId),
+]);
+```
+
+Do not leave Promises floating accidentally. A Promise must be awaited, returned, composed, or explicitly detached.
+
+Detached work must be visibly detached and must have an intentional owner for rejection. Local handling is valid:
+
+```ts
+void sendTelemetry(event)
+  .catch(
+    (error: unknown): void => {
+      reportTelemetryError(error);
+    },
+  );
+```
+
+An established application-level task/error supervisor is also valid. A bare `void somePromise()` is not sufficient by itself because it marks detachment without showing who owns failure.
+
+Prefer `async`/`await` for ordinary sequential control flow. Promise chains remain available when the Promise itself is genuinely being transformed or composed as a value.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled release-critical areas include async code, modules/imports/exports, naming, and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
+This guide is intentionally incomplete. Unsettled release-critical areas include modules/imports/exports, naming, and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
