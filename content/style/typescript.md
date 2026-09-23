@@ -5,8 +5,8 @@ summary: A strict, explicit TypeScript house style built around readable contrac
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: in-progress
 updated: "2026-09-18"
-accepted_through: D023
-version: 0.1.12
+accepted_through: D024
+version: 0.1.13
 route: /style/TypeScript
 ---
 
@@ -893,8 +893,68 @@ Keep side-effect-only imports rare and confined to deliberate bootstrap or compo
 
 The rule is simple: `export` means "this is intentionally part of this module's public contract," not merely "something elsewhere happens to need access to it."
 
+## D024 — Use semantic names with conventional TypeScript casing
+
+Use `PascalCase` for types, interfaces, classes, and named union variants:
+
+```ts
+type PlayerState = {
+  readonly playerId: string;
+};
+
+interface AudioOutput {
+  play(
+    clip: AudioClip,
+  ): Promise<void>;
+}
+```
+
+Use `camelCase` for values, functions, parameters, properties, and methods:
+
+```ts
+const maxRetries: number = 3;
+
+function loadPlayer(
+  playerId: string,
+): Promise<Player> {
+  // ...
+}
+```
+
+Boolean names should read as predicates:
+
+```ts
+const isReady: boolean = true;
+const hasSession: boolean = false;
+const canRetry: boolean = true;
+const shouldRefresh: boolean = false;
+```
+
+Collections should usually use meaningful plurals rather than mechanical suffixes such as `List`.
+
+Do not add declaration-category prefixes or suffixes that merely repeat TypeScript syntax:
+
+```ts
+interface IAudioOutput {}
+type TPlayerState = {};
+class AudioOutputImpl {}
+```
+
+Prefer names that describe the real distinction, such as `BrowserAudioOutput` or `MockAudioOutput`.
+
+Treat acronyms as ordinary words inside identifiers:
+
+```ts
+type HttpClient = {};
+const apiUrl: string = "...";
+```
+
+A `const` binding does not automatically become SCREAMING_SNAKE_CASE. Reserve all-caps names for true fixed module-level program constants, protocol values, configuration defaults, or catalogs whose constancy is part of their role.
+
+Prefer lowercase kebab-case source filenames such as `player-service.ts` and `worker-client.ts`, while preserving framework- or tool-mandated filenames exactly.
+
 ## Still in progress
 
-This guide is intentionally incomplete. Unsettled release-critical areas include naming and formatting/linting/enforcement. Framework-specific and other edge-case guidance can be added after 1.0.
+This guide is intentionally incomplete. Formatting/linting/enforcement is the final planned release-critical decision before the 1.0 audit. Framework-specific and other edge-case guidance can be added after 1.0.
 
 When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
