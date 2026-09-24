@@ -2,15 +2,11 @@ name: Style guide audit
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths: ['content/style/**', 'scripts/**', 'src/App.tsx', 'src/index.css', 'package*.json', '.github/workflows/style-guide-audit.yml']
   push:
     branches: [main]
-    paths:
-      - '.github/workflows/style-guide-audit.yml'
-      - 'content/style/**'
-      - 'scripts/style-guide*'
-      - 'src/App.tsx'
-      - 'scripts/content.ts'
-      - 'scripts/verify-deployment.ts'
+    paths: ['content/style/**', 'scripts/**', 'src/App.tsx', 'src/index.css', 'package*.json', '.github/workflows/style-guide-audit.yml']
 
 permissions:
   contents: read
@@ -22,42 +18,48 @@ concurrency:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: '24'
           cache: npm
-      - name: Record source revision
-        run: git rev-parse HEAD > audit-source-revision.txt
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: style-guide-audit-source
-          path: |
-            src/
-            scripts/
-            content/
-            public/
-            package.json
-            package-lock.json
-            tsconfig.json
-            index.html
-            vite.config.ts
-            wrangler.jsonc
-            README.md
-            LICENSE
-            audit-source-revision.txt
-          retention-days: 7
-          if-no-files-found: error
       - run: npm ci
-      - run: npm run check
+      - name: Required checks with failure-preserving output capture
+        shell: bash
+        run: npm run check | tee audit-check.log
+      - name: Install isolated pinned browser tooling
+        run: |
+          mkdir -p /tmp/style-audit-browser
+          npm install --prefix /tmp/style-audit-browser --no-package-lock playwright@1.56.1
+          /tmp/style-audit-browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify browser reading and copy behavior
+        env:
+          STYLE_BROWSER_MODULE: file:///tmp/style-audit-browser/node_modules/playwright/index.mjs
+        run: node scripts/style-guide-browser.mjs
+      - name: Verify canonical live resources after automatic deployment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          for attempt in $(seq 1 12); do
+            if node scripts/style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live.json; then
+              cat audit-live.json
+              exit 0
+            fi
+            sleep 15
+          done
+          echo 'Canonical live resources did not match this source revision.' >&2
+          exit 1
+      - run: git rev-parse HEAD > audit-source-revision.txt
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: success()
+        if: always()
         with:
-          name: style-guide-audit-build
+          name: style-guide-verification
           path: |
-            dist/
+            audit-check.log
+            audit-live.json
             audit-source-revision.txt
-          retention-days: 7
+            style-guide-browser-report/
+            content/style/typescript.md
+          retention-days: 14
           if-no-files-found: error
