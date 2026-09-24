@@ -26,12 +26,18 @@ jobs:
           python3 scripts/style-guide-audit-apply.py
           python3 - <<'PY'
           from pathlib import Path
+          import json
+          p=Path('package.json');j=json.loads(p.read_text())
+          j['devDependencies']['@typescript/typescript6']='6.0.2'
+          p.write_text(json.dumps(j,indent=2)+'\n')
           p=Path('scripts/style-guide-check.mjs');s=p.read_text()
+          s=s.replace('process.env.STYLE_GUIDE_TYPESCRIPT || "typescript"', 'process.env.STYLE_GUIDE_TYPESCRIPT || "@typescript/typescript6"')
           s=s.replace('require.resolve("typescript/bin/tsc")', 'path.resolve("node_modules/.bin", process.platform === "win32" ? "tsc.cmd" : "tsc")')
           s=s.replace('spawnSync(process.execPath, [compiler, "--project", path.join(directory, "tsconfig.json"), "--pretty", "false"], {encoding:"utf8"})', 'spawnSync(compiler, ["--project", path.join(directory, "tsconfig.json"), "--pretty", "false"], {encoding:"utf8", shell:process.platform === "win32"})')
+          s=s.replace('typescript:ts.version,examples:', 'syntaxApi:ts.version,typescript:require("typescript").version,examples:')
           p.write_text(s)
           PY
-      - name: Lock the guide formatter without upgrading other tools
+      - name: Lock audit tooling without upgrading other tools
         run: npm install --package-lock-only --ignore-scripts
       - run: npm ci
       - name: Capture dependency advisory evidence without automatic upgrades
