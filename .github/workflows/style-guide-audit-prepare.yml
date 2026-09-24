@@ -1,4 +1,4 @@
-name: Prepare reviewed TypeScript guide
+name: Finalize reviewed TypeScript guide
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  prepare:
+  finalize:
     if: github.ref == 'refs/heads/audit/typescript-1.0'
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -21,56 +21,112 @@ jobs:
         with:
           node-version: '24'
           cache: npm
-      - name: Apply narrowly scoped source corrections
+      - name: Mark the already-verified core as the 1.0 release candidate
         run: |
-          python3 scripts/style-guide-audit-apply.py
           python3 - <<'PY'
           from pathlib import Path
-          import json
-          p=Path('package.json');j=json.loads(p.read_text())
-          j['devDependencies']['@typescript/typescript6']='6.0.2'
-          p.write_text(json.dumps(j,indent=2)+'\n')
-          p=Path('scripts/style-guide-check.mjs');s=p.read_text()
-          s=s.replace('process.env.STYLE_GUIDE_TYPESCRIPT || "typescript"', 'process.env.STYLE_GUIDE_TYPESCRIPT || "@typescript/typescript6"')
-          s=s.replace('require.resolve("typescript/bin/tsc")', 'path.resolve("node_modules/.bin", process.platform === "win32" ? "tsc.cmd" : "tsc")')
-          s=s.replace('spawnSync(process.execPath, [compiler, "--project", path.join(directory, "tsconfig.json"), "--pretty", "false"], {encoding:"utf8"})', 'spawnSync(compiler, ["--project", path.join(directory, "tsconfig.json"), "--pretty", "false"], {encoding:"utf8", shell:process.platform === "win32"})')
-          s=s.replace('typescript:ts.version,examples:', 'syntaxApi:ts.version,typescript:require("typescript").version,examples:')
+          import re
+          p=Path('content/style/typescript.md');s=p.read_text()
+          assert 'accepted_through: D025' in s
+          assert 'version: 0.1.14' in s and 'status: in-progress' in s
+          s=s.replace('version: 0.1.14','version: 1.0.0',1).replace('status: in-progress','status: stable',1)
+          s,n=re.subn(r'^> \*\*In progress\.\*\*[^\n]*\n\n','',s,count=1,flags=re.M)
+          assert n==1
           p.write_text(s)
+          p=Path('.github/workflows/style-guide-audit.yml')
+          p.write_text('''name: Style guide audit
+
+          on:
+            workflow_dispatch:
+            pull_request:
+              paths: ['content/style/**', 'scripts/**', 'src/App.tsx', 'src/index.css', 'package*.json', '.github/workflows/style-guide-audit.yml']
+            push:
+              branches: [main]
+              paths: ['content/style/**', 'scripts/**', 'src/App.tsx', 'src/index.css', 'package*.json', '.github/workflows/style-guide-audit.yml']
+
+          permissions:
+            contents: read
+
+          concurrency:
+            group: style-guide-audit-${{ github.ref }}
+            cancel-in-progress: true
+
+          jobs:
+            audit:
+              runs-on: ubuntu-latest
+              timeout-minutes: 20
+              steps:
+                - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+                - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+                  with:
+                    node-version: '24'
+                    cache: npm
+                - run: npm ci
+                - run: npm run check | tee audit-check.log
+                - name: Install isolated pinned browser tooling
+                  run: |
+                    mkdir -p /tmp/style-audit-browser
+                    npm install --prefix /tmp/style-audit-browser --no-package-lock playwright@1.56.1
+                    /tmp/style-audit-browser/node_modules/.bin/playwright install --with-deps chromium
+                - name: Verify browser reading and copy behavior
+                  env:
+                    STYLE_BROWSER_MODULE: file:///tmp/style-audit-browser/node_modules/playwright/index.mjs
+                  run: node scripts/style-guide-browser.mjs
+                - name: Verify canonical live resources after automatic deployment
+                  if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+                  run: |
+                    for attempt in $(seq 1 12); do
+                      if node scripts/style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live.json; then
+                        cat audit-live.json
+                        exit 0
+                      fi
+                      sleep 15
+                    done
+                    echo 'Canonical live resources did not match this source revision.' >&2
+                    exit 1
+                - run: git rev-parse HEAD > audit-source-revision.txt
+                - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+                  if: always()
+                  with:
+                    name: style-guide-verification
+                    path: |
+                      audit-check.log
+                      audit-live.json
+                      audit-source-revision.txt
+                      style-guide-browser-report/
+                      content/style/typescript.md
+                    retention-days: 14
+                    if-no-files-found: error
+          ''')
+          # Remove indentation added only to embed readable YAML in this workflow.
+          s=p.read_text();lines=s.splitlines();p.write_text(lines[0]+'\n'+'\n'.join(line[10:] if line.startswith('          ') else line for line in lines[1:])+'\n')
           PY
-      - name: Lock audit tooling without upgrading other tools
-        run: npm install --package-lock-only --ignore-scripts
       - run: npm ci
-      - name: Capture dependency advisory evidence without automatic upgrades
-        run: |
-          set +e
-          npm audit --json > audit-dependencies.json
-          result=$?
-          if [ "$result" -gt 1 ]; then exit "$result"; fi
-      - run: npm run format:style
-      - run: npm run check
+      - run: npm run check | tee audit-check.log
       - name: Install isolated pinned browser tooling
         run: |
           mkdir -p /tmp/style-audit-browser
           npm install --prefix /tmp/style-audit-browser --no-package-lock playwright@1.56.1
           /tmp/style-audit-browser/node_modules/.bin/playwright install --with-deps chromium
-      - name: Check reader layout and copy interactions
+      - name: Check final release presentation
         env:
           STYLE_BROWSER_MODULE: file:///tmp/style-audit-browser/node_modules/playwright/index.mjs
         run: node scripts/style-guide-browser.mjs
-      - name: Commit only the reviewed staging changes
+      - name: Record source-only release on the staging branch
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/App.tsx src/index.css scripts/content.ts scripts/build.ts scripts/verify-deployment.ts scripts/style-guide-check.mjs package.json package-lock.json content/style/typescript.md
-          git commit -m 'Apply verified TypeScript guide audit corrections'
+          git rm .github/workflows/style-guide-audit-prepare.yml scripts/style-guide-audit-apply.py
+          git add content/style/typescript.md .github/workflows/style-guide-audit.yml
+          git commit -m 'Release audited TypeScript style guide 1.0.0'
           git push origin HEAD:refs/heads/audit/typescript-1.0
           git rev-parse HEAD > audit-source-revision.txt
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: reviewed-typescript-guide
+          name: typescript-guide-release-candidate
           path: |
-            content/style/
+            content/style/typescript.md
             scripts/style-guide*
             src/App.tsx
             src/index.css
@@ -81,7 +137,7 @@ jobs:
             package-lock.json
             dist/
             style-guide-browser-report/
+            audit-check.log
             audit-source-revision.txt
-            audit-dependencies.json
           retention-days: 7
           if-no-files-found: error
