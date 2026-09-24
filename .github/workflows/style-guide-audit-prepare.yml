@@ -22,10 +22,24 @@ jobs:
           node-version: '24'
           cache: npm
       - name: Apply narrowly scoped source corrections
-        run: python3 scripts/style-guide-audit-apply.py
+        run: |
+          python3 scripts/style-guide-audit-apply.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/style-guide-check.mjs');s=p.read_text()
+          s=s.replace('require.resolve("typescript/bin/tsc")', 'path.resolve("node_modules/.bin", process.platform === "win32" ? "tsc.cmd" : "tsc")')
+          s=s.replace('spawnSync(process.execPath, [compiler, "--project", path.join(directory, "tsconfig.json"), "--pretty", "false"], {encoding:"utf8"})', 'spawnSync(compiler, ["--project", path.join(directory, "tsconfig.json"), "--pretty", "false"], {encoding:"utf8", shell:process.platform === "win32"})')
+          p.write_text(s)
+          PY
       - name: Lock the guide formatter without upgrading other tools
         run: npm install --package-lock-only --ignore-scripts
       - run: npm ci
+      - name: Capture dependency advisory evidence without automatic upgrades
+        run: |
+          set +e
+          npm audit --json > audit-dependencies.json
+          result=$?
+          if [ "$result" -gt 1 ]; then exit "$result"; fi
       - run: npm run format:style
       - run: npm run check
       - name: Install isolated pinned browser tooling
@@ -41,7 +55,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/App.tsx src/index.css scripts/content.ts scripts/build.ts scripts/verify-deployment.ts package.json package-lock.json content/style/typescript.md
+          git add src/App.tsx src/index.css scripts/content.ts scripts/build.ts scripts/verify-deployment.ts scripts/style-guide-check.mjs package.json package-lock.json content/style/typescript.md
           git commit -m 'Apply verified TypeScript guide audit corrections'
           git push origin HEAD:refs/heads/audit/typescript-1.0
           git rev-parse HEAD > audit-source-revision.txt
@@ -62,5 +76,6 @@ jobs:
             dist/
             style-guide-browser-report/
             audit-source-revision.txt
+            audit-dependencies.json
           retention-days: 7
           if-no-files-found: error
