@@ -1,0 +1,66 @@
+name: Prepare reviewed TypeScript guide
+
+on:
+  push:
+    branches: [audit/typescript-1.0]
+    paths: ['.github/workflows/style-guide-audit-prepare.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    if: github.ref == 'refs/heads/audit/typescript-1.0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: audit/typescript-1.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Apply narrowly scoped source corrections
+        run: python3 scripts/style-guide-audit-apply.py
+      - name: Lock the guide formatter without upgrading other tools
+        run: npm install --package-lock-only --ignore-scripts
+      - run: npm ci
+      - run: npm run format:style
+      - run: npm run check
+      - name: Install isolated pinned browser tooling
+        run: |
+          mkdir -p /tmp/style-audit-browser
+          npm install --prefix /tmp/style-audit-browser --no-package-lock playwright@1.56.1
+          /tmp/style-audit-browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Check reader layout and copy interactions
+        env:
+          STYLE_BROWSER_MODULE: file:///tmp/style-audit-browser/node_modules/playwright/index.mjs
+        run: node scripts/style-guide-browser.mjs
+      - name: Commit only the reviewed staging changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/App.tsx src/index.css scripts/content.ts scripts/build.ts scripts/verify-deployment.ts package.json package-lock.json content/style/typescript.md
+          git commit -m 'Apply verified TypeScript guide audit corrections'
+          git push origin HEAD:refs/heads/audit/typescript-1.0
+          git rev-parse HEAD > audit-source-revision.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reviewed-typescript-guide
+          path: |
+            content/style/
+            scripts/style-guide*
+            src/App.tsx
+            src/index.css
+            scripts/content.ts
+            scripts/build.ts
+            scripts/verify-deployment.ts
+            package.json
+            package-lock.json
+            dist/
+            style-guide-browser-report/
+            audit-source-revision.txt
+          retention-days: 7
+          if-no-files-found: error
