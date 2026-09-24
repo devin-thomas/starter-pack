@@ -3,16 +3,14 @@ id: typescript
 title: TypeScript
 summary: A strict, explicit TypeScript house style built around readable contracts, deliberate state modeling, and compiler-enforced clarity.
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
-status: in-progress
+status: stable
 updated: "2026-09-23"
 accepted_through: D025
-version: 0.1.14
+version: 1.0.0
 route: /style/TypeScript
 ---
 
 # TypeScript Style Guide
-
-> **In progress.** The core rules are accepted. The 1.0 release audit is checking their examples and delivery before removing this designation.
 
 For agents: apply the accepted rules below to first-party TypeScript. Preserve externally owned contracts at their boundaries. Topics explicitly outside this core guide are not implicit house rules. Examples are independently type-checked; the module example is a small multi-file program. Game and AI examples are illustrative, not specifications of a commercial game's rules or a provider's API.
 
