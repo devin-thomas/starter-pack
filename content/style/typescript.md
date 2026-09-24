@@ -3,56 +3,45 @@ id: typescript
 title: TypeScript
 summary: A strict, explicit TypeScript house style built around readable contracts, deliberate state modeling, and compiler-enforced clarity.
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
-status: in-progress
-updated: "2026-09-18"
-accepted_through: D024
-version: 0.1.13
+status: stable
+updated: "2026-09-23"
+accepted_through: D025
+version: 1.0.0
 route: /style/TypeScript
 ---
 
 # TypeScript Style Guide
 
-> **In progress.** This public guide contains the decisions that are settled so far. Anything not covered here is still open rather than silently inherited from common TypeScript convention.
-
-For agents: treat the accepted rules below as the current TypeScript house style for first-party code. Preserve externally owned contracts at their boundaries, and do not invent rules for topics that are still unsettled.
+For agents: apply the accepted rules below to first-party TypeScript. Preserve externally owned contracts at their boundaries. Topics explicitly outside this core guide are not implicit house rules. Examples are independently type-checked; the module example is a small multi-file program. Game and AI examples are illustrative, not specifications of a commercial game's rules or a provider's API.
 
 ## D001 — Explicit types by default
 
-Write explicit, precise type annotations almost everywhere TypeScript syntax reasonably permits them. Types are part of the readable source contract, not editor-only metadata.
+Write explicit, precise annotations wherever TypeScript provides a useful annotation point. Types are readable source contracts for developers and coding agents, not merely information an editor can infer. Do not widen a real domain to make an annotation easier.
 
-Prefer:
+<!-- example: explicit-types -->
 
 ```ts
+type GameMode = "arcade" | "story" | "training";
+
+const gameMode: GameMode = "arcade";
 const maxLives: number = 3;
 
-function calculateScore(
-  distance: number,
-  boosts: number,
-): number {
+function calculateScore(distance: number, boosts: number): number {
   const distanceScore: number = distance * 10;
   const boostScore: number = boosts * 100;
   return distanceScore + boostScore;
 }
 ```
 
-Do not widen a real domain merely to make an annotation easy:
+When exactly one literal is the intended contract, write that literal type, such as `const gameMode: "arcade" = "arcade"`. An annotation should preserve intent, not automatically broaden it to `string`.
 
-```ts
-type GameMode =
-  | "arcade"
-  | "story"
-  | "training";
-
-const gameMode: GameMode = "arcade";
-```
-
-Narrow syntax exceptions are allowed where TypeScript provides no useful annotation point, such as a `for...of` binding.
+Callbacks follow the same explicit rule. The narrowly accepted exceptions are useful precision from `satisfies` or `as const`, justified generic call-site inference, and syntax that has no annotation position, such as a `for...of` binding. Annotate a destructuring pattern as a whole; do not confuse property renaming with a type annotation.
 
 ## D002 — `const` means immutable; `let` means mutable
 
-Use `const` only when both the binding and the value exposed through its declared type graph are intended to be immutable.
+This is a house convention stronger than JavaScript's binding-only meaning of `const`. Use `const` for a binding whose exposed value graph is intended to be immutable. If intentional mutable state exists underneath a local binding, use `let`, even when rebinding is not expected. Stable properties of a mixed-mutability type can still be `readonly`.
 
-Immutable graphs cascade `readonly`:
+<!-- example: immutable-config -->
 
 ```ts
 type SamplingConfig = {
@@ -66,10 +55,14 @@ type AgentConfig = {
   readonly enabledTools: readonly string[];
 };
 
-const config: AgentConfig = loadConfig();
+const config: AgentConfig = {
+  model: "arena-coach",
+  sampling: { temperature: 0.2, maxTokens: 1024 },
+  enabledTools: ["replay-search"],
+};
 ```
 
-If intentionally mutable state exists underneath a binding, use `let` even when rebinding is not expected:
+<!-- example: mutable-player -->
 
 ```ts
 type PlayerState = {
@@ -78,15 +71,24 @@ type PlayerState = {
   health: number;
 };
 
-let player: PlayerState = createPlayer();
+let player: PlayerState = {
+  playerId: "cube-1",
+  maxHealth: 100,
+  health: 100,
+};
+
 player.health = 80;
 ```
 
-Do not use a broad `DeepReadonly<T>` abstraction as the normal way to express first-party immutability. Put the contract where the type is defined.
+Cascade `readonly` at the declarations that own the contract. A readonly property holding a mutable array, object, `Map`, or live resource does not make the contents immutable. Do not hide mutable state behind a setter, closure, or `const` wrapper. Use named domain operations when changes carry rules beyond simple assignment.
+
+This convention concerns intended access paths, not a whole-program immutability proof. TypeScript's structural compatibility can allow writable aliases to readonly objects, and readonly annotations do not freeze JavaScript objects. Avoid introducing aliases that undermine the intended contract; review ownership separately. If a mutable binding must never be replaced, use an explicit architectural restriction, focused check, or test rather than pretending its contents are immutable.
+
+Do not use a broad `DeepReadonly<T>` transformation as the default way to define first-party data.
 
 ## D003 — Maximum practical compiler strictness
 
-The baseline is:
+Use this minimum safety baseline:
 
 ```json
 {
@@ -102,67 +104,87 @@ The baseline is:
 }
 ```
 
-The goal is not to enable flags blindly. Prefer compiler-enforced explicitness when the stricter model better describes runtime uncertainty or programmer intent.
+These flags do not choose the runtime, module resolution, JSX settings, or emit strategy for a project. Add those target-specific settings separately. Strictness should expose uncertainty, not encourage assertions that suppress it.
 
-Indexed access is therefore fallible unless the type proves otherwise:
+<!-- example: checked-index -->
 
 ```ts
-const firstEnemy: Enemy | undefined = enemies[0];
+type EnemyDefinition = {
+  readonly name: string;
+};
+
+const enemies: readonly EnemyDefinition[] = [];
+const firstEnemy: EnemyDefinition | undefined = enemies[0];
+
+function enemyLabel(enemy: EnemyDefinition | undefined): string {
+  if (enemy === undefined) {
+    return "No enemy selected";
+  }
+  return enemy.name;
+}
 ```
+
+An optional property is not automatically permission to assign `undefined`. Write `property?: T | undefined` only when both omission and explicit undefined are intended. Use brackets for index-signature lookups and `override` for actual overrides. A full union consumer also follows the shared exhaustiveness rule below.
 
 ## D004 — Named domain states first; semantic nullish fallback
 
-If absence or state carries useful domain meaning, model it with named states rather than ambiguous sentinel combinations.
+When absence or state carries useful domain meaning, give it named alternatives. Do not assemble a state machine from booleans plus nullable fields that permit contradictory combinations.
+
+<!-- example: lock-on-state -->
 
 ```ts
+type EnemyDefinition = {
+  readonly name: string;
+};
+
 type UnlockedState = {
   readonly kind: "unlocked";
 };
 
 type LockedState = {
   readonly kind: "locked";
-  readonly target: Enemy;
+  readonly target: EnemyDefinition;
 };
 
-type LockOnState =
-  | UnlockedState
-  | LockedState;
+type LockOnState = UnlockedState | LockedState;
+
+let lockOn: LockOnState = { kind: "unlocked" };
+lockOn = { kind: "locked", target: { name: "Training dummy" } };
 ```
 
-For low-complexity absence, keep the meanings distinct:
+For low-complexity absence, keep the meanings distinct: `property?: T` means omitted or not supplied; `T | undefined` fits ordinary lookups and language/API uncertainty; `T | null` fits intentional empty or cleared values when no richer state is useful.
 
-- `property?: T` — omitted, not supplied, or inherited.
-- `T | undefined` — lookup or language/API uncertainty.
-- `T | null` — intentionally empty or cleared when no richer state is worth naming.
-
-Do not build state machines from booleans plus nullable fields when a named union can make legal states explicit.
+Describe external APIs faithfully first. For example, a DOM lookup that returns `null` must not be annotated as returning `undefined` merely to fit an internal preference. Normalize at the boundary when needed. “Not found” need not become a result object unless it carries useful additional domain information.
 
 ## D005 — `type` for data; `interface` for implementation contracts
 
-Use `type` for first-party data, state, configuration, request/response values, literal unions, tuples, and type composition.
+Use `type` for data, state, configuration, request/response values, literal unions, tuples, and type composition. Use `interface` for intentional substitutable behavior. An exported data object does not become an interface just because it crosses a boundary.
+
+<!-- example: behavioral-contract -->
 
 ```ts
-type AgentRequest = {
-  readonly model: string;
-  readonly messages: readonly AgentMessage[];
+type ReplayRequest = {
+  readonly replayId: string;
 };
-```
 
-Use `interface` for an intentional behavioral implementation contract:
+type CoachReply = {
+  readonly advice: string;
+};
 
-```ts
-interface ModelProvider {
-  complete(
-    request: AgentRequest,
-  ): Promise<AgentResult>;
+interface ReplayAnalyzer {
+  analyze(request: ReplayRequest): Promise<CoachReply>;
 }
 ```
 
-A callback field does not turn a data object into an interface. A function-only capability remains a function type alias.
+A function-only capability can remain a function type alias. A callback property does not turn an otherwise ordinary data object into an implementation contract. An interface does not require a class; class suitability is a separate decision.
+
+Both forms participate in TypeScript's structural type system. A type alias is not an exact or sealed runtime shape, and `interface` does not automatically grant permission for unrelated declaration merging. Preserve deliberate external augmentation requirements only at their boundary.
 
 ## D006 — Name meaningful union variants
 
-Give meaningful discriminated-union variants their own names by default, even when they are small.
+Name each meaningful domain variant even when it contains only one field. Compose the names into full unions and useful subsets instead of repeatedly extracting anonymous shapes.
+
+<!-- example: named-effects -->
 
 ```ts
 type AddChipsEffect = {
@@ -175,95 +197,96 @@ type AddMultEffect = {
   readonly mult: number;
 };
 
-type JokerEffect =
-  | AddChipsEffect
-  | AddMultEffect;
+type MultiplyMultEffect = {
+  readonly kind: "multiply-mult";
+  readonly factor: number;
+};
+
+type JokerEffect = AddChipsEffect | AddMultEffect | MultiplyMultEffect;
+type AdditiveEffect = AddChipsEffect | AddMultEffect;
+
+const effects: readonly JokerEffect[] = [
+  { kind: "add-chips", chips: 25 },
+  { kind: "add-mult", mult: 3 },
+];
 ```
 
-Named variants can be recomposed into semantic subsets:
-
-```ts
-type AdditiveEffect =
-  | AddChipsEffect
-  | AddMultEffect;
-```
-
-Several simultaneous effects are several values, such as `readonly JokerEffect[]`, not an impossible intersection of mutually exclusive discriminants.
+Several simultaneous effects are several values. Intersecting two variants with incompatible `kind` literals does not create a valid combined effect. Tiny, genuinely incidental helper-local unions may remain inline, but a domain variant's small size is not a reason to leave it unnamed.
 
 ## D007 — Use a shared `assertNever` for exhaustiveness
 
-Full-union consumers end with the shared exhaustive branch:
+Every consumer intended to handle a complete owned union ends its switch with the shared `assertNever` pattern. This makes exhaustiveness explicit, including in functions returning `void`.
+
+<!-- example: exhaustive-effects -->
 
 ```ts
-function assertNever(
-  value: never,
-): never {
-  throw new Error("Unexpected variant");
+type AddChipsEffect = {
+  readonly kind: "add-chips";
+  readonly chips: number;
+};
+
+type AddMultEffect = {
+  readonly kind: "add-mult";
+  readonly mult: number;
+};
+
+type JokerEffect = AddChipsEffect | AddMultEffect;
+
+function assertNever(value: never): never {
+  throw new Error("Unexpected union variant");
 }
-```
 
-```ts
-function effectLabel(
-  effect: JokerEffect,
-): string {
+function effectLabel(effect: JokerEffect): string {
   switch (effect.kind) {
     case "add-chips":
       return `+${effect.chips} chips`;
-
     case "add-mult":
       return `+${effect.mult} Mult`;
-
     default:
       return assertNever(effect);
   }
 }
 ```
 
-If a new variant is added but not handled, the compiler rejects the call to `assertNever`. The same pattern works for side-effect-only switches where `noImplicitReturns` would not protect exhaustiveness.
+Adding an unhandled variant makes the call to `assertNever` fail type checking. Exhaustiveness is relative to the declared input union, including a deliberately narrower subset. The helper is not generic and must not be forced to log or stringify arbitrary user/provider data. Its parameter has a compile-time purpose even when the runtime body does not inspect it.
 
 ## D008 — Owned unions use `kind`; external discriminators stay truthful
 
-First-party discriminated unions narrow on `kind`.
+Use `kind` for owned state, effect, event, command, and result variants. Keep externally prescribed discriminator names at the boundary; normalize inward when the external representation should not propagate.
+
+<!-- example: provider-normalization -->
 
 ```ts
-type RunningAgentState = {
-  readonly kind: "running";
-  readonly runId: string;
+// Suppose this provider's wire contract uses event_type.
+type ProviderFinishedEvent = {
+  readonly event_type: "run.finished";
+  readonly reply: string;
 };
-```
 
-Externally dictated payloads keep their real discriminator spelling at the boundary:
-
-```ts
-type ProviderCompletedEvent = {
-  readonly type: "response.completed";
+type CompletedAgentEvent = {
+  readonly kind: "completed";
   readonly output: string;
 };
+
+function normalizeProviderEvent(
+  event: ProviderFinishedEvent,
+): CompletedAgentEvent {
+  return { kind: "completed", output: event.reply };
+}
 ```
 
-Normalize inward when the external representation should not propagate through the domain.
-
-The boundary should tell the truth about the outside system. Owned code should tell the truth about our domain.
+The boundary type must describe what is actually received, not a field spelling we would prefer. Normalization follows validation; it does not establish that raw input has the external type.
 
 ## D009 — Literal unions for closed scalar domains
 
-When the literal runtime values are themselves the domain, constrain those literals directly.
+When literal values are themselves the domain, constrain the literals directly. Do not introduce an enum just to turn the desired string into a namespaced token.
+
+<!-- example: literal-rarities -->
 
 ```ts
-type JokerRarity =
-  | "common"
-  | "uncommon"
-  | "rare"
-  | "legendary";
+type JokerRarity = "common" | "uncommon" | "rare" | "legendary";
 
 const rarity: JokerRarity = "rare";
-```
-
-Do not introduce an `enum` merely for namespacing when the program actually wants the string `"rare"`.
-
-If runtime iteration is useful, a direct checked list is fine:
-
-```ts
 const JOKER_RARITIES: readonly JokerRarity[] = [
   "common",
   "uncommon",
@@ -272,250 +295,197 @@ const JOKER_RARITIES: readonly JokerRarity[] = [
 ];
 ```
 
-More complex runtime catalogs or `as const` derivation should exist only when they materially benefit the program.
+A runtime catalog earns its place when it supports a menu, validator, metadata lookup, or another actual runtime use. Keep the semantic type explicit unless a richer runtime source of truth is genuinely justified.
+
+A list typed `readonly JokerRarity[]` checks its entries; it does not prove that every rarity appears, appears exactly once, or appears in a particular order. Use an appropriate complete-key structure or an explicit coverage test when completeness is part of the contract. Do not invent runtime guarantees from an element annotation.
 
 ## D010 — No unconstrained scalar wrapper types
 
-If every value of a primitive is legal, use the primitive directly.
+If every value of a primitive is legal, use the primitive. Do not create documentation-only aliases such as `type PlayerId = string`, nominal brands for arbitrary strings, or `{ value: string }` wrappers solely to distinguish identities.
 
-Do not create documentation-only aliases:
+A custom scalar must narrow legal values or record a real validated invariant:
 
-```ts
-type PlayerId = string;
-type SearchQuery = string;
-```
-
-Do not add nominal brands or one-field wrapper objects merely to make arbitrary strings or numbers look like different types.
-
-A custom scalar type is justified only when it narrows the legal values or proves a real invariant.
-
-Compile-time structure is good when it actually constrains:
+<!-- example: constrained-replay-id -->
 
 ```ts
 type ReplayId = `replay_${string}`;
+
+function replayFileName(replayId: ReplayId): string {
+  return `${replayId}.slp`;
+}
+
+const replayId: ReplayId = "replay_finals-1";
 ```
 
-For a runtime-only invariant, a proof marker is acceptable only behind a validator or parser that actually establishes that invariant.
+This example constrains only the prefix; it also permits `"replay_"`. It does not prove existence, authorization, a checksum, or a nonempty suffix. A runtime-only invariant may use a proof marker, but construction must pass through a validator that actually establishes that invariant. Do not add a stronger-sounding name without a stronger check.
 
 ## D011 — Match runtime validation APIs to the meaning of failure
 
-Use different validation APIs for different semantic jobs.
+Use `isX` for membership testing; `parseX` for a required valid value whose invalidity aborts the operation; and a named result union when callers need meaningful information about validation failure.
 
-### Membership test: `isX`
-
-Use a type predicate when the caller is asking whether a value belongs to the refined domain.
+<!-- example: replay-id-validation -->
 
 ```ts
-function isReplayId(
-  value: string,
-): value is ReplayId {
-  return replayIdPattern.test(value);
+type ReplayId = `replay_${string}`;
+
+function isReplayId(value: unknown): value is ReplayId {
+  return typeof value === "string" && value.startsWith("replay_");
 }
-```
 
-### Required valid value: `parseX`
-
-Use a parser when a valid value is required for the operation to continue.
-
-```ts
-function parseReplayId(
-  value: string,
-): ReplayId {
-  if (!replayIdPattern.test(value)) {
-    throw new Error("Invalid replay ID");
+function parseReplayId(value: unknown): ReplayId {
+  if (!isReplayId(value)) {
+    throw new Error("Expected a replay_ identifier");
   }
-
-  return value as ReplayId;
+  return value;
 }
 ```
 
-The final assertion is allowed inside the trusted validation boundary that just proved the invariant, not at arbitrary call sites.
-
-### Meaningful validation failure: named result union
-
-Use a named result union when the reason for invalidity is domain information the caller needs.
+<!-- example: validation-result -->
 
 ```ts
-type ValidReplayIdResult = {
+type NonBlankPrompt = string & {
+  readonly __validatedNonBlankPrompt: unique symbol;
+};
+
+type ValidPrompt = {
   readonly kind: "valid";
-  readonly value: ReplayId;
+  readonly value: NonBlankPrompt;
 };
 
-type InvalidReplayIdResult = {
+type InvalidPrompt = {
   readonly kind: "invalid";
-  readonly reason: string;
+  readonly reason: "not-a-string" | "blank";
 };
 
-type ReplayIdParseResult =
-  | ValidReplayIdResult
-  | InvalidReplayIdResult;
+type PromptParseResult = ValidPrompt | InvalidPrompt;
+
+function parsePrompt(value: unknown): PromptParseResult {
+  if (typeof value !== "string") {
+    return { kind: "invalid", reason: "not-a-string" };
+  }
+  if (value.trim().length === 0) {
+    return { kind: "invalid", reason: "blank" };
+  }
+  // Runtime proof immediately above establishes this branded invariant.
+  return { kind: "valid", value: value as NonBlankPrompt };
+}
 ```
 
-Do not force one validation API to solve every case.
+A final assertion is allowed only when TypeScript cannot express a runtime fact the implementation just established. Prefer ordinary narrowing when it already proves the return type, as in `parseReplayId`.
+
+Type predicates and assertion-function annotations are contracts the compiler trusts; it does not prove that the body implements them correctly. Test both acceptance and rejection, including edge cases. A predicate must match the claimed set of values, not quietly test a stricter unrelated condition.
+
+A statically expressible type still needs validation when the input arrives untrusted at runtime. Literal and template-literal annotations do not inspect JSON. Assertion functions remain exceptional rather than the normal construction path; returning the refined value keeps data flow explicit.
 
 ## D012 — Untrusted values start as `unknown`
 
-Raw external data starts as `unknown` until the program has actually established what it contains.
+Raw runtime input begins as `unknown` until a real check establishes its shape. Do not annotate unvalidated data with the type you hope it has.
+
+<!-- example: unknown-boundary -->
 
 ```ts
-const payload: unknown =
-  await response.json();
+// This ambient declaration represents an externally owned SDK typing defect.
+declare function readLegacyProviderReply(): any;
 
-const providerEvent: ProviderEventDto =
-  parseProviderEvent(payload);
+function parseCoachReply(value: unknown): string {
+  if (typeof value !== "string") {
+    throw new Error("Expected a text coaching reply");
+  }
+  return value;
+}
+
+function loadCoachReply(): string {
+  const rawReply: unknown = readLegacyProviderReply();
+  return parseCoachReply(rawReply);
+}
 ```
 
-Do not give unvalidated data the type you merely expect it to have. A type annotation does not validate a runtime value.
+An SDK returning `any` does not require us to create another `any` binding. Contain it directly as `unknown`. Only genuinely unavoidable integration syntax belongs in the narrow external exception.
 
-`any` is not a normal first-party modeling tool. If a third-party library forces `any`, contain it at that boundary and restore a checked type immediately:
-
-```ts
-const sdkResult: any =
-  legacySdk.getResult();
-
-const payload: unknown =
-  sdkResult;
-
-const result: ProviderResult =
-  parseProviderResult(payload);
-```
-
-A concrete DTO type is appropriate when a real trusted layer—such as a validator, generated client, or framework contract—has already established that shape.
-
-A useful flow is:
-
-```ts
-const rawPayload: unknown =
-  await getProviderPayload();
-
-const providerEvent: ProviderEventDto =
-  parseProviderEvent(rawPayload);
-
-const event: AgentEvent =
-  normalizeProviderEvent(providerEvent);
-```
-
-Each type should communicate how much the program actually knows at that point.
+Concrete DTO types are appropriate after an actual trusted layer establishes the contract. Generated interfaces, a client's generic type argument, or a framework's TypeScript signature alone are not runtime validation. Check what the boundary really guarantees. Validate first, then normalize external fields into owned types when useful.
 
 ## D013 — Explicit annotations by default; use `satisfies` when precision helps
 
-Write an explicit annotation when the declared contract itself is the important source information:
+Keep `: Type` as the default. Use `satisfies` when checking a broader contract while retaining the expression's more precise keys or structure materially helps.
+
+<!-- example: precise-route-catalog -->
 
 ```ts
-type ProviderConfig = {
-  readonly model: string;
-  readonly timeoutMs: number;
-};
-
-const config: ProviderConfig = {
-  model: "gpt-5",
-  timeoutMs: 30_000,
-};
-```
-
-Use `satisfies` when the value should be checked against a broader contract but keeping its more precise inferred keys or literals provides real value:
-
-```ts
-type RouteDefinition = {
+type ReplayRoute = {
   readonly path: string;
   readonly requiresAuth: boolean;
 };
 
-const routes = {
-  home: {
-    path: "/",
-    requiresAuth: false,
-  },
-  guide: {
-    path: "/guide",
-    requiresAuth: true,
-  },
-} satisfies Readonly<Record<string, RouteDefinition>>;
+const REPLAY_ROUTES = {
+  library: { path: "/replay-library", requiresAuth: false },
+  analysis: { path: "/replay-analysis", requiresAuth: true },
+} as const satisfies Readonly<Record<string, ReplayRoute>>;
 
-type RouteName =
-  keyof typeof routes;
-// "home" | "guide"
+type ReplayScreen = keyof typeof REPLAY_ROUTES;
+const initialScreen: ReplayScreen = "library";
 ```
 
-A direct annotation with `Record<string, RouteDefinition>` would broaden those known keys to `string`. Here, `satisfies` earns its place because the literal key information remains useful.
+Here the catalog's actual keys are useful runtime configuration, and `ReplayScreen` retains `"library" | "analysis"`. The `as const` also preserves the immutable literal graph required for this constant. `satisfies Readonly<...>` alone checks compatibility; it does **not** apply readonly modifiers to the expression's inferred properties. Contextual typing can affect inference, so it is not a promise to preserve every literal automatically.
 
-Do not use `satisfies` merely as a stylistic replacement for ordinary annotations.
-
-Type assertions are different. `as Type` tells TypeScript to treat a value as that type; it does not validate the value. Reserve assertions for places where a real proof or external fact exists that TypeScript cannot express directly, such as the final step of a validator that already proved a runtime-only invariant.
-
-Do not use `as any` or `as unknown as TargetType` to force ordinary first-party code past a useful compiler error.
+`as Type` is different: it asserts a type rather than validating runtime data. Reserve it for an immediately justified proof boundary or a genuine language/framework limitation. Do not use `as any` or `as unknown as TargetType` to silence ordinary compiler disagreements. Exceptional externally forced interop stays quarantined and explained, not normalized as application style.
 
 ## D014 — Function declarations for named behavior; arrows for function values
 
-Use a function declaration for named reusable behavior:
+Use declarations for named reusable operations. Use arrows for callbacks, locally supplied behavior, and deliberately first-class function values. This is a house distinction: ordinary functions are also first-class values and can form closures.
+
+<!-- example: function-roles -->
 
 ```ts
-function calculateScore(
-  distance: number,
-  boosts: number,
-): number {
-  return distance * 10 + boosts * 100;
+type EnemyDefinition = {
+  readonly name: string;
+  readonly isVisible: boolean;
+};
+
+function calculateDamage(baseDamage: number, multiplier: number): number {
+  return baseDamage * multiplier;
 }
+
+const enemies: readonly EnemyDefinition[] = [
+  { name: "Training dummy", isVisible: true },
+];
+
+const visibleEnemies: readonly EnemyDefinition[] = enemies.filter(
+  (enemy: EnemyDefinition): boolean => enemy.isVisible,
+);
 ```
 
-Use an arrow function when the function is genuinely acting as a value, callback, or closure:
-
-```ts
-const visibleEnemies: readonly Enemy[] =
-  enemies.filter(
-    (enemy: Enemy): boolean =>
-      enemy.visible,
-  );
-```
-
-This distinction is not only visual. Arrow functions capture `this` from their surrounding lexical scope, while ordinary functions use normal function `this` behavior based on how they are called. The two forms should therefore keep separate jobs instead of being standardized into one style.
-
-Concise expression bodies are encouraged when the entire callback is one clear expression:
-
-```ts
-(enemy: Enemy): boolean =>
-  enemy.visible
-```
-
-Do not add braces and an explicit `return` when they communicate nothing additional. Use a block body when multiple statements, branching, or meaningful control flow make the structure useful.
+Arrows capture lexical `this`; ordinary functions use call-dependent `this`. Do not replace one with the other without checking that semantic difference. Concise expression bodies are preferred when one clear expression says everything; braces and `return` add no useful information in that case. Use a block when statements or control flow need one. Do not organize source around hoisting convenience alone.
 
 ## D015 — Keep callback parameter and return types explicit
 
-Write callback parameter and return types even when TypeScript can infer them from the receiving API.
+Contextual typing is not a reason to remove the callback's local contract. Keep the types beside the behavior, including concise arrows.
+
+<!-- example: explicit-callback -->
 
 ```ts
-const visibleEnemies: readonly Enemy[] =
-  enemies.filter(
-    (enemy: Enemy): boolean =>
-      enemy.visible,
-  );
+type PlayerSummary = {
+  readonly name: string;
+  readonly isActive: boolean;
+};
+
+const players: readonly PlayerSummary[] = [];
+const activePlayers: readonly PlayerSummary[] = players.filter(
+  (player: PlayerSummary): boolean => player.isActive,
+);
 ```
 
-The goal is not only to tell the compiler what it already knows. The types tell the developer what the callback expects and intends to return at the exact point where that behavior is written.
+This communicates what the developer expects to receive and produce. Giving a coding agent nearby intent-bearing tokens is a design goal, not a universal measured guarantee of improved generation quality.
 
-They also provide coding agents with stronger nearby semantic context about how a value should be used and what kind of value should be produced next. The style therefore optimizes source for human and agent understanding, not just compiler inference.
-
-This remains compatible with concise arrow functions:
-
-```ts
-(player: Player): boolean =>
-  player.active
-```
-
-Explicit types do not require braces. Keep the concise body when one expression fully communicates the behavior.
+An explicit `boolean` return is meaningful here: JavaScript filtering uses truthiness, and TypeScript's ordinary `filter` predicate signature does not itself require a boolean. The house annotation intentionally narrows our callback's contract. A callback intended to narrow a union should declare the appropriate type-predicate return instead of discarding that intent as an ordinary boolean.
 
 ## D016 — Use `as const` selectively for useful literal precision
 
-Use `as const` when preserving exact literal values or tuple structure materially benefits the program.
+Use `as const` when exact literal values or tuple positions matter, not as a generic immutability button. Keep semantic domains explicit and check them with `satisfies` when both roles are useful.
 
-Keep the semantic domain explicit:
+<!-- example: exact-direction-tuple -->
 
 ```ts
-type Direction =
-  | "up"
-  | "down"
-  | "left"
-  | "right";
+type Direction = "up" | "down" | "left" | "right";
 
 const DIRECTIONS = [
   "up",
@@ -523,65 +493,48 @@ const DIRECTIONS = [
   "left",
   "right",
 ] as const satisfies readonly Direction[];
+
+const firstDirection: "up" = DIRECTIONS[0];
+const ORIGIN: readonly [0, 0] = [0, 0];
 ```
 
-Here, `Direction` remains the source-visible domain. `as const` preserves the exact runtime tuple, while `satisfies` checks that the tuple still conforms to the explicit semantic type.
+For a tiny exact tuple, a direct annotation such as `readonly [0, 0]` may be clearer than deriving a new semantic type from a value. Use the representation that preserves useful information without hiding the domain.
 
-Another useful case is an exact tuple:
-
-```ts
-const ORIGIN = [0, 0] as const;
-```
-
-Its type is:
-
-```ts
-readonly [0, 0]
-```
-
-Do not use `as const` merely to make something "more readonly," and do not derive semantic types from runtime values when writing the type directly would be clearer.
-
-Also remember that `as const` is a TypeScript type-level operation. It does not freeze the JavaScript object at runtime.
+`as const` is erased at runtime. It does not freeze an object or make a separately referenced mutable object immutable. The list above also does not prove complete domain coverage just because it satisfies an array of `Direction`.
 
 ## D017 — Do not use non-null assertions
 
-Do not use the postfix non-null assertion operator to make `null` or `undefined` disappear from a type.
+Do not use postfix `!` to erase `null` or `undefined`. There is no ordinary framework/lifecycle exception. Narrow, validate, or call a helper that establishes presence visibly.
 
-Avoid:
-
-```ts
-const player: Player =
-  players.find(
-    (candidate: Player): boolean =>
-      candidate.id === playerId,
-  )!;
-```
-
-The `!` changes what TypeScript believes without adding any runtime proof.
-
-Prefer visible narrowing:
+<!-- example: require-player -->
 
 ```ts
-const player: Player | undefined =
-  players.find(
-    (candidate: Player): boolean =>
-      candidate.id === playerId,
+type PlayerSummary = {
+  readonly playerId: string;
+  readonly name: string;
+};
+
+function requirePlayer(
+  players: readonly PlayerSummary[],
+  playerId: string,
+): PlayerSummary {
+  const player: PlayerSummary | undefined = players.find(
+    (candidate: PlayerSummary): boolean => candidate.playerId === playerId,
   );
-
-if (player === undefined) {
-  throw new Error("Player not found");
+  if (player === undefined) {
+    throw new Error("Player not found");
+  }
+  return player;
 }
-
-usePlayer(player);
 ```
 
-If the same invariant appears repeatedly, centralize the check in a helper that returns the proven type.
-
-The goal is to make the transition from `Player | undefined` to `Player` visible to the developer, compiler, and coding agent rather than hiding it behind a convenience assertion.
+`players.find(...)!` changes what TypeScript believes without adding that check. Centralize repeated checks when the helper has a real purpose. This rule is about postfix non-null assertions; the separate class-field definite-assignment feature is outside this core prescription, not silently approved or banned by it.
 
 ## D018 — Freeze at runtime only when enforcement matters
 
-Use readonly types for normal first-party immutability:
+Readonly types define the normal first-party contract. Add `Object.freeze()` only when runtime mutation is a concrete risk worth preventing, such as handing shared configuration to untyped integration code.
+
+<!-- example: runtime-freezing -->
 
 ```ts
 type AgentConfig = {
@@ -589,372 +542,305 @@ type AgentConfig = {
   readonly retries: number;
 };
 
-const config: AgentConfig = {
-  model: "gpt-5",
+const config: AgentConfig = Object.freeze({
+  model: "arena-coach",
   retries: 3,
-};
+});
 ```
 
-Do not add `Object.freeze()` merely because a value is readonly.
+This example's fields are primitive values. Freezing is shallow: a nested object must be treated separately. Deep runtime enforcement is a deliberate boundary choice, not an application-wide default or a replacement for explicit types.
 
-Use runtime freezing when it materially changes what the running program can guarantee—for example, when an object crosses into untyped JavaScript, plugin code, or another boundary that may not honor the TypeScript contract:
-
-```ts
-const config: Readonly<AgentConfig> =
-  Object.freeze({
-    model: "gpt-5",
-    retries: 3,
-  });
-```
-
-Remember that `Object.freeze()` is shallow. Deep freezing should be a deliberate boundary-level choice when an entire nested graph genuinely requires runtime enforcement, not a default utility applied to every immutable value.
+Freezing an object is not a security sandbox. It does not automatically prevent mutation through class methods, closures, accessors, or the internal state of objects such as `Map` and `Date`. Verify the actual representation and threat before claiming a runtime guarantee.
 
 ## D019 — Generics must earn their place
 
-Use a generic only when it preserves a real reusable type relationship.
+Use generics only for real supported type variation and useful relationships. A first-party abstraction used in only one concrete type configuration should be concrete. Do not preserve hypothetical reuse; generalize when a second legitimate need exists.
+
+<!-- example: earned-generic -->
 
 ```ts
-function firstOrUndefined<T>(
-  values: readonly T[],
-): T | undefined {
-  return values[0];
-}
-```
-
-Here the generic is meaningful because the same implementation preserves the caller's element type across multiple legitimate uses.
-
-Constrain generic parameters when the implementation requires structure:
-
-```ts
-type Identified = {
-  readonly id: string;
+type PlayerSummary = {
+  readonly name: string;
 };
 
-function findById<T extends Identified>(
-  values: readonly T[],
-  id: string,
-): T | undefined {
-  return values.find(
-    (value: T): boolean =>
-      value.id === id,
-  );
+type CoachTip = {
+  readonly advice: string;
+};
+
+function firstOrUndefined<T>(values: readonly T[]): T | undefined {
+  return values[0];
 }
+
+const players: readonly PlayerSummary[] = [{ name: "Gohan" }];
+const tips: readonly CoachTip[] = [{ advice: "Review your landing choices" }];
+const firstPlayer: PlayerSummary | undefined = firstOrUndefined(players);
+const firstTip: CoachTip | undefined = firstOrUndefined(tips);
 ```
 
-Do not preserve a generic abstraction for hypothetical reuse. If first-party code only has one real type instantiation, make the abstraction concrete.
+Constrain a type parameter to capabilities the implementation requires. Do not add constraints that replace useful caller-specific information with an unnecessarily broad type.
 
-Prefer:
+Call-site inference is allowed when the concrete choice is already source-visible. Write type arguments when the choice itself matters or resolves ambiguity. This rule governs introducing our own generic abstractions, not whether using a library's `Promise<T>` or collection type requires multiple local instantiations.
 
-```ts
-class PlayerRepository {
-  // ...
-}
-```
-
-over:
-
-```ts
-class Repository<T> {
-  // ...
-}
-```
-
-when `Repository<Player>` is the only real supported form.
-
-Generalize later if a second legitimate use actually appears.
-
-At call sites, inference is fine when the concrete type is already obvious from typed arguments and the declared result. Write an explicit type argument when choosing that type is itself meaningful information or resolves ambiguity.
+A call such as `decode<CoachReply>(raw)` does not validate `raw` just because the type argument is explicit. Generic decoding must still use real runtime validation, for example through a supplied parser or schema. Custom type parameters are erased.
 
 ## D020 — Prefer data and functions; classes represent continuing runtime objects
 
-Use plain typed data plus named functions for ordinary domain values and transformations.
+Use plain data and named transformations for ordinary domain values. A noun, an ID, method grouping, or constructor validation does not justify a class.
+
+<!-- example: player-value-transformation -->
 
 ```ts
 type PlayerState = {
   readonly playerId: string;
   readonly maxHealth: number;
-  health: number;
+  readonly health: number;
 };
 
-function applyDamage(
-  player: PlayerState,
-  damage: number,
-): PlayerState {
-  return {
-    ...player,
-    health: Math.max(
-      0,
-      player.health - damage,
-    ),
-  };
+function applyDamage(player: PlayerState, damage: number): PlayerState {
+  if (!Number.isFinite(damage) || damage < 0) {
+    throw new Error("Damage must be finite and nonnegative");
+  }
+  return { ...player, health: Math.max(0, player.health - damage) };
 }
 ```
 
-A class must earn its place by representing a continuing runtime object whose meaning depends on something more than serializable public data—such as a live resource, private evolving state, lifecycle, temporal invariants, or a stateful behavioral implementation contract.
+A class can earn its place as a continuing runtime object with a live resource, private evolving state, lifecycle, and temporal invariants. Several strong signals should normally coincide. A class remains a choice, not a requirement: a closure may represent the same behavior well.
 
-A useful heuristic is:
-
-> If you could serialize the value, reconstruct it from its fields, and still have the same kind of thing, it probably wants to be data. If its meaning depends on something live that cannot be captured by those fields alone, it may want to be a class.
-
-For example, a worker client can justify a class because the instance owns a live `Worker`, pending requests, sequencing state, listeners, and cleanup responsibilities:
+<!-- example: live-replay-connection -->
 
 ```ts
-interface WorkerClient {
-  request(
-    message: WorkerRequest,
-  ): Promise<WorkerResponse>;
-
+interface ReplayConnection {
+  send(command: string): void;
   close(): void;
 }
 
-class BrowserWorkerClient
-  implements WorkerClient {
-  private readonly worker: Worker;
-  private readonly pending:
-    Map<number, PendingRequest>;
+class BrowserReplayConnection implements ReplayConnection {
+  private readonly socket: WebSocket;
+  private isClosed: boolean;
 
-  constructor(
-    worker: Worker,
-  ) {
-    this.worker = worker;
-    this.pending =
-      new Map<number, PendingRequest>();
+  constructor(url: string) {
+    this.socket = new WebSocket(url);
+    this.isClosed = false;
   }
 
-  async request(
-    message: WorkerRequest,
-  ): Promise<WorkerResponse> {
-    throw new Error("Example");
+  send(command: string): void {
+    if (this.isClosed || this.socket.readyState !== WebSocket.OPEN) {
+      throw new Error("Replay connection is not open");
+    }
+    this.socket.send(command);
   }
 
   close(): void {
-    // Release this instance's runtime resources.
+    if (this.isClosed) {
+      return;
+    }
+    this.isClosed = true;
+    this.socket.close();
   }
 }
 ```
 
-Do not create a class merely because the concept is a domain noun, related functions operate on its data, a constructor can validate it, or methods would be convenient to group. Validation alone belongs in a parser or factory when the result is still fundamentally data.
+The instance owns its socket and enforces send/close behavior; copying its fields is not a new connection. A binding for this mutable runtime object uses `let`. `readonly socket` prevents replacing that field; it does not declare the socket immutable.
 
-Classes should be relatively uncommon, but they remain appropriate for things like sockets, workers, audio engines, database connections, media sessions, watchers, transactions, and device managers where continuing runtime identity is real.
+If a value can be serialized and reconstructed from its fields as the same kind of thing, it probably wants to be data. Treat that as a heuristic, not a JSON test that automatically turns every non-JSON value into a class. Genuine framework requirements and useful custom `Error` identity remain boundary exceptions already covered by the corresponding rules.
 
 ## D021 — Represent failure according to what it means
 
-Use `T | undefined` for ordinary absence or lookup misses:
+Use `T | undefined` for an ordinary lookup miss. Use named result variants for expected domain alternatives callers should inspect. Throw or reject when the operation cannot produce its promised normal result and the failure should propagate to an error boundary.
+
+<!-- example: lobby-result -->
 
 ```ts
-function findPlayer(
-  players: readonly Player[],
-  playerId: string,
-): Player | undefined {
-  return players.find(
-    (player: Player): boolean =>
-      player.playerId === playerId,
-  );
-}
-```
-
-Use a named discriminated result union when failure is an expected recoverable domain outcome that callers are supposed to inspect:
-
-```ts
-type SaveSucceeded = {
-  readonly kind: "saved";
-  readonly revision: number;
+type LobbyJoined = {
+  readonly kind: "joined";
+  readonly slot: number;
 };
 
-type SaveConflict = {
-  readonly kind: "conflict";
-  readonly currentRevision: number;
+type LobbyFull = {
+  readonly kind: "full";
+  readonly capacity: number;
 };
 
-type SaveResult =
-  | SaveSucceeded
-  | SaveConflict;
-```
+type JoinLobbyResult = LobbyJoined | LobbyFull;
 
-Throw when an invariant, required precondition, or exceptional runtime operation prevents the function from producing its promised normal result:
-
-```ts
-function requireSession(
-  session: Session | undefined,
-): Session {
-  if (session === undefined) {
-    throw new Error("Session is required");
+function joinLobby(playerCount: number, capacity: number): JoinLobbyResult {
+  if (!Number.isSafeInteger(playerCount) || playerCount < 0) {
+    throw new Error("Invalid player count");
   }
-
-  return session;
+  if (!Number.isSafeInteger(capacity) || capacity < 1) {
+    throw new Error("Invalid lobby capacity");
+  }
+  if (playerCount >= capacity) {
+    return { kind: "full", capacity };
+  }
+  return { kind: "joined", slot: playerCount + 1 };
 }
 ```
 
-The key question is whether the caller is supposed to make a normal domain decision based on the outcome. If yes, put that outcome in the type. If no normal result can be produced and failure should propagate to an error boundary, throw or reject.
+“Lobby full” is a normal domain decision; malformed internal counts are not another join outcome. Classify failure relative to the function's contract, not just how frequently it happens. The same condition can be ordinary absence in `findPlayer` and a violated requirement in `requirePlayer`.
 
-Do not wrap every foreseeable failure in a result type, and do not hide meaningful expected domain alternatives exclusively behind exceptions. Custom `Error` subclasses must also earn their place; expected domain failure information should generally remain typed data.
+Do not wrap every foreseeable failure only to recreate propagation manually, or hide expected alternatives solely behind exceptions. A result union does not prove a function cannot also throw. Custom `Error` classes need meaningful exception identity, metadata, or behavior; expected domain information normally stays plain typed data.
 
 ## D022 — Async structure should expose causality
 
-Give every async function an explicit `Promise<T>` return type:
+Declare explicit `Promise<T>` return types on ordinary async functions. Await required completion, return or compose owned Promises, and use concurrency deliberately. Async generators have iterator contracts and are outside this ordinary async-function rule.
+
+<!-- example: concurrent-replay-analysis -->
 
 ```ts
-async function loadProfile(
-  userId: string,
-): Promise<UserProfile> {
-  // ...
+type ReplaySummary = {
+  readonly replayId: string;
+};
+
+type CoachTip = {
+  readonly advice: string;
+};
+
+interface ReplayAnalysisSource {
+  loadReplay(replayId: string): Promise<ReplaySummary>;
+  loadTip(replayId: string): Promise<CoachTip>;
+}
+
+async function loadAnalysis(
+  source: ReplayAnalysisSource,
+  replayId: string,
+): Promise<readonly [ReplaySummary, CoachTip]> {
+  const [replay, tip]: readonly [ReplaySummary, CoachTip] = await Promise.all([
+    source.loadReplay(replayId),
+    source.loadTip(replayId),
+  ]);
+  return [replay, tip];
 }
 ```
 
-Use `await` when the current operation depends on completion:
+The calls start the work; `Promise.all` observes their results. It fulfills after all fulfill, but rejects when an input rejects without automatically cancelling the others. `allSettled` observes every outcome, `race` uses the first settlement, and `any` uses the first fulfillment or rejects if all reject. Racing a timeout is not cancellation. Sequential or bounded execution remains appropriate when ordering, resource pressure, rate limits, or effects make unrestricted concurrency wrong.
+
+Never accidentally float a Promise. Detached work must be visibly detached and have an intentional local or application-level failure owner.
+
+<!-- example: supervised-detachment -->
 
 ```ts
-const profile: UserProfile =
-  await loadProfile(userId);
+interface TaskSupervisor {
+  // The implementation owns rejection handling and task lifetime.
+  detach(task: Promise<void>): void;
+}
+
+interface ReplayTelemetry {
+  send(replayId: string): Promise<void>;
+}
+
+function reportReplayViewed(
+  supervisor: TaskSupervisor,
+  telemetry: ReplayTelemetry,
+  replayId: string,
+): void {
+  supervisor.detach(telemetry.send(replayId));
+}
 ```
 
-When operations are genuinely independent, express that deliberate concurrency with the Promise combinator that matches the intended behavior:
+A local `void task.catch(handler)` is valid only when the terminal handler itself is safe: a thrown exception or rejected Promise from the handler creates another rejection that also needs an owner. A bare `void task` does not handle rejection. A process-wide unhandled-rejection listener is not a substitute for intentional task ownership, and non-awaited work is not guaranteed to survive page or serverless-request termination.
 
-```ts
-const [
-  profile,
-  preferences,
-]: readonly [
-  UserProfile,
-  UserPreferences,
-] = await Promise.all([
-  loadProfile(userId),
-  loadPreferences(userId),
-]);
-```
-
-Do not leave Promises floating accidentally. A Promise must be awaited, returned, composed, or explicitly detached.
-
-Detached work must be visibly detached and must have an intentional owner for rejection. Local handling is valid:
-
-```ts
-void sendTelemetry(event)
-  .catch(
-    (error: unknown): void => {
-      reportTelemetryError(error);
-    },
-  );
-```
-
-An established application-level task/error supervisor is also valid. A bare `void somePromise()` is not sufficient by itself because it marks detachment without showing who owns failure.
-
-Prefer `async`/`await` for ordinary sequential control flow. Promise chains remain available when the Promise itself is genuinely being transformed or composed as a value.
+Prefer `async`/`await` for ordinary control flow. Direct Promise chains remain available where composing a Promise as a value is clearer. Keep callback contracts explicit, and preserve the failure semantics established above.
 
 ## D023 — Keep module boundaries narrow and named
 
-Use named exports by default and export only declarations that intentionally belong to the module's public contract.
+Named exports are the default. Leave implementation details unexported and use `import type` for type-only dependencies. The following three files form one example.
 
 ```ts
-type PlayerRecord = {
-  readonly id: string;
-  readonly displayName: string;
+// file: replay-types.ts
+export type ReplaySummary = {
+  readonly replayId: string;
+  readonly label: string;
 };
-
-function normalizePlayer(
-  record: PlayerRecord,
-): Player {
-  // ...
-}
-
-export async function loadPlayer(
-  playerId: string,
-): Promise<Player> {
-  // ...
-}
 ```
-
-Here `PlayerRecord` and `normalizePlayer` remain private implementation details.
-
-Use `import type` when a dependency exists only in the type system:
 
 ```ts
-import type {
-  Player,
-} from "./player";
+// file: replay-label.ts
+import type { ReplaySummary } from "./replay-types";
+
+function normalizeLabel(label: string): string {
+  return label.trim();
+}
+
+export function replayLabel(replay: ReplaySummary): string {
+  return normalizeLabel(replay.label);
+}
 ```
-
-Avoid default exports in ordinary first-party modules because importers can rename them arbitrarily. Preserve default exports when an external framework or API genuinely requires them.
-
-Avoid broad barrel files that merely re-export a directory. Curated re-export entry points are allowed when they define a real package, feature, or subsystem boundary:
 
 ```ts
-export {
-  createSession,
-  closeSession,
-} from "./session";
-
-export type {
-  Session,
-  SessionConfig,
-} from "./types";
+// file: replay-api.ts
+export { replayLabel } from "./replay-label";
+export type { ReplaySummary } from "./replay-types";
 ```
 
-Keep side-effect-only imports rare and confined to deliberate bootstrap or composition modules.
+The last file is justified only when it represents an intentional subsystem entry point. Do not create broad `export *` barrels merely to shorten paths. A named import may still use an explicit `as` alias; named exports make the declared identity checkable and renaming visible, not impossible.
 
-The rule is simple: `export` means "this is intentionally part of this module's public contract," not merely "something elsewhere happens to need access to it."
+Default exports remain exceptions for genuine framework requirements or material interoperability benefits. Type-only imports are erased; an ordinary import is required when a value is needed at runtime, such as a class used with `new` or `instanceof`. Keep intentional side-effect imports at bootstrap/composition boundaries. Module-local scope is an API boundary, not a secrecy guarantee for shipped client code.
 
 ## D024 — Use semantic names with conventional TypeScript casing
 
-Use `PascalCase` for types, interfaces, classes, and named union variants:
+Use PascalCase for types, interfaces, classes, and named variants. Use camelCase for ordinary values, functions, parameters, properties, and methods. Boolean names should read as predicates, and collections should usually use meaningful plurals.
+
+<!-- example: semantic-names -->
 
 ```ts
-type PlayerState = {
-  readonly playerId: string;
+type AgentEndpoint = {
+  readonly apiUrl: string;
+  readonly isEnabled: boolean;
 };
 
-interface AudioOutput {
-  play(
-    clip: AudioClip,
-  ): Promise<void>;
+const DEFAULT_REQUEST_TIMEOUT_MS: number = 30_000;
+const endpoints: readonly AgentEndpoint[] = [];
+const canRequestAdvice: boolean = endpoints.length > 0;
+
+function endpointUrl(endpoint: AgentEndpoint): string {
+  return endpoint.apiUrl;
 }
 ```
 
-Use `camelCase` for values, functions, parameters, properties, and methods:
+Avoid declaration-category names such as `IAudioOutput`, `TPlayerState`, or `AudioOutputImpl`. Prefer a real distinction such as `BrowserAudioOutput`. Treat acronyms as ordinary words: `HttpClient`, `apiUrl`, `parseJson`.
 
-```ts
-const maxRetries: number = 3;
+Not every `const` is an all-caps constant. Reserve SCREAMING_SNAKE_CASE for genuine fixed module-level defaults, protocol values, and catalogs whose constancy is part of their role. Ordinary immutable bindings remain camelCase.
 
-function loadPlayer(
-  playerId: string,
-): Promise<Player> {
-  // ...
+Prefer lowercase kebab-case source paths such as `replay-label.ts` and `worker-client.ts`. Preserve externally required spelling at boundaries, including wire fields, tool filenames, and component capitalization required by JSX. Do not rewrite an external contract merely to make its names look owned.
+
+## D025 — Automate formatting and enforce reliable rules in CI
+
+Use one deterministic formatter for mechanics, a TypeScript-aware lint system for reliable correctness/house checks, and an independent compiler check. Pin each repository's tool versions and configuration. The house contract does not permanently mandate a formatter brand or one target-specific configuration.
+
+An implementation might expose these commands after installing and pinning its selected tools:
+
+```json
+{
+  "scripts": {
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "check": "npm run format:check && npm run typecheck && npm run lint && npm test"
+  }
 }
 ```
 
-Boolean names should read as predicates:
+This is not a complete package manifest; the repository supplies its test command, dependencies, and target-specific configuration. Formatting drift, type errors, and enabled lint violations fail CI. Do not accumulate a permanent warning tier. Use relevant automated tests where they exist.
 
-```ts
-const isReady: boolean = true;
-const hasSession: boolean = false;
-const canRetry: boolean = true;
-const shouldRefresh: boolean = false;
-```
+Mechanically check only rules that are trustworthy. Do not blindly enable presets that erase explicit annotations, rewrite intentional mutable `let` bindings to `const`, or treat bare `void promise` as sufficient handling. Keep formatter and lint responsibilities separate. Suppress only a narrowly inapplicable rule, explain the reason, and detect unused suppressions. Deliberately exclude generated/vendor code rather than disguising owned code as external.
 
-Collections should usually use meaningful plurals rather than mechanical suffixes such as `List`.
+Architectural judgment remains necessary for correct validation, alias ownership, genuine generic reuse, class suitability, domain-error semantics, and task supervision. Passing automation is not proof of all those properties.
 
-Do not add declaration-category prefixes or suffixes that merely repeat TypeScript syntax:
+## Scope and future additions
 
-```ts
-interface IAudioOutput {}
-type TPlayerState = {};
-class AudioOutputImpl {}
-```
+The core guide covers the common first-party language and architecture decisions above. Detailed framework conventions, runtime/module baselines, advanced generics, cancellation/retry mechanisms, and other unprescribed topics can be added later. They do not silently inherit a house rule from whichever ecosystem convention happens to be popular.
 
-Prefer names that describe the real distinction, such as `BrowserAudioOutput` or `MockAudioOutput`.
+The release audit checks the guide and its published examples. Hosting a guide does not certify every older implementation file in the hosting application as conformant; adopting the house style in an existing codebase is a separate migration.
 
-Treat acronyms as ordinary words inside identifiers:
+## Language references
 
-```ts
-type HttpClient = {};
-const apiUrl: string = "...";
-```
+These references explain language and tooling behavior; the house choices above remain the guide's own conventions.
 
-A `const` binding does not automatically become SCREAMING_SNAKE_CASE. Reserve all-caps names for true fixed module-level program constants, protocol values, configuration defaults, or catalogs whose constancy is part of their role.
-
-Prefer lowercase kebab-case source filenames such as `player-service.ts` and `worker-client.ts`, while preserving framework- or tool-mandated filenames exactly.
-
-## Still in progress
-
-This guide is intentionally incomplete. Formatting/linting/enforcement is the final planned release-critical decision before the 1.0 audit. Framework-specific and other edge-case guidance can be added after 1.0.
-
-When a topic is not covered yet, do not treat common TypeScript style as an implicit house rule.
+- [TypeScript object types and readonly](https://www.typescriptlang.org/docs/handbook/2/objects.html)
+- [TypeScript narrowing and type predicates](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
+- [The satisfies operator](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html)
+- [Const assertions and their limits](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html)
+- [TypeScript modules](https://www.typescriptlang.org/docs/handbook/2/modules.html)
+- [JavaScript Promise operations](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+- [Type-aware linting](https://typescript-eslint.io/getting-started/typed-linting/)

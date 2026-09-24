@@ -391,7 +391,7 @@ export async function generateResources(data: SiteData, output: string) {
     JSON.stringify(
       {
         id: "style-guides",
-        status: "in-progress",
+        status: data.styles.guides.some((guide) => guide.status === "in-progress") ? "in-progress" : "stable",
         guides: styleCatalog,
       },
       null,

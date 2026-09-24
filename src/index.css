@@ -1925,3 +1925,8 @@ a.skill-card:hover {
     width: 100%;
   }
 }
+
+/* Only shown when the small agent-copy control cannot access the clipboard. */
+.style-agent-inline { flex-wrap: wrap; }
+.style-agent-fallback { display: grid; gap: 6px; flex-basis: 100%; min-width: 0; }
+.style-agent-fallback input { box-sizing: border-box; width: 100%; min-width: 0; padding: 6px; color: var(--text); background: var(--surface); border: 1px solid var(--line); font: inherit; }

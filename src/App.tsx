@@ -772,11 +772,9 @@ function StyleHub({ data }: { data: SiteData }) {
         {data.styles.guides.map((guide) => (
           <a className="style-guide-card" href={guide.route} key={guide.id}>
             <h2>{guide.title}</h2>
-            <span className="style-status">
-              {guide.status === "in-progress"
-                ? "In progress"
-                : guide.status.replaceAll("-", " ")}
-            </span>
+            {guide.status === "in-progress" && (
+              <span className="style-status">In progress</span>
+            )}
           </a>
         ))}
       </div>
@@ -787,25 +785,34 @@ function StyleHub({ data }: { data: SiteData }) {
   );
 }
 
-function StyleAgentLinks({ guide }: { guide: StyleGuideEntry }) {
-  const [copied, setCopied] = useState<boolean>(false);
+function StyleAgentLinks({ guide }: { guide: StyleGuideEntry }): ReactNode {
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">("idle");
   const markdownUrl: string = `${resourceOrigin}${guide.route}.md`;
 
   async function copyAgentLink(): Promise<void> {
     try {
       if (!navigator.clipboard) throw new Error("Clipboard unavailable");
       await navigator.clipboard.writeText(markdownUrl);
-      setCopied(true);
+      setCopyStatus("copied");
     } catch {
-      setCopied(false);
+      setCopyStatus("failed");
     }
   }
 
   return (
     <span className="style-agent-inline">
       <button type="button" onClick={copyAgentLink}>
-        {copied ? "Agent link copied" : "Copy for agent"}
+        {copyStatus === "copied" ? "Agent link copied" : "Copy for agent"}
       </button>
+      <span className="sr-only" role="status">
+        {copyStatus === "copied" ? "Style guide address copied." : ""}
+      </span>
+      {copyStatus === "failed" && (
+        <span className="style-agent-fallback" role="status">
+          <label htmlFor="style-agent-address">Copy unavailable. Select this address:</label>
+          <input id="style-agent-address" readOnly value={markdownUrl} />
+        </span>
+      )}
     </span>
   );
 }
@@ -819,11 +826,10 @@ function StyleGuidePage({ guide }: { guide: StyleGuideEntry }) {
         description={guide.humanSummary}
       />
       <div className="style-status-bar" aria-label="Guide status">
-        <span className="style-status">
-          {guide.status === "in-progress"
-            ? "In progress"
-            : guide.status.replaceAll("-", " ")}
-        </span>
+        {guide.status === "in-progress" && (
+          <span className="style-status">In progress</span>
+        )}
+        <span>Version {guide.version}</span>
         <span>Updated {guide.updated}</span>
         <StyleAgentLinks guide={guide} />
       </div>
