@@ -17,12 +17,15 @@
     "build": "tsx scripts/build.ts",
     "typecheck": "tsc --noEmit",
     "prepare:startup": "tsx scripts/prepare-startup.ts",
-    "check": "tsx scripts/prepare-startup.ts --check && npm run typecheck && npm run test:workbench && npm run test:startup && npm run build",
+    "check": "tsx scripts/prepare-startup.ts --check && npm run typecheck && npm run check:style && npm run test:workbench && npm run test:startup && npm run build && npm run verify:style",
     "test:workbench": "tsx --test scripts/workbench.test.ts scripts/workbench-recovery.test.ts scripts/registry.test.ts",
     "test:startup": "tsx --test scripts/crawler-policy.test.ts scripts/companion-links.test.ts scripts/setup-contract.test.ts scripts/deployment-catalog.test.ts scripts/feedback.test.ts",
     "preview": "vite preview --host 127.0.0.1",
     "deploy": "npm run check && wrangler deploy && npm run verify:deployment",
-    "verify:deployment": "tsx scripts/verify-deployment.ts"
+    "verify:deployment": "tsx scripts/verify-deployment.ts",
+    "format:style": "node scripts/style-guide-check.mjs --write",
+    "check:style": "node scripts/style-guide-check.mjs && tsx --test scripts/style-guide-links.test.ts",
+    "verify:style": "node scripts/style-guide-surfaces.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
@@ -43,6 +46,8 @@
     "tsx": "^4.23.13",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",
-    "wrangler": "^4.129.1"
+    "wrangler": "^4.129.1",
+    "prettier": "3.6.2",
+    "@typescript/typescript6": "6.0.2"
   }
 }

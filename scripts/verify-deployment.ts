@@ -49,7 +49,8 @@ if (!html.includes('id="site-data"') || !html.includes("Your first build")) {
   throw new Error("The response is not the rendered Starter Pack homepage.");
 }
 const styleHtml = await read("/style/TypeScript", /text\/html/);
-if (!styleHtml.includes("TypeScript") || !styleHtml.includes("Agent access") || !styleHtml.includes("In progress")) {
+const visibleStyleHtml = styleHtml.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+if (!visibleStyleHtml.includes("TypeScript") || !visibleStyleHtml.includes("Copy for agent") || !visibleStyleHtml.includes("style-guide-prose")) {
   throw new Error("The TypeScript style guide page is incomplete.");
 }
 const script = html.match(/<script\b[^>]*\bsrc="([^\"]+\.js)"/);

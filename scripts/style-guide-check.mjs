@@ -6,8 +6,8 @@ import path from "node:path";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
-const ts = require(process.env.STYLE_GUIDE_TYPESCRIPT || "typescript");
-const compiler = process.env.STYLE_GUIDE_TSC || require.resolve("typescript/bin/tsc");
+const ts = require(process.env.STYLE_GUIDE_TYPESCRIPT || "@typescript/typescript6");
+const compiler = process.env.STYLE_GUIDE_TSC || path.resolve("node_modules/.bin", process.platform === "win32" ? "tsc.cmd" : "tsc");
 const sourcePath = process.argv.find((arg) => arg.endsWith(".md")) || "content/style/typescript.md";
 let source = await readFile(sourcePath, "utf8");
 const write = process.argv.includes("--write");
@@ -159,7 +159,7 @@ try {
   const options = { target: "ES2022", module: "Node16", moduleResolution: "Node16", lib: ["ES2022", "DOM"], types: [], strict: true, noUncheckedIndexedAccess: true, exactOptionalPropertyTypes: true, noImplicitOverride: true, noFallthroughCasesInSwitch: true, noImplicitReturns: true, noPropertyAccessFromIndexSignature: true, noEmit: true };
   async function compile(extra = {}) {
     await writeFile(path.join(directory, "tsconfig.json"), JSON.stringify({compilerOptions: {...options,...extra},include:["**/*.ts"]}));
-    const run = spawnSync(process.execPath, [compiler, "--project", path.join(directory, "tsconfig.json"), "--pretty", "false"], {encoding:"utf8"});
+    const run = spawnSync(compiler, ["--project", path.join(directory, "tsconfig.json"), "--pretty", "false"], {encoding:"utf8", shell:process.platform === "win32"});
     assert.equal(run.status, 0, `${run.stdout}\n${run.stderr}`);
   }
   await compile();
@@ -174,5 +174,5 @@ try {
     assert.equal(run.status, 0, `${name}: ${run.stdout}\n${run.stderr}`);
   }
   const expectedErrors = [...negatives.values()].reduce((sum,text) => sum + (text.match(/@ts-expect-error/g) || []).length, 0) + 1;
-  console.log(JSON.stringify({typescript:ts.version,examples:snippets.size,jsonExamples:jsonCount,decisions:decisionIds.length,negativeTypeAssertions:expectedErrors,runtimePrograms:runtime.size,explicitContractChecks:"passed",formatting:skipFormat?"not run (local supplementary check)":"passed",status:"passed"}));
+  console.log(JSON.stringify({syntaxApi:ts.version,typescript:require("typescript").version,examples:snippets.size,jsonExamples:jsonCount,decisions:decisionIds.length,negativeTypeAssertions:expectedErrors,runtimePrograms:runtime.size,explicitContractChecks:"passed",formatting:skipFormat?"not run (local supplementary check)":"passed",status:"passed"}));
 } finally { await rm(directory,{recursive:true,force:true}); }

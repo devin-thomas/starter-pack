@@ -5,6 +5,7 @@ import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import App from "../src/App";
 import { buildWorkbench } from "./workbench";
+import { jsonResourceReferences, markdownResourceReferences } from "./style-guide-links";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import {
@@ -228,14 +229,10 @@ for (const file of outputFiles.filter(
           .flatMap((match) => hostedUrls(match[2])),
       ]
     : file.endsWith(".json")
-      ? [
-          ...text.matchAll(
-            /"((?:\/|https:\/\/starter\.devthomas\.site\/)[^"\\\s]*)\\?"/g,
-          ),
-        ].map((match) => match[1])
+      ? jsonResourceReferences(text)
       : file.endsWith(".txt")
         ? hostedUrls(text)
-        : [...text.matchAll(/\]\(([^)\s]+)\)/g)].map((match) => match[1]);
+        : markdownResourceReferences(text);
   for (const reference of references) {
     if (/^(mailto:|data:|tel:)/.test(reference)) continue;
     const url = new URL(decodeHtml(reference), baseUrl);
