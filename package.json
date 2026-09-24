@@ -41,13 +41,13 @@
     "@types/node": "^26.5.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
+    "@typescript/typescript6": "6.0.2",
     "@vitejs/plugin-react": "^6.1.1",
     "esbuild": "^0.28.2",
+    "prettier": "3.6.2",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",
-    "wrangler": "^4.129.1",
-    "prettier": "3.6.2",
-    "@typescript/typescript6": "6.0.2"
+    "wrangler": "^4.131.0"
   }
 }
