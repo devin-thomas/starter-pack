@@ -55,6 +55,7 @@ const titles: Record<string, string> = {
   "/guide": "Browse the guide",
   "/style": "Style guides",
   "/style/TypeScript": "TypeScript Style Guide",
+  "/style/Godot": "Godot Style Guide",
   "/recommendations": "Recommendations",
   "/resources": "Skills and agent resources",
   "/artifacts": "Project templates",
