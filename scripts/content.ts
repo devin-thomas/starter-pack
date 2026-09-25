@@ -92,6 +92,7 @@ const staticRoutes = [
   "/guide",
   "/style",
   "/style/TypeScript",
+  "/style/Godot",
   "/phases/1",
   "/phases/2",
   "/phases/3",
@@ -141,7 +142,7 @@ export async function loadContent(): Promise<SiteData> {
     ),
   };
   const styleGuides: SiteData["styles"]["guides"] = await Promise.all(
-    ["typescript"].map(async (id) => {
+    ["typescript", "godot"].map(async (id) => {
       const raw = await readFile(`content/style/${id}.md`, "utf8");
       const { data, content } = matter(raw);
       for (const field of ["id", "title", "summary", "human_summary", "status", "accepted_through", "version", "route"]) {
@@ -156,7 +157,7 @@ export async function loadContent(): Promise<SiteData> {
         .replace(/^# .+\r?\n+/m, "")
         .replace(/^> \*\*In progress\.\*\*[^\n]*\r?\n+/m, "")
         .replace(/^For agents:[^\n]*\r?\n+/m, "")
-        .replace(/^## D\d{3} — /gm, "## ");
+        .replace(/^## [A-Z]\d{3} — /gm, "## ");
       const introHtml = accentHeadings(await renderProse(introMarkdown));
       const html = accentHeadings(await renderProse(humanBody));
       const outline = [...html.matchAll(/<h2\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)]
