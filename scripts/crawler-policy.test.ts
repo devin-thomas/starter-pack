@@ -9,6 +9,6 @@ test("scoped curriculum rules override the managed root block", () => {
   assert.doesNotThrow(() => assertGoogleResourceAccess(`User-agent: Google-Extended\nDisallow: /\n\nUser-agent: *\nAllow: /\n\n${googleResourcePolicy}`));
 });
 test("a more specific resource block fails verification", () => {
-  for (const path of ["/agent/start.md", "/agent/catalog.json", "/prompts/get-started.txt", "/artifacts/progress/README.md", "/style/TypeScript.md"])
+  for (const path of ["/agent/start.md", "/agent/catalog.json", "/prompts/get-started.txt", "/artifacts/progress/README.md", "/style/TypeScript.md", "/style/Godot.md"])
     assert.throws(() => assertGoogleResourceAccess(`${googleResourcePolicy}\nDisallow: ${path}`), /blocked/);
 });
