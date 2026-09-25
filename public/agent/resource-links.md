@@ -274,6 +274,17 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Primary: [https://starter.devthomas.site/style/TypeScript.json](https://starter.devthomas.site/style/TypeScript.json)
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/style/TypeScript.json](https://starter-pack.uppercut-labs.workers.dev/style/TypeScript.json)
 
+## /style/Godot.md
+
+- Primary: [https://starter.devthomas.site/style/Godot.md](https://starter.devthomas.site/style/Godot.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/style/Godot.md](https://starter-pack.uppercut-labs.workers.dev/style/Godot.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/content/style/godot.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/content/style/godot.md)
+
+## /style/Godot.json
+
+- Primary: [https://starter.devthomas.site/style/Godot.json](https://starter.devthomas.site/style/Godot.json)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/style/Godot.json](https://starter-pack.uppercut-labs.workers.dev/style/Godot.json)
+
 ## /style/catalog.json
 
 - Primary: [https://starter.devthomas.site/style/catalog.json](https://starter.devthomas.site/style/catalog.json)
