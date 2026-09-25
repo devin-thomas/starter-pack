@@ -6,15 +6,20 @@ Visit [Starter Pack](https://starter.devthomas.site).
 
 ## Public style guides
 
-The site now also publishes in-progress coding style guides under [`/style`](https://starter.devthomas.site/style). The first guide is [TypeScript](https://starter.devthomas.site/style/TypeScript).
+The site publishes stable coding style guides under [`/style`](https://starter.devthomas.site/style):
 
-Agent-readable forms are generated with the human page:
+- [TypeScript](https://starter.devthomas.site/style/TypeScript)
+- [Godot](https://starter.devthomas.site/style/Godot) — hard-pinned to Godot 4.7.2 with GDScript as the primary language.
+
+Agent-readable forms are generated with the human pages:
 
 - `https://starter.devthomas.site/style/TypeScript.md`
 - `https://starter.devthomas.site/style/TypeScript.json`
+- `https://starter.devthomas.site/style/Godot.md`
+- `https://starter.devthomas.site/style/Godot.json`
 - `https://starter.devthomas.site/style/catalog.json`
 
-The public guide contains only accepted rules. Private deliberation and rejected alternatives remain outside this repository's published surface.
+Public guides contain only accepted rules. Private deliberation and rejected alternatives remain outside this repository's published surface.
 
 ## Use and reuse
 
