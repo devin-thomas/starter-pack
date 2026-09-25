@@ -48,10 +48,12 @@ const html = await read("/", /text\/html/);
 if (!html.includes('id="site-data"') || !html.includes("Your first build")) {
   throw new Error("The response is not the rendered Starter Pack homepage.");
 }
-const styleHtml = await read("/style/TypeScript", /text\/html/);
-const visibleStyleHtml = styleHtml.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
-if (!visibleStyleHtml.includes("TypeScript") || !visibleStyleHtml.includes("Copy for agent") || !visibleStyleHtml.includes("style-guide-prose")) {
-  throw new Error("The TypeScript style guide page is incomplete.");
+for (const [route, title] of [["/style/TypeScript", "TypeScript"], ["/style/Godot", "Godot"]] as const) {
+  const styleHtml = await read(route, /text\/html/);
+  const visibleStyleHtml = styleHtml.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+  if (!visibleStyleHtml.includes(title) || !visibleStyleHtml.includes("Copy for agent") || !visibleStyleHtml.includes("style-guide-prose")) {
+    throw new Error(`${title} style guide page is incomplete.`);
+  }
 }
 const script = html.match(/<script\b[^>]*\bsrc="([^\"]+\.js)"/);
 const stylesheet = html.match(/<link\b[^>]*\bhref="([^\"]+\.css)"/);
@@ -83,7 +85,7 @@ for (const route of ["/phases/1.md", "/phases/2.md", "/artifacts/progress/README
 const requirementsBody = await read("/agent/requirements.json", /application\/json/);
 if (requirementsBody !== await readFile("dist/agent/requirements.json", "utf8")) throw new Error("Live requirements differ from this build.");
 const requirements = parseRegistry(JSON.parse(requirementsBody));
-for (const route of ["/schemas/requirements.schema.json", "/schemas/starter-progress.schema.json", "/setup/computer-setup.manifest.json", "/skills/versions.json", "/style/TypeScript.json", "/style/catalog.json"])
+for (const route of ["/schemas/requirements.schema.json", "/schemas/starter-progress.schema.json", "/setup/computer-setup.manifest.json", "/skills/versions.json", "/style/TypeScript.json", "/style/Godot.json", "/style/catalog.json"])
   if (await read(route, /application\/json/) !== await readFile(`dist${route}`, "utf8")) throw new Error(`Live contract differs: ${route}`);
 if (!start.includes("Starter Pack skill"))
   throw new Error("The agent start resource is missing.");
