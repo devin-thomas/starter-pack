@@ -42,8 +42,10 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           for attempt in $(seq 1 12); do
-            if node scripts/style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live.json; then
+            if node scripts/style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live.json \
+              && node scripts/godot-style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live-godot.json; then
               cat audit-live.json
+              cat audit-live-godot.json
               exit 0
             fi
             sleep 15
@@ -58,8 +60,10 @@ jobs:
           path: |
             audit-check.log
             audit-live.json
+            audit-live-godot.json
             audit-source-revision.txt
             style-guide-browser-report/
             content/style/typescript.md
+            content/style/godot.md
           retention-days: 14
           if-no-files-found: error
