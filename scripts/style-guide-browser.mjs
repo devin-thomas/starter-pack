@@ -3,10 +3,24 @@ import { createServer } from "node:http";
 import { readFile, stat, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 const { chromium } = await import(process.env.STYLE_BROWSER_MODULE || "playwright");
+
 const root = path.resolve("dist");
 const output = path.resolve("style-guide-browser-report");
 await mkdir(output,{recursive:true});
-const guide = JSON.parse(await readFile(path.join(root,"style/TypeScript.json"),"utf8"));
+
+const guides = [
+  {
+    slug: "TypeScript",
+    internalId: /^D\d{3}/,
+    data: JSON.parse(await readFile(path.join(root,"style/TypeScript.json"),"utf8")),
+  },
+  {
+    slug: "Godot",
+    internalId: /^G\d{3}/,
+    data: JSON.parse(await readFile(path.join(root,"style/Godot.json"),"utf8")),
+  },
+];
+
 const mime = { ".html":"text/html", ".js":"application/javascript", ".css":"text/css", ".json":"application/json", ".md":"text/plain", ".txt":"text/plain", ".svg":"image/svg+xml", ".png":"image/png", ".woff2":"font/woff2", ".woff":"font/woff" };
 const server = createServer(async (request,response) => {
   try {
@@ -22,10 +36,19 @@ const server = createServer(async (request,response) => {
     response.end(await readFile(found));
   } catch {response.writeHead(500).end("Server error");}
 });
+
 await new Promise((resolve) => server.listen(0,"127.0.0.1",resolve));
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({headless:true});
-const report = {version:guide.version,status:"passed",viewports:[],pageErrors:[],checks:[]};
+const report = {
+  version: guides[0].data.version,
+  status:"passed",
+  guides: guides.map((guide) => ({slug:guide.slug,version:guide.data.version,acceptedThrough:guide.data.accepted_through})),
+  viewports:[],
+  pageErrors:[],
+  checks:[],
+};
+
 try {
   for (const [name,width,height] of [["desktop",1440,1000],["mobile",390,844],["small-mobile",320,740]]) {
     const context = await browser.newContext({viewport:{width,height},reducedMotion:"reduce"});
@@ -33,51 +56,80 @@ try {
     await context.grantPermissions(["clipboard-read","clipboard-write"],{origin});
     const page = await context.newPage();
     page.on("pageerror",(error) => report.pageErrors.push(`${name}: ${error.message}`));
-    await page.goto(`${origin}/style`,{waitUntil:"networkidle"});
-    const card = page.locator('.style-guide-card[href="/style/TypeScript"]');
-    assert.equal(await card.locator("p").count(),0,"hub card has no redundant description");
-    if (guide.status === "stable") assert.equal(await card.locator(".style-status").count(),0);
-    await card.click();
-    await page.waitForURL("**/style/TypeScript");
-    await page.locator(".style-guide-prose h2").first().waitFor();
-    await page.evaluate(() => document.fonts.ready);
-    const headings = await page.locator(".style-guide-prose h2").allTextContents();
-    assert.equal(headings.length,27,"25 rules plus scope and references");
-    assert(headings.every((heading) => !/^D\d{3}/.test(heading)),"no planning IDs in headings");
-    assert(await page.locator(".style-guide-intro").isVisible(),"human intro");
-    if (guide.status === "stable") assert.equal(await page.locator(".style-status").count(),0);
-    assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),"no page-level horizontal overflow");
-    await page.screenshot({path:path.join(output,`${name}-top.png`)});
-    await page.getByRole("button",{name:"Copy for agent",exact:true}).click();
-    await page.getByRole("button",{name:"Agent link copied",exact:true}).waitFor();
-    assert.equal(await page.evaluate(() => navigator.clipboard.readText()),"https://starter.devthomas.site/style/TypeScript.md");
-    const anchor = await page.locator(".style-guide-prose h2").nth(21).getAttribute("id");
-    await page.goto(`${origin}/style/TypeScript#${anchor}`,{waitUntil:"networkidle"});
-    await page.reload({waitUntil:"networkidle"});
-    assert.equal(new URL(page.url()).hash,`#${anchor}`,"deep link survives reload");
-    assert((await page.locator(`[id="${anchor}"]`).boundingBox()).y < height,"deep linked heading scrolls into view");
-    await page.screenshot({path:path.join(output,`${name}-async.png`)});
-    report.viewports.push({name,width,height,headings:headings.length,overflow:false,copy:true,deepLink:true});
+
+    for (const guide of guides) {
+      await page.goto(`${origin}/style`,{waitUntil:"networkidle"});
+      const card = page.locator(`.style-guide-card[href="/style/${guide.slug}"]`);
+      assert.equal(await card.locator("p").count(),0,`${guide.slug}: hub card has no redundant description`);
+      if (guide.data.status === "stable") assert.equal(await card.locator(".style-status").count(),0);
+
+      await card.click();
+      await page.waitForURL(`**/style/${guide.slug}`);
+      await page.locator(".style-guide-prose h2").first().waitFor();
+      await page.evaluate(() => document.fonts.ready);
+
+      const headings = await page.locator(".style-guide-prose h2").allTextContents();
+      assert.equal(headings.length,27,`${guide.slug}: 25 rules plus scope and references`);
+      assert(headings.every((heading) => !guide.internalId.test(heading)),`${guide.slug}: no planning IDs in headings`);
+      assert(await page.locator(".style-guide-intro").isVisible(),`${guide.slug}: human intro`);
+      if (guide.data.status === "stable") assert.equal(await page.locator(".style-status").count(),0);
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),`${guide.slug}: no page-level horizontal overflow`);
+
+      const prefix=guide.slug.toLowerCase();
+      await page.screenshot({path:path.join(output,`${prefix}-${name}-top.png`)});
+
+      await page.getByRole("button",{name:"Copy for agent",exact:true}).click();
+      await page.getByRole("button",{name:"Agent link copied",exact:true}).waitFor();
+      assert.equal(
+        await page.evaluate(() => navigator.clipboard.readText()),
+        `https://starter.devthomas.site/style/${guide.slug}.md`,
+        `${guide.slug}: clipboard link`,
+      );
+
+      const anchor = await page.locator(".style-guide-prose h2").nth(21).getAttribute("id");
+      await page.goto(`${origin}/style/${guide.slug}#${anchor}`,{waitUntil:"networkidle"});
+      await page.reload({waitUntil:"networkidle"});
+      assert.equal(new URL(page.url()).hash,`#${anchor}`,`${guide.slug}: deep link survives reload`);
+      const box=await page.locator(`[id="${anchor}"]`).boundingBox();
+      assert(box && box.y < height,`${guide.slug}: deep linked heading scrolls into view`);
+      await page.screenshot({path:path.join(output,`${prefix}-${name}-deep-link.png`)});
+
+      report.viewports.push({guide:guide.slug,name,width,height,headings:headings.length,overflow:false,copy:true,deepLink:true});
+    }
+
     await context.close();
   }
+
   const context = await browser.newContext({viewport:{width:390,height:844},reducedMotion:"reduce"});
   await context.route("https://static.cloudflareinsights.com/**",(route) => route.fulfill({status:204,body:""}));
   await context.addInitScript(() => Object.defineProperty(navigator,"clipboard",{configurable:true,value:{writeText:async () => {throw new Error("Clipboard denied for test");}}}));
   const page = await context.newPage();
   page.on("pageerror",(error) => report.pageErrors.push(`clipboard fallback: ${error.message}`));
-  await page.goto(`${origin}/style/TypeScript`,{waitUntil:"networkidle"});
-  await page.getByRole("button",{name:"Copy for agent",exact:true}).click();
-  await page.locator("#style-agent-address").waitFor();
-  assert.equal(await page.locator("#style-agent-address").inputValue(),"https://starter.devthomas.site/style/TypeScript.md");
-  assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth+1),"fallback has no overflow");
-  await page.screenshot({path:path.join(output,"mobile-clipboard-fallback.png")});
+
+  for (const guide of guides) {
+    await page.goto(`${origin}/style/${guide.slug}`,{waitUntil:"networkidle"});
+    await page.getByRole("button",{name:"Copy for agent",exact:true}).click();
+    await page.locator("#style-agent-address").waitFor();
+    assert.equal(
+      await page.locator("#style-agent-address").inputValue(),
+      `https://starter.devthomas.site/style/${guide.slug}.md`,
+      `${guide.slug}: fallback address`,
+    );
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth+1),`${guide.slug}: fallback has no overflow`);
+    await page.screenshot({path:path.join(output,`${guide.slug.toLowerCase()}-mobile-clipboard-fallback.png`)});
+  }
+
   report.checks.push("hub navigation", "human intro", "all rule headings", "hidden internal IDs", "clipboard success", "clipboard denial fallback", "small mobile overflow", "anchor reload", "no application page errors");
   await context.close();
   assert.deepEqual(report.pageErrors,[]);
-} catch(error) {report.status="failed";report.error=String(error);throw error;}
-finally {
+} catch(error) {
+  report.status="failed";
+  report.error=String(error);
+  throw error;
+} finally {
   await writeFile(path.join(output,"browser-report.json"),JSON.stringify(report,null,2)+"\n");
   await browser.close();
   await new Promise((resolve) => server.close(resolve));
 }
+
 console.log(JSON.stringify(report));
