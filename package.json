@@ -25,7 +25,7 @@
     "verify:deployment": "tsx scripts/verify-deployment.ts",
     "format:style": "node scripts/style-guide-check.mjs --write",
     "check:style": "node scripts/style-guide-check.mjs && tsx --test scripts/style-guide-links.test.ts",
-    "verify:style": "node scripts/style-guide-surfaces.mjs"
+    "verify:style": "node scripts/style-guide-surfaces.mjs && node scripts/godot-style-guide-surfaces.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
