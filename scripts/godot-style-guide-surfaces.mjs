@@ -95,6 +95,7 @@ console.log(JSON.stringify({
   status: "passed",
   guideVersion: guide.version,
   acceptedThrough: guide.accepted_through,
+  engineVersion: "4.7.2",
   rules: ids.length,
   markdownSha256: createHash("sha256").update(raw).digest("hex"),
   checked: ["human", "hub", "markdown", "json", "catalog", "agent-catalog", "llms"],
