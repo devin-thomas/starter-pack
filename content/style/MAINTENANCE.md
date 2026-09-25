@@ -1,10 +1,10 @@
 # Maintaining the published style guides
 
-TypeScript's core guide is version 1.0.0. Its accepted rules are published in `typescript.md`; metadata drives the human page, Markdown, JSON, catalog, and discovery entries. Planning is not stored in public content.
+TypeScript and Godot each have a stable 1.0.0 core. Their accepted rules are published in `typescript.md` and `godot.md`; metadata drives the human pages, Markdown, JSON, catalog, and discovery entries. Planning is not stored in public content.
 
-Run `npm run format:style` when changing code fences, then `npm run check`. The required check compiles all TypeScript examples with the accepted strict flags, checks explicit declaration contracts, tests rejected type operations, runs executable behavior tests, and verifies generated resource parity. `npm run verify:style` checks built resources; `node scripts/style-guide-surfaces.mjs --live https://starter.devthomas.site` checks the deployed equivalents.
+Run `npm run format:style` when changing TypeScript code fences, then `npm run check`. The TypeScript checker compiles its examples with the accepted strict flags, checks explicit declaration contracts, tests rejected type operations, and runs executable behavior tests. The Godot release is hard-pinned to Godot 4.7.2; Starter Pack CI verifies its public 25-rule surface and metadata but does not claim to execute Godot without a pinned Godot binary. Project-level Godot enforcement belongs in the target Godot repository as described by G024.
 
-`Style guide audit` also checks browser reading, clipboard success and denial, mobile overflow, and fragment navigation. It runs with read-only repository permissions. Its main-branch run waits briefly for the existing auto-deployment and verifies canonical live resources; it does not deploy or mutate source.
+`npm run verify:style` checks the built TypeScript and Godot resources. `Style guide audit` checks browser reading, clipboard success and denial, mobile overflow, fragment navigation, and hidden internal decision IDs for both guides. It runs with read-only repository permissions. Its main-branch run waits for the existing deployment path and verifies canonical live resources where the workflow supports them; it does not mutate source.
 
 The checker uses the repository's native TypeScript 7 executable for independent type checks. Its syntax-inspection pass uses the pinned `@typescript/typescript6` compatibility API because TypeScript 7.0 does not expose the classic compiler API. This split is deliberate; do not replace the actual compiler check with a parser-only check. The installed lockfile records the precise dependencies.
 
