@@ -7,7 +7,23 @@ const input = await readFile("content/style/godot.md", "utf8");
 const { data: expected, content } = matter(input);
 const markdown = content.trimStart();
 
+const liveAt = process.argv.indexOf("--live");
+const live = liveAt >= 0 ? new URL(process.argv[liveAt + 1]) : null;
+if (live && (live.protocol !== "https:" || live.hostname !== "starter.devthomas.site")) {
+  throw new Error("Live checks require the canonical HTTPS host");
+}
+
 async function read(route, contentType) {
+  if (live) {
+    const response = await fetch(new URL(route, live), {
+      signal: AbortSignal.timeout(15_000),
+      cache: "no-store",
+    });
+    assert.equal(response.status, 200, `${route}: HTTP ${response.status}`);
+    assert(contentType.test(response.headers.get("content-type") || ""), `${route}: wrong MIME type`);
+    return response.text();
+  }
+
   const path = route === "/style"
     ? "dist/style.html"
     : route === expected.route
@@ -15,7 +31,6 @@ async function read(route, contentType) {
       : `dist${route}`;
   const body = await readFile(path, "utf8");
   assert(body.length > 0, `${route}: empty output`);
-  void contentType;
   return body;
 }
 
@@ -76,7 +91,7 @@ assert.equal(agentEntry?.markdown, `https://starter.devthomas.site${expected.rou
 assert((await read("/llms.txt", /text\/plain/)).includes(`${expected.route}.md`), "Godot agent discovery");
 
 console.log(JSON.stringify({
-  surface: "built dist",
+  surface: live ? live.href : "built dist",
   status: "passed",
   guideVersion: guide.version,
   acceptedThrough: guide.accepted_through,
