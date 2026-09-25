@@ -361,6 +361,7 @@ function Resources({ phase }: { phase?: number }) {
         ["/guide.json", "Guide data"],
         ["/about.json", "About data"],
         ["/style/TypeScript.md", "TypeScript style guide"],
+        ["/style/Godot.md", "Godot style guide"],
         ["/style/catalog.json", "Style guide catalog"],
         ["/llms.txt", "Agent discovery index"],
       ];
