@@ -6,7 +6,7 @@ human_summary: Godot is a scene-based game engine; this guide turns its flexible
 status: stable
 updated: "2026-09-25"
 accepted_through: G025
-version: 1.0.0
+version: 1.0.1
 route: /style/Godot
 ---
 
@@ -270,6 +270,8 @@ QuestSystem.complete_quest(quest_id)
 
 is preferable to external mutation of QuestSystem internals.
 
+An Autoload script does not declare a class_name matching its Autoload name; Godot 4.7.2 rejects that as hiding the singleton. Callers reach it through the Autoload name, which is the exception to G003's class_name requirement.
+
 Use static functions/values for shared behavior that has no continuing runtime instance or Node lifecycle. Do not move a scene-local dependency to Autoload merely to avoid passing a reference.
 
 ## G014 — Groups represent semantic sets, not hidden services
@@ -279,10 +281,14 @@ Use groups when membership itself is meaningful and callers genuinely want the c
 ~~~gdscript
 const GROUP_ENEMIES: StringName = &"enemies"
 
-var enemies: Array[Node] = get_tree().get_nodes_in_group(
-	GROUP_ENEMIES,
-)
+func count_enemies() -> int:
+	var enemies: Array[Node] = get_tree().get_nodes_in_group(
+		GROUP_ENEMIES,
+	)
+	return enemies.size()
 ~~~
+
+Query the group when the set is needed. A member variable initialized with get_tree() runs before the Node enters the SceneTree and fails.
 
 Important first-party group names should use stable StringName constants.
 
@@ -487,8 +493,52 @@ Useful native gates include:
 ~~~text
 godot --version
 godot --headless --path <project> --import
-godot --headless --path <project> --script <script> --check-only
+godot --headless --path <project> --script res://tests/check_scripts.gd
 ~~~
+
+Do not use --check-only as a pass/fail gate. In Godot 4.7.2 it prints parse errors but still exits 0, and it does not register Autoload names, so valid Autoload calls are reported as unknown identifiers. Godot also exits 0 when the --script file itself fails to load.
+
+A script gate loads every first-party script under the project's warning settings and exits non-zero on any failure:
+
+~~~gdscript
+extends SceneTree
+## Loads first-party scripts with project warning settings; fails on any error.
+
+const PASSED_MARKER: String = "SCRIPT_CHECK_PASSED"
+const SKIPPED_DIRECTORIES: PackedStringArray = ["addons"]
+
+func _initialize() -> void:
+	var own_script: Script = get_script()
+	var failures: PackedStringArray = []
+	for path: String in _find_scripts("res://"):
+		if path == own_script.resource_path:
+			continue
+		var script: GDScript = ResourceLoader.load(
+			path,
+			"GDScript",
+			ResourceLoader.CACHE_MODE_IGNORE,
+		)
+		if script == null or not (script.can_instantiate() or script.is_abstract()):
+			failures.append(path)
+	for path: String in failures:
+		printerr("Script check failed: ", path)
+	if failures.is_empty():
+		print(PASSED_MARKER)
+	quit(0 if failures.is_empty() else 1)
+
+func _find_scripts(directory: String) -> PackedStringArray:
+	var paths: PackedStringArray = []
+	for child: String in DirAccess.get_directories_at(directory):
+		if child.begins_with(".") or SKIPPED_DIRECTORIES.has(child):
+			continue
+		paths.append_array(_find_scripts(directory.path_join(child)))
+	for file: String in DirAccess.get_files_at(directory):
+		if file.get_extension() == "gd":
+			paths.append(directory.path_join(file))
+	return paths
+~~~
+
+Treat the run as passed only when the exit code is 0 and the output contains SCRIPT_CHECK_PASSED.
 
 Run the repository's real automated tests as part of validation.
 
