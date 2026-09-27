@@ -44,7 +44,7 @@ jobs:
           for attempt in $(seq 1 12); do
             if node scripts/style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live.json \
               && node scripts/godot-style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live-godot.json \
-              && node scripts/kotlin-style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live-kotlin.json \\
+              && node scripts/kotlin-style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live-kotlin.json \
               && node scripts/wip-style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live-wip.json; then
               cat audit-live.json
               cat audit-live-godot.json
