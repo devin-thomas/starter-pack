@@ -93,7 +93,7 @@ func resultLabel(_ result: SaveResult) -> String {
 
 External non-frozen/resilient enums can require an unknown-case boundary. Handle that documented interoperability condition deliberately rather than asserting that an external API is permanently closed. Case-pattern bindings do not offer the same annotation syntax as a normal let declaration.
 
-**Basis:** [TS:D006-D008](https://starter.devthomas.site/style/TypeScript) · [KT:K006-K007](https://starter.devthomas.site/style/Kotlin) · [S:ENUM](https://raw.githubusercontent.com/swiftlang/swift-book/main/TSPL.docc/LanguageGuide/Enumerations.md)
+**Basis:** [TS:D006-D008](https://starter.devthomas.site/style/TypeScript) · [KT:K006-K007](https://starter.devthomas.site/style/Kotlin) · [S:ENUM](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/enumerations/)
 
 ## SW005 — Use optionals for one meaningful absence
 
@@ -133,7 +133,7 @@ Use an optional for a normal miss, a named enum for expected alternatives the ca
 
 Keep cancellation distinct from an ordinary domain rejection. Use `try?` only when deliberately discarding the reason is part of an optional-result contract. Prefer a meaningful error type when callers need specific identity or information. Typed throws is an available scoped contract, not a requirement to enumerate every incidental implementation failure.
 
-**Basis:** [TS:D021](https://starter.devthomas.site/style/TypeScript) · [KT:K012](https://starter.devthomas.site/style/Kotlin) · [S:ERRORS](https://raw.githubusercontent.com/swiftlang/swift-book/main/TSPL.docc/LanguageGuide/ErrorHandling.md)
+**Basis:** [TS:D021](https://starter.devthomas.site/style/TypeScript) · [KT:K012](https://starter.devthomas.site/style/Kotlin) · [S:ERRORS](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/errorhandling/)
 
 ## SW009 — Assertions never replace release validation
 
@@ -245,7 +245,7 @@ Use `var body: some View` and builder-supported branches for view composition. K
 
 Annotate builder closure parameters where useful and supported, while letting the framework's builder contract express the composite result. Do not dismantle a builder into artificial helper types just to imitate TypeScript callback syntax. Extract a subview when it has a coherent presentation API, not only to appease line counts.
 
-**Basis:** [KT:K004](https://starter.devthomas.site/style/Kotlin) · [KT:K023](https://starter.devthomas.site/style/Kotlin) · [S:BUILDERS](https://raw.githubusercontent.com/swiftlang/swift-book/main/TSPL.docc/ReferenceManual/Attributes.md)
+**Basis:** [KT:K004](https://starter.devthomas.site/style/Kotlin) · [KT:K023](https://starter.devthomas.site/style/Kotlin) · [S:BUILDERS](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/attributes/)
 
 ## SW018 — Async view work follows identity and cancellation
 
@@ -265,7 +265,7 @@ Use async calls, async let, or task groups for related work whose completion and
 
 Do not use Task.detached merely to imply background work. It changes context/ownership assumptions and is justified only when that independence is actually required. A task handle is not automatically a supervision policy, and async alone does not promise execution away from a UI actor.
 
-**Basis:** [TS:D022](https://starter.devthomas.site/style/TypeScript) · [KT:K018](https://starter.devthomas.site/style/Kotlin) · [S:CONCURRENCY](https://raw.githubusercontent.com/swiftlang/swift-book/main/TSPL.docc/LanguageGuide/Concurrency.md)
+**Basis:** [TS:D022](https://starter.devthomas.site/style/TypeScript) · [KT:K018](https://starter.devthomas.site/style/Kotlin) · [S:CONCURRENCY](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
 
 ## SW020 — Preserve cancellation and bound retry behavior
 
@@ -275,7 +275,7 @@ Keep cancellation distinct when catching and translating failures. Account for t
 
 Retry only named eligible failures with a bounded policy and one authoritative retry owner. Do not nest independent retries in a view, service, and transport for the same request. Record when cancellation cannot stop work that an external system has already accepted.
 
-**Basis:** [KT:K019](https://starter.devthomas.site/style/Kotlin) · [S:CONCURRENCY](https://raw.githubusercontent.com/swiftlang/swift-book/main/TSPL.docc/LanguageGuide/Concurrency.md)
+**Basis:** [KT:K019](https://starter.devthomas.site/style/Kotlin) · [S:CONCURRENCY](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
 
 ## SW021 — Actors express isolation, not just scheduling intent
 
@@ -285,7 +285,7 @@ Give mutable concurrent owners a deliberate isolation contract. UI-facing model 
 
 An await can permit actor reentrancy. Revalidate assumptions that can change across suspension before committing state. Do not use nonisolated(unsafe), unchecked Sendable, or an arbitrary dispatch hop merely to silence a diagnostic. Concurrency promises require an actual ownership or synchronization argument.
 
-**Basis:** [KT:K020](https://starter.devthomas.site/style/Kotlin) · [S:ISOLATION](https://raw.githubusercontent.com/swiftlang/swift-book/main/TSPL.docc/LanguageGuide/Concurrency.md)
+**Basis:** [KT:K020](https://starter.devthomas.site/style/Kotlin) · [S:ISOLATION](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
 
 ## SW022 — Transfer safe values across isolation boundaries
 
@@ -295,7 +295,7 @@ Prefer appropriately Sendable value snapshots at concurrency boundaries. A struc
 
 When a synchronized reference type genuinely needs an unchecked conformance, keep it narrow, explain the protected state and invariants, and test the concurrency behavior. Do not treat a read-only property or a stable reference as proof of thread safety.
 
-**Basis:** [KT:K003](https://starter.devthomas.site/style/Kotlin) · [KT:K020](https://starter.devthomas.site/style/Kotlin) · [S:SENDABLE](https://raw.githubusercontent.com/swiftlang/swift-book/main/TSPL.docc/LanguageGuide/Concurrency.md)
+**Basis:** [KT:K003](https://starter.devthomas.site/style/Kotlin) · [KT:K020](https://starter.devthomas.site/style/Kotlin) · [S:SENDABLE](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
 
 ## SW023 — ARC and capture lists follow actual ownership
 
@@ -305,7 +305,7 @@ Review closure and task captures for retention cycles and resource lifetime. Use
 
 Do not rely on a deinitializer to rescue every incorrectly owned subscription. Stop or detach relationships when their semantic lifetime ends. Release only resources this component owns, not borrowed services whose lifecycle belongs elsewhere.
 
-**Basis:** [KT:K021](https://starter.devthomas.site/style/Kotlin) · [S:ARC](https://raw.githubusercontent.com/swiftlang/swift-book/main/TSPL.docc/LanguageGuide/AutomaticReferenceCounting.md)
+**Basis:** [KT:K021](https://starter.devthomas.site/style/Kotlin) · [S:ARC](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/automaticreferencecounting/)
 
 ## SW024 — Events, commands, and observation remain distinct
 

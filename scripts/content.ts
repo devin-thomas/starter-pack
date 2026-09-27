@@ -163,7 +163,7 @@ export async function loadContent(): Promise<SiteData> {
         .replace(/^# .+\r?\n+/m, "")
         .replace(/^> \*\*In progress\.\*\*[^\n]*\r?\n+/m, "")
         .replace(/^For agents:[^\n]*\r?\n+/m, "")
-        .replace(/^## [A-Z]\d{3} — /gm, "## ");
+        .replace(/^## [A-Z]+\d{3} — /gm, "## ");
       const introHtml = accentHeadings(await renderProse(introMarkdown));
       const html = accentHeadings(await renderProse(humanBody));
       const outline = [...html.matchAll(/<h2\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)]
