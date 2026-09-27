@@ -1,6 +1,6 @@
 # Maintaining the published style guides
 
-TypeScript has a stable 1.0.0 core, Godot a stable 1.0.1 core, and Kotlin a stable 1.0.0 core with an Android TV profile. Their accepted rules are published in `typescript.md`, `godot.md`, and `kotlin.md`; metadata drives the human pages, Markdown, JSON, catalog, and discovery entries. Planning is not stored in public content.
+TypeScript has a stable 1.0.0 core, Godot a stable 1.0.1 core, and Kotlin a stable 1.0.0 core with an Android TV profile. React + TypeScript, Python, Swift + SwiftUI, JavaScript, and Dart + Flutter are intentionally published as in-progress review guides. Their accepted rules are published in `typescript.md`, `godot.md`, and `kotlin.md`; metadata drives the human pages, Markdown, JSON, catalog, and discovery entries. Planning is not stored in public content.
 
 Run `npm run format:style` when changing TypeScript code fences, then `npm run check`. The TypeScript checker compiles its examples with the accepted strict flags, checks explicit declaration contracts, tests rejected type operations, and runs executable behavior tests. The Godot release is hard-pinned to Godot 4.7.2; Starter Pack CI verifies its public 25-rule surface and metadata but does not claim to execute Godot without a pinned Godot binary. Project-level Godot enforcement belongs in the target Godot repository as described by G024. The Godot 1.0.1 examples and the G024 script gate were checked by hand against the official Godot 4.7.2 macOS build on 2026-09-25; repeat that check with a real 4.7.2 binary when changing GDScript examples.
 
@@ -15,3 +15,8 @@ This is guide-example enforcement, not a claim that every legacy source file in 
 Example markers are HTML comments and do not appear in the human reading surface. The three D023 module files form one small multi-file example; other blocks are checked independently. Do not convert illustrative route strings into real site paths to satisfy a link checker. Link checks must distinguish actual metadata/Markdown links from source-code examples.
 
 Existing hosting-toolchain dependency debt discovered during the audit is tracked separately in issue #3. A passing guide release is not a blanket security certification of the hosting application.
+
+
+## In-progress review guides
+
+The five review guides are public so their complete prepared wording can be inspected and copied by agents without implying final approval. React RX-Q01 A is accepted; Python PY-Q01–Q03, Swift SW-Q01–Q02, JavaScript JS-Q01–Q02, and Dart/Flutter DF-Q01–Q02 remain pending. Candidate text in pending sections is not authoritative. The review guides must retain `status: in-progress` until final guide-level approval. Browser and surface checks verify publication mechanics and decision markers; they do not turn prepared translations into accepted house rules or certify framework/device behavior.

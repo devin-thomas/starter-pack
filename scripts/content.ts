@@ -94,6 +94,11 @@ const staticRoutes = [
   "/style/TypeScript",
   "/style/Godot",
   "/style/Kotlin",
+  "/style/React-TypeScript",
+  "/style/Python",
+  "/style/Swift-SwiftUI",
+  "/style/JavaScript",
+  "/style/Dart-Flutter",
   "/phases/1",
   "/phases/2",
   "/phases/3",
@@ -143,7 +148,7 @@ export async function loadContent(): Promise<SiteData> {
     ),
   };
   const styleGuides: SiteData["styles"]["guides"] = await Promise.all(
-    ["typescript", "godot", "kotlin"].map(async (id) => {
+    ["typescript", "godot", "kotlin", "react-typescript", "python", "swift-swiftui", "javascript", "dart-flutter"].map(async (id) => {
       const raw = await readFile(`content/style/${id}.md`, "utf8");
       const { data, content } = matter(raw);
       for (const field of ["id", "title", "summary", "human_summary", "status", "accepted_through", "version", "route"]) {
@@ -158,7 +163,7 @@ export async function loadContent(): Promise<SiteData> {
         .replace(/^# .+\r?\n+/m, "")
         .replace(/^> \*\*In progress\.\*\*[^\n]*\r?\n+/m, "")
         .replace(/^For agents:[^\n]*\r?\n+/m, "")
-        .replace(/^## [A-Z]\d{3} — /gm, "## ");
+        .replace(/^## [A-Z]+\d{3} — /gm, "## ");
       const introHtml = accentHeadings(await renderProse(introMarkdown));
       const html = accentHeadings(await renderProse(humanBody));
       const outline = [...html.matchAll(/<h2\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)]

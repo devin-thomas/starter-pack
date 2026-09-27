@@ -9,24 +9,14 @@ const output = path.resolve("style-guide-browser-report");
 await mkdir(output,{recursive:true});
 
 const guides = [
-  {
-    slug: "TypeScript",
-    internalId: /^D\d{3}/,
-    headingCount: 27,
-    data: JSON.parse(await readFile(path.join(root,"style/TypeScript.json"),"utf8")),
-  },
-  {
-    slug: "Godot",
-    internalId: /^G\d{3}/,
-    headingCount: 27,
-    data: JSON.parse(await readFile(path.join(root,"style/Godot.json"),"utf8")),
-  },
-  {
-    slug: "Kotlin",
-    internalId: /^K\d{3}/,
-    headingCount: 41,
-    data: JSON.parse(await readFile(path.join(root,"style/Kotlin.json"),"utf8")),
-  },
+  { slug: "TypeScript", internalId: /^D\d{3}/, headingCount: 27, data: JSON.parse(await readFile(path.join(root,"style/TypeScript.json"),"utf8")) },
+  { slug: "Godot", internalId: /^G\d{3}/, headingCount: 27, data: JSON.parse(await readFile(path.join(root,"style/Godot.json"),"utf8")) },
+  { slug: "Kotlin", internalId: /^K\d{3}/, headingCount: 41, data: JSON.parse(await readFile(path.join(root,"style/Kotlin.json"),"utf8")) },
+  { slug: "React-TypeScript", internalId: /^RX\d{3}/, headingCount: 35, data: JSON.parse(await readFile(path.join(root,"style/React-TypeScript.json"),"utf8")) },
+  { slug: "Python", internalId: /^PY\d{3}/, headingCount: 37, data: JSON.parse(await readFile(path.join(root,"style/Python.json"),"utf8")) },
+  { slug: "Swift-SwiftUI", internalId: /^SW\d{3}/, headingCount: 37, data: JSON.parse(await readFile(path.join(root,"style/Swift-SwiftUI.json"),"utf8")) },
+  { slug: "JavaScript", internalId: /^JS\d{3}/, headingCount: 30, data: JSON.parse(await readFile(path.join(root,"style/JavaScript.json"),"utf8")) },
+  { slug: "Dart-Flutter", internalId: /^DF\d{3}/, headingCount: 37, data: JSON.parse(await readFile(path.join(root,"style/Dart-Flutter.json"),"utf8")) },
 ];
 
 const mime = { ".html":"text/html", ".js":"application/javascript", ".css":"text/css", ".json":"application/json", ".md":"text/plain", ".txt":"text/plain", ".svg":"image/svg+xml", ".png":"image/png", ".woff2":"font/woff2", ".woff":"font/woff" };
@@ -69,7 +59,7 @@ try {
       await page.goto(`${origin}/style`,{waitUntil:"networkidle"});
       const card = page.locator(`.style-guide-card[href="/style/${guide.slug}"]`);
       assert.equal(await card.locator("p").count(),0,`${guide.slug}: hub card has no redundant description`);
-      if (guide.data.status === "stable") assert.equal(await card.locator(".style-status").count(),0);
+      if (guide.data.status === "stable") assert.equal(await card.locator(".style-status").count(),0); else assert.equal(await card.locator(".style-status").count(),1);
 
       await card.click();
       await page.waitForURL(`**/style/${guide.slug}`);
@@ -77,10 +67,10 @@ try {
       await page.evaluate(() => document.fonts.ready);
 
       const headings = await page.locator(".style-guide-prose h2").allTextContents();
-      assert.equal(headings.length,guide.headingCount,`${guide.slug}: all accepted rules and supporting sections`);
+      assert.equal(headings.length,guide.headingCount,`${guide.slug}: all rule and supporting sections`);
       assert(headings.every((heading) => !guide.internalId.test(heading)),`${guide.slug}: no planning IDs in headings`);
       assert(await page.locator(".style-guide-intro").isVisible(),`${guide.slug}: human intro`);
-      if (guide.data.status === "stable") assert.equal(await page.locator(".style-status").count(),0);
+      if (guide.data.status === "stable") assert.equal(await page.locator(".style-status").count(),0); else assert.equal(await page.locator(".style-status").count(),1);
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),`${guide.slug}: no page-level horizontal overflow`);
 
       const prefix=guide.slug.toLowerCase();
