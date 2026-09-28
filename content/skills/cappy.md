@@ -17,9 +17,9 @@ Not the right fit for general screen recording, video editing, streaming, or con
 
 The skill takes the agent from nothing to one verified capture, reading before it records:
 
-1. **Install Cappy and find the project** — Checks Node.js 24+, installs the Cappy npm package as its README describes, and finds the game folder that holds `cappy.config.json`. It never guesses a package name.
+1. **Install Cappy and find the project** — Checks Node.js 24+, installs `@uppercut-labs/cappy` as a dev dependency, and finds the game folder that holds `cappy.config.json`. It never installs the unrelated unscoped `cappy` package.
 
-2. **Connect the game** — Installs the four-file Godot addon that ships with Cappy, then registers a scenario (a named, parameterized moment) or a replay provider (the game's own input log). Event times are simulation milliseconds, so the same input gives the same timeline.
+2. **Connect the game** — Copies the four-file Godot addon from the installed package (`addons/cappy/`) into the game, then registers a scenario (a named, parameterized moment) or a replay provider (the game's own input log). Event times are simulation milliseconds, so the same input gives the same timeline.
 
 3. **Write the configuration** — Starts from a minimal `cappy.config.json`. The OBS password stays in an environment variable and never enters the file.
 
@@ -45,12 +45,12 @@ The skill takes the agent from nothing to one verified capture, reading before i
 ## Prerequisites
 
 - **macOS or Windows** (accepted with real OBS, FFmpeg, and Godot 4.7.2) or **Linux** (accepted, real OBS capture not yet verified)
-- **Node.js 24 or newer** and the **Cappy npm package** (not published yet)
+- **Node.js 24 or newer** and the **`@uppercut-labs/cappy`** npm package
 - **FFmpeg and ffprobe**, and **OBS Studio 28+** with its WebSocket server on — needed for capture; `doctor`, `scenarios`, and replay without capture work without OBS
 
 ## Installation and use
 
-Cappy is a product-specific agent skill that ships inside the Cappy npm package, at `.agents/skills/cappy/SKILL.md`. The package is not published yet; this page will name it once it is. Cappy's own tests fail whenever the skill names a command, flag, error code, or addon call that does not exist. Once Cappy is installed, point your agent at the skill:
+Cappy is a product-specific agent skill that ships inside the `@uppercut-labs/cappy` npm package, at `.agents/skills/cappy/SKILL.md`. Install it in your game project with `npm install --save-dev @uppercut-labs/cappy`; the skill is then at `node_modules/@uppercut-labs/cappy/.agents/skills/cappy/SKILL.md`. Cappy's own tests fail whenever the skill names a command, flag, error code, or addon call that does not exist. Once Cappy is installed, point your agent at the skill:
 
 ```
 Read the Cappy skill and help me capture the boss intro in my Godot game.

@@ -280,7 +280,7 @@
       "sourceVersion": null,
       "package": {
         "registry": "npm",
-        "name": null,
+        "name": "@uppercut-labs/cappy",
         "skillPath": ".agents/skills/cappy/SKILL.md"
       },
       "public": true,
