@@ -271,6 +271,45 @@
       "sourceRef": "main"
     },
     {
+      "id": "cappy",
+      "slug": "cappy",
+      "title": "Cappy",
+      "summary": "Set up and run Cappy to capture reproducible game footage: connect the Godot addon, configure OBS and FFmpeg presets, record, replay, compare builds, and read Cappy errors.",
+      "category": "specialized",
+      "order": 3,
+      "sourceRepo": "devin-thomas/cappy",
+      "sourcePath": ".agents/skills/cappy/SKILL.md",
+      "sourceVersion": null,
+      "sourceRevision": "748c96ae496d2910ae7286c41535ec1459fdaa88",
+      "public": true,
+      "ownedBy": "devin-thomas",
+      "relatedSkills": [],
+      "prerequisites": [
+        {
+          "platform": "macos",
+          "reason": "Accepted with real OBS, FFmpeg, and Godot 4.7.2"
+        },
+        {
+          "platform": "windows",
+          "reason": "Accepted with real OBS, FFmpeg, and Godot 4.7.2"
+        },
+        {
+          "platform": "linux",
+          "reason": "Accepted; real OBS capture not yet verified"
+        },
+        {
+          "application": "Node.js 24+",
+          "reason": "Cappy runs from a built checkout of its repository"
+        },
+        {
+          "application": "OBS Studio 28+ and FFmpeg",
+          "reason": "Needed for capture; doctor, scenarios, and replay --no-capture work without OBS"
+        }
+      ],
+      "recommendationOnly": false,
+      "sourceRef": "main"
+    },
+    {
       "id": "perfect-playlist",
       "slug": "perfect-playlist",
       "title": "Perfect Playlist",
