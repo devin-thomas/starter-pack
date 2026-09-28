@@ -17,9 +17,9 @@ Not the right fit for general screen recording, video editing, streaming, or con
 
 The skill takes the agent from nothing to one verified capture, reading before it records:
 
-1. **Locate Cappy and the project** — Checks Node.js 24+, builds Cappy from its repository, and finds the game folder that holds `cappy.config.json`.
+1. **Install Cappy and find the project** — Checks Node.js 24+, installs the Cappy npm package as its README describes, and finds the game folder that holds `cappy.config.json`. It never guesses a package name.
 
-2. **Connect the game** — Installs the four-file Godot addon, then registers a scenario (a named, parameterized moment) or a replay provider (the game's own input log). Event times are simulation milliseconds, so the same input gives the same timeline.
+2. **Connect the game** — Installs the four-file Godot addon that ships with Cappy, then registers a scenario (a named, parameterized moment) or a replay provider (the game's own input log). Event times are simulation milliseconds, so the same input gives the same timeline.
 
 3. **Write the configuration** — Starts from a minimal `cappy.config.json`. The OBS password stays in an environment variable and never enters the file.
 
@@ -45,12 +45,12 @@ The skill takes the agent from nothing to one verified capture, reading before i
 ## Prerequisites
 
 - **macOS or Windows** (accepted with real OBS, FFmpeg, and Godot 4.7.2) or **Linux** (accepted, real OBS capture not yet verified)
-- **Node.js 24 or newer** — Cappy runs from a built checkout of its repository
+- **Node.js 24 or newer** and the **Cappy npm package** (not published yet)
 - **FFmpeg and ffprobe**, and **OBS Studio 28+** with its WebSocket server on — needed for capture; `doctor`, `scenarios`, and replay without capture work without OBS
 
 ## Installation and use
 
-Cappy is a product-specific agent skill. Its canonical implementation lives in the Cappy repository, beside the code it describes, and its tests fail whenever the skill names a command, flag, error code, or addon call that does not exist. Point your agent at it when working with Cappy:
+Cappy is a product-specific agent skill that ships inside the Cappy npm package, at `.agents/skills/cappy/SKILL.md`. The package is not published yet; this page will name it once it is. Cappy's own tests fail whenever the skill names a command, flag, error code, or addon call that does not exist. Once Cappy is installed, point your agent at the skill:
 
 ```
 Read the Cappy skill and help me capture the boss intro in my Godot game.
@@ -62,4 +62,4 @@ The skill reads before it records: it asks before OBS records the screen and bef
 
 > "My Godot party game has a board turn I want to capture for the trailer, and I want the same shot again after I change the camera."
 
-The agent checks Node 24, builds Cappy, installs the addon, and registers a `board_turn` scenario with a `seed` parameter. It writes a config with a `trailer` preset that cuts a clip from `DICE_ROLLED` to `TURN_ENDED`, runs `cappy doctor` (all checks pass) and `cappy scenarios` (it lists `board_turn`), then asks before recording. `cappy run board_turn --param seed=7 --preset trailer` produces a master, the clip, and a manifest marked `succeeded`. After the camera change, `cappy compare-builds board_turn base new-camera --param seed=7` captures both builds and shows exactly where the frames differ.
+The agent checks Node 24, installs the Cappy package, copies in the addon, and registers a `board_turn` scenario with a `seed` parameter. It writes a config with a `trailer` preset that cuts a clip from `DICE_ROLLED` to `TURN_ENDED`, runs `cappy doctor` (all checks pass) and `cappy scenarios` (it lists `board_turn`), then asks before recording. `cappy run board_turn --param seed=7 --preset trailer` produces a master, the clip, and a manifest marked `succeeded`. After the camera change, `cappy compare-builds board_turn base new-camera --param seed=7` captures both builds and shows exactly where the frames differ.

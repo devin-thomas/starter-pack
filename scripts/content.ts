@@ -253,6 +253,12 @@ export async function loadContent(): Promise<SiteData> {
   // Load skill manifest and lessons
   const skillManifestRaw = JSON.parse(await readFile("content/skills/manifest.json", "utf8"));
   const skillManifest = skillManifestRaw.skills as SiteData["skills"]["manifest"];
+  for (const entry of skillManifest) {
+    const sourced = [entry.sourceRepo, entry.sourcePath, entry.sourceRevision, entry.sourceRef].every((field) => typeof field === "string" && field.trim());
+    const packaged = entry.package !== undefined && typeof entry.package.skillPath === "string" && entry.package.skillPath.trim() !== "";
+    if (sourced === packaged)
+      throw new Error(`content/skills/manifest.json: skill "${entry.id}" needs either public source fields or a package, not both or neither`);
+  }
   const skillLessons: SiteData["skills"]["lessons"] = {};
   const lessonFiles = (await readdir("content/skills")).filter((f) => f.endsWith(".md"));
   const seenSkillIds = new Set<string>();
