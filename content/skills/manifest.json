@@ -277,7 +277,7 @@
       "summary": "Set up and run Cappy to capture reproducible game footage: connect the Godot addon, configure OBS and FFmpeg presets, record, replay, compare builds, and read Cappy errors.",
       "category": "specialized",
       "order": 3,
-      "sourceVersion": null,
+      "sourceVersion": "0.1.0",
       "package": {
         "registry": "npm",
         "name": "@uppercut-labs/cappy",
