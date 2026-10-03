@@ -219,6 +219,26 @@ export async function loadContent(): Promise<SiteData> {
   const recommendations: SiteData["recommendations"] = JSON.parse(
     await readFile("content/recommendations.json", "utf8"),
   );
+  const packages: SiteData["packages"] = JSON.parse(
+    await readFile("content/packages.json", "utf8"),
+  );
+  if (!Array.isArray(packages) || packages.length === 0)
+    throw new Error("Package catalog must contain at least one public package");
+  const packageNames = new Set<string>();
+  for (const entry of packages) {
+    if (!entry || typeof entry !== "object") throw new Error("Invalid package entry");
+    for (const field of ["name", "title", "summary", "repository"] as const) {
+      if (typeof entry[field] !== "string" || !entry[field].trim())
+        throw new Error(`Package entry missing ${field}`);
+    }
+    if (!/^@uppercut-labs\/[a-z0-9-]+$/.test(entry.name) || packageNames.has(entry.name))
+      throw new Error(`Invalid or duplicate package name: ${entry.name}`);
+    packageNames.add(entry.name);
+    const source = new URL(entry.repository);
+    if (source.protocol !== "https:" || source.hostname !== "github.com" ||
+        !source.pathname.startsWith("/uppercut-labs/"))
+      throw new Error(`Package source must be an Uppercut Labs GitHub repository: ${entry.name}`);
+  }
   const seen = new Set<string>();
   for (const recommendation of recommendations) {
     for (const field of [
@@ -293,6 +313,7 @@ export async function loadContent(): Promise<SiteData> {
     phases,
     pages,
     recommendations,
+    packages,
     skills: { manifest: skillManifest, lessons: skillLessons, recommendations: skillRecommendations },
     styles,
     prompt: (await readFile("public/prompts/get-started.txt", "utf8")).trim(),

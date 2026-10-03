@@ -37,6 +37,13 @@ export interface SkillLesson {
   video?: { url: string; title?: string };
 }
 
+export interface PackageEntry {
+  name: string;
+  title: string;
+  summary: string;
+  repository: string;
+}
+
 export interface SiteData {
   pages: { guide: string; about: string; cloudflareIphone: string };
   phases: {
@@ -60,6 +67,7 @@ export interface SiteData {
     url: string;
     referral?: { url: string; disclosure: string };
   }[];
+  packages: PackageEntry[];
   skills: {
     manifest: SkillEntry[];
     lessons: Record<string, SkillLesson>;
@@ -680,6 +688,7 @@ function SkillsHub({ data }: { data: SiteData }) {
       <p className="muted">
         Skills are reusable instructions your agent follows. You do not need all of them. Start with the one that matches your next step.
       </p>
+      <p className="muted">Looking for installable software? <a href="#packages">Browse Uppercut Labs packages</a>.</p>
       {orderedCategories.map((cat) => (
         <section key={cat} className="content-section">
           <h2>{categoryLabels[cat] || cat}</h2>
@@ -704,6 +713,23 @@ function SkillsHub({ data }: { data: SiteData }) {
           </div>
         </section>
       ))}
+      <section id="packages" className="content-section">
+        <h2>Uppercut Labs packages</h2>
+        <p>Installable tools and visual libraries published on npm. These are separate from the agent skills above.</p>
+        <div className="recommendation-list">
+          {data.packages.map((entry) => (
+            <div key={entry.name} className="recommendation skill-card package-card">
+              <h3>{entry.title}</h3>
+              <p>{entry.summary}</p>
+              <code>{entry.name}</code>
+              <div className="package-links">
+                <ExternalLink href={`https://www.npmjs.com/package/${entry.name}`} label={`${entry.title} on npm`}>npm package<Icon name="arrow-up-right" size={12} /></ExternalLink>
+                <ExternalLink href={entry.repository} label={`${entry.title} source on GitHub`}>Source<Icon name="arrow-up-right" size={12} /></ExternalLink>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
       <section className="content-section">
         <h2>Third-party recommendations</h2>
         <p>Skills and resources from other authors that complement this collection.</p>

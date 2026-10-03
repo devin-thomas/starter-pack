@@ -1121,6 +1121,25 @@ a.skill-card:hover {
   margin-top: auto;
   padding-top: 8px;
 }
+.package-card code {
+  display: block;
+  margin-top: 18px;
+  color: var(--text);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.package-links {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.package-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 13px;
+}
 .recommendation h2 {
   font-size: 19px;
 }

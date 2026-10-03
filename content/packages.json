@@ -1,0 +1,26 @@
+[
+  {
+    "name": "@uppercut-labs/cappy",
+    "title": "Cappy",
+    "summary": "Capture repeatable game sessions with scenarios, replays, OBS recording, and FFmpeg exports.",
+    "repository": "https://github.com/uppercut-labs/cappy"
+  },
+  {
+    "name": "@uppercut-labs/ps1-backgrounds",
+    "title": "PS1 Backgrounds",
+    "summary": "Add procedural PS1-inspired scenes behind a website with a JavaScript API or Web Component.",
+    "repository": "https://github.com/uppercut-labs/ps1-backgrounds"
+  },
+  {
+    "name": "@uppercut-labs/n64-backgrounds",
+    "title": "N64 Backgrounds",
+    "summary": "Add N64-inspired procedural scenes behind a website with a JavaScript API or Web Component.",
+    "repository": "https://github.com/uppercut-labs/console-backgrounds"
+  },
+  {
+    "name": "@uppercut-labs/dreamcast-backgrounds",
+    "title": "Dreamcast Backgrounds",
+    "summary": "Add Dreamcast-inspired procedural scenes behind a website with a JavaScript API or Web Component.",
+    "repository": "https://github.com/uppercut-labs/console-backgrounds"
+  }
+]
