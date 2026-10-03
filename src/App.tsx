@@ -18,11 +18,14 @@ export interface SkillEntry {
   summary: string;
   category: string;
   order: number;
-  sourceRepo: string;
-  sourcePath: string;
+  /** Public source repository fields; absent for a skill that ships only inside a package. */
+  sourceRepo?: string;
+  sourcePath?: string;
   sourceVersion: string | null;
-  sourceRevision: string;
-  sourceRef: string;
+  sourceRevision?: string;
+  sourceRef?: string;
+  /** A skill delivered inside a package; `name` stays null until the package is published. */
+  package?: { registry: "npm"; name: string | null; skillPath: string };
   public: boolean;
   ownedBy: string;
   relatedSkills: string[];
@@ -594,7 +597,6 @@ const categoryLabels: Record<string, string> = {
 };
 
 function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; lesson: SkillLesson; manifest: SkillEntry[]; lessons: Record<string, SkillLesson> }) {
-  const sourceUrl = `https://github.com/${entry.sourceRepo}/blob/${entry.sourceRef}/${entry.sourcePath}`;
   const relatedEntries = entry.relatedSkills
     .map((id) => manifest.find((s) => s.id === id))
     .filter((s): s is SkillEntry => s != null && s.public && !s.recommendationOnly);
@@ -660,12 +662,24 @@ function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; le
       )}
       <section className="skill-meta-section skill-source">
         <h2>Source</h2>
-        <p>
-          Canonical implementation: <a href={`https://github.com/${entry.sourceRepo}/tree/${entry.sourceRef}/${entry.sourcePath.replace(/\/[^/]+$/, "")}`} target="_blank" rel="noopener noreferrer">
-            {entry.sourceRepo}<Icon name="arrow-up-right" size={13} /><span className="sr-only"> (opens in a new tab)</span>
-          </a>
-          {entry.sourceVersion && <span className="metadata"> v{entry.sourceVersion}</span>}
-        </p>
+        {entry.package ? (
+          <p>
+            Ships with the {entry.package.name ? (
+              <a href={`https://www.npmjs.com/package/${entry.package.name}`} target="_blank" rel="noopener noreferrer">
+                {entry.package.name}<Icon name="arrow-up-right" size={13} /><span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            ) : entry.title} npm package at <code>{entry.package.skillPath}</code>.
+            {!entry.package.name && " The package is not published yet."}
+            {entry.sourceVersion && <span className="metadata"> v{entry.sourceVersion}</span>}
+          </p>
+        ) : (
+          <p>
+            Canonical implementation: <a href={`https://github.com/${entry.sourceRepo}/tree/${entry.sourceRef}/${(entry.sourcePath ?? "").replace(/\/[^/]+$/, "")}`} target="_blank" rel="noopener noreferrer">
+              {entry.sourceRepo}<Icon name="arrow-up-right" size={13} /><span className="sr-only"> (opens in a new tab)</span>
+            </a>
+            {entry.sourceVersion && <span className="metadata"> v{entry.sourceVersion}</span>}
+          </p>
+        )}
       </section>
       <a href="/skills" className="text-link">
         All skills
