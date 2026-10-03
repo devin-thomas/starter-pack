@@ -1,5 +1,11 @@
 [
   {
+    "name": "@uppercut-labs/agent-native",
+    "title": "Agent Native",
+    "summary": "Build permission-checked actions that agents can discover and run in apps and sites. Experimental preview for Node.js 22 or newer.",
+    "repository": "https://github.com/uppercut-labs/agent-native"
+  },
+  {
     "name": "@uppercut-labs/cappy",
     "title": "Cappy",
     "summary": "Capture repeatable game sessions with scenarios, replays, OBS recording, and FFmpeg exports.",
