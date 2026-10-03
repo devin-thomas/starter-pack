@@ -48,6 +48,13 @@ const html = await read("/", /text\/html/);
 if (!html.includes('id="site-data"') || !html.includes("Your first build")) {
   throw new Error("The response is not the rendered Starter Pack homepage.");
 }
+const skillsHtml = await read("/skills", /text\/html/);
+const localSkillsHtml = await readFile("dist/skills.html", "utf8");
+const packageSection = /<section id="packages"[\s\S]*?<\/section>/;
+const livePackages = skillsHtml.match(packageSection)?.[0];
+const builtPackages = localSkillsHtml.match(packageSection)?.[0];
+if (!livePackages || !builtPackages || livePackages !== builtPackages)
+  throw new Error("Live package section differs from this build.");
 for (const [route, title] of [["/style/TypeScript", "TypeScript"], ["/style/Godot", "Godot"], ["/style/Kotlin", "Kotlin"], ["/style/React-TypeScript", "React + TypeScript"], ["/style/Python", "Python"], ["/style/Swift-SwiftUI", "Swift + SwiftUI"], ["/style/JavaScript", "JavaScript"], ["/style/Dart-Flutter", "Dart + Flutter"]] as const) {
   const styleHtml = await read(route, /text\/html/);
   const visibleStyleHtml = styleHtml.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
@@ -128,5 +135,5 @@ for (const [collection, manifest] of [
   );
 }
 console.log(
-  `Verified ${base.origin}: ${local ? "local HTTP asset routing (not deployment; GitHub packet fetch skipped)" : "normal DNS, HTTPS and GitHub packet"}, rendered homepage and all published style guides, JS/CSS, exact current skills/style/setup/schema/requirements resources, Google learner-resource robots policy, exact startup packet and prompts, all 35 icon hashes, exact Workbench download bytes, catalog CORS, and six private-path denials. Provider-app acceptance is separate.`,
+  `Verified ${base.origin}: ${local ? "local HTTP asset routing (not deployment; GitHub packet fetch skipped)" : "normal DNS, HTTPS and GitHub packet"}, rendered homepage, exact package section, all published style guides, JS/CSS, exact current skills/style/setup/schema/requirements resources, Google learner-resource robots policy, exact startup packet and prompts, all 35 icon hashes, exact Workbench download bytes, catalog CORS, and six private-path denials. Provider-app acceptance is separate.`,
 );
