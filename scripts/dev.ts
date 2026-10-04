@@ -34,6 +34,7 @@ server.middlewares.use(async (request, response, next) => {
     /^\/phases\/[123]\.(md|json)$/.test(pathname) ||
     /^\/style\/(?:(?:TypeScript|Godot|Kotlin|React-TypeScript|Python|Swift-SwiftUI|JavaScript|Dart-Flutter)\.(?:md|json)|catalog\.json)$/.test(pathname) ||
     /^\/skills\/[a-z-]+\/SKILL\.md$/.test(pathname) ||
+    /^\/skills(?:\/[a-z-]+)?\.(md|json)$/.test(pathname) ||
     [
       "/agent/catalog.json",
       "/agent/phase-1-packet.txt",

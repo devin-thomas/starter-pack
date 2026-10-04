@@ -8,6 +8,7 @@ export function CopyText({
   copiedLabel = "Prompt copied",
   instruction = "Paste into your agent, then send.",
   alwaysVisible = false,
+  disclosureLabel = "Read or select the full prompt",
   download,
 }: {
   text: string;
@@ -16,6 +17,7 @@ export function CopyText({
   copiedLabel?: string;
   instruction?: string;
   alwaysVisible?: boolean;
+  disclosureLabel?: string;
   download?: string;
 }) {
   const id = useId();
@@ -97,7 +99,7 @@ export function CopyText({
       </div>
       {!alwaysVisible && (
         <details className="copy-disclosure" ref={disclosure}>
-          <summary>Read or select the full prompt</summary>
+          <summary>{disclosureLabel}</summary>
           {selectableText}
         </details>
       )}

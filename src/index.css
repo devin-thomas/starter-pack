@@ -1105,6 +1105,40 @@ a.skill-card {
   color: inherit;
   transition: border-color 0.15s;
 }
+.skill-install {
+  margin-bottom: 38px;
+}
+.skill-install p {
+  font-size: 14px;
+}
+.skill-host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+.skill-host select {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  min-height: 44px;
+  padding: 8px 12px;
+}
+.skill-command {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface-soft);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+}
+.skill-install .muted code {
+  overflow-wrap: anywhere;
+}
 a.skill-card:hover {
   border-color: var(--line-strong);
 }

@@ -1,6 +1,7 @@
 import { type ReactNode, useState } from "react";
 import { CopyText } from "./CopyText";
 import { Feedback } from "./Feedback";
+import { skillHosts, skillInstallation, skillsPackageUrl, type SkillHost } from "./skill-installation";
 import { motion, useReducedMotion } from "motion/react";
 import {
   Icon,
@@ -596,6 +597,33 @@ const categoryLabels: Record<string, string> = {
   plan: "Plan", build: "Build", specialized: "Specialized", fun: "Fun",
 };
 
+function SkillInstall({ entry }: { entry?: SkillEntry }) {
+  const [host, setHost] = useState<SkillHost>("codex");
+  const installation = skillInstallation(entry, host);
+  return (
+    <section id="get-skills" className="content-section skill-install">
+      <h2>{entry ? `Get ${entry.title}` : "Get the skills with Uppercut Labs"}</h2>
+      <p>{installation.description}</p>
+      <p><ExternalLink href={skillsPackageUrl}>Meet @uppercut-labs/skills on npm<Icon name="arrow-up-right" size={12} /></ExternalLink></p>
+      {entry && !entry.package && (
+        <label className="skill-host">Your agent
+          <select value={host} onChange={(event) => {
+            const selected = skillHosts.find((candidate) => candidate === event.target.value);
+            if (selected) setHost(selected);
+          }}>
+            {skillHosts.map((value) => <option key={value} value={value}>{value}</option>)}
+          </select>
+        </label>
+      )}
+      <pre className="skill-command"><code>{installation.command}</code></pre>
+      <CopyText key={installation.command} text={installation.command} label="Terminal command" buttonLabel="Copy command" copiedLabel="Command copied" disclosureLabel="Read or select the command" instruction={entry ? "Run in your project folder." : "Run in your terminal to browse available skills."} />
+      {!entry && <p className="muted">To install one, use <code>npx @uppercut-labs/skills add &lt;skillname&gt; --host &lt;host&gt; --project .</code>. Each skill page has a ready-to-copy command. Cappy ships separately in its own package.</p>}
+      <h3>Let your agent take it from here</h3>
+      <CopyText text={installation.prompt} label={entry ? `Install ${entry.title} with your agent` : "Choose and install skills with your agent"} buttonLabel="Copy prompt for your agent" />
+    </section>
+  );
+}
+
 function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; lesson: SkillLesson; manifest: SkillEntry[]; lessons: Record<string, SkillLesson> }) {
   const relatedEntries = entry.relatedSkills
     .map((id) => manifest.find((s) => s.id === id))
@@ -610,6 +638,7 @@ function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; le
         title={entry.title}
         description={entry.summary}
       />
+      <SkillInstall entry={entry} />
       {lesson.video && (
         <div className="skill-video">
           <video controls src={lesson.video.url}>
@@ -703,6 +732,7 @@ function SkillsHub({ data }: { data: SiteData }) {
         Skills are reusable instructions your agent follows. You do not need all of them. Start with the one that matches your next step.
       </p>
       <p className="muted">Looking for installable software? <a href="#packages">Browse Uppercut Labs packages</a>.</p>
+      <SkillInstall />
       {orderedCategories.map((cat) => (
         <section key={cat} className="content-section">
           <h2>{categoryLabels[cat] || cat}</h2>
@@ -729,7 +759,7 @@ function SkillsHub({ data }: { data: SiteData }) {
       ))}
       <section id="packages" className="content-section">
         <h2>Uppercut Labs packages</h2>
-        <p>Installable tools and visual libraries published on npm. These are separate from the agent skills above.</p>
+        <p>The skills installer, plus tools and visual libraries published on npm.</p>
         <div className="recommendation-list">
           {data.packages.map((entry) => (
             <div key={entry.name} className="recommendation skill-card package-card">

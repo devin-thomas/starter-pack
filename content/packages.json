@@ -1,5 +1,11 @@
 [
   {
+    "name": "@uppercut-labs/skills",
+    "title": "Uppercut Skills",
+    "summary": "The premier and primary way to get Uppercut Labs agent skills. Install the skill you need with its required skill dependencies. Requires Node.js 22 or newer.",
+    "repository": "https://github.com/devin-thomas/skills"
+  },
+  {
     "name": "@uppercut-labs/agent-native",
     "title": "Agent Native",
     "summary": "Build permission-checked actions that agents can discover and run in apps and sites. Experimental preview for Node.js 22 or newer.",

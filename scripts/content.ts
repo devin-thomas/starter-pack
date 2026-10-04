@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import { Marked } from "marked";
 import type { SiteData } from "../src/App";
+import { skillInstallation, skillInstallationMarkdown } from "../src/skill-installation";
 import { googleResourcePolicy } from "./crawler-policy";
 import { createHash } from "node:crypto";
 import { parseRegistry, projectPhaseRequirements } from "../src/workbench/registry";
@@ -236,7 +237,8 @@ export async function loadContent(): Promise<SiteData> {
     packageNames.add(entry.name);
     const source = new URL(entry.repository);
     if (source.protocol !== "https:" || source.hostname !== "github.com" ||
-        !source.pathname.startsWith("/uppercut-labs/"))
+        !(source.pathname.startsWith("/uppercut-labs/") ||
+          (entry.name === "@uppercut-labs/skills" && source.pathname === "/devin-thomas/skills")))
       throw new Error(`Package source must be an Uppercut Labs GitHub repository: ${entry.name}`);
   }
   const seen = new Set<string>();
@@ -436,6 +438,25 @@ export async function generateResources(data: SiteData, output: string) {
   const skillVersions = JSON.parse(
     await readFile("public/skills/versions.json", "utf8"),
   );
+  const skillEntries = data.skills.manifest.filter((entry) => entry.public && !entry.recommendationOnly && data.skills.lessons[entry.id]);
+  const skillCatalog = skillEntries.map((entry) => ({
+    id: entry.id,
+    title: entry.title,
+    summary: entry.summary,
+    html: `${origin}/skills/${entry.slug}`,
+    markdown: `${origin}/skills/${entry.slug}.md`,
+    json: `${origin}/skills/${entry.slug}.json`,
+    installation: skillInstallation(entry),
+  }));
+  await write(`${output}/skills.md`, `# Uppercut Labs skills\n\n${skillInstallationMarkdown()}\n${skillCatalog.map((entry) => `- [${entry.title}](${entry.markdown}): ${entry.summary}`).join("\n")}\n`);
+  await write(`${output}/skills.json`, JSON.stringify({ installation: skillInstallation(), skills: skillCatalog }, null, 2));
+  for (const entry of skillEntries) {
+    const raw = await readFile(`content/skills/${entry.slug}.md`, "utf8");
+    const parsed = matter(raw);
+    const markdown = parsed.content.replace(/^(# .+\r?\n)/m, `$1\n${skillInstallationMarkdown(entry)}\n`);
+    await write(`${output}/skills/${entry.slug}.md`, markdown);
+    await write(`${output}/skills/${entry.slug}.json`, JSON.stringify({ ...entry, installation: skillInstallation(entry), markdown }, null, 2));
+  }
   for (const id of ["starter-pack", "computer-setup", "quick-build"]) {
     await write(
       `${output}/skills/${id}/SKILL.md`,
@@ -519,6 +540,13 @@ export async function generateResources(data: SiteData, output: string) {
         updated_at: generatedAt.slice(0, 10),
         generated_at: generatedAt,
         resources: [...entries, {
+          id: "skills", kind: "skills",
+          title: "Uppercut Labs skills",
+          summary: "Get skills with @uppercut-labs/skills, the premier and primary installer.",
+          html: `${origin}/skills`,
+          markdown: `${origin}/skills.md`,
+          json: `${origin}/skills.json`,
+        }, ...skillCatalog.map((entry) => ({ ...entry, kind: "skill" })), {
           id: "cloudflare-iphone", kind: "help",
           title: "Deploy a static site to Cloudflare from your iPhone",
           summary: "Optional, agent-neutral static file upload using Files and Safari, with ten real screenshots.",
@@ -559,6 +587,6 @@ export async function generateResources(data: SiteData, output: string) {
   );
   await write(
     `${output}/llms.txt`,
-    `# Starter Pack\n\nA guide by Devin Thomas at Uppercut Labs. Fetch only the resource needed for the current action.\n\n- [Start](${origin}/agent/start.md)\n- [Catalog](${origin}/agent/catalog.json)\n- [Requirements](${origin}/agent/requirements.json)\n${entries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n${styleEntries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n- [Style guide catalog](${origin}/style/catalog.json)\n- [Recommendations](${origin}/recommendations.json)\n`,
+    `# Starter Pack\n\nA guide by Devin Thomas at Uppercut Labs. Fetch only the resource needed for the current action.\n\n- [Start](${origin}/agent/start.md)\n- [Catalog](${origin}/agent/catalog.json)\n- [Requirements](${origin}/agent/requirements.json)\n- [Skills and primary npm installer](${origin}/skills.md)\n${entries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n${styleEntries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n- [Style guide catalog](${origin}/style/catalog.json)\n- [Recommendations](${origin}/recommendations.json)\n`,
   );
 }
