@@ -55,6 +55,20 @@ const livePackages = skillsHtml.match(packageSection)?.[0];
 const builtPackages = localSkillsHtml.match(packageSection)?.[0];
 if (!livePackages || !builtPackages || livePackages !== builtPackages)
   throw new Error("Live package section differs from this build.");
+const installSection = /<section id="get-skills"[\s\S]*?<\/section>/;
+const skillCatalog = JSON.parse(await readFile("dist/skills.json", "utf8"));
+for (const route of ["/skills", ...skillCatalog.skills.map((entry: { html: string }) => new URL(entry.html).pathname)]) {
+  const livePage = route === "/skills" ? skillsHtml : await read(route, /text\/html/);
+  const builtPage = route === "/skills" ? localSkillsHtml : await readFile(`dist${route}.html`, "utf8");
+  const builtInstall = builtPage.match(installSection)?.[0];
+  if (!builtInstall || livePage.match(installSection)?.[0] !== builtInstall)
+    throw new Error(`Live skill installation guidance differs: ${route}`);
+  for (const extension of ["md", "json"]) {
+    const resource = `${route}.${extension}`;
+    if (await read(resource, extension === "json" ? /application\/json/ : /text\/plain/) !== await readFile(`dist${resource}`, "utf8"))
+      throw new Error(`Live skill resource differs: ${resource}`);
+  }
+}
 for (const [route, title] of [["/style/TypeScript", "TypeScript"], ["/style/Godot", "Godot"], ["/style/Kotlin", "Kotlin"], ["/style/React-TypeScript", "React + TypeScript"], ["/style/Python", "Python"], ["/style/Swift-SwiftUI", "Swift + SwiftUI"], ["/style/JavaScript", "JavaScript"], ["/style/Dart-Flutter", "Dart + Flutter"]] as const) {
   const styleHtml = await read(route, /text\/html/);
   const visibleStyleHtml = styleHtml.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
@@ -135,5 +149,5 @@ for (const [collection, manifest] of [
   );
 }
 console.log(
-  `Verified ${base.origin}: ${local ? "local HTTP asset routing (not deployment; GitHub packet fetch skipped)" : "normal DNS, HTTPS and GitHub packet"}, rendered homepage, exact package section, all published style guides, JS/CSS, exact current skills/style/setup/schema/requirements resources, Google learner-resource robots policy, exact startup packet and prompts, all 35 icon hashes, exact Workbench download bytes, catalog CORS, and six private-path denials. Provider-app acceptance is separate.`,
+  `Verified ${base.origin}: ${local ? "local HTTP asset routing (not deployment; GitHub packet fetch skipped)" : "normal DNS, HTTPS and GitHub packet"}, rendered homepage, exact package section, all skill installation sections and Markdown/JSON resources, all published style guides, JS/CSS, exact current skills/style/setup/schema/requirements resources, Google learner-resource robots policy, exact startup packet and prompts, all 35 icon hashes, exact Workbench download bytes, catalog CORS, and six private-path denials. Provider-app acceptance is separate.`,
 );
