@@ -48,8 +48,10 @@ test("optional harness tracking preserves gates and required next actions", () =
   const pack = manifest.optional_packs["programmatic-harness"];
   assert.equal(pack.phase_gate, false);
   assert.equal(pack.automatic_install, false);
-  assert.match(pack.availability, /requires_compatible_released/);
+  assert.match(pack.availability, /codex_local_only_after_compatible_pinned/);
   assert.equal(pack.codex_auth, "managed_chatgpt_sign_in");
+  assert.equal(pack.codex_billing, "eligible_chatgpt_plan; no_openai_platform_api_key_or_api_billing");
+  assert.equal(pack.installation_scope, "project_local_after_explicit_approval");
   assert.equal(registry.requirements_revision, "2026-09-10");
   assert.deepEqual(registry.phases["phase-2"].gate, { all_of: [
     "computer-setup", "private-progress-repository", "phase-2-remote-baseline",
@@ -79,6 +81,38 @@ test("optional harness tracking preserves gates and required next actions", () =
   assert.deepEqual(phaseGate(data, catalog), incomplete);
   assert.equal(phaseCompletion(data, "phase-2", catalog)?.requirements_revision, "2026-09-09");
   assert.equal(currentStep(data, catalog), undefined);
+});
+
+test("released Codex harness onboarding stays optional and saves only normalized evidence", async () => {
+  const pack = manifest.optional_packs["programmatic-harness"];
+  const [phase, guide, starter, setup] = await Promise.all([
+    readFile("content/phases/2.md", "utf8"),
+    readFile("public/setup/programmatic-harness.md", "utf8"),
+    readFile("public/skills/starter-pack/current/SKILL.md", "utf8"),
+    readFile("public/skills/computer-setup/current/SKILL.md", "utf8"),
+  ]);
+  assert.ok(registry.phases["phase-2"].optional?.includes("programmatic-harness"));
+  assert.deepEqual(registry.phases["phase-2"].gate?.all_of, [
+    "computer-setup", "private-progress-repository", "phase-2-remote-baseline",
+    "quick-build", "live-deployment", "final-progress-save",
+  ]);
+  for (const document of [phase, guide, starter, setup]) {
+    assert.match(document, /managed ChatGPT sign-in/);
+    assert.match(document, /API key|API billing/);
+    assert.match(document, /Quick Build/);
+    assert.match(document, /explicit opt-in|opt in|opts in|Ask explicitly/i);
+  }
+  assert.match(guide, /0\.1\.1/);
+  assert.match(guide, /\.tgz\.sha256/);
+  assert.match(guide, /npm exec --yes --package=\.\/uppercut-labs-skills-0\.1\.1\.tgz -- uppercut-skills add programmatic-harness --host codex --project "\$PWD" --channel bundled/);
+  assert.match(guide, /private planning URLs/);
+  assert.match(guide, /raw session and turn IDs/);
+  assert.equal(pack.skill_version, "0.1.1");
+  assert.match(pack.skills_cli_tarball, /uppercut-labs-skills-0\.1\.1\.tgz$/);
+  assert.match(pack.skills_cli_tarball_sha256, /uppercut-labs-skills-0\.1\.1\.tgz\.sha256$/);
+  assert.match(pack.skill_source, /tree\/50ce5dce91c49fcf896aa887e11b4c3a529e40e5\/programmatic-harness$/);
+  assert.match(setup, /Keep Cursor and cloud workflows deferred/);
+  assert.equal(manifest.required_capabilities.some(item => item.id === "programmatic-harness"), false);
 });
 
 function assertPrivateServeExamples(document: string) {

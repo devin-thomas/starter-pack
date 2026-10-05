@@ -73,6 +73,12 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/computer-setup.manifest.json](https://starter-pack.uppercut-labs.workers.dev/setup/computer-setup.manifest.json)
 - GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/computer-setup.manifest.json](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/computer-setup.manifest.json)
 
+## /setup/programmatic-harness.md
+
+- Primary: [https://starter.devthomas.site/setup/programmatic-harness.md](https://starter.devthomas.site/setup/programmatic-harness.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/programmatic-harness.md](https://starter-pack.uppercut-labs.workers.dev/setup/programmatic-harness.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/programmatic-harness.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/programmatic-harness.md)
+
 ## /setup/linux.md
 
 - Primary: [https://starter.devthomas.site/setup/linux.md](https://starter.devthomas.site/setup/linux.md)
@@ -289,4 +295,3 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 
 - Primary: [https://starter.devthomas.site/style/catalog.json](https://starter.devthomas.site/style/catalog.json)
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/style/catalog.json](https://starter-pack.uppercut-labs.workers.dev/style/catalog.json)
-

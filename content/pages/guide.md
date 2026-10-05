@@ -9,6 +9,8 @@
 
 When Computer Setup begins, your agent prepares a downloadable **Progress Workbench** alongside your progress file. It opens the local view as soon as Python is available and preserves any customization you already made. This website does not receive your progress or host a personal dashboard.
 
+After required setup is complete, Codex users can opt in to a local programmatic-harness proof. It uses Codex's managed ChatGPT sign-in, needs no OpenAI API key or API billing, and never gates Quick Build. See the [Phase 2 optional Codex workflow](/phases/2#optional-try-a-programmatic-harness-with-codex).
+
 Your agent also asks which email to use for development accounts and notifications if you have not already chosen them. You can use one address, give a service its own address, or leave the choice for later. These choices do not change your Git identity.
 
 The Workbench helps you read your record; it is not a phase milestone. A protected hosted copy can wait until later. If you want to publish something first, give your instant app's extra credit priority.
