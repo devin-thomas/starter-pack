@@ -3,7 +3,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-import { instructionPacket } from "./content";
+import { instructionPacket, normalizeGeneratedText } from "./content";
+
+test("generated text normalizes CRLF and CR to LF for consistent resource bytes", () => {
+  assert.equal(normalizeGeneratedText("first\r\nsecond\rthird\n"), "first\nsecond\nthird\n");
+});
 
 test("generated Phase 1 packet includes readiness before the first action", async () => {
   const packet = await instructionPacket();

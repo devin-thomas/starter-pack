@@ -114,9 +114,12 @@ export let routes = [...staticRoutes];
 export function addSkillRoutes(slugs: string[]) {
   routes = [...staticRoutes, "/skills", "/skills/recommendations", ...slugs.map((s) => `/skills/${s}`)];
 }
+export function normalizeGeneratedText(value: string) {
+  return value.replace(/\r\n?/g, "\n");
+}
 export async function write(destination: string, value: string) {
   await mkdir(path.dirname(destination), { recursive: true });
-  await writeFile(destination, value);
+  await writeFile(destination, normalizeGeneratedText(value));
 }
 export async function files(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
