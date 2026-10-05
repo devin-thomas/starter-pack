@@ -277,6 +277,16 @@
         "java"
       ],
       "selection": "project_specific"
+    },
+    "programmatic-harness": {
+      "phase_gate": false,
+      "selection": "explicit_opt_in",
+      "availability": "requires_compatible_released_adapter_and_reusable_skill",
+      "codex_auth": "managed_chatgpt_sign_in",
+      "local_and_cloud_evidence": "independent",
+      "automatic_install": false,
+      "evidence_path": "artifacts.programmatic_harness",
+      "evidence_schema": "https://starter.devthomas.site/schemas/starter-progress.schema.json#/$defs/programmaticHarnessEvidence"
     }
   },
   "state_path": "setup/computer.json",
@@ -301,7 +311,8 @@
     "phone-to-computer-file": "remote_access.checks.phone_to_computer_file",
     "computer-to-phone-file": "remote_access.checks.computer_to_phone_file",
     "verified-phone-connection": "remote_access.checks.phone_harness_interaction",
-    "private-progress-repository": "private_save; actual approved remote commit and private visibility verified"
+    "private-progress-repository": "private_save; actual approved remote commit and private visibility verified",
+    "programmatic-harness": "artifacts.programmatic_harness; normalized per-provider local/cloud proof outcomes, no credentials or raw provider output"
   },
   "focused_guides": {
     "authentication": "https://starter.devthomas.site/setup/authentication.md",

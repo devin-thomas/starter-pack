@@ -257,7 +257,12 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["phase", "status", "requirements_revision", "source"],
+            "required": [
+              "phase",
+              "status",
+              "requirements_revision",
+              "source"
+            ],
             "properties": {
               "phase": {
                 "enum": [
@@ -289,10 +294,144 @@
             },
             "additionalProperties": true
           }
+        },
+        "programmatic_harness": {
+          "$ref": "#/$defs/programmaticHarnessEvidence"
         }
       },
       "additionalProperties": true
     }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "$defs": {
+    "programmaticHarnessEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempts"
+      ],
+      "properties": {
+        "attempts": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "provider",
+              "target",
+              "outcome"
+            ],
+            "properties": {
+              "provider": {
+                "enum": [
+                  "codex",
+                  "cursor"
+                ]
+              },
+              "target": {
+                "enum": [
+                  "local",
+                  "cloud"
+                ]
+              },
+              "outcome": {
+                "enum": [
+                  "not_tested",
+                  "declined",
+                  "deferred",
+                  "partial",
+                  "failed",
+                  "passed"
+                ]
+              },
+              "runtime_version": {
+                "type": "string",
+                "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+                "maxLength": 32
+              },
+              "auth_mode": {
+                "enum": [
+                  "managed_chatgpt",
+                  "provider_managed"
+                ]
+              },
+              "verified_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "first_file_verified": {
+                "type": "boolean"
+              },
+              "second_file_verified": {
+                "type": "boolean"
+              },
+              "same_session_resumed": {
+                "type": "boolean"
+              },
+              "next_action": {
+                "enum": [
+                  "sign_in",
+                  "update_runtime",
+                  "retry_local",
+                  "return_to_curriculum",
+                  "await_release",
+                  "separate_cloud_opt_in"
+                ]
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "provider": {
+                      "const": "codex"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "target": {
+                      "const": "local"
+                    },
+                    "auth_mode": {
+                      "const": "managed_chatgpt"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "outcome": {
+                      "const": "passed"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "verified_at",
+                    "first_file_verified",
+                    "second_file_verified",
+                    "same_session_resumed"
+                  ],
+                  "properties": {
+                    "first_file_verified": {
+                      "const": true
+                    },
+                    "second_file_verified": {
+                      "const": true
+                    },
+                    "same_session_resumed": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
 }

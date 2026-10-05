@@ -30,7 +30,8 @@
       "optional": [
         "development-email",
         "progress-workbench",
-        "workbench-publishing-extra-credit"
+        "workbench-publishing-extra-credit",
+        "programmatic-harness"
       ]
     },
     "phase-3": {
@@ -656,6 +657,20 @@
       ],
       "guide": "/artifacts/progress/README.md",
       "completion_meaning": "The final reconciled progress, actual evidence and completion record have reached the intended private GitHub repository and the saved remote revision is verified. Preserve local success and mark this save pending on push failure; an earlier setup save is not the final save. Repeat closeout without empty commits or storing the containing commit's own SHA recursively."
+    },
+    "programmatic-harness": {
+      "title": "Programmatic Harness (optional)",
+      "phase": "phase-2",
+      "requirement": "optional",
+      "gate_for": [],
+      "prerequisites": [
+        "computer-setup"
+      ],
+      "evidence": [
+        "agent_check"
+      ],
+      "guide": "/phases/2",
+      "completion_meaning": "After explicit opt-in and a compatible released workflow, a local two-turn file proof passes with the same session resumed. Record only normalized evidence in artifacts.programmatic_harness. Cloud proof is separate; absence, decline, deferral or failure never blocks Quick Build or graduation. This activity is preparation until the compatible adapter and reusable skill are released."
     }
   },
   "aliases": {

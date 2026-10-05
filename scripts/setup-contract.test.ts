@@ -5,7 +5,7 @@ import manifest from "../public/setup/computer-setup.manifest.json";
 import setupExample from "../public/setup/state.example.json";
 import registrySource from "../content/workbench-steps.json";
 import { parseRegistry, phaseIds, projectCatalog } from "../src/workbench/registry";
-import { phaseGate, record, type Progress } from "../src/workbench/model";
+import { currentStep, phaseCompletion, phaseGate, record, type Progress } from "../src/workbench/model";
 
 // These checks read contracts and synthetic state only; no setup commands are executed.
 const registry = parseRegistry(registrySource);
@@ -43,6 +43,43 @@ function completePhaseTwo(): Progress {
       .map(([id]) => [id, { status: "completed" }])),
   };
 }
+
+test("optional harness tracking preserves gates and required next actions", () => {
+  const pack = manifest.optional_packs["programmatic-harness"];
+  assert.equal(pack.phase_gate, false);
+  assert.equal(pack.automatic_install, false);
+  assert.match(pack.availability, /requires_compatible_released/);
+  assert.equal(pack.codex_auth, "managed_chatgpt_sign_in");
+  assert.equal(registry.requirements_revision, "2026-09-10");
+  assert.deepEqual(registry.phases["phase-2"].gate, { all_of: [
+    "computer-setup", "private-progress-repository", "phase-2-remote-baseline",
+    "quick-build", "live-deployment", "final-progress-save",
+  ] });
+  assert.equal(manifest.required_capabilities.some(item => item.id === "programmatic-harness"), false);
+  const onlyOptional = completePhaseTwo();
+  onlyOptional.steps = { "programmatic-harness": { status: "deferred" } };
+  assert.equal(currentStep(onlyOptional, catalog), undefined);
+  onlyOptional.choices = { workbench: { next_step_id: "programmatic-harness" } };
+  assert.equal(currentStep(onlyOptional, catalog)?.[0], "programmatic-harness");
+  const data = completePhaseTwo();
+  const complete = phaseGate(data, catalog);
+  data.steps["quick-build"] = { status: "not_started" };
+  const incomplete = phaseGate(data, catalog);
+  for (const status of ["not_started", "deferred", "skipped", "completed"] as const) {
+    data.steps["programmatic-harness"] = { status };
+    assert.deepEqual(phaseGate(data, catalog), incomplete);
+    assert.equal(currentStep(data, catalog)?.[0], "quick-build");
+    data.steps["quick-build"] = { status: "completed" };
+    assert.deepEqual(phaseGate(data, catalog), complete);
+    assert.equal(currentStep(data, catalog), undefined);
+    data.steps["quick-build"] = { status: "not_started" };
+  }
+  data.artifacts = { programmatic_harness: { attempts: [{ provider: "codex", target: "local", outcome: "failed" }] },
+    phase_history: [{ phase: "phase-2", status: "completed", requirements_revision: "2026-09-09", source: "learner_report" }] };
+  assert.deepEqual(phaseGate(data, catalog), incomplete);
+  assert.equal(phaseCompletion(data, "phase-2", catalog)?.requirements_revision, "2026-09-09");
+  assert.equal(currentStep(data, catalog), undefined);
+});
 
 function assertPrivateServeExamples(document: string) {
   const blocks = [...document.matchAll(/```(?:text|bash|powershell|sh)\r?\n([\s\S]*?)```/g)];
