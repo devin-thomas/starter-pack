@@ -124,7 +124,7 @@ export function currentStep(progress: Progress, catalog: Catalog): [string, Step
     const entry = entries.find(([id, step]) => step.status === status && definitionFor(id, catalog)?.requirement !== "optional");
     if (entry) return entry;
   }
-  return entries[0];
+  return entries.find(([id]) => definitionFor(id, catalog)?.requirement !== "optional");
 }
 export function safeLink(value: string): string | undefined {
   try { const url = new URL(value); return ["http:", "https:"].includes(url.protocol) && !url.username && !url.password ? url.href : undefined; }

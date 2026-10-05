@@ -482,6 +482,7 @@ export async function generateResources(data: SiteData, output: string) {
           ] : []),
           ...(phase.order === 2 ? [
             `- [Computer Setup instructions](${origin}/skills/computer-setup/SKILL.md)`,
+            `- [Optional Codex programmatic-harness guide](${origin}/setup/programmatic-harness.md)`,
             `- [Quick Build instructions](${origin}/skills/quick-build/SKILL.md)`,
             `- [Private progress repository instructions](${origin}/artifacts/progress/README.md)`,
             `- [Progress Workbench lifecycle](${origin}/artifacts/progress-workbench/README.md)`,

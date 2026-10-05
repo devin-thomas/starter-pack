@@ -9,6 +9,27 @@ const schema = JSON.parse(await readFile("public/schemas/starter-progress.schema
 const ajv = new Ajv2020({ allErrors: true });
 addFormats(ajv);
 const validate = ajv.compile(schema);
+test("harness proof evidence rejects credentials and separates local from cloud", () => {
+  const data = state();
+  for (const outcome of ["not_tested", "declined", "deferred", "partial", "failed"]) {
+    data.artifacts = { programmatic_harness: { attempts: [{ provider: "codex", target: "local", outcome }] } };
+    assert.ok(validate(data), ajv.errorsText(validate.errors));
+  }
+  const passed = { provider: "codex", target: "local", outcome: "passed", auth_mode: "managed_chatgpt",
+    runtime_version: "0.145.0", verified_at: "2026-10-04T12:00:00Z",
+    first_file_verified: true, second_file_verified: true, same_session_resumed: true };
+  const check = (attempt: object) => validate({ ...data, artifacts: { programmatic_harness: { attempts: [attempt] } } });
+  assert.ok(check(passed));
+  assert.equal(check({ ...passed, same_session_resumed: false }), false);
+  assert.equal(check({ provider: "codex", target: "local", outcome: "passed" }), false);
+  assert.equal(check({ ...passed, target: "cloud" }), false);
+  assert.equal(check({ ...passed, auth_mode: "apikey" }), false);
+  for (const key of ["token", "credentials", "account_email", "session_id", "raw_output", "notes"]) {
+    assert.equal(check({ ...passed, [key]: "sentinel" }), false);
+  }
+  assert.equal(check({ ...passed, runtime_version: "sentinel" }), false);
+  assert.ok(check({ provider: "cursor", target: "cloud", outcome: "deferred", next_action: "separate_cloud_opt_in" }));
+});
 const catalog: Catalog = {
   version: "0.1.0",
   phases: [1, 2, 3].map(number => ({ id: `phase-${number}` as Catalog["phases"][number]["id"], title: `Phase ${number}`, url: `https://starter.devthomas.site/phases/${number}`, preview: number === 3 })),

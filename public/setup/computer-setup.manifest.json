@@ -1,8 +1,8 @@
 {
   "manifest_version": 1,
   "id": "starter-pack-computer-setup",
-  "skill_version": "0.2.0",
-  "updated_at": "2026-09-10",
+  "skill_version": "0.2.1",
+  "updated_at": "2026-10-04",
   "requirements": "https://starter.devthomas.site/agent/requirements.json",
   "requirements_revision": "2026-09-10",
   "requirements_role": "canonical_phase_gates; this manifest specifies setup implementation and evidence only",
@@ -277,6 +277,28 @@
         "java"
       ],
       "selection": "project_specific"
+    },
+    "programmatic-harness": {
+      "phase_gate": false,
+      "selection": "explicit_opt_in",
+      "availability": "codex_local_only_after_compatible_pinned_adapter_and_reusable_skill_releases",
+      "codex_auth": "managed_chatgpt_sign_in",
+      "codex_billing": "eligible_chatgpt_plan; no_openai_platform_api_key_or_api_billing",
+      "local_and_cloud_evidence": "independent",
+      "automatic_install": false,
+      "installation_scope": "project_local_after_explicit_approval",
+      "evidence_path": "artifacts.programmatic_harness",
+      "evidence_schema": "https://starter.devthomas.site/schemas/starter-progress.schema.json#/$defs/programmaticHarnessEvidence",
+      "guide": "https://starter.devthomas.site/setup/programmatic-harness.md",
+      "adapter_package": "@uppercut-labs/agent-native@0.1.1",
+      "adapter_tarball": "https://github.com/uppercut-labs/agent-native/releases/download/v0.1.1/uppercut-labs-agent-native-0.1.1.tgz",
+      "adapter_tarball_sha256": "https://github.com/uppercut-labs/agent-native/releases/download/v0.1.1/uppercut-labs-agent-native-0.1.1.tgz.sha256",
+      "adapter_docs": "https://github.com/uppercut-labs/agent-native/blob/main/docs/harness-codex.md",
+      "skill_version": "0.1.1",
+      "skill_source": "https://github.com/devin-thomas/skills/tree/50ce5dce91c49fcf896aa887e11b4c3a529e40e5/programmatic-harness",
+      "skills_cli_tarball": "https://github.com/devin-thomas/skills/releases/download/v0.1.1/uppercut-labs-skills-0.1.1.tgz",
+      "skills_cli_tarball_sha256": "https://github.com/devin-thomas/skills/releases/download/v0.1.1/uppercut-labs-skills-0.1.1.tgz.sha256",
+      "skill_install_arguments": "add programmatic-harness --host codex --project ABS_PROJECT --channel bundled"
     }
   },
   "state_path": "setup/computer.json",
@@ -301,7 +323,8 @@
     "phone-to-computer-file": "remote_access.checks.phone_to_computer_file",
     "computer-to-phone-file": "remote_access.checks.computer_to_phone_file",
     "verified-phone-connection": "remote_access.checks.phone_harness_interaction",
-    "private-progress-repository": "private_save; actual approved remote commit and private visibility verified"
+    "private-progress-repository": "private_save; actual approved remote commit and private visibility verified",
+    "programmatic-harness": "artifacts.programmatic_harness; normalized per-provider local/cloud proof outcomes; no credentials, raw provider output, private planning URLs, or raw session/turn IDs"
   },
   "focused_guides": {
     "authentication": "https://starter.devthomas.site/setup/authentication.md",
