@@ -7,7 +7,7 @@
 
 ## Build with Codex
 
-On a computer, open Codex and paste the [starting prompt](#starting-prompt). Bring your saved progress if you are returning. On a phone, begin with your supported companion and carry its handoff into your computer harness for Phase 2.
+On a computer, open Codex and paste the [starting prompt](#starting-prompt). Bring your saved progress if you are returning. On a phone, begin with your supported companion and carry its handoff into your computer harness for Phase 2. Before the first Phase 1 action, your agent checks the conversation host, selected computer harness, and accessible target separately. The copyable Codex readiness checkpoint is `https://starter.devthomas.site/setup/codex-readiness.md`.
 
 Starter Pack gives Codex a path to follow: inspect your computer, prepare an installation plan, save progress privately, turn your idea into build tasks, implement them, and help deploy the result. It keeps completed work and remaining blockers in your record so you can return without starting over. Access to files and tools determines what it can do directly; it tells you when a step needs your action.
 
@@ -15,7 +15,7 @@ Your part is to choose what you want, review consequential changes, sign in to y
 
 ### What is new: a program can continue a Codex session
 
-The optional local workflow adds a way for software to drive Codex using its managed ChatGPT sign-in. In our release check, a small program asked Codex to create a file, checked its contents, closed the connection, then restarted and resumed the same session to create a second file. Both results and cleanup passed. That demonstrates continuity across two tasks; a complete unattended Starter Pack run has not been verified.
+The optional local workflow adds a way for software to drive Codex using its managed ChatGPT sign-in. In our release check, a small program asked Codex to create `proof.txt` with `hello world`, checked the exact contents, closed the connection, then restarted and resumed the same session to change that same file to `hello Codex`. Both content checks and cleanup passed. That demonstrates continuity across two tasks; a complete unattended Starter Pack run has not been verified.
 
 Want to see it work yourself? After required Computer Setup, tell Codex: **I want to try the optional local Codex programmatic-harness proof.** Your agent loads the reusable instructions and guides the small experiment. It needs an eligible ChatGPT plan, with no OpenAI Platform API key or API billing. See the [Phase 2 workflow](/phases/2#optional-try-a-programmatic-harness-with-codex) for the steps; your agent handles the pinned installation instructions.
 

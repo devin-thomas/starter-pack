@@ -341,6 +341,7 @@ export async function instructionPacket() {
   const registry = parseRegistry(JSON.parse(await readFile("content/workbench-steps.json", "utf8")));
   const resources = [
     ["Companion instructions", "public/skills/starter-pack/current/SKILL.md"],
+    ["Codex readiness checkpoint", "public/setup/codex-readiness.md"],
     ["Phase 1 guidance", "content/phases/1.md"],
     ["Progress instructions", "public/artifacts/progress/README.md"],
     ["Empty progress template (only when no saved progress exists)", "public/artifacts/progress/starter-progress.json"],

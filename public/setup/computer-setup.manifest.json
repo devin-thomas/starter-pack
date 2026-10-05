@@ -1,8 +1,8 @@
 {
   "manifest_version": 1,
   "id": "starter-pack-computer-setup",
-  "skill_version": "0.2.1",
-  "updated_at": "2026-10-04",
+  "skill_version": "0.2.2",
+  "updated_at": "2026-10-05",
   "requirements": "https://starter.devthomas.site/agent/requirements.json",
   "requirements_revision": "2026-09-10",
   "requirements_role": "canonical_phase_gates; this manifest specifies setup implementation and evidence only",
@@ -328,6 +328,7 @@
   },
   "focused_guides": {
     "authentication": "https://starter.devthomas.site/setup/authentication.md",
+    "codex_readiness": "https://starter.devthomas.site/setup/codex-readiness.md",
     "file_transfer": "https://starter.devthomas.site/setup/file-transfer.md",
     "private_workbench": "https://starter.devthomas.site/setup/private-workbench.md",
     "troubleshooting": "https://starter.devthomas.site/setup/tool-troubleshooting.md"

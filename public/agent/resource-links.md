@@ -79,6 +79,12 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/programmatic-harness.md](https://starter-pack.uppercut-labs.workers.dev/setup/programmatic-harness.md)
 - GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/programmatic-harness.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/programmatic-harness.md)
 
+## /setup/codex-readiness.md
+
+- Primary: [https://starter.devthomas.site/setup/codex-readiness.md](https://starter.devthomas.site/setup/codex-readiness.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/setup/codex-readiness.md](https://starter-pack.uppercut-labs.workers.dev/setup/codex-readiness.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/codex-readiness.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/setup/codex-readiness.md)
+
 ## /setup/linux.md
 
 - Primary: [https://starter.devthomas.site/setup/linux.md](https://starter.devthomas.site/setup/linux.md)

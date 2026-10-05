@@ -1,6 +1,6 @@
 ---
 skill_id: quick-build
-updated: 2026-09-17
+updated: 2026-10-05
 ---
 
 # Quick Build
@@ -43,6 +43,10 @@ Quick Build follows five stages in order:
 ## Prerequisites
 
 None for standalone use. When used as part of Starter Pack Phase 2, the curriculum contract and its prerequisites apply.
+
+## Reuse the Codex readiness check
+
+When Quick Build is part of Starter Pack, reuse the Codex readiness checkpoint (`https://starter.devthomas.site/setup/codex-readiness.md`) during planning and before the learner-approved implementation begins. Recheck only after a material change to the conversation host, selected harness, target workspace, permissions, runtime, or authentication. Do not repeat an answered offer, successful setup, or login check. The Programmatic Harness proof is optional and never a Quick Build prerequisite; continue with the required next action if it was declined, deferred, unavailable, or failed.
 
 ## Installation and use
 

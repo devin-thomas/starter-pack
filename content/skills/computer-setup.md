@@ -1,6 +1,6 @@
 ---
 skill_id: computer-setup
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Computer Setup
@@ -19,7 +19,7 @@ Computer Setup follows an inspect-approve-install-verify cycle:
 
 1. **Load existing state** — Reads your progress file, setup manifest, and canonical requirements. Preserves everything from Phase 1 without requiring you to repeat intake. A private repository is not an entry prerequisite.
 
-2. **Inspect your environment** — Checks your OS, architecture, installed tools, selected harness, and prior results. Classifies each capability as working, missing, failed, or not tested.
+2. **Inspect your environment** — Checks your OS, architecture, installed tools, selected harness, and prior results. Classifies each capability as working, missing, failed, or not tested. Reuse the Codex readiness checkpoint (`https://starter.devthomas.site/setup/codex-readiness.md`); recheck only facts affected by a changed machine, workspace, runtime, permission, or authentication context.
 
 3. **Approve and install** — Explains the necessary batch of tools and obtains your approval before installing anything. Reuses healthy existing installations. Installs dependencies in order using recoverable jobs. Prioritizes Git and GitHub CLI first.
 
@@ -31,7 +31,7 @@ Computer Setup follows an inspect-approve-install-verify cycle:
 
 7. **Save and close out** — Reviews the final state diff, saves to the private remote, and verifies its revision and files. States what is ready and the exact next action.
 
-8. **Offer optional Codex experiment** — Only after required setup closeout, offer eligible Codex users the released local Programmatic Harness workflow. It is opt-in, project-local, and never a setup or phase gate. A decline or deferral returns directly to Quick Build.
+8. **Offer optional Codex experiment** — Reuse the earlier readiness result and offer eligible Codex users the released local Programmatic Harness workflow only after required setup closeout and private saving. It is opt-in, project-local, and never a setup or phase gate. Preserve declines and deferrals; a decline, deferral, or failure returns directly to Quick Build.
 
 ## Inputs
 
@@ -61,9 +61,11 @@ Read the Computer Setup skill and help me prepare my computer for Phase 2.
 
 The skill supports Windows, macOS, and Linux. Your selected harness determines which IDE is required: Codex and Claude Code use VS Code, Antigravity uses its own IDE, and Cursor's desktop editor is sufficient.
 
-## Optional Codex programmatic harness
+## Codex readiness and optional programmatic harness
 
-After required Computer Setup outcomes and the private progress save are verified, offer the optional local Codex programmatic-harness proof only when its compatible adapter and reusable skill have published pinned releases. Ask whether the learner wants to try it; never install the adapter, skill, or project dependencies automatically. If they decline, defer, are ineligible, or encounter a failure, preserve the required setup evidence and continue to Quick Build.
+At Computer Setup entry and closeout, reuse the Codex readiness checkpoint (`https://starter.devthomas.site/setup/codex-readiness.md`). Do not repeat successful checks or sign-in. If the target workspace or authentication context has changed, recheck only the affected facts. A readiness check never installs Codex, starts login, or runs inference.
+
+After required Computer Setup outcomes and the private progress save are verified, offer the optional local Codex programmatic-harness proof only when its compatible adapter and reusable skill have published pinned releases. Ask whether the learner wants to try it; never install the adapter, skill, or project dependencies automatically. If they decline, defer, are ineligible, or encounter a failure, preserve the required setup evidence and continue to Quick Build. A prior decline remains declined; revisit a deferral only when its blocker changes or the learner asks.
 
 For an eligible Codex user who opts in, use the checksum-verified [Programmatic Harness installation guide](https://starter.devthomas.site/phases/2#optional-try-a-programmatic-harness-with-codex) to load the pinned reusable skill and follow its proof workflow. Use the [Agent Native documentation](https://github.com/uppercut-labs/agent-native/tree/main/docs), including its programmatic-harness overview and Codex adapter details, for technical reference. The Codex route uses its managed ChatGPT sign-in and eligible ChatGPT plan; do not request an OpenAI Platform API key or enable API billing. Cloud use is a separate opt-in and is not included in the local proof. Do not offer unfinished Cursor or cloud workflows as if they were supported.
 
