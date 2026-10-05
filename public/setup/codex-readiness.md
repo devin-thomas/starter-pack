@@ -10,7 +10,7 @@ Keep three facts separate:
 2. **Selected computer harness:** the app the learner chose to work with project files.
 3. **Target:** the actual machine and workspace that the assistant can inspect or change.
 
-Use explicit saved choices and authoritative runtime/tool facts. Do not infer Codex from a ChatGPT login, provider name, fetched skill, or shared skills folder. If the target or selected harness is unclear, ask only what is needed for the next step: “Which app should work with your project files, and is that computer available to inspect now?” A phone-only learner can continue here and choose or prepare a computer route later.
+Use explicit saved choices and authoritative runtime/tool facts. Do not infer Codex from a ChatGPT login, provider name, fetched skill, or shared skills folder. If the target or selected harness is unclear, ask only what is needed for the next step: "Which app should work with your project files, and is that computer available to inspect now?" A phone-only learner can continue here and choose or prepare a computer route later.
 
 When Codex is the selected harness and the intended target is accessible, and the check is permitted, use only non-inference status checks such as `codex --version` and `codex login status`. Do not install or start Codex, invoke `codex login`, read credential files, start a session, call a model, or copy raw status output. Reduce the result to whether the CLI is available, its version if observed, whether managed ChatGPT sign-in is present, and what remains unknown. If the target is inaccessible, report readiness as unknown rather than checking a different machine.
 
