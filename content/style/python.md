@@ -18,9 +18,9 @@ For agents: this is a published review draft, not a stable house standard. Apply
 
 ## Scope
 
-This is a reusable Python language and ownership guide, not a mandate to use FastAPI, Streamlit, Pydantic, LangChain, pandas, or a particular packaging tool. It draws on the accepted house guides and the private PDF-IT source notes. Those notes' runtime roadmap and provider stack remain project-specific.
+This is a reusable Python language and ownership guide, not a mandate to use FastAPI, Streamlit, Pydantic, LangChain, pandas, or a particular packaging tool. It draws on the accepted house guides. Runtime roadmaps and provider stacks remain project-specific.
 
-The old Python Wayfinder frontier asked about annotation density. The later accepted guides provide a consistent explicit-contract preference, so this draft prepares the explicit-everywhere-practical answer instead of restarting that interview. That is a documented derivation, not a claim that the old issue has already been closed or that a Python release has been approved. Python examples use a declared 3.11-compatible subset unless marked otherwise; repositories retain their own baselines.
+The accepted guides provide a consistent explicit-contract preference. This draft translates that preference into Python; publication does not imply approval of the pending choices. Python examples use a declared 3.11-compatible subset unless marked otherwise; repositories retain their own baselines.
 
 ## PY001 — Write explicit contracts wherever Python has a useful position
 
@@ -30,7 +30,7 @@ Annotate parameters, named returns, instance fields, and local assignments with 
 
 Python loop targets, comprehension targets, and lambda parameter syntax lack the same inline annotation positions as ordinary assignments. Let the typed iterable/callable supply those contracts; do not invent syntax or add meaningless predeclarations. A lambda has the additional callback rule below. Explicit typing is not an argument for disabling useful generic call-site inference.
 
-**Basis:** [TS:D001](https://starter.devthomas.site/style/TypeScript) · [TS:D015](https://starter.devthomas.site/style/TypeScript) · [GD:G001](https://starter.devthomas.site/style/Godot) · [KT:K001](https://starter.devthomas.site/style/Kotlin) · CTX:PY-WAYFINDER (private planning evidence)
+**Basis:** [TS:D001](https://starter.devthomas.site/style/TypeScript) · [TS:D015](https://starter.devthomas.site/style/TypeScript) · [GD:G001](https://starter.devthomas.site/style/Godot) · [KT:K001](https://starter.devthomas.site/style/Kotlin)
 
 ## PY002 — Use a real checker; annotations do not validate runtime input
 
@@ -87,7 +87,7 @@ Prefer dataclasses for owned named record values, TypedDict for an intentionally
 
 Use a continuing class when resource lifetime, private evolving state, or temporal invariants justify an instance. Framework models and exceptions have native roles. Do not create a service class just because functions share a noun, or require every value to be a Pydantic model because one application uses it.
 
-**Basis:** [TS:D005](https://starter.devthomas.site/style/TypeScript) · [TS:D020](https://starter.devthomas.site/style/TypeScript) · [KT:K005](https://starter.devthomas.site/style/Kotlin) · CTX:PDFIT (private source evidence)
+**Basis:** [TS:D005](https://starter.devthomas.site/style/TypeScript) · [TS:D020](https://starter.devthomas.site/style/TypeScript) · [KT:K005](https://starter.devthomas.site/style/Kotlin)
 
 ## PY006 — Keep domain alternatives named and internally consistent
 
@@ -171,7 +171,7 @@ Do not create a runtime enum solely to namespace strings, and do not leave a mea
 
 <!-- DECISION:PY-Q03:END -->
 
-**Basis:** [TS:D009](https://starter.devthomas.site/style/TypeScript) · [KT:K008](https://starter.devthomas.site/style/Kotlin) · CTX:PDFIT (private source evidence) · [P:ENUM](https://docs.python.org/3/library/enum.html)
+**Basis:** [TS:D009](https://starter.devthomas.site/style/TypeScript) · [KT:K008](https://starter.devthomas.site/style/Kotlin) · [P:ENUM](https://docs.python.org/3/library/enum.html)
 
 ## PY010 — Custom scalars must establish more than a new spelling
 
@@ -201,7 +201,7 @@ A schema tool may be appropriate at file, HTTP, environment, or provider boundar
 
 Normalize a validated wire model into the representation useful to the owner. Do not require a specific schema library for all internal values or copy validation into every internal call. Authorization, accepted URL schemes, referential integrity, and safe resource limits may need checks beyond field types.
 
-**Basis:** [KT:K011](https://starter.devthomas.site/style/Kotlin) · CTX:PDFIT (private source evidence) · [P:PYDANTIC](https://docs.pydantic.dev/latest/concepts/strict_mode/)
+**Basis:** [KT:K011](https://starter.devthomas.site/style/Kotlin) · [P:PYDANTIC](https://docs.pydantic.dev/latest/concepts/strict_mode/)
 
 ## PY013 — Failure contracts follow meaning
 
@@ -291,7 +291,7 @@ Keep shared contracts import-light. Do not import a heavy provider, GUI toolkit,
 
 Avoid module-import network calls, writes, argument parsing, or environment-dependent initialization as ordinary style. Runtime annotation consumers may need names available outside TYPE_CHECKING; test that boundary instead of moving every import mechanically. Keep the CLI entry path explicit and repeatable.
 
-**Basis:** [TS:D023](https://starter.devthomas.site/style/TypeScript) · [KT:K017](https://starter.devthomas.site/style/Kotlin) · CTX:PDFIT (private source evidence)
+**Basis:** [TS:D023](https://starter.devthomas.site/style/TypeScript) · [KT:K017](https://starter.devthomas.site/style/Kotlin)
 
 ## PY022 — Async signatures describe awaited outcomes
 
@@ -371,7 +371,7 @@ A serializable record does not require database, HTTP, or provider dependencies 
 
 Do not pickle untrusted input or silently trust a deserializer because its result has a type annotation. Separate decoding, business validation, and authorization. A schema library, ORM, or dataframe shape is not automatically the universal domain representation.
 
-**Basis:** [KT:K011](https://starter.devthomas.site/style/Kotlin) · [KT:K031](https://starter.devthomas.site/style/Kotlin) · CTX:PDFIT (private source evidence)
+**Basis:** [KT:K011](https://starter.devthomas.site/style/Kotlin) · [KT:K031](https://starter.devthomas.site/style/Kotlin)
 
 ## PY030 — Use native names and narrow module APIs
 
@@ -427,11 +427,11 @@ Use deterministic clocks and fake capabilities where they faithfully preserve be
 
 *Inherited principle — target-language wording remains a draft.*
 
-Record the interpreter, static checker, formatter, test tools, and declared compatibility matrix. Do not transplant PDF-IT's historical version roadmap into unrelated applications or upgrade an interpreter because a guide example uses a newer API.
+Record the interpreter, static checker, formatter, test tools, and declared compatibility matrix. Do not transplant a project's historical version roadmap into unrelated applications or upgrade an interpreter because a guide example uses a newer API.
 
 Report syntax/import checks, unit tests, static typing, packaging, provider integration, and deployed behavior separately. The packet's Python runtime fixtures are not a substitute for an unavailable static checker. Preserve product APIs, data formats, dependencies, and deployment constraints unless a separate task authorizes changes.
 
-**Basis:** [KT:K035-K038](https://starter.devthomas.site/style/Kotlin) · CTX:PDFIT (private source evidence)
+**Basis:** [KT:K035-K038](https://starter.devthomas.site/style/Kotlin)
 
 ## Review and release boundary
 

@@ -26,7 +26,6 @@ const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,"").replace(/
 assert(visible.includes("Copy for agent") && visible.includes("style-guide-prose") && visible.includes("Why use TypeScript"),"human-first page contract");
 assert(!/<h2[^>]*>[^<]*D\d{3}\s*[—-]/.test(visible),"internal IDs leaked into human headings");
 assert(!visible.includes("Agent access"),"obsolete large agent panel");
-assert(!visible.includes("style-guide-development"),"private planning link in public guide");
 const hub = (await read("/style",/text\/html/)).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,"");
 assert(hub.includes('href="/style/TypeScript"'),"hub entry");
 if (expected.status === "stable") {

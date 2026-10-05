@@ -102,7 +102,7 @@ for (const spec of specs) {
     assert(markdown.includes("Accepted RX-Q01 A"), "React accepted decision marker");
     assert(!markdown.includes("Pending RX-Q01"), "React decision remains pending");
   } else for (const decision of spec.pending) assert(markdown.includes("Pending " + decision), spec.id + ": missing " + decision);
-  assert(!markdown.includes("style-guide-development/blob"), spec.id + ": private planning URL leaked");
+  assert(!/\bCTX:[A-Z][A-Z0-9_-]*|\(private (?:planning|source) evidence\)/.test(markdown), spec.id + ": unsupported source annotation");
   const json = JSON.parse(await read(spec.route + ".json", /application\/json/));
   assert.equal(json.markdown, markdown, spec.id + ": JSON/source parity");
   const raw = await read(spec.route + ".md", /text\/plain/);

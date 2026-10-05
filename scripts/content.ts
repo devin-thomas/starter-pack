@@ -549,7 +549,7 @@ export async function generateResources(data: SiteData, output: string) {
         }, ...skillCatalog.map((entry) => ({ ...entry, kind: "skill" })), {
           id: "cloudflare-iphone", kind: "help",
           title: "Deploy a static site to Cloudflare from your iPhone",
-          summary: "Optional, agent-neutral static file upload using Files and Safari, with ten real screenshots.",
+          summary: "Optional, agent-neutral static file upload using Files and Safari, with illustrated steps.",
           html: `${origin}/help/cloudflare-iphone`,
           markdown: `${origin}/help/cloudflare-iphone.md`,
           json: `${origin}/help/cloudflare-iphone.json`,

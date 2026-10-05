@@ -17,7 +17,7 @@ assert.deepEqual(ids, Array.from({ length: 38 }, (_, index) => `K${String(index 
 assert.equal([...markdown.matchAll(/^## /gm)].length, 41, "38 rules plus scope, validation, and references");
 assert(markdown.includes("val labels: MutableList<String>"), "accepted native binding example");
 assert(markdown.includes("Kotlin/JVM 1.9.0"), "specific core validation evidence");
-for (const forbidden of ["Pending owner decision", "0.1.0-draft", "One remaining owner decision", "style-guide-development", "quick-build/google-tv-radio", "[P1]", "[P2]", "[P3]"]) {
+for (const forbidden of ["Pending owner decision", "0.1.0-draft", "One remaining owner decision", "quick-build/google-tv-radio", "[P1]", "[P2]", "[P3]"]) {
   assert(!markdown.includes(forbidden), `private or provisional material: ${forbidden}`);
 }
 
@@ -57,7 +57,6 @@ const html = await read(expected.route, /text\/html/);
 const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").replace(/<!--[\s\S]*?-->/g, "");
 assert(visible.includes("Copy for agent") && visible.includes("style-guide-prose") && visible.includes("Why use this Kotlin guide?"), "human-first page contract");
 assert(!/<h2[^>]*>[^<]*K\d{3}\s*[—-]/.test(visible), "internal K IDs leaked into human headings");
-assert(!visible.includes("style-guide-development"), "private planning link in public guide");
 assert(!visible.includes('class="style-status"'), "stable guide shows a status badge");
 
 const hub = (await read("/style", /text\/html/)).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");

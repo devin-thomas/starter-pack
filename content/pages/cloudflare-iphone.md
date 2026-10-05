@@ -28,13 +28,6 @@ In Safari, sign in to Cloudflare and open [Workers & Pages](https://dash.cloudfl
 
 The screenshots begin with an existing account already selected. If Cloudflare asks you to choose an account, select the one you intend to use before continuing; that selection screen was outside this test.
 
-<div class="help-screenshots">
-<figure>
-<a href="/help/cloudflare-iphone/01.jpg" aria-label="Open screenshot 1 at full size"><img src="/help/cloudflare-iphone/01.jpg" width="588" height="1280" loading="lazy" decoding="async" alt="Cloudflare Workers & Pages dashboard in iPhone Safari with the Create application button near the top."></a>
-<figcaption>1. Start with Create application in Workers & Pages.</figcaption>
-</figure>
-</div>
-
 ## 2. Choose the static upload
 
 On **Make something new**, tap **Upload your static files**. The next screen is **Upload and deploy**. Tap the **folder** link inside the upload area to open the iPhone file picker.
@@ -42,10 +35,6 @@ On **Make something new**, tap **Upload your static files**. The next screen is 
 This tested route uses Workers static upload. The **Continue to Pages** link leads to a different workflow.
 
 <div class="help-screenshots">
-<figure>
-<a href="/help/cloudflare-iphone/02.jpg" aria-label="Open screenshot 2 at full size"><img src="/help/cloudflare-iphone/02.jpg" width="588" height="1280" loading="lazy" decoding="async" alt="Cloudflare Make something new screen with Upload your static files below the repository and template options."></a>
-<figcaption>2. Choose Upload your static files.</figcaption>
-</figure>
 <figure>
 <a href="/help/cloudflare-iphone/03.jpg" aria-label="Open screenshot 3 at full size"><img src="/help/cloudflare-iphone/03.jpg" width="588" height="1280" loading="lazy" decoding="async" alt="Upload and deploy screen showing separate file and folder links inside an empty upload area."></a>
 <figcaption>3. Tap folder to select the extracted website folder.</figcaption>
@@ -74,13 +63,6 @@ In this example, the folder contains `index.html`, `script.js`, and `styles.css`
 Back in Safari, check the file list. The example lists all three files directly: `index.html`, `script.js`, and `styles.css`. If the list is empty or shows the wrong folder's contents, correct the selection before deploying.
 
 Cloudflare also supplies a **Worker name**. The tested example used `dry-band-0aa5`; your generated name will probably differ. Keep the supplied name or enter one you want to use.
-
-<div class="help-screenshots">
-<figure>
-<a href="/help/cloudflare-iphone/06.jpg" aria-label="Open screenshot 6 at full size"><img src="/help/cloudflare-iphone/06.jpg" width="588" height="1280" loading="lazy" decoding="async" alt="Cloudflare upload review lists index.html, script.js, and styles.css, with dry-band-0aa5 in the Worker name field."></a>
-<figcaption>6. Confirm the file list and Worker name.</figcaption>
-</figure>
-</div>
 
 ## 5. Deploy the website
 

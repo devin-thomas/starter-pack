@@ -229,7 +229,7 @@ When a repository already uses or separately adopts Riverpod, apply the Riverpod
 
 <!-- DECISION:DF-Q02:END -->
 
-**Basis:** [KT:K017](https://starter.devthomas.site/style/Kotlin) · [KT:K030](https://starter.devthomas.site/style/Kotlin) · [CTX:FLUTTER](https://github.com/devin-thomas/domain-expansion/blob/first-fixes/pubspec.yaml) · [D:RIVERPOD](https://riverpod.dev/docs/concepts2/consumers)
+**Basis:** [KT:K017](https://starter.devthomas.site/style/Kotlin) · [KT:K030](https://starter.devthomas.site/style/Kotlin) · [Project example](https://github.com/devin-thomas/domain-expansion/blob/first-fixes/pubspec.yaml) · [D:RIVERPOD](https://riverpod.dev/docs/concepts2/consumers)
 
 ## DF018 — Riverpod observation and commands retain their jobs
 

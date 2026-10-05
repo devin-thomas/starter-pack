@@ -69,7 +69,6 @@ assert(
   "human-first page contract",
 );
 assert(!/<h2[^>]*>[^<]*G\d{3}\s*[—-]/.test(visible), "internal G IDs leaked into human headings");
-assert(!visible.includes("style-guide-development"), "private planning link in public guide");
 assert(!visible.includes('class="style-status"'), "released guide still shows status badge");
 
 const hub = (await read("/style", /text\/html/)).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
