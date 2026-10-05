@@ -15,6 +15,7 @@ test("generated Phase 1 packet includes readiness before the first action", asyn
   assert.match(packet, /conversation host[\s\S]*selected computer harness[\s\S]*target/);
   assert.match(packet, /codex --version/);
   assert.match(packet, /codex login status/);
+  assert.match(packet, /use the already available selected harness, prepare or continue computer setup, or defer and keep using the current supported companion/);
   assert.match(packet, /Do not install or start Codex, invoke `codex login`, read credential files, start a session, call a model/);
   assert.doesNotMatch(packet, /\]\(\/(?!\/)|\b(?:href|src)="\/(?!\/)/);
 });
@@ -67,6 +68,9 @@ test("readiness state stays separate from proof and remains schema-valid", async
   assert.deepEqual(state.artifacts.programmatic_harness.attempts, []);
   assert.match(guide, /Readiness and offer history belong in the existing `steps\["programmatic-harness"\]` status and concise nonsecret notes/);
   assert.match(guide, /Actual proof outcomes belong only in `artifacts\.programmatic_harness\.attempts`/);
+  assert.match(guide, /Version and sign-in do not prove plan eligibility, model availability, or a successful programmatic turn/);
+  assert.match(guide, /Do not promote CLI capability, a managed login, or model-list metadata into a passed proof/);
+  assert.match(guide, /Do not save a machine name, workspace path, account identity, credentials, raw status output, or session\/turn ID/);
   assert.deepEqual(schema.$defs.programmaticHarnessEvidence.properties.attempts.items.properties.outcome.enum,
     ["not_tested", "declined", "deferred", "partial", "failed", "passed"]);
 });
