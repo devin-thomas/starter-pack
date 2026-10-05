@@ -5,11 +5,25 @@
 3. **Keep your own record.** Your agent records completed, skipped, and deferred steps in a progress file. During Phase 2 setup, it saves that file to your private GitHub repo as soon as access is ready, before Quick Build begins.
 4. **Pick up where you left off.** Attach your saved progress file, or paste your saved progress text, into your agent when you return. Tell it what you have done and ask for clarification whenever you need it.
 
+## Build with Codex
+
+On a computer, open Codex and paste the [starting prompt](#starting-prompt). Bring your saved progress if you are returning. On a phone, begin with your supported companion and carry its handoff into your computer harness for Phase 2.
+
+Starter Pack gives Codex a path to follow: inspect your computer, prepare an installation plan, save progress privately, turn your idea into build tasks, implement them, and help deploy the result. It keeps completed work and remaining blockers in your record so you can return without starting over. Access to files and tools determines what it can do directly; it tells you when a step needs your action.
+
+Your part is to choose what you want, review consequential changes, sign in to your accounts, and try the app's main action. Codex handles the project files and routine commands it has permission to run. You do not need to copy every command from this guide or maintain the plan by hand. You can keep another supported agent if that already works for you.
+
+### What is new: a program can continue a Codex session
+
+The optional local workflow adds a way for software to drive Codex using its managed ChatGPT sign-in. In our release check, a small program asked Codex to create a file, checked its contents, closed the connection, then restarted and resumed the same session to create a second file. Both results and cleanup passed. That demonstrates continuity across two tasks; a complete unattended Starter Pack run has not been verified.
+
+Want to see it work yourself? After required Computer Setup, tell Codex: **I want to try the optional local Codex programmatic-harness proof.** Your agent loads the reusable instructions and guides the small experiment. It needs an eligible ChatGPT plan, with no OpenAI Platform API key or API billing. See the [Phase 2 workflow](/phases/2#optional-try-a-programmatic-harness-with-codex) for the steps; your agent handles the pinned installation instructions.
+
+You can use Codex for the ordinary setup and build path without running this experiment. The proof is optional and never gates Quick Build. Broader workflows that coordinate many tasks are a next step; the released proof covers local Codex sessions.
+
 ## See your progress locally
 
 When Computer Setup begins, your agent prepares a downloadable **Progress Workbench** alongside your progress file. It opens the local view as soon as Python is available and preserves any customization you already made. This website does not receive your progress or host a personal dashboard.
-
-After required setup is complete, Codex users can opt in to a local programmatic-harness proof. It uses Codex's managed ChatGPT sign-in, needs no OpenAI API key or API billing, and never gates Quick Build. See the [Phase 2 optional Codex workflow](/phases/2#optional-try-a-programmatic-harness-with-codex).
 
 Your agent also asks which email to use for development accounts and notifications if you have not already chosen them. You can use one address, give a service its own address, or leave the choice for later. These choices do not change your Git identity.
 

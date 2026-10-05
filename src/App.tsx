@@ -1033,6 +1033,26 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   Prefer to look around? Browse the guide
                   <Icon name="arrow-right" size={16} />
                 </a>
+                <section className="content-section how-it-works" aria-labelledby="codex-start">
+                  <span className="eyebrow">BUILD WITH CODEX</span>
+                  <h2 id="codex-start">Let Codex carry the work forward.</h2>
+                  <p>
+                    On your computer, paste the starting prompt into Codex.
+                    The pack gives it instructions for setup, private progress,
+                    planning, building, and deployment. You choose the result,
+                    handle sign-ins and approvals, and try what it builds.
+                  </p>
+                  <p>
+                    New: an optional local workflow lets a program start Codex
+                    through your ChatGPT sign-in and resume its session. We
+                    verified two tasks across a close and restart, checking the
+                    files Codex made each time.
+                  </p>
+                  <a className="text-link" href="/guide#build-with-codex">
+                    See what Codex handles and how to try it
+                    <Icon name="arrow-right" size={15} />
+                  </a>
+                </section>
                 <section className="content-section">
                   <div className="section-heading">
                     <h2>Three phases. A clear next step.</h2>
