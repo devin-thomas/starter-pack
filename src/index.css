@@ -1331,6 +1331,17 @@ a.skill-card:hover {
 .prose .heading-label {
   min-width: 0;
 }
+.prose .has-brand-heading-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.prose .has-brand-heading-icon > .heading-brand-icon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  color: var(--text);
+}
 .page-heading .eyebrow > .ui-icon {
   color: var(--phase-make);
 }

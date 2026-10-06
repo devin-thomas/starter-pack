@@ -3,10 +3,22 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-import { instructionPacket, normalizeGeneratedText } from "./content";
+import { instructionPacket, normalizeGeneratedText, renderProse } from "./content";
 
 test("generated text normalizes CRLF and CR to LF for consistent resource bytes", () => {
   assert.equal(normalizeGeneratedText("first\r\nsecond\rthird\n"), "first\nsecond\nthird\n");
+});
+
+test("Codex guide heading renders the ChatGPT brand mark as a decorative mask", async () => {
+  const rendered = await renderProse("## Build with Codex\n\n## See your progress locally");
+  assert.match(rendered, /<h2 id="build-with-codex" class="has-brand-heading-icon">/);
+  assert.match(rendered, /brand-icon brand-icon-mask heading-brand-icon" aria-hidden="true"/);
+  assert.match(rendered, /mask-image:url\('\/icons\/brands\/chatgpt\.svg'\)/);
+  assert.match(rendered, /<span class="heading-label">Build with Codex<\/span><\/h2>/);
+  assert.match(rendered, /<h2 id="see-your-progress-locally">See your progress locally<\/h2>/);
+  const css = await readFile("src/index.css", "utf8");
+  assert.match(css, /\.prose \.has-brand-heading-icon\s*\{[^}]*align-items:\s*center/);
+  assert.match(css, /\.prose \.has-brand-heading-icon > \.heading-brand-icon\s*\{[^}]*width:\s*24px;[^}]*height:\s*24px/);
 });
 
 test("generated Phase 1 packet includes readiness before the first action", async () => {

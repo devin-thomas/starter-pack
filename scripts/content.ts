@@ -31,6 +31,10 @@ const headingIcons: Readonly<Record<string, string>> = {
   "Add complexity for a reason": "settings-2",
 };
 
+const headingBrandIcons: Readonly<Record<string, string>> = {
+  "Build with Codex": "chatgpt",
+};
+
 function escapeAttribute(value: string) {
   return value
     .replace(/&/g, "&amp;")
@@ -40,7 +44,7 @@ function escapeAttribute(value: string) {
 }
 
 // A fresh renderer keeps duplicate heading IDs deterministic within each page.
-async function renderProse(markdown: string) {
+export async function renderProse(markdown: string) {
   const headingIds = new Set<string>();
   const proseMarkdown = new Marked({
     renderer: {
@@ -57,6 +61,11 @@ async function renderProse(markdown: string) {
         let id = slug;
         for (let suffix = 2; headingIds.has(id); suffix++) id = `${slug}-${suffix}`;
         headingIds.add(id);
+        const brandIcon = (depth === 2 || depth === 3) && headingBrandIcons[text];
+        if (brandIcon) {
+          const image = `url('/icons/brands/${brandIcon}.svg')`;
+          return `<h${depth} id="${id}" class="has-brand-heading-icon"><span class="brand-icon brand-icon-mask heading-brand-icon" aria-hidden="true" style="mask-image:${image};-webkit-mask-image:${image}"></span><span class="heading-label">${label}</span></h${depth}>\n`;
+        }
         const icon = (depth === 2 || depth === 3) && headingIcons[text];
         if (!icon) return `<h${depth} id="${id}">${label}</h${depth}>\n`;
         const image = `url('/icons/interface/${icon}.svg')`;
