@@ -7,6 +7,8 @@ Version: 0.2.0. Use these when the [Quick Build skill](https://starter.devthomas
 - [DECISIONS.md](https://starter.devthomas.site/artifacts/quick-build/DECISIONS.md): durable choices and the reasons behind them.
 - [TICKET.md](https://starter.devthomas.site/artifacts/quick-build/TICKET.md): copy into ordered files in `tickets/`.
 
+These templates intentionally remain PLAN/SPEC/DECISIONS/TICKET: do not expand a simple Quick Build into a full Grill artifact pack. Reuse existing `GLOSSARY.md` / `GLOSSARY-MAP.md` terminology when the repository has it; preserve `PROJECT.md` and other unrelated project documentation. A legacy `CONTEXT.md` is a migration candidate only if it actually contains a domain glossary—never create an empty parallel glossary.
+
 Keep project-specific confidential plans in private storage. Reuse the handoff and existing answers, ask one compact design round, then synthesize the primary action, content ownership, useful empty state, actual target devices, and behavioral checks. Do not add a second technical questionnaire or unrelated demos/autoplay. Cloudflare is the default; choose any alternative deliberately and preserve existing project conventions.
 
 Show the learner a concise plain-English plan and wait for explicit approval before implementation. The learner can inspect these files without needing to study their formats first. Record build checks, availability, layout, and real-device behavior separately. Unperformed human checks remain pending. On delivery use the [progress guide](https://starter.devthomas.site/artifacts/progress/README.md) for revision-aware closeout and the final private save; these templates are not a second graduation registry.

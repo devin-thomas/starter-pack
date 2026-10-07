@@ -1,6 +1,6 @@
 ---
 skill_id: quick-build
-updated: 2026-10-05
+updated: 2026-10-07
 ---
 
 # Quick Build
@@ -26,6 +26,10 @@ Quick Build follows five stages in order:
 4. **Build and verify** — Implements the approved scope, runs repository-standard checks, and exercises the primary flow including empty and error states at intended viewport sizes.
 
 5. **Deliver and leave a resume point** — Carries out authorized deployment, verifies the published result, and records the source location, live URL, verification evidence, and a next action.
+
+## Existing glossary compatibility
+
+Quick Build 0.2.2 remains intentionally lightweight. It does not require a glossary, a PROJECT.md brief, or a Grill interview for new small apps. When an existing repository already uses `GLOSSARY.md` (or `GLOSSARY-MAP.md` for multiple domains), Quick Build respects those terms; it preserves a separate `PROJECT.md` if present. A legacy `CONTEXT.md` is never blindly renamed or duplicated, and an unrelated task brief named Context remains an ordinary task brief.
 
 ## Inputs
 

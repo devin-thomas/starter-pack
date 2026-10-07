@@ -1,6 +1,6 @@
 ---
 skill_id: task-execution-prompt
-updated: 2026-09-17
+updated: 2026-10-07
 ---
 
 # Task Execution Prompt
@@ -17,7 +17,7 @@ Not the right fit for discovery or planning work. Use Grill to Build first to pr
 
 Task Execution Prompt follows a four-stage authoring process:
 
-1. **Inspect before interviewing** — Reads your repository's AGENTS.md, CONTEXT.md, ADR, specifications, build/test/lint configuration, Git policy, tracker conventions, and any existing execution prompt. Uses what it finds rather than asking you to restate it.
+1. **Inspect before interviewing** — Reads your repository's AGENTS.md, relevant `GLOSSARY.md` files via `GLOSSARY-MAP.md` where present, `PROJECT.md` when present, ADRs, specifications, build/test/lint configuration, Git policy, tracker conventions, and any existing execution prompt. Legacy Context files are migration inputs, not a second canonical glossary. Uses what it finds rather than asking you to restate it.
 
 2. **Resolve only decisions** — Asks one question at a time about things it cannot discover: task source and selection rules, lifecycle mutations, human gates, authority order, validation gates, Git and publishing behavior, protected resources, failure outcomes, and reporting format. Each question includes a recommended answer.
 
