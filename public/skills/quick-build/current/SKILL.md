@@ -1,8 +1,8 @@
 ---
 name: quick-build
 description: Shape a meaningful Starter Pack project with one design interview, an approved plan, a durable build, and live deployment.
-version: 0.2.1
-updated: 2026-10-05
+version: 0.2.2
+updated: 2026-10-07
 ---
 
 # Quick Build
@@ -26,6 +26,8 @@ Read any supplied repository instructions, references, and saved handoff first. 
 ## Plan
 
 Use the [artifact templates](https://starter.devthomas.site/artifacts/quick-build/README.md), adapting to existing repository conventions. Write a plan, specification, durable decisions, and ordered tickets with observable acceptance conditions. Keep confidential planning in a private repo or private workspace; publish only documents the learner intends to share.
+
+**Existing domain vocabulary:** If this project already has `GLOSSARY.md` or `GLOSSARY-MAP.md` pointing to scoped glossaries, read them and use their established terms throughout the plan, spec and implementation. `PROJECT.md` may hold broader scope and discovery state in a project that already uses Grill. For a small Quick Build, neither file is a prerequisite: do not manufacture an empty glossary, run an extra discovery round, or replace the PLAN/SPEC/DECISIONS/ticket templates. Treat legacy `CONTEXT.md` / `CONTEXT-MAP.md` as migration candidates only when they actually contain domain vocabulary; preserve their contents until a deliberate migration. An unrelated task input called `CONTEXT.md` is not a glossary.
 
 Defaults for a new project: React and TypeScript; Vite for a simple browser app; a full-stack framework only when beneficial; Cloudflare hosting; Neon only for relational persistence; authentication and payments only when the product requires them. Preserve existing repository conventions, package manager, scripts, source visibility, and privacy choices. Vercel is an explicit suitable alternative, not a silent replacement for Cloudflare. Paid services, new credential scope, and public publication require the learner's decision.
 
