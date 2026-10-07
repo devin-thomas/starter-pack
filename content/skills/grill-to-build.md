@@ -1,6 +1,6 @@
 ---
 skill_id: grill-to-build
-updated: 2026-09-23
+updated: 2026-10-07
 ---
 
 # Grill to Build
@@ -15,7 +15,7 @@ Not the right fit for small apps that can be scoped in one conversation. Use Qui
 
 ## How it works
 
-Grill to Build maintains five living artifacts and runs a structured pipeline:
+Grill to Build keeps a living project brief, a focused glossary when needed, decisions, deferred ideas, a specification, and ordered tickets. It runs a structured pipeline:
 
 1. **Extract the raw idea** — Inspects your repository and request to pull out everything already known: problem, user, platform, constraints, technology preferences, and existing decisions. Initializes only missing discovery artifacts.
 
@@ -27,19 +27,22 @@ Grill to Build maintains five living artifacts and runs a structured pipeline:
 
 5. **Decompose tickets** — Creates ordered ticket files with a stable prefix, each containing a goal, concrete scope, observable acceptance criteria, and dependencies. Prefers vertical increments over file-level chores.
 
-6. **Build and feed back** — When implementation is requested, starts from the first ticket and routes new information deliberately: requirements update Context and SPEC, architectural decisions update ADR, future ideas go to Ideas.md, and implementation details leave product artifacts alone.
+6. **Build and feed back** — When implementation is requested, starts from the first ticket and routes new information deliberately: requirements update PROJECT.md and SPEC (plus GLOSSARY.md only if canonical terminology changes), architectural decisions update ADR, future ideas go to Ideas.md, and implementation details leave product artifacts alone.
 
 ### The artifacts
 
-- **Context.md** — Living, canonical understanding and system model
+Matt Pocock skills v1.3 renamed `CONTEXT.md` to `GLOSSARY.md` and `CONTEXT-MAP.md` to `GLOSSARY-MAP.md`. Because Grill's old `Context.md` contained broader project understanding, migrate that content into `PROJECT.md` and place only settled domain terms in `GLOSSARY.md`. Do not blindly rename a mixed-purpose file or lose previous discovery state.
+
+- **PROJECT.md** — Living project understanding, system model, constraints, workflow preferences, and unanswered questions
+- **GLOSSARY.md** — Canonical domain terminology only; created when terms are settled, or resolved through `GLOSSARY-MAP.md`
 - **ADR.md** — Append-only record of consequential decisions (accepted, rejected, proposed, superseded)
 - **Ideas.md** — Valuable work deliberately deferred from current scope
 - **SPEC.md** — Implementation contract, created only after discovery stabilizes
 - **tickets/*.md** — Ordered work units, created only after the specification stabilizes
 
-## Diagram format is a contract
+## Host-native presentation and editable model source
 
-Grill to Build asks once which living-model format to use: Graphviz DOT, Markdown/Mermaid, Figma/FigJam, Excalidraw, diagrams.net, or no diagram. An explicit choice is binding for the workflow.
+Grill to Build silently chooses the richest useful presentation actually supported by its current host: mobile-friendly interactive in-chat layouts in capable ChatGPT hosts; Claude Artifacts in supported Claude conversations; or concise Markdown/Mermaid elsewhere. It does not spend a first-round question asking which diagram tool to use. **The editable living-model source stays separate**, defaulting to Markdown/Mermaid in `PROJECT.md`. You can still explicitly select Graphviz DOT, Markdown/Mermaid, Figma/FigJam, Excalidraw, diagrams.net, or no diagram; that choice is binding.
 
 The agent must **not** substitute an AI-generated raster image for the selected diagram format. Image generation is used only when you explicitly choose generated imagery as the diagram source or output method.
 
@@ -66,7 +69,7 @@ For system and architecture diagrams, **Graphviz DOT → SVG (+ optional PNG)** 
 
 ## Outputs
 
-- A synchronized set of Context, ADR, Ideas, SPEC, and ticket artifacts
+- A synchronized `PROJECT.md` brief, `GLOSSARY.md` when terms are settled, ADR, Ideas, SPEC, and ticket artifacts
 - An implementation-ready build pack with testable acceptance criteria
 - A ubiquitous vocabulary used consistently across all artifacts and code
 
