@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "starter_pack_version": "0.2.0",
-  "updated_at": "2026-09-10T12:00:00Z",
+  "updated_at": "2026-10-09T12:00:00Z",
   "environment": {
     "device": "phone",
     "os": null,
@@ -11,7 +11,7 @@
   "phase": {
     "current": "phase-1",
     "status": "completed",
-    "requirements_revision": "2026-09-10",
+    "requirements_revision": "2026-10-09",
     "completed_at": "2026-09-10T12:00:00Z"
   },
   "steps": {
@@ -22,10 +22,6 @@
     "github-mobile": {
       "status": "completed",
       "notes": ["Synthetic learner report: opened the signed-in GitHub Mobile profile."]
-    },
-    "authenticator": {
-      "status": "completed",
-      "notes": ["Synthetic learner report: authenticator installed, opened, and ready. No enrollment secrets recorded."]
     },
     "github": {"status": "completed", "notes": ["Synthetic learner report: existing account ready."]},
     "cloudflare": {"status": "completed", "notes": ["Synthetic learner report: existing account ready."]},

@@ -15,7 +15,7 @@ function state(): Progress {
 }
 function phone(): Progress {
   const result = state();
-  for (const id of ["primary-ai-phone-app", "github-mobile", "authenticator", "core-accounts", "instant-app"]) result.steps[id] = { status: "completed" };
+  for (const id of ["primary-ai-phone-app", "github-mobile", "core-accounts", "instant-app"]) result.steps[id] = { status: "completed" };
   return result;
 }
 test("phone-only graduation accepts legacy alias and aggregate without optional preferences", () => {
@@ -24,6 +24,13 @@ test("phone-only graduation accepts legacy alias and aggregate without optional 
   assert.equal(phaseGate(data, catalog)?.complete, true);
   assert.equal(currentStep(data, catalog), undefined);
   assert.equal(JSON.stringify(data), before);
+});
+test("a learner graduates without an authenticator or code-based 2FA proof", () => {
+  const data = phone();
+  assert.equal(data.steps.authenticator, undefined);
+  assert.equal(phaseGate(data, catalog)?.complete, true);
+  data.steps.authenticator = { status: "not_started" }; // Old records are preserved but no longer gate graduation.
+  assert.equal(phaseGate(data, catalog)?.complete, true);
 });
 test("granular accounts and one builder satisfy the account group, not all builders", () => {
   const data = phone();

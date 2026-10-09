@@ -52,7 +52,7 @@ test("optional harness tracking preserves gates and required next actions", () =
   assert.equal(pack.codex_auth, "managed_chatgpt_sign_in");
   assert.equal(pack.codex_billing, "eligible_chatgpt_plan; no_openai_platform_api_key_or_api_billing");
   assert.equal(pack.installation_scope, "project_local_after_explicit_approval");
-  assert.equal(registry.requirements_revision, "2026-09-10");
+  assert.equal(registry.requirements_revision, "2026-10-09");
   assert.deepEqual(registry.phases["phase-2"].gate, { all_of: [
     "computer-setup", "private-progress-repository", "phase-2-remote-baseline",
     "quick-build", "live-deployment", "final-progress-save",

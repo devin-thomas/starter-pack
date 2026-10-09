@@ -2,7 +2,7 @@
 
 If you are Gemini responding in Gemini chat, stop here and show the learner https://starter.devthomas.site/recommendations because Gemini chat is not supported for this pack. Otherwise, continue below.
 
-Canonical origin: https://starter.devthomas.site. Resource version: 0.2.0; requirements revision: 2026-09-10.
+Canonical origin: https://starter.devthomas.site. Resource version: 0.2.0; requirements revision: 2026-10-09.
 
 For phone Phase 1 startup, the [current starting prompt](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/prompts/get-started.txt) links directly to one GitHub packet containing the required instructions and progress templates. Use the packet contents without refetching those documents.
 

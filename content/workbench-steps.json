@@ -1,13 +1,12 @@
 {
   "version": "0.2.0",
-  "requirements_revision": "2026-09-10",
+  "requirements_revision": "2026-10-09",
   "phases": {
     "phase-1": {
       "gate": {
         "all_of": [
           "primary-ai-phone-app",
           "github-mobile",
-          "authenticator",
           "core-accounts",
           "instant-build"
         ]
@@ -116,20 +115,6 @@
       ],
       "guide": "/phases/1",
       "completion_meaning": "The selected primary AI phone companion app is signed in and can complete a useful chat interaction."
-    },
-    "authenticator": {
-      "title": "Authenticator",
-      "phase": "phase-1",
-      "requirement": "required",
-      "gate_for": [
-        "phase-1"
-      ],
-      "prerequisites": [],
-      "evidence": [
-        "learner_report"
-      ],
-      "guide": "/phases/1",
-      "completion_meaning": "An authenticator is available and ready for account security without sharing recovery codes or secret keys with the agent."
     },
     "github-mobile": {
       "title": "GitHub on your phone",

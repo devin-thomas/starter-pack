@@ -429,13 +429,7 @@ function RecommendationCard({
               <BrandIcon name={item.id} size={27} />
             ) : (
               <Icon
-                name={
-                  item.category === "phone-app"
-                    ? "smartphone"
-                    : item.id === "authenticator"
-                      ? "shield-check"
-                      : "blocks"
-                }
+                name={item.category === "phone-app" ? "smartphone" : "blocks"}
                 size={25}
               />
             )}
@@ -534,8 +528,7 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
           </div>
         </div>
         <p className="account-summary">
-          Required phone apps: your primary AI app, GitHub Mobile, and an
-          authenticator.
+          Required phone apps: your primary AI app and GitHub Mobile.
         </p>
         <p className="account-summary">
           Account checklist: GitHub, Cloudflare, Neon, your phone companion, and

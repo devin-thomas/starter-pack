@@ -15,7 +15,7 @@ const ajv = new Ajv2020({ allErrors: true, strict: true });
 addFormats(ajv);
 const validate = ajv.compile(schema);
 const fresh = () => structuredClone(source);
-const resource = (registry: RequirementsRegistry) => ({ id: "starter-pack-requirements", updated_at: "2026-09-10", ...registry });
+const resource = (registry: RequirementsRegistry) => ({ id: "starter-pack-requirements", updated_at: "2026-10-09", ...registry });
 const has = (value: object, key: string) => Object.hasOwn(value, key);
 
 test("canonical source and public resource satisfy the same registry contract", () => {
@@ -25,6 +25,8 @@ test("canonical source and public resource satisfy the same registry contract", 
   assert.ok(validate(resource(parsed)), ajv.errorsText(validate.errors));
   assert.deepEqual(registryModule.parseRegistry(resource(parsed)), parsed);
   for (const step of Object.values(parsed.steps)) assert.ok(step.completion_meaning.trim());
+  assert.deepEqual(parsed.phases["phase-1"].gate, { all_of: ["primary-ai-phone-app", "github-mobile", "core-accounts", "instant-build"] });
+  assert.equal(has(parsed.steps, "authenticator"), false);
 });
 
 test("expressions reject empty, duplicate, ambiguous and unknown members", () => {

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "skill_version": "0.2.0",
-  "requirements_revision": "2026-09-10",
-  "updated_at": "2026-09-10T00:00:00Z",
+  "requirements_revision": "2026-10-09",
+  "updated_at": "2026-10-09T00:00:00Z",
   "os": null,
   "architecture": null,
   "harness": null,

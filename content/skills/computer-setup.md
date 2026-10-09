@@ -1,6 +1,6 @@
 ---
 skill_id: computer-setup
-updated: 2026-10-05
+updated: 2026-10-09
 ---
 
 # Computer Setup
@@ -49,7 +49,7 @@ Computer Setup follows an inspect-approve-install-verify cycle:
 
 ## Prerequisites
 
-Phase 1 completion with a working phone companion and authenticator.
+Phase 1 completion with a working phone companion and signed-in GitHub Mobile. No separate authenticator app is required.
 
 ## Installation and use
 

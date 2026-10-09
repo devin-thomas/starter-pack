@@ -1,6 +1,6 @@
 # Your private progress repository
 
-Version: 0.2.0. Updated September 10, 2026. Your companion keeps this record for you; the website does not store it. During Phase 1 and the start of Phase 2 Computer Setup, use existing local or portable progress. A private repository is not required to graduate Phase 1 or begin installing the tools that enable GitHub access.
+Version: 0.2.0. Updated October 9, 2026. Your companion keeps this record for you; the website does not store it. During Phase 1 and the start of Phase 2 Computer Setup, use existing local or portable progress. A private repository is not required to graduate Phase 1 or begin installing the tools that enable GitHub access.
 
 ## Read progress in the local Workbench
 
@@ -14,7 +14,7 @@ Hosting a protected copy is optional later work, lower priority than deploying t
 
 ## Remember account details once
 
-After confirming the phone companion and authenticator, offer one optional checkpoint for the learner's GitHub username, development account email and any existing service handles they want remembered. Reuse details they already supplied. This checkpoint is not a completion requirement, and declining it does not stop setup.
+After confirming the phone companion and GitHub Mobile, offer one optional checkpoint for the learner's GitHub username, development account email and any existing service handles they want remembered. Reuse details they already supplied. This checkpoint is not a completion requirement, and declining it does not stop setup.
 
 Store confirmed handles in `artifacts.account_profile` with `github_username` (string or null), `service_usernames` (an object keyed by service), `status` (`recorded`, `declined` or `deferred`), and `notes` (an array). Preserve unknown fields and existing service handles when merging. Do not ask the intake again after a recorded decision; clarify a missing value only when the current task needs it.
 
@@ -78,11 +78,12 @@ The [schema](https://starter.devthomas.site/schemas/starter-progress.schema.json
 
 ## Requirements and older records
 
-Read the [canonical requirements](https://starter.devthomas.site/agent/requirements.json), or the matching generated definitions in a supplied packet. This release uses version `0.2.0` and requirements revision `2026-09-10`. Evaluate only the relevant phase's gate and its referenced groups, prerequisites, completion meanings, and accepted evidence. `all_of` means every member; `any_of` means a qualifying choice, not all alternatives. These are registry expressions, not JSON Schema validation keywords. Do not infer gates from labels, counts, or optional preferences or maintain a separate curriculum checklist.
+Read the [canonical requirements](https://starter.devthomas.site/agent/requirements.json), or the matching generated definitions in a supplied packet. This release uses version `0.2.0` and requirements revision `2026-10-09`. Evaluate only the relevant phase's gate and its referenced groups, prerequisites, completion meanings, and accepted evidence. `all_of` means every member; `any_of` means a qualifying choice, not all alternatives. These are registry expressions, not JSON Schema validation keywords. Do not infer gates from labels, counts, or optional preferences or maintain a separate curriculum checklist.
 
 Retain the original data while reconciling known IDs:
 
 - `instant-app` is an alias for `instant-build`; keep original notes and provenance without counting it twice.
+- `authenticator` is a retired Phase 1 checkpoint, **not a current requirement**. Preserve older learner records without turning this historical step into a gate, blocker, or repeated prompt. Provider-specific account verification is handled privately through the provider's supported flow.
 - `github`, `cloudflare`, `neon`, and `instant-builder` belong to the core-account group. A completed historical `core-accounts` aggregate can be recognized without fabricating missing child records. Explicit conflicting child evidence needs reconciliation, not an automatic pass.
 - `phase-2-project` is a historical aggregate, not an alias for both `quick-build` and `live-deployment`. Carry its evidence forward; ask only for genuinely missing behavior evidence. A URL or HTTP 200 alone is insufficient.
 - Keep unknown steps and fields. A custom step with a valid phase belongs there; an unassigned one remains additional work, not a new gate. Retain conflicting aliases/duplicates and surface the conflict instead of overwriting whichever timestamp is older.
