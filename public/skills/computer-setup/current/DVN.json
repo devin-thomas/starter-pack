@@ -1,0 +1,343 @@
+{
+  "schemaVersion": 1,
+  "skillName": "computer-setup",
+  "skillBlobSha": "294ba178c24e183fe847a6ab122320e62d071e53",
+  "auditComplete": true,
+  "resources": [
+    {
+      "key": "requirements",
+      "path": "workbench-steps.json",
+      "gitBlobSha": "7a1548a9cf67c19e601f3366a7d9ece67a025626",
+      "required": "mandatory",
+      "repository": "devin-thomas/starter-pack",
+      "root": "content"
+    },
+    {
+      "key": "progress",
+      "path": "progress/README.md",
+      "gitBlobSha": "def70137abb5215fcedcefd1eb0412f7777981d9",
+      "required": "mandatory",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/artifacts"
+    },
+    {
+      "key": "progress-schema",
+      "path": "starter-progress.schema.json",
+      "gitBlobSha": "ea39441ca3e7a541ac6cd5b7491f4db74955ef57",
+      "required": "mandatory",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/schemas"
+    },
+    {
+      "key": "progress-template",
+      "path": "progress/starter-progress.json",
+      "gitBlobSha": "9bf2164770d5b8e779b06c664c2f0ddaa1f0bfc6",
+      "required": "optional",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/artifacts"
+    },
+    {
+      "key": "readiness",
+      "path": "codex-readiness.md",
+      "gitBlobSha": "042b03f0796c23a4fb18054fdd6826bcc1ed9418",
+      "required": "optional",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "workbench",
+      "path": "progress-workbench/README.md",
+      "gitBlobSha": "31df86aa77374043eb7e7dc5c8ab3410b415556f",
+      "required": "mandatory",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/artifacts"
+    },
+    {
+      "key": "resource-directory",
+      "path": "resource-links.md",
+      "gitBlobSha": "b4fd1fa1498067017528079cfd0d045095960582",
+      "required": "optional",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/agent"
+    },
+    {
+      "key": "setup-manifest",
+      "path": "computer-setup.manifest.json",
+      "gitBlobSha": "f75d8be6b5f6a9ab9fd216ab64e63d00bc7c7b08",
+      "required": "mandatory",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "windows",
+      "path": "windows.md",
+      "gitBlobSha": "16370d7d7c4e82bf878ac937f692bcd3e6079140",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "macos",
+      "path": "macos.md",
+      "gitBlobSha": "293635cc346c170b48e471a5cab44c623f1961c3",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "linux",
+      "path": "linux.md",
+      "gitBlobSha": "60c8abb2de954667034439c99127c708bdae1412",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "setup-state",
+      "path": "state.example.json",
+      "gitBlobSha": "2bd5d2312054156f3c01cbd2afe3f8121eac2221",
+      "required": "optional",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "authentication",
+      "path": "authentication.md",
+      "gitBlobSha": "af5b29d264454e9636f8df9ccbf9b6453d940060",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "ide",
+      "path": "ide.md",
+      "gitBlobSha": "8ab6ccf172cea3f5665da5d1f365d923527855ec",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "troubleshooting",
+      "path": "tool-troubleshooting.md",
+      "gitBlobSha": "689c5e2096b9b4bda59f88a2c63e0305efbc5d02",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "remote-access",
+      "path": "remote-access.md",
+      "gitBlobSha": "b5cd9a03eb5905fbafc6026003b444f54b50489f",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup",
+      "requires": [
+        "file-transfer"
+      ]
+    },
+    {
+      "key": "file-transfer",
+      "path": "file-transfer.md",
+      "gitBlobSha": "a439ffbf83eb47ac666fef50bb34785566ee42a2",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "private-workbench",
+      "path": "private-workbench.md",
+      "gitBlobSha": "af00241908ee5966f27d7c285b0a15cab1bce652",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "workbench-publishing",
+      "path": "workbench-publishing.md",
+      "gitBlobSha": "6aa5ffc7461b48e9e42ac3c7b8f9e2f10a4a6d3d",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup",
+      "requires": [
+        "private-workbench"
+      ]
+    },
+    {
+      "key": "programmatic-harness",
+      "path": "programmatic-harness.md",
+      "gitBlobSha": "dbc99469f18e0c9f58b259147e462c49390a11cd",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "progress-gitignore",
+      "path": "progress/gitignore.txt",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/artifacts",
+      "gitBlobSha": "8904fe490b11f117c6655a9545a2985f03d4b41b",
+      "required": "stage"
+    }
+  ],
+  "stages": [
+    {
+      "key": "readiness",
+      "resources": [
+        "readiness"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "initialize-progress",
+      "resources": [
+        "progress-template",
+        "progress-schema",
+        "progress-gitignore",
+        "setup-state"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "workbench",
+      "resources": [
+        "workbench",
+        "progress-template",
+        "progress-schema"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "windows",
+      "resources": [
+        "windows",
+        "readiness",
+        "authentication",
+        "ide",
+        "troubleshooting",
+        "remote-access",
+        "file-transfer"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "macos",
+      "resources": [
+        "macos",
+        "readiness",
+        "authentication",
+        "ide",
+        "troubleshooting",
+        "remote-access",
+        "file-transfer"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "linux",
+      "resources": [
+        "linux",
+        "readiness",
+        "authentication",
+        "ide",
+        "troubleshooting",
+        "remote-access",
+        "file-transfer"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "initialize-setup",
+      "resources": [
+        "setup-state"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "authentication",
+      "resources": [
+        "authentication"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "ide",
+      "resources": [
+        "ide"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "troubleshooting",
+      "resources": [
+        "troubleshooting"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "remote-access",
+      "resources": [
+        "remote-access"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "file-transfer",
+      "resources": [
+        "file-transfer"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "quick-build",
+      "resources": [],
+      "dependencies": [
+        "quick-build"
+      ]
+    },
+    {
+      "key": "private-workbench",
+      "resources": [
+        "private-workbench",
+        "workbench",
+        "progress-schema"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "workbench-publishing",
+      "resources": [
+        "workbench-publishing",
+        "workbench",
+        "progress-schema"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "programmatic-harness",
+      "resources": [
+        "programmatic-harness"
+      ],
+      "dependencies": [
+        "programmatic-harness"
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "key": "quick-build",
+      "canonicalId": "starter-pack/quick-build",
+      "required": "stage",
+      "stages": [
+        "quick-build"
+      ]
+    },
+    {
+      "key": "programmatic-harness",
+      "canonicalId": "public/programmatic-harness",
+      "required": "stage",
+      "stages": [
+        "programmatic-harness"
+      ]
+    }
+  ]
+}
