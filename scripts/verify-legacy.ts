@@ -4,11 +4,14 @@ import { readFile } from "node:fs/promises";
 import { files, loadContent, routes } from "./content";
 import {
   assertDirectResource,
+  assertDirectResponse,
   assertPinnedBytes,
   assertReadingRedirect,
 } from "./migration-contract";
 import origins from "../src/site-origin.json";
 import baseline from "./fixtures/pre-domain-migration-releases.json";
+import { assertSameAgentCatalog } from "./deployment-catalog";
+import { assertSameRobots } from "./crawler-policy";
 
 export async function verifyLegacy(
   base = new URL(origins.legacyOrigin),
@@ -54,12 +57,14 @@ export async function verifyLegacy(
         : route.endsWith(".xml")
           ? /(?:application|text)\/xml/
           : /./;
-    await assertDirectResource(
-      await fetchAt(base.origin + route),
-      await readFile(file),
-      type,
-      route,
-    );
+    const response = await fetchAt(base.origin + route);
+    const expected = await readFile(file);
+    if (route === "/agent/catalog.json" || route === "/robots.txt") {
+      assertDirectResponse(response, type, route);
+      const actual = await response.text();
+      if (route === "/agent/catalog.json") assertSameAgentCatalog(actual, expected.toString("utf8"));
+      else assertSameRobots(actual, expected.toString("utf8"));
+    } else await assertDirectResource(response, expected, type, route);
     const head = await fetchAt(base.origin + route, "HEAD");
     assert.equal(head.status, 200, route);
     assert.equal(head.headers.get("Location"), null, route);

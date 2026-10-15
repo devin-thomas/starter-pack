@@ -38,7 +38,12 @@ npm run verify:legacy -- https://starter.devthomas.site
 The legacy script tests the old host separately; it never relies on following a
 redirect to read machine resources. It checks all pre-migration pinned files and
 all built machine/static bodies, GET/HEAD, all reading destinations, downloads,
-CORS and private-path denials. A failed P0 check halts rollout. Disable the legacy
+CORS and private-path denials. Catalog comparison ignores only validated build
+timestamps, matching the canonical verifier. The served robots policy must retain
+the exact source suffix; only the SHA-256-pinned Cloudflare managed preamble in the
+test fixture is permitted, and learner-resource access must still pass. Any changed
+provider preamble requires review. All other bodies, including every
+pinned release and packet, require exact bytes. A failed P0 check halts rollout. Disable the legacy
 redirect switch first; restore a known-good Worker version separately if needed.
 
 Style audits target the exact configured canonical origin and reject redirect

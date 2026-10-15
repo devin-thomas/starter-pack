@@ -1,6 +1,21 @@
+import { createHash } from "node:crypto";
+
 // Google-Extended covers both training and grounding. Limit permission to public curriculum.
 export const googleResourcePaths = ["/agent/", "/skills/", "/style/", "/phases/", "/artifacts/", "/setup/", "/prompts/", "/schemas/", "/help/", "/recommendations.json", "/guide.md", "/about.md", "/llms.txt"];
 export const googleResourcePolicy = `User-agent: Google-Extended\n${googleResourcePaths.map(path => `Allow: ${path}`).join("\n")}\n`;
+
+export function assertSameRobots(actual: string, expected: string) {
+  const source = expected.trimEnd();
+  const served = actual.trimEnd();
+  if (!source || !served.endsWith(source)) throw new Error("Live robots.txt differs from the built source policy.");
+  const prefix = served.slice(0, -source.length).trim();
+  if (prefix) {
+    // Pin the observed provider preamble; even another crawler rule needs review.
+    if (createHash("sha256").update(prefix).digest("hex") !== "74cfd1bcd1dede6d233fe5b6005c0f13a339ec087363379a35f5f9d57ed5e42b")
+      throw new Error("Unrecognized robots.txt preamble; review the live policy.");
+  }
+  assertGoogleResourceAccess(actual);
+}
 
 export function assertGoogleResourceAccess(robots: string) {
   const groups: { agents: string[]; rules: { allow: boolean; path: string }[] }[] = [];
