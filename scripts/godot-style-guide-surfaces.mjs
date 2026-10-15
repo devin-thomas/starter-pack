@@ -1,3 +1,4 @@
+import siteOrigins from "../src/site-origin.json" with { type: "json" };
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -85,7 +86,7 @@ for (const key of ["version", "status", "updated", "accepted_through"]) {
 
 const agentCatalog = JSON.parse(await read("/agent/catalog.json", /application\/json/));
 const agentEntry = agentCatalog.resources.find(item => item.id === "style-godot");
-assert.equal(agentEntry?.markdown, `https://starter.devthomas.site${expected.route}.md`, "Godot agent catalog");
+assert.equal(agentEntry?.markdown, `${siteOrigins.canonicalOrigin}${expected.route}.md`, "Godot agent catalog");
 
 assert((await read("/llms.txt", /text\/plain/)).includes(`${expected.route}.md`), "Godot agent discovery");
 

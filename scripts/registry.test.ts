@@ -158,12 +158,12 @@ test("catalog and phase packet projections are lossless, revision-aligned and se
   assert.equal(typeof registryModule.projectPhaseRequirements, "function");
   const registry = registryModule.parseRegistry(source);
   const before = JSON.stringify(registry);
-  const phases = registryModule.phaseIds.map((id, index) => ({ id, title: `Phase ${index + 1}`, url: `https://starter.devthomas.site/phases/${index + 1}`, preview: index === 2 }));
+  const phases = registryModule.phaseIds.map((id, index) => ({ id, title: `Phase ${index + 1}`, url: `https://starter.uppercut-labs.com/phases/${index + 1}`, preview: index === 2 }));
   const catalog = registryModule.projectCatalog(registry, phases);
   assert.deepEqual(catalog.requirements, registry);
   assert.equal(catalog.requirements_revision, registry.requirements_revision);
   assert.equal(has(catalog.requirements, "revision"), false);
-  for (const [id, step] of Object.entries(registry.steps)) assert.deepEqual(catalog.steps[id], { ...step, url: `https://starter.devthomas.site/phases/${step.phase.slice(-1)}` });
+  for (const [id, step] of Object.entries(registry.steps)) assert.deepEqual(catalog.steps[id], { ...step, url: `https://starter.uppercut-labs.com/phases/${step.phase.slice(-1)}` });
   const withAliasMetadata = fresh();
   withAliasMetadata.steps["instant-build"].aliases = ["instant-app"];
   assert.deepEqual(registryModule.projectCatalog(registryModule.parseRegistry(withAliasMetadata), phases).steps["instant-build"].aliases, ["instant-app"]);

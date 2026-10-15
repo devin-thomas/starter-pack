@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "skillName": "starter-pack",
-  "skillBlobSha": "120941ace41684afc4a2f1362dcb880f0efe787c",
+  "skillBlobSha": "7c743d07fd8c27b9c7e632b42af8f8a608822ea8",
   "auditComplete": true,
   "resources": [
     {
@@ -15,7 +15,7 @@
     {
       "key": "progress",
       "path": "progress/README.md",
-      "gitBlobSha": "def70137abb5215fcedcefd1eb0412f7777981d9",
+      "gitBlobSha": "d8f0d36ccc8464c9c511b663967f9d025e4d4b02",
       "required": "mandatory",
       "repository": "devin-thomas/starter-pack",
       "root": "public/artifacts"
@@ -47,7 +47,7 @@
     {
       "key": "workbench",
       "path": "progress-workbench/README.md",
-      "gitBlobSha": "31df86aa77374043eb7e7dc5c8ab3410b415556f",
+      "gitBlobSha": "4868f85606c1d8188a485f99074e4d3badf6f64a",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/artifacts"
@@ -55,7 +55,7 @@
     {
       "key": "resource-directory",
       "path": "resource-links.md",
-      "gitBlobSha": "b4fd1fa1498067017528079cfd0d045095960582",
+      "gitBlobSha": "2e5a587b7e6a28db4b9bacc5895d90089ffaf91c",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/agent"
@@ -87,7 +87,7 @@
     {
       "key": "private-workbench",
       "path": "private-workbench.md",
-      "gitBlobSha": "af00241908ee5966f27d7c285b0a15cab1bce652",
+      "gitBlobSha": "ff7d52aaa7bb328fe2f0a2954cb4a17aef994231",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -95,7 +95,7 @@
     {
       "key": "workbench-publishing",
       "path": "workbench-publishing.md",
-      "gitBlobSha": "6aa5ffc7461b48e9e42ac3c7b8f9e2f10a4a6d3d",
+      "gitBlobSha": "1bb5f1babfc155ace143334fcaafb7f315e9da05",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup",
@@ -132,7 +132,7 @@
       "path": "mobile-deployment.md",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup",
-      "gitBlobSha": "0ee1a800c389d4d088a97c7cef712b5d61363432",
+      "gitBlobSha": "8cb22e194ca4a2f02b9d1f9d6c5ae0890b9b6068",
       "required": "stage"
     },
     {
@@ -148,7 +148,7 @@
       "path": "remote-access.md",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup",
-      "gitBlobSha": "b5cd9a03eb5905fbafc6026003b444f54b50489f",
+      "gitBlobSha": "8ea02bd9e34278ee22a7a501120d2a285fbd332a",
       "required": "stage"
     }
   ],

@@ -146,8 +146,8 @@ function attributes(tag: string) {
 }
 function hostedUrls(text: string) {
   return [
-    ...decodeHtml(text).matchAll(/https:\/\/starter\.devthomas\.site\/[^\s<>"'`]+/g),
-  ].map((match) => match[0].replace(/[.,;:!?)\]]+$/, ""));
+    ...decodeHtml(text).matchAll(/https:\/\/[^\s<>"'`]+/g),
+  ].map((match) => match[0].replace(/[.,;:!?)\]]+$/, "")).filter(url => url.startsWith(origin + "/"));
 }
 const htmlIds = new Map<string, Set<string>>();
 async function destinationIds(file: string) {

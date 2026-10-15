@@ -1,3 +1,4 @@
+import siteOrigins from "../src/site-origin.json" with { type: "json" };
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -69,14 +70,14 @@ assert(entry, "Kotlin catalog entry");
 for (const field of ["version", "status", "updated", "accepted_through"]) {
   assert.equal(entry[field], guide[field], `catalog ${field}`);
 }
-assert.equal(entry.html, "https://starter.devthomas.site/style/Kotlin");
-assert.equal(entry.markdown, "https://starter.devthomas.site/style/Kotlin.md");
-assert.equal(entry.json, "https://starter.devthomas.site/style/Kotlin.json");
+assert.equal(entry.html, siteOrigins.canonicalOrigin + "/style/Kotlin");
+assert.equal(entry.markdown, siteOrigins.canonicalOrigin + "/style/Kotlin.md");
+assert.equal(entry.json, siteOrigins.canonicalOrigin + "/style/Kotlin.json");
 const agentCatalog = JSON.parse(await read("/agent/catalog.json", /application\/json/));
 const agentEntry = agentCatalog.resources.find(item => item.id === "style-kotlin");
 assert.equal(agentEntry?.markdown, entry.markdown, "Kotlin agent discovery");
 assert((await read("/llms.txt", /text\/plain/)).includes(`${expected.route}.md`), "llms discovery");
-assert((await read("/sitemap.xml", /(?:application|text)\/xml/)).includes(`https://starter.devthomas.site${expected.route}`), "human sitemap");
+assert((await read("/sitemap.xml", /(?:application|text)\/xml/)).includes(`${siteOrigins.canonicalOrigin}${expected.route}`), "human sitemap");
 
 console.log(JSON.stringify({
   surface: live ? live.href : "built dist",

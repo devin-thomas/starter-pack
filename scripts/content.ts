@@ -7,6 +7,7 @@ import { skillInstallation, skillInstallationMarkdown } from "../src/skill-insta
 import { googleResourcePolicy } from "./crawler-policy";
 import { createHash } from "node:crypto";
 import { parseRegistry, projectPhaseRequirements } from "../src/workbench/registry";
+import siteOrigins from "../src/site-origin.json";
 
 const headingIcons: Readonly<Record<string, string>> = {
   "How the companion works": "compass",
@@ -96,7 +97,7 @@ function accentHeadings(html: string) {
   );
 }
 
-export const origin = "https://starter.devthomas.site";
+export const origin = siteOrigins.canonicalOrigin;
 const staticRoutes = [
   "/",
   "/guide",
@@ -345,7 +346,7 @@ export function startupPacketRelease(packet: string) {
   const hash = createHash("sha256").update(packet).digest("hex");
   const file = `public/agent/packets/phase-1-${hash.slice(0, 16)}.md`;
   const url = `https://raw.githubusercontent.com/devin-thomas/starter-pack/main/${file}`;
-  const prompt = `Help me start or resume Devin Thomas's Starter Pack.\n\nIf you are Gemini responding in Gemini chat, stop here and show me https://starter.devthomas.site/recommendations. Otherwise, continue below.\n\nRead ${url} and guide me one step at a time. Preserve any progress I provide.\n\nIf you can't read it, ask me for the site's "Copy instruction packet" instead of guessing.\n`;
+  const prompt = `Help me start or resume Devin Thomas's Starter Pack.\n\nIf you are Gemini responding in Gemini chat, stop here and show me ${origin}/recommendations. Otherwise, continue below.\n\nRead ${url} and guide me one step at a time. Preserve any progress I provide.\n\nIf you can't read it, ask me for the site's "Copy instruction packet" instead of guessing.\n`;
   return { file, url, hash, prompt };
 }
 

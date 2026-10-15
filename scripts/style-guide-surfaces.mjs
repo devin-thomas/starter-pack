@@ -1,3 +1,4 @@
+import siteOrigins from "../src/site-origin.json" with { type: "json" };
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -41,6 +42,6 @@ for (const key of ["version","status","updated","accepted_through"]) assert.equa
 assert.equal(catalog.status,catalog.guides.some((item) => item.status === "in-progress")?"in-progress":"stable","aggregate status");
 const agentCatalog = JSON.parse(await read("/agent/catalog.json",/application\/json/));
 const agentEntry = agentCatalog.resources.find((item) => item.id === "style-typescript");
-assert.equal(agentEntry?.markdown,`https://starter.devthomas.site${expected.route}.md`);
+assert.equal(agentEntry?.markdown,`${siteOrigins.canonicalOrigin}${expected.route}.md`);
 assert((await read("/llms.txt",/text\/plain/)).includes(`${expected.route}.md`),"agent discovery");
 console.log(JSON.stringify({surface:live?live.href:"built dist",status:"passed",guideVersion:guide.version,acceptedThrough:guide.accepted_through,markdownSha256:createHash("sha256").update(raw).digest("hex"),checked:["human","hub","markdown","json","catalog","agent-catalog","llms"]}));

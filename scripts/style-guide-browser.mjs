@@ -1,3 +1,4 @@
+import siteOrigins from "../src/site-origin.json" with { type: "json" };
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { readFile, stat, mkdir, writeFile } from "node:fs/promises";
@@ -80,7 +81,7 @@ try {
       await page.getByRole("button",{name:"Agent link copied",exact:true}).waitFor();
       assert.equal(
         await page.evaluate(() => navigator.clipboard.readText()),
-        `https://starter.devthomas.site/style/${guide.slug}.md`,
+        `${siteOrigins.canonicalOrigin}/style/${guide.slug}.md`,
         `${guide.slug}: clipboard link`,
       );
 
@@ -110,7 +111,7 @@ try {
     await page.locator("#style-agent-address").waitFor();
     assert.equal(
       await page.locator("#style-agent-address").inputValue(),
-      `https://starter.devthomas.site/style/${guide.slug}.md`,
+      `${siteOrigins.canonicalOrigin}/style/${guide.slug}.md`,
       `${guide.slug}: fallback address`,
     );
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth+1),`${guide.slug}: fallback has no overflow`);

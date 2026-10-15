@@ -1,9 +1,9 @@
 {
   "manifest_version": 1,
   "id": "starter-pack-computer-setup",
-  "skill_version": "0.2.2",
-  "updated_at": "2026-10-05",
-  "requirements": "https://starter.devthomas.site/agent/requirements.json",
+  "skill_version": "0.2.3",
+  "updated_at": "2026-10-15",
+  "requirements": "https://starter.uppercut-labs.com/agent/requirements.json",
   "requirements_revision": "2026-10-09",
   "requirements_role": "canonical_phase_gates; this manifest specifies setup implementation and evidence only",
   "workbench": {
@@ -11,8 +11,8 @@
     "phase_gate": false,
     "assemble_at": "computer_setup_start",
     "independent_of_github": true,
-    "lifecycle": "https://starter.devthomas.site/artifacts/progress-workbench/README.md",
-    "download": "https://starter.devthomas.site/artifacts/progress-workbench/index.html",
+    "lifecycle": "https://starter.uppercut-labs.com/artifacts/progress-workbench/README.md",
+    "download": "https://starter.uppercut-labs.com/artifacts/progress-workbench/index.html",
     "location": "beside_canonical_starter_progress_json",
     "preserve_existing_html": true,
     "serve_when": "python_interpreter_verified",
@@ -35,8 +35,8 @@
     "directory": "absolute_progress_folder",
     "visible_http_poll_seconds": 5,
     "file_mode_reload": "choose_saved_json_again",
-    "optional_publishing": "https://starter.devthomas.site/setup/workbench-publishing.md",
-    "optional_private_access": "https://starter.devthomas.site/setup/private-workbench.md",
+    "optional_publishing": "https://starter.uppercut-labs.com/setup/workbench-publishing.md",
+    "optional_private_access": "https://starter.uppercut-labs.com/setup/private-workbench.md",
     "remote_share_boundary": "isolated_allowlisted_snapshot_with_approved_progress_projection",
     "publishing_priority": "after_instant_app_deployment_extra_credit"
   },
@@ -82,20 +82,20 @@
       "extra_required": [
         "powershell-7"
       ],
-      "adapter": "https://starter.devthomas.site/setup/windows.md"
+      "adapter": "https://starter.uppercut-labs.com/setup/windows.md"
     },
     "macos": {
       "support": "first_class",
       "target": "current macOS",
       "preferred_install_support": "healthy_homebrew_or_supported_vendor_binary",
       "extra_required": [],
-      "adapter": "https://starter.devthomas.site/setup/macos.md"
+      "adapter": "https://starter.uppercut-labs.com/setup/macos.md"
     },
     "linux": {
       "support": "best_effort",
       "target": "agent-routed",
       "extra_required": [],
-      "adapter": "https://starter.devthomas.site/setup/linux.md"
+      "adapter": "https://starter.uppercut-labs.com/setup/linux.md"
     }
   },
   "required_capabilities": [
@@ -111,7 +111,7 @@
       "id": "selected-ide",
       "selection": "ide.harness_to_ide_or_default",
       "version_policy": "current_supported",
-      "instructions": "https://starter.devthomas.site/setup/ide.md"
+      "instructions": "https://starter.uppercut-labs.com/setup/ide.md"
     },
     {
       "id": "git",
@@ -187,12 +187,12 @@
     {
       "id": "phone-to-computer-file",
       "verification": "benign_file_received_in_actual_client_destination_and_contents_confirmed",
-      "instructions": "https://starter.devthomas.site/setup/file-transfer.md"
+      "instructions": "https://starter.uppercut-labs.com/setup/file-transfer.md"
     },
     {
       "id": "computer-to-phone-file",
       "verification": "returned_benign_file_opened_on_phone_and_contents_confirmed",
-      "instructions": "https://starter.devthomas.site/setup/file-transfer.md"
+      "instructions": "https://starter.uppercut-labs.com/setup/file-transfer.md"
     },
     {
       "id": "remote-interaction-layer",
@@ -236,7 +236,7 @@
       "phase_gate": false,
       "verify_current_license_and_host_suitability": true,
       "rosetta": "only_if_actual_architecture_and_selected_feature_require_it_with_approval",
-      "instructions": "https://starter.devthomas.site/setup/tool-troubleshooting.md",
+      "instructions": "https://starter.uppercut-labs.com/setup/tool-troubleshooting.md",
       "excluded": [
         "orbstack",
         "legacy-docker-compose"
@@ -288,8 +288,8 @@
       "automatic_install": false,
       "installation_scope": "project_local_after_explicit_approval",
       "evidence_path": "artifacts.programmatic_harness",
-      "evidence_schema": "https://starter.devthomas.site/schemas/starter-progress.schema.json#/$defs/programmaticHarnessEvidence",
-      "guide": "https://starter.devthomas.site/setup/programmatic-harness.md",
+      "evidence_schema": "https://starter.uppercut-labs.com/schemas/starter-progress.schema.json#/$defs/programmaticHarnessEvidence",
+      "guide": "https://starter.uppercut-labs.com/setup/programmatic-harness.md",
       "adapter_package": "@uppercut-labs/agent-native@0.1.1",
       "adapter_tarball": "https://github.com/uppercut-labs/agent-native/releases/download/v0.1.1/uppercut-labs-agent-native-0.1.1.tgz",
       "adapter_tarball_sha256": "https://github.com/uppercut-labs/agent-native/releases/download/v0.1.1/uppercut-labs-agent-native-0.1.1.tgz.sha256",
@@ -309,7 +309,7 @@
     "record": ["version", "resolved_path", "scope", "install_source", "architecture", "verified_at", "contexts", "next_action"],
     "use_ordinary_resolution": true,
     "project_local_tools": "verify_through_repository_runner; never_add_project_node_modules_bin_to_global_PATH",
-    "instructions": "https://starter.devthomas.site/setup/tool-troubleshooting.md"
+    "instructions": "https://starter.uppercut-labs.com/setup/tool-troubleshooting.md"
   },
   "progress_mapping": {
     "selected-agentic-harness": "capabilities.selected-agentic-harness",
@@ -327,15 +327,15 @@
     "programmatic-harness": "artifacts.programmatic_harness; normalized per-provider local/cloud proof outcomes; no credentials, raw provider output, private planning URLs, or raw session/turn IDs"
   },
   "focused_guides": {
-    "authentication": "https://starter.devthomas.site/setup/authentication.md",
-    "codex_readiness": "https://starter.devthomas.site/setup/codex-readiness.md",
-    "file_transfer": "https://starter.devthomas.site/setup/file-transfer.md",
-    "private_workbench": "https://starter.devthomas.site/setup/private-workbench.md",
-    "troubleshooting": "https://starter.devthomas.site/setup/tool-troubleshooting.md"
+    "authentication": "https://starter.uppercut-labs.com/setup/authentication.md",
+    "codex_readiness": "https://starter.uppercut-labs.com/setup/codex-readiness.md",
+    "file_transfer": "https://starter.uppercut-labs.com/setup/file-transfer.md",
+    "private_workbench": "https://starter.uppercut-labs.com/setup/private-workbench.md",
+    "troubleshooting": "https://starter.uppercut-labs.com/setup/tool-troubleshooting.md"
   },
   "ide": {
     "required": true,
-    "lifecycle": "https://starter.devthomas.site/setup/ide.md",
+    "lifecycle": "https://starter.uppercut-labs.com/setup/ide.md",
     "select_from": "development_harness_not_phone_companion",
     "harness_to_ide": {
       "antigravity": "antigravity",

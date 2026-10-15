@@ -1,10 +1,10 @@
 # Fix the failing capability, not the whole computer
 
-Use this guide during [Computer Setup](https://starter.devthomas.site/skills/computer-setup/current/SKILL.md) and for later selected tools. Preserve working installations, profiles, project configuration and lockfiles. Inspect the observed failure, propose a narrow repair, obtain approval for changes, then rerun the failing check and its affected contexts.
+Use this guide during [Computer Setup](https://starter.uppercut-labs.com/skills/computer-setup/current/SKILL.md) and for later selected tools. Preserve working installations, profiles, project configuration and lockfiles. Inspect the observed failure, propose a narrow repair, obtain approval for changes, then rerun the failing check and its affected contexts.
 
 ## Command resolution in each context
 
-A successful install or one terminal's version output does not prove the agent can use the tool. For every applicable system/user CLI in the [manifest](https://starter.devthomas.site/setup/computer-setup.manifest.json), record:
+A successful install or one terminal's version output does not prove the agent can use the tool. For every applicable system/user CLI in the [manifest](https://starter.uppercut-labs.com/setup/computer-setup.manifest.json), record:
 
 | Context | Required check |
 | --- | --- |
@@ -48,7 +48,7 @@ Context outcomes are `passed`, `failed`, `not_tested` or `not_applicable`, with 
 
 ### Terminal passes, harness fails
 
-This is a context failure. Check whether the harness launches a different shell, sanitizes its environment, uses a different user/architecture, or predates a persistent PATH change. Compare only relevant trusted path entries and command resolution. Preserve the working terminal result. Apply the narrow [Windows](https://starter.devthomas.site/setup/windows.md) or [macOS](https://starter.devthomas.site/setup/macos.md) repair, then save state and relaunch the actual long-lived parent if necessary. A fresh child of a stale parent may still inherit stale PATH.
+This is a context failure. Check whether the harness launches a different shell, sanitizes its environment, uses a different user/architecture, or predates a persistent PATH change. Compare only relevant trusted path entries and command resolution. Preserve the working terminal result. Apply the narrow [Windows](https://starter.uppercut-labs.com/setup/windows.md) or [macOS](https://starter.uppercut-labs.com/setup/macos.md) repair, then save state and relaunch the actual long-lived parent if necessary. A fresh child of a stale parent may still inherit stale PATH.
 
 Do not replace profiles wholesale, link all startup files together, create a user-local executable named `env`, or inject every known bin directory. If `env` is already shadowed, report its exact local path and propose a narrow approved correction; do not delete a user's file automatically.
 
@@ -86,9 +86,9 @@ These are scripts for a consenting learner/test machine, not authorization to al
 - If a CLI works interactively but not in an agent task, preserve the first pass; repair only the failing context and repeat from the real task runner.
 - After Windows PATH persistence changes, confirm a newly launched harness and child task; after macOS profile changes, check the selected noninteractive launch and GUI-originated task. Record an untested context honestly.
 - Verify a project-local CLI through its existing runner and confirm no project-bin entry was added to persistent PATH.
-- Exercise [Git privacy recovery](https://starter.devthomas.site/setup/authentication.md) only on approved unpushed test history; never toggle account privacy protections.
-- In [file transfer](https://starter.devthomas.site/setup/file-transfer.md), independently record a successful first direction and failed or untested return direction.
-- For [private Workbench access](https://starter.devthomas.site/setup/private-workbench.md), verify the allowlisted content, denied paths and intended audience while preserving unrelated Serve routes.
+- Exercise [Git privacy recovery](https://starter.uppercut-labs.com/setup/authentication.md) only on approved unpushed test history; never toggle account privacy protections.
+- In [file transfer](https://starter.uppercut-labs.com/setup/file-transfer.md), independently record a successful first direction and failed or untested return direction.
+- For [private Workbench access](https://starter.uppercut-labs.com/setup/private-workbench.md), verify the allowlisted content, denied paths and intended audience while preserving unrelated Serve routes.
 - If a staged skill is not discoverable, label it context-only or repair the supported install; do not report native success from a copied file.
 
 On unresolved failure record the exact capability/context, attempted repair, observed outcome, evidence source and next action. Keep completed work and unknown legacy data. Documentation checks are not a clean-machine installation, physical phone test, private-network denial test or a full UI walkthrough.

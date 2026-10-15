@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "skillName": "quick-build",
-  "skillBlobSha": "1997d1e235de445ff16f45278b21ab66f7c169c9",
+  "skillBlobSha": "2a3f2737e7a2f7fe4a2e81be04e70193c41de447",
   "auditComplete": true,
   "resources": [
     {
@@ -15,7 +15,7 @@
     {
       "key": "progress",
       "path": "progress/README.md",
-      "gitBlobSha": "def70137abb5215fcedcefd1eb0412f7777981d9",
+      "gitBlobSha": "d8f0d36ccc8464c9c511b663967f9d025e4d4b02",
       "required": "mandatory",
       "repository": "devin-thomas/starter-pack",
       "root": "public/artifacts"
@@ -47,7 +47,7 @@
     {
       "key": "workbench",
       "path": "progress-workbench/README.md",
-      "gitBlobSha": "31df86aa77374043eb7e7dc5c8ab3410b415556f",
+      "gitBlobSha": "4868f85606c1d8188a485f99074e4d3badf6f64a",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/artifacts"
@@ -55,7 +55,7 @@
     {
       "key": "resource-directory",
       "path": "resource-links.md",
-      "gitBlobSha": "b4fd1fa1498067017528079cfd0d045095960582",
+      "gitBlobSha": "2e5a587b7e6a28db4b9bacc5895d90089ffaf91c",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/agent"
@@ -63,7 +63,7 @@
     {
       "key": "template-readme",
       "path": "quick-build/README.md",
-      "gitBlobSha": "2e221aff80d25b32eb4b7071326d551e143a5e7d",
+      "gitBlobSha": "76845f82a102a16f2b63b892bc9c82b1c7dfb7e0",
       "required": "mandatory",
       "repository": "devin-thomas/starter-pack",
       "root": "public/artifacts"
@@ -103,7 +103,7 @@
     {
       "key": "authentication",
       "path": "authentication.md",
-      "gitBlobSha": "af5b29d264454e9636f8df9ccbf9b6453d940060",
+      "gitBlobSha": "3175bc0ed1bcdefdeb8880d7bd3829a9249aa1e3",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -111,7 +111,7 @@
     {
       "key": "troubleshooting",
       "path": "tool-troubleshooting.md",
-      "gitBlobSha": "689c5e2096b9b4bda59f88a2c63e0305efbc5d02",
+      "gitBlobSha": "7f5807ee16b7d236b1362e530ce8416f560c63ec",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -119,7 +119,7 @@
     {
       "key": "private-workbench",
       "path": "private-workbench.md",
-      "gitBlobSha": "af00241908ee5966f27d7c285b0a15cab1bce652",
+      "gitBlobSha": "ff7d52aaa7bb328fe2f0a2954cb4a17aef994231",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -127,7 +127,7 @@
     {
       "key": "workbench-publishing",
       "path": "workbench-publishing.md",
-      "gitBlobSha": "6aa5ffc7461b48e9e42ac3c7b8f9e2f10a4a6d3d",
+      "gitBlobSha": "1bb5f1babfc155ace143334fcaafb7f315e9da05",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup",

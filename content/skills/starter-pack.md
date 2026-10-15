@@ -48,7 +48,7 @@ None. This is the entry point for the entire curriculum.
 Copy the starting prompt from the site or download the instruction packet:
 
 ```
-https://starter.devthomas.site/#starting-prompt
+https://starter.uppercut-labs.com/#starting-prompt
 ```
 
 Paste it into your agent to begin. The packet bundles this companion skill, Phase 1 instructions, the progress guide, template, and schema.

@@ -2,25 +2,25 @@
 
 A free guide from Devin Thomas at Uppercut Labs for making and deploying software with your own AI agent. No Starter Pack account or learner database.
 
-Visit [Starter Pack](https://starter.devthomas.site).
+The next release uses [Starter Pack](https://starter.uppercut-labs.com) as its canonical address. The current live site remains at [https://starter.devthomas.site](https://starter.devthomas.site) until the separately approved domain cutover.
 
 The product and package name `dvn` is always lowercase. Published skill
 declarations use the lowercase filename `dvn.json`.
 
 ## Public style guides
 
-The site publishes stable coding style guides under [`/style`](https://starter.devthomas.site/style):
+The site publishes stable coding style guides under [`/style`](https://starter.uppercut-labs.com/style):
 
-- [TypeScript](https://starter.devthomas.site/style/TypeScript)
-- [Godot](https://starter.devthomas.site/style/Godot) — hard-pinned to Godot 4.7.2 with GDScript as the primary language.
+- [TypeScript](https://starter.uppercut-labs.com/style/TypeScript)
+- [Godot](https://starter.uppercut-labs.com/style/Godot) — hard-pinned to Godot 4.7.2 with GDScript as the primary language.
 
 Agent-readable forms are generated with the human pages:
 
-- `https://starter.devthomas.site/style/TypeScript.md`
-- `https://starter.devthomas.site/style/TypeScript.json`
-- `https://starter.devthomas.site/style/Godot.md`
-- `https://starter.devthomas.site/style/Godot.json`
-- `https://starter.devthomas.site/style/catalog.json`
+- `https://starter.uppercut-labs.com/style/TypeScript.md`
+- `https://starter.uppercut-labs.com/style/TypeScript.json`
+- `https://starter.uppercut-labs.com/style/Godot.md`
+- `https://starter.uppercut-labs.com/style/Godot.json`
+- `https://starter.uppercut-labs.com/style/catalog.json`
 
 Public guides contain only accepted rules. Private deliberation and rejected alternatives remain outside this repository's published surface.
 
@@ -32,7 +32,7 @@ Copyright (c) 2026 Devin Thomas. All rights reserved. You may read, examine, ref
 
 Found a confusing step or something that does not work? [Report a problem](https://github.com/devin-thomas/starter-pack/issues/new?template=bug_report.yml) with the page or phase, what you tried, and your device/browser/AI app. Reports are public: do not attach private progress files, conversations, account details, or credentials.
 
-For private feedback, feature requests, and project stories, use [the contact form](https://starter.devthomas.site/contact) or email starter@devthomas.site. Story submissions include an optional permission-to-feature checkbox; nothing is published automatically.
+For private feedback, feature requests, and project stories, use [the contact form](https://starter.uppercut-labs.com/contact) or email starter@devthomas.site. Story submissions include an optional permission-to-feature checkbox; nothing is published automatically.
 
 `src/worker.ts` handles only `/api/feedback`; all other site content remains static. It validates bounded JSON, checks origin, applies per-IP and overall per-location rate limits, and forwards escaped notification content to a private Make webhook. Make sends only to the owner's fixed recipient and responds with `{"ok":true}` after Gmail accepts the notification. No visitor-controlled recipient or automatic reply is used. Failures preserve the form text and never claim confirmed delivery. Cloudflare's rate limits are approximate per location, not a global spending cap.
 
@@ -66,7 +66,7 @@ To recheck the domain without redeploying, run `npm run verify:deployment`.
 
 Public curriculum is in `content/`. Hosted skills, templates, and agent instructions are in `public/`. The website has no learner progress storage. The optional contact form processes the message and project details a visitor deliberately submits; its privacy explanation is on the About page.
 
-The [Skills page](https://starter.devthomas.site/skills) features [Uppercut Skills](https://www.npmjs.com/package/@uppercut-labs/skills) as the premier and primary installer, with a copyable browse command and agent prompt. Each individual skill page provides a host-specific install command and agent prompt; Cappy currently ships separately in its own npm package. The hub and individual pages also publish Markdown and JSON installation guidance, linked from the agent catalog and `llms.txt`.
+The [Skills page](https://starter.uppercut-labs.com/skills) features [Uppercut Skills](https://www.npmjs.com/package/@uppercut-labs/skills) as the premier and primary installer, with a copyable browse command and agent prompt. Each individual skill page provides a host-specific install command and agent prompt; Cappy currently ships separately in its own npm package. The hub and individual pages also publish Markdown and JSON installation guidance, linked from the agent catalog and `llms.txt`.
 
 The page also lists public `@uppercut-labs` npm packages, including the experimental Agent Native preview. `content/packages.json` is the single source for those cards; each entry links to its npm listing and public GitHub source. Add a package only after its npm listing and source repository are publicly accessible. Keep private and unpublished products out of this catalog, and label public previews clearly. Package names are intentionally versionless so the page stays useful across releases. `npm run check` validates catalog shape and links in the generated page; `npm run verify:deployment` checks the live package section, skill installation guidance, and matching Markdown/JSON resources after deployment.
 
@@ -82,7 +82,7 @@ Each phase includes lessons adapted from Devin's projects: Domain Expansion, Dai
 
 ## Progress Workbench
 
-The [templates page](https://starter.devthomas.site/artifacts) provides a downloadable, self-contained HTML viewer. Learners use it locally beside their canonical progress JSON; the Starter Pack site does not accept or personalize itself with that data. Computer Setup assembles the viewer and serves it on loopback as soon as Python is ready. Viewer use is not a completion gate.
+The [templates page](https://starter.uppercut-labs.com/artifacts) provides a downloadable, self-contained HTML viewer. Learners use it locally beside their canonical progress JSON; the Starter Pack site does not accept or personalize itself with that data. Computer Setup assembles the viewer and serves it on loopback as soon as Python is ready. Viewer use is not a completion gate.
 
 Source lives in `src/workbench/`; `scripts/workbench.ts` builds the single HTML file with embedded styles, Geist font/license, vanilla JavaScript, guide labels, and validation compiled from the progress schema. Learners need no build tools. The public catalog contains guide metadata only and allows anonymous cross-origin reads. The template response is an attachment, with a shared-host guard as a fallback. `npm run check` includes focused Workbench contract tests. Agent lifecycle and optional Cloudflare Access hosting instructions are in `public/artifacts/progress-workbench/README.md` and `public/setup/workbench-publishing.md`.
 

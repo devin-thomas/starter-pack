@@ -47,7 +47,7 @@ test("progress bootstrap exposes exact fallback URLs and existing GitHub files",
   const directory = await readFile("public/agent/resource-links.md", "utf8");
   const raw = "https://raw.githubusercontent.com/devin-thomas/starter-pack/main/";
   for (const path of ["artifacts/progress/starter-progress.json", "schemas/starter-progress.schema.json"]) {
-    for (const prefix of ["https://starter.devthomas.site/", "https://starter-pack.uppercut-labs.workers.dev/", `${raw}public/`])
+    for (const prefix of ["https://starter.uppercut-labs.com/", "https://starter-pack.uppercut-labs.workers.dev/", `${raw}public/`])
       assert.ok(directory.includes(`](${prefix}${path})`), `${prefix}${path}`);
   }
   const links = [...directory.matchAll(/\]\((https:\/\/raw\.githubusercontent\.com\/[^)]+)\)/g)];
@@ -61,6 +61,6 @@ test("progress bootstrap exposes exact fallback URLs and existing GitHub files",
   for (const file of ["public/agent/start.md", "public/skills/starter-pack/current/SKILL.md"]) {
     const text = await readFile(file, "utf8");
     assert.ok(text.includes(`${raw}public/agent/resource-links.md`), file);
-    assert.ok(text.includes("https://starter.devthomas.site/agent/resource-links.md"), file);
+    assert.ok(text.includes("https://starter.uppercut-labs.com/agent/resource-links.md"), file);
   }
 });

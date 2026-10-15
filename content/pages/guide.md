@@ -7,7 +7,7 @@
 
 ## Build with Codex
 
-On a computer, open Codex and paste the [starting prompt](#starting-prompt). Bring your saved progress if you are returning. On a phone, begin with your supported companion and carry its handoff into your computer harness for Phase 2. Before the first Phase 1 action, your agent checks the conversation host, selected computer harness, and accessible target separately. The copyable Codex readiness checkpoint is `https://starter.devthomas.site/setup/codex-readiness.md`.
+On a computer, open Codex and paste the [starting prompt](#starting-prompt). Bring your saved progress if you are returning. On a phone, begin with your supported companion and carry its handoff into your computer harness for Phase 2. Before the first Phase 1 action, your agent checks the conversation host, selected computer harness, and accessible target separately. The copyable Codex readiness checkpoint is `https://starter.uppercut-labs.com/setup/codex-readiness.md`.
 
 Starter Pack gives Codex a path to follow: inspect your computer, prepare an installation plan, save progress privately, turn your idea into build tasks, implement them, and help deploy the result. It keeps completed work and remaining blockers in your record so you can return without starting over. Access to files and tools determines what it can do directly; it tells you when a step needs your action.
 

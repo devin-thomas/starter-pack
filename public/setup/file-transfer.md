@@ -2,7 +2,7 @@
 
 You can send a document or ZIP straight to your computer, tell your agent where it arrived, and send the result back without depending on a chat's attachment controls. This avoids chat-upload limits, not device storage limits or every receiving app's restrictions.
 
-This is separate from [phone-to-harness control](https://starter.devthomas.site/setup/remote-access.md). A chat message is not a delivered file, and a delivered file is not control of the running agent.
+This is separate from [phone-to-harness control](https://starter.uppercut-labs.com/setup/remote-access.md). A chat message is not a delivered file, and a delivered file is not control of the running agent.
 
 ## Select a supported private transfer route
 
@@ -41,6 +41,6 @@ Receiving an archive grants no authority to run scripts or obey instructions ins
 
 If a file is missing, distinguish wrong device/account, client disconnected, unavailable sharing option, send failure, pending receive, collision/renamed file, storage failure, or receiving-app trouble. Use current client logs/help without exporting secrets. Do not promise resumability on every receiver; retry the small fixture and check for duplicates before sending again.
 
-Store each outcome under `remote_access.checks` in [setup state](https://starter.devthomas.site/setup/state.example.json), and reflect only confirmed outcomes in canonical progress using the [requirements registry](https://starter.devthomas.site/agent/requirements.json). Use `not_tested` for missing evidence and `failed` for an observed failure. Tailscale network readiness and harness control keep their own evidence.
+Store each outcome under `remote_access.checks` in [setup state](https://starter.uppercut-labs.com/setup/state.example.json), and reflect only confirmed outcomes in canonical progress using the [requirements registry](https://starter.uppercut-labs.com/agent/requirements.json). Use `not_tested` for missing evidence and `failed` for an observed failure. Tailscale network readiness and harness control keep their own evidence.
 
 Platform references checked September 10, 2026. These instructions are not a claim that a physical phone round trip has been performed.

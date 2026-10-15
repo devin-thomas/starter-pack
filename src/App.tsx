@@ -1,5 +1,6 @@
 import { type ReactNode, useState } from "react";
 import { CopyText } from "./CopyText";
+import siteOrigins from "./site-origin.json";
 import { Feedback } from "./Feedback";
 import { skillHosts, skillInstallation, skillsPackageUrl, type SkillHost } from "./skill-installation";
 import { motion, useReducedMotion } from "motion/react";
@@ -277,7 +278,7 @@ function PhaseCards() {
   );
 }
 
-const resourceOrigin = "https://starter.devthomas.site";
+const resourceOrigin = siteOrigins.canonicalOrigin;
 type Resource = readonly [path: string, label: string, description?: string];
 const templateResources: Resource[] = [
   [

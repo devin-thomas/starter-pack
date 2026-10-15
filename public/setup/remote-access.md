@@ -10,7 +10,7 @@ Remote control lets you direct the agent. Tailscale also gives your phone and co
 | View the Workbench | Optional Tailscale Serve | Approved snapshot loads; content and audience boundary checked |
 | Approve an account login | Provider-supported authorization | Intended account/scope authenticated without exposing credentials |
 
-Use the [canonical requirements](https://starter.devthomas.site/agent/requirements.json) for phase gates, not a combined "remote ready" checkbox.
+Use the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json) for phase gates, not a combined "remote ready" checkbox.
 
 ## 1. Confirm the private network
 
@@ -22,7 +22,7 @@ Record computer connection, phone connection and intended network/device identit
 
 ## 2. Move a file both ways
 
-Follow [file transfer](https://starter.devthomas.site/setup/file-transfer.md) with a harmless text/Markdown fixture. Locate/read the phone's file in the actual receiving-client destination, then have the learner open the returned computer file on the phone. Preserve each direction independently.
+Follow [file transfer](https://starter.uppercut-labs.com/setup/file-transfer.md) with a harmless text/Markdown fixture. Locate/read the phone's file in the actual receiving-client destination, then have the learner open the returned computer file on the phone. Preserve each direction independently.
 
 Taildrop's personal-device/tag/client restrictions must be checked. Do not weaken managed policy or move credentials to demonstrate readiness. A native remote message alone cannot complete these checks.
 
@@ -42,11 +42,11 @@ Once the approved desktop route is enabled, open the [Antigravity dashboard](htt
 
 ## Record partial success honestly
 
-Use [setup state](https://starter.devthomas.site/setup/state.example.json) and the manifest's progress mapping. These six check records are independent: `tailscale_computer`, `tailscale_phone`, `device_identity`, `phone_to_computer_file`, `computer_to_phone_file`, `phone_harness_interaction`. Each has a status, source/time, evidence and next repair. Missing evidence is `not_tested`, not an observed failure.
+Use [setup state](https://starter.uppercut-labs.com/setup/state.example.json) and the manifest's progress mapping. These six check records are independent: `tailscale_computer`, `tailscale_phone`, `device_identity`, `phone_to_computer_file`, `computer_to_phone_file`, `phone_harness_interaction`. Each has a status, source/time, evidence and next repair. Missing evidence is `not_tested`, not an observed failure.
 
 Legacy booleans remain compatibility summaries, not authoritative evidence for new checks. If `environment.remote_access_ready` is retained in canonical progress, define it only as a projection of the confirmed harness-interaction outcome. Never use it to complete networking or either transfer direction. Preserve contradictory history for review rather than overwriting it.
 
-If a check fails, classify the layer: account/device connection, DNS/network, file send/receive, host service, credentials, selected session or actual interaction. Preserve unrelated successes and continue the remaining independent work. Optional [private Workbench](https://starter.devthomas.site/setup/private-workbench.md) access is not a phase gate. [Authentication](https://starter.devthomas.site/setup/authentication.md) uses provider login, not automatic .env transfer.
+If a check fails, classify the layer: account/device connection, DNS/network, file send/receive, host service, credentials, selected session or actual interaction. Preserve unrelated successes and continue the remaining independent work. Optional [private Workbench](https://starter.uppercut-labs.com/setup/private-workbench.md) access is not a phase gate. [Authentication](https://starter.uppercut-labs.com/setup/authentication.md) uses provider login, not automatic .env transfer.
 
 After required setup outcomes pass, save and verify the latest private progress before Quick Build. Network installation, a status page, and HTTP availability alone do not prove the file or harness actions.
 

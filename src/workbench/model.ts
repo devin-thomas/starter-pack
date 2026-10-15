@@ -1,4 +1,5 @@
 import { parseRegistry, type Phase, type RequirementsRegistry, type RegistryStep, type RequirementExpression, type RequirementLevel } from "./registry";
+import siteOrigins from "../site-origin.json";
 export type { Phase, RequirementExpression, RequirementLevel } from "./registry";
 export type Status = "not_started" | "in_progress" | "completed" | "skipped" | "deferred" | "not_applicable";
 export type PhaseStatus = "not_started" | "in_progress" | "completed";
@@ -257,7 +258,11 @@ export function validationDiagnostics(errors: readonly { instancePath?: string; 
 export function validCatalog(value: unknown): value is Catalog {
   if (!record(value) || typeof value.version !== "string" || !Array.isArray(value.phases) || !record(value.steps)) return false;
   const phases = value.phases;
-  const guideLink = (url: unknown) => typeof url === "string" && /^https:\/\/starter\.devthomas\.site\/phases\/[123](?:#[a-z0-9-]+)?$/.test(url);
+  const guideLink = (url: unknown) => {
+    if (typeof url !== "string") return false;
+    const origin = siteOrigins.canonicalOrigin;
+    return url.startsWith(origin) && /^\/phases\/[123](?:#[a-z0-9-]+)?$/.test(url.slice(origin.length));
+  };
   if (phases.length !== 3 || !["phase-1", "phase-2", "phase-3"].every(id => phases.some(item => record(item) && item.id === id))) return false;
   if (!phases.every(item => record(item) && validPhase(item.id) && typeof item.title === "string" && item.preview === (item.id === "phase-3") && guideLink(item.url))) return false;
   if (!Object.values(value.steps).every(step => record(step) && typeof step.title === "string" && validPhase(step.phase) && guideLink(step.url))) return false;

@@ -1,3 +1,5 @@
+import siteOrigins from "../site-origin.json";
+
 export const phaseIds = ["phase-1", "phase-2", "phase-3"] as const;
 export type Phase = (typeof phaseIds)[number];
 export type RequirementLevel = "required" | "recommended" | "optional";
@@ -65,7 +67,7 @@ export type PhaseRequirements = Omit<RequirementsRegistry, "phases"> & {
   phases: Partial<Record<Phase, RegistryPhase>>;
 };
 
-const guideOrigin = "https://starter.devthomas.site";
+const guideOrigin = siteOrigins.canonicalOrigin;
 const idPattern = /^(?!(?:constructor|prototype)$)[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const guidePattern = /^\/[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_.-]+)*(?:#[a-zA-Z0-9_-]+)?$/;
 

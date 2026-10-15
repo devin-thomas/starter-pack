@@ -32,8 +32,8 @@ test("harness proof evidence rejects credentials and separates local from cloud"
 });
 const catalog: Catalog = {
   version: "0.1.0",
-  phases: [1, 2, 3].map(number => ({ id: `phase-${number}` as Catalog["phases"][number]["id"], title: `Phase ${number}`, url: `https://starter.devthomas.site/phases/${number}`, preview: number === 3 })),
-  steps: { "computer-setup": { title: "Computer Setup", phase: "phase-2", url: "https://starter.devthomas.site/phases/2" } },
+  phases: [1, 2, 3].map(number => ({ id: `phase-${number}` as Catalog["phases"][number]["id"], title: `Phase ${number}`, url: `https://starter.uppercut-labs.com/phases/${number}`, preview: number === 3 })),
+  steps: { "computer-setup": { title: "Computer Setup", phase: "phase-2", url: "https://starter.uppercut-labs.com/phases/2" } },
 };
 function state(): Progress {
   return { schema_version: 1, starter_pack_version: "0.1.0", updated_at: "2026-09-09T00:00:00Z", phase: { current: "phase-2", status: "in_progress" }, steps: {} };
@@ -119,4 +119,5 @@ test("online labels accept only the expected catalog shape and guide origin", ()
   assert.ok(validCatalog(catalog));
   assert.equal(validCatalog({ ...catalog, phases: [] }), false);
   assert.equal(validCatalog({ ...catalog, steps: { bad: { title: "Bad", phase: "phase-2", url: "https://evil.example" } } }), false);
+  assert.equal(validCatalog({ ...catalog, steps: { bad: { title: "Bad", phase: "phase-2", url: "https://starter.uppercut-labs.com.evil.test/phases/2" } } }), false);
 });

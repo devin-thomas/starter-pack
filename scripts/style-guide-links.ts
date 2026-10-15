@@ -1,5 +1,6 @@
 import { marked } from "marked";
 import type { Token } from "marked";
+import siteOrigins from "../src/site-origin.json";
 
 // Inspect JSON values, not quoted fragments inside serialized example prose.
 export function jsonResourceReferences(source: string): readonly string[] {
@@ -7,7 +8,9 @@ export function jsonResourceReferences(source: string): readonly string[] {
   let references: string[] = [];
   function visit(item: unknown): void {
     if (typeof item === "string") {
-      if (/^(?:\/(?!\/)|https:\/\/starter\.devthomas\.site\/)[^\s"'\\]*$/.test(item)) references.push(item);
+      const local = item.startsWith("/") && !item.startsWith("//");
+      const hosted = [siteOrigins.canonicalOrigin, siteOrigins.legacyOrigin].some(origin => item.startsWith(origin + "/"));
+      if ((local || hosted) && !/[\s"'\\]/.test(item)) references.push(item);
       return;
     }
     if (Array.isArray(item)) {

@@ -8,6 +8,7 @@ import type { SiteData } from "../src/App";
 import { validCatalog } from "../src/workbench/model";
 import { parseRegistry, projectCatalog, phaseIds } from "../src/workbench/registry";
 import { interfaceIcons, extraIcons, brandIcons } from "../src/workbench/icons";
+import siteOrigins from "../src/site-origin.json";
 
 export async function buildWorkbench(output: string, data: SiteData) {
   const base = `${output}/artifacts/progress-workbench`;
@@ -15,7 +16,7 @@ export async function buildWorkbench(output: string, data: SiteData) {
   const catalog = projectCatalog(registry, phaseIds.map(id => {
     const page = data.phases.find(page => page.id === id);
     if (!page) throw new Error(`Missing Workbench phase page: ${id}`);
-    return { id, title: page.title, url: `https://starter.devthomas.site/phases/${page.order}`, preview: registry.phases[id].preview === true };
+    return { id, title: page.title, url: `${siteOrigins.canonicalOrigin}/phases/${page.order}`, preview: registry.phases[id].preview === true };
   }));
   if (!validCatalog(catalog)) throw new Error("Invalid Progress Workbench catalog");
   const ajv = new Ajv2020({ code: { source: true }, allErrors: true });
@@ -52,6 +53,7 @@ export async function buildWorkbench(output: string, data: SiteData) {
   const iconLicenses = await Promise.all(["interface/LICENSE-lucide.txt", "brands/LICENSE-lobe-icons.txt", "brands/LICENSE-simple-icons.txt", "brands/DISCLAIMER-simple-icons.md"].map(path => readFile(`public/icons/${path}`, "utf8")));
   const css = (await readFile("src/workbench/style.css", "utf8")).replace("WORKBENCH_FONT", font.toString("base64")) + "\n" + iconCss.join("\n");
   const html = (await readFile("src/workbench/index.html", "utf8"))
+    .replace("WORKBENCH_ORIGIN", siteOrigins.canonicalOrigin)
     .replace("/* WORKBENCH_STYLE */", css)
     .replace("/* WORKBENCH_SCRIPT */", script.outputFiles[0].text.replace(/<\/script/gi, "<\\/script"))
     .replace("<!-- WORKBENCH_LICENSE -->", `<!-- Embedded font, icon and validation code licenses and icon provenance\n${[license, ...validatorLicenses, ...iconLicenses, JSON.stringify(iconSources)].join("\n\n").replace(/--/g, "- -")}\n-->`);
