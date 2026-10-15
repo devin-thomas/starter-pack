@@ -16,6 +16,10 @@
     {
       "pattern": "starter.devthomas.site",
       "custom_domain": true
+    },
+    {
+      "pattern": "starter.uppercut-labs.com",
+      "custom_domain": true
     }
   ],
   "ratelimits": [
