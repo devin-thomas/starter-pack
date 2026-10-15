@@ -130,7 +130,7 @@ export default {
         const target = new URL(siteOrigins.canonicalOrigin);
         target.pathname = url.pathname;
         target.search = url.search;
-        return Promise.resolve(Response.redirect(target.href, 308));
+        return Promise.resolve(Response.redirect(target.href, 301));
       }
       url.pathname = route === "/" ? "/index.html" : `${route}.html`;
       return env.ASSETS.fetch(new Request(url, request));

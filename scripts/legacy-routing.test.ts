@@ -28,13 +28,15 @@ test("Worker and real static-assets pipeline preserve the legacy routing contrac
     for (const alias of new Set([route, route === "/" ? "/index.html" : route + ".html", route === "/" ? "/" : route + "/"])) {
       for (const method of ["GET", "HEAD"]) {
         const response = await fetch(origins.legacyOrigin, alias + "?from=bookmark&next=https%3A%2F%2Fevil.example", method);
-        assert.equal(response.status, 308, alias);
+        assert.equal(response.status, 301, alias);
         const target = origins.canonicalOrigin + alias + "?from=bookmark&next=https%3A%2F%2Fevil.example";
         assert.equal(response.headers.get("Location"), target);
         const destination = await fetch(origins.canonicalOrigin, alias + "?from=bookmark&next=https%3A%2F%2Fevil.example", method);
         assert.equal(destination.status, 200, `one hop: ${target}`);
         assert.match(destination.headers.get("Content-Type") ?? "", /text\/html/);
-        if (method === "HEAD") assert.equal((await destination.arrayBuffer()).byteLength, 0);
+        const bytes = await destination.arrayBuffer();
+        if (method === "HEAD") assert.equal(bytes.byteLength, 0);
+        else assert.ok(Buffer.from(bytes).toString().includes(`<link rel="canonical" href="${origins.canonicalOrigin}${route}"`), `served canonical: ${route}`);
       }
     }
   }

@@ -16,7 +16,7 @@ owner's separate release approval.
 The Worker constructs a fixed canonical destination, preserving the requested
 path and query. Reading-page extensionless, trailing-slash and `.html` aliases
 serve HTML directly on the destination, so recognized legacy aliases take one
-308 hop. API routing precedes page routing. Unknown paths stay 404 and unsupported
+301 hop. API routing precedes page routing. Unknown paths stay 404 and unsupported
 non-API methods return 405. Forwarded host headers and query destinations never
 select a redirect host.
 
@@ -46,7 +46,7 @@ Worker-first patterns are alternatives if measured traffic warrants them.
 Disable only `LEGACY_HUMAN_REDIRECTS` first to restore legacy reading pages.
 Restore a known-good Worker version separately only when required. Permanent
 redirects can be cached by clients; disabling the switch cannot recall a cached
-308. Never remove old packets or numbered skill releases during rollback.
+301. Never remove old packets or numbered skill releases during rollback.
 
 Platform references, checked 2026-10-15:
 
