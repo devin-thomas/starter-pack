@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { handleFeedback, notification, parseSubmission, type FeedbackEnv } from "../src/worker";
+import siteOrigins from "../src/site-origin.json";
 
 const base = { kind: "feedback", phase: "general", message: "The setup steps helped." };
 const origin = "https://starter.devthomas.site";
@@ -158,4 +159,54 @@ test("explicit JSON acknowledgement delivers normalized data and reports success
   assert.equal(delivered.message, base.message);
   assert.equal(typeof delivered.submissionId, "string");
   assert.equal(Number.isNaN(Date.parse(delivered.receivedAt)), false);
+});
+
+test("each approved host accepts only its own exact Origin and never adds feedback CORS", async () => {
+  const approved = Object.values(siteOrigins);
+  for (const target of approved) {
+    const h = harness();
+    const valid = new Request(target + "/api/feedback", { method: "POST", headers: { Origin: target, "Content-Type": "application/json", "CF-Connecting-IP": "192.0.2.1" }, body: JSON.stringify(base) });
+    const result = await handleFeedback(valid, h.env, h.send);
+    assert.equal(result.status, 200, target);
+    assert.equal(result.headers.get("Access-Control-Allow-Origin"), null);
+    assert.equal(h.calls.length, 1);
+    for (const originHeader of [...approved.filter(value => value !== target), "https://other.uppercut-labs.com", target + ".evil.example", "null", ""]) {
+      const denied = harness();
+      const input = new Request(target + "/api/feedback", { method: "POST", headers: { Origin: originHeader, "Content-Type": "application/json", "CF-Connecting-IP": "192.0.2.1", "X-Forwarded-Host": new URL(target).host }, body: JSON.stringify(base) });
+      assert.equal((await handleFeedback(input, denied.env, denied.send)).status, 403, `${target}: ${originHeader}`);
+      assert.equal(denied.calls.length, 0);
+      assert.equal(denied.limits.length, 0);
+    }
+    const missing = new Request(target + "/api/feedback", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(base) });
+    assert.equal((await handleFeedback(missing, h.env, h.send)).status, 403);
+  }
+  for (const target of ["https://other.uppercut-labs.com", "http://starter.uppercut-labs.com", "https://starter.uppercut-labs.com:444", "https://starter.uppercut-labs.com.evil.example"]) {
+    const h = harness();
+    const input = new Request(target + "/api/feedback", { method: "POST", headers: { Origin: target, "Content-Type": "application/json" }, body: JSON.stringify(base) });
+    assert.equal((await handleFeedback(input, h.env, h.send)).status, 403);
+    assert.equal(h.calls.length, 0);
+  }
+});
+
+test("declared oversized bodies are rejected before delivery", async () => {
+  const h = harness();
+  assert.equal((await handleFeedback(request(base, { "Content-Length": "48001" }), h.env, h.send)).status, 400);
+  assert.equal(h.calls.length, 0);
+});
+
+test("delivery failures expose neither visitor data nor webhook configuration", async (t) => {
+  const logs: unknown[][] = [];
+  t.mock.method(console, "error", (...values: unknown[]) => { logs.push(values); });
+  const h = harness();
+  const send: typeof fetch = async () => { throw new Error("private webhook token and visitor message"); };
+  const response = await handleFeedback(request({ ...base, message: "private visitor message" }), h.env, send);
+  assert.equal(response.status, 502);
+  const body = await response.text();
+  assert.ok(!body.includes("private"));
+  assert.ok(!body.includes("hook.us2.make.com"));
+  assert.equal(response.headers.get("Access-Control-Allow-Origin"), null);
+  const serialized = JSON.stringify(logs);
+  assert.ok(serialized.includes("feedback_notification_unconfirmed"));
+  assert.ok(!serialized.includes("private"));
+  assert.ok(!serialized.includes("hook.us2.make.com"));
 });

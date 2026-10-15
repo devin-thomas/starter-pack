@@ -11,7 +11,7 @@ export interface FeedbackEnv {
   FEEDBACK_TOTAL_LIMITER: Limiter;
 }
 
-const origins = new Set(["https://starter.devthomas.site", "https://starter-pack.uppercut-labs.workers.dev"]);
+const origins = new Set(Object.values(siteOrigins));
 const maxBytes = 48_000;
 const reply = (status: number, error?: string) => Response.json(error ? { ok: false, error } : { ok: true }, {
   status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", ...(status === 429 ? { "Retry-After": "60" } : {}) },
