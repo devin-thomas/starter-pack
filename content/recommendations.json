@@ -17,7 +17,7 @@
     "kind": "recommendation",
     "ide": {
       "id": "vscode",
-      "setup": "https://starter.devthomas.site/setup/ide.md",
+      "setup": "https://starter.uppercut-labs.com/setup/ide.md",
       "agent_installs_and_configures": true
     }
   },
@@ -35,7 +35,7 @@
     "kind": "recommendation",
     "ide": {
       "id": "vscode",
-      "setup": "https://starter.devthomas.site/setup/ide.md",
+      "setup": "https://starter.uppercut-labs.com/setup/ide.md",
       "agent_installs_and_configures": true
     }
   },
@@ -53,7 +53,7 @@
     "kind": "recommendation",
     "ide": {
       "id": "cursor",
-      "setup": "https://starter.devthomas.site/setup/ide.md",
+      "setup": "https://starter.uppercut-labs.com/setup/ide.md",
       "agent_installs_and_configures": true
     }
   },
@@ -71,7 +71,7 @@
     "kind": "recommendation",
     "ide": {
       "id": "antigravity",
-      "setup": "https://starter.devthomas.site/setup/ide.md",
+      "setup": "https://starter.uppercut-labs.com/setup/ide.md",
       "agent_installs_and_configures": true
     }
   },
@@ -84,7 +84,7 @@
     "recommended_by": "Devin Thomas",
     "checked_at": "2026-09-09",
     "reason": "Required: a signed-in companion on your phone, separate from your development harness.\n\nSupported: ChatGPT, Claude, and Cursor. Gemini is not supported; other companions may vary.\n\nFor Antigravity users or those with untested or unsupported harnesses, free Claude Sonnet is a Phase 1 workaround. Sonnet 4.6 at Medium effort has been enough within the free allowance in my testing; use those settings when available.",
-    "url": "https://starter.devthomas.site/phases/1#prepare-your-apps-and-accounts",
+    "url": "https://starter.uppercut-labs.com/phases/1#prepare-your-apps-and-accounts",
     "phase": "phase-1",
     "kind": "recommendation"
   },

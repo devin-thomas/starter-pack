@@ -1,3 +1,4 @@
+import siteOrigins from "../src/site-origin.json" with { type: "json" };
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -23,14 +24,14 @@ for (const forbidden of ["Pending owner decision", "0.1.0-draft", "One remaining
 
 const liveAt = process.argv.indexOf("--live");
 const live = liveAt >= 0 ? new URL(process.argv[liveAt + 1]) : null;
-if (live && (live.protocol !== "https:" || live.hostname !== "starter.devthomas.site")) {
+if (live && (live.origin !== siteOrigins.canonicalOrigin)) {
   throw new Error("Live checks require the canonical HTTPS host");
 }
 
 async function read(route, contentType) {
   if (live) {
     const response = await fetch(new URL(route, live), {
-      signal: AbortSignal.timeout(15_000),
+      redirect: "manual", signal: AbortSignal.timeout(15_000),
       cache: "no-store",
     });
     assert.equal(response.status, 200, `${route}: HTTP ${response.status}`);
@@ -69,14 +70,14 @@ assert(entry, "Kotlin catalog entry");
 for (const field of ["version", "status", "updated", "accepted_through"]) {
   assert.equal(entry[field], guide[field], `catalog ${field}`);
 }
-assert.equal(entry.html, "https://starter.devthomas.site/style/Kotlin");
-assert.equal(entry.markdown, "https://starter.devthomas.site/style/Kotlin.md");
-assert.equal(entry.json, "https://starter.devthomas.site/style/Kotlin.json");
+assert.equal(entry.html, siteOrigins.canonicalOrigin + "/style/Kotlin");
+assert.equal(entry.markdown, siteOrigins.canonicalOrigin + "/style/Kotlin.md");
+assert.equal(entry.json, siteOrigins.canonicalOrigin + "/style/Kotlin.json");
 const agentCatalog = JSON.parse(await read("/agent/catalog.json", /application\/json/));
 const agentEntry = agentCatalog.resources.find(item => item.id === "style-kotlin");
 assert.equal(agentEntry?.markdown, entry.markdown, "Kotlin agent discovery");
 assert((await read("/llms.txt", /text\/plain/)).includes(`${expected.route}.md`), "llms discovery");
-assert((await read("/sitemap.xml", /(?:application|text)\/xml/)).includes(`https://starter.devthomas.site${expected.route}`), "human sitemap");
+assert((await read("/sitemap.xml", /(?:application|text)\/xml/)).includes(`${siteOrigins.canonicalOrigin}${expected.route}`), "human sitemap");
 
 console.log(JSON.stringify({
   surface: live ? live.href : "built dist",

@@ -1,4 +1,5 @@
 import validate from "progress-validator";
+import siteOrigins from "../site-origin.json";
 import { icon, type IconName, phaseIcons, providerIcon, statusIcons } from "./icons";
 import {
   type Catalog,
@@ -24,7 +25,7 @@ import {
 } from "./model";
 
 declare const __WORKBENCH_CATALOG__: Catalog;
-const origin = "https://starter.devthomas.site";
+const origin = siteOrigins.canonicalOrigin;
 const metadataUrl = `${origin}/artifacts/progress-workbench/catalog.json`;
 const maxBytes = 2 * 1024 * 1024;
 
@@ -446,7 +447,7 @@ async function loadCatalog() {
   }
 }
 
-if (["starter.devthomas.site", "starter-pack.uppercut-labs.workers.dev"].includes(location.hostname)) {
+if (Object.values(siteOrigins).some(value => new URL(value).hostname === location.hostname)) {
   element("file-tools").hidden = true;
   element("drop-zone").replaceChildren(node("p", "Download this HTML file from Starter Pack's templates page, then open it on your own computer."));
 } else {

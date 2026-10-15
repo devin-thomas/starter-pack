@@ -1,3 +1,4 @@
+import siteOrigins from "../src/site-origin.json" with { type: "json" };
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -70,10 +71,10 @@ const specs = [
 ];
 const liveAt = process.argv.indexOf("--live");
 const live = liveAt >= 0 ? new URL(process.argv[liveAt + 1]) : null;
-if (live && (live.protocol !== "https:" || live.hostname !== "starter.devthomas.site")) throw new Error("Live checks require the canonical HTTPS host");
+if (live && (live.origin !== siteOrigins.canonicalOrigin)) throw new Error("Live checks require the canonical HTTPS host");
 async function read(route, contentType) {
   if (live) {
-    const response = await fetch(new URL(route, live), { signal: AbortSignal.timeout(15_000), cache: "no-store" });
+    const response = await fetch(new URL(route, live), { redirect: "manual", signal: AbortSignal.timeout(15_000), cache: "no-store" });
     assert.equal(response.status, 200, route + ": HTTP " + response.status);
     assert(contentType.test(response.headers.get("content-type") || ""), route + ": wrong MIME type");
     return response.text();
@@ -118,10 +119,10 @@ for (const spec of specs) {
   assert(card.includes("style-status") && !card.includes("<p"), spec.id + ": hub card");
   const entry = catalog.guides.find((item) => item.id === spec.id);
   assert(entry && entry.status === "in-progress", spec.id + ": catalog status");
-  assert.equal(entry.markdown, "https://starter.devthomas.site" + spec.route + ".md", spec.id + ": catalog markdown");
+  assert.equal(entry.markdown, siteOrigins.canonicalOrigin + spec.route + ".md", spec.id + ": catalog markdown");
   assert.equal(agentCatalog.resources.find((item) => item.id === "style-" + spec.id)?.markdown, entry.markdown, spec.id + ": agent catalog");
   assert(llms.includes(spec.route + ".md"), spec.id + ": llms");
-  assert(sitemap.includes("https://starter.devthomas.site" + spec.route), spec.id + ": sitemap");
+  assert(sitemap.includes(siteOrigins.canonicalOrigin + spec.route), spec.id + ": sitemap");
   results.push({ id: spec.id, rules: ids.length, markdownSha256: createHash("sha256").update(raw).digest("hex") });
 }
 console.log(JSON.stringify({ surface: live ? live.href : "built dist", status: "passed", guides: results }));

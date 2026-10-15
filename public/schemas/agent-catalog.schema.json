@@ -79,7 +79,7 @@
                 "html": {
                   "type": "string",
                   "format": "uri",
-                  "pattern": "^https://starter\\.devthomas\\.site/phases/[123]#[a-z0-9-]+$"
+                  "pattern": "^https://(?:starter\\.uppercut-labs\\.com|starter\\.devthomas\\.site)/phases/[123]#[a-z0-9-]+$"
                 }
               }
             }
@@ -181,7 +181,7 @@
     "resourceUrl": {
       "type": "string",
       "format": "uri",
-      "pattern": "^https://starter\\.devthomas\\.site/"
+      "pattern": "^https://(?:starter\\.uppercut-labs\\.com|starter\\.devthomas\\.site)/"
     }
   }
 }

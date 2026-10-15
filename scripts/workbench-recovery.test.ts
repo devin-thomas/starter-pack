@@ -7,8 +7,8 @@ import { phaseGate, currentStep, safeProgress, readProgress, validCatalog, phase
 const registry = parseRegistry(JSON.parse(await readFile("content/workbench-steps.json", "utf8")));
 const catalog: Catalog = {
   version: registry.version, requirements_revision: registry.requirements_revision, requirements: registry,
-  phases: ["phase-1", "phase-2", "phase-3"].map(id => ({ id: id as Progress["phase"]["current"], title: id, url: `https://starter.devthomas.site/phases/${id.slice(-1)}`, preview: id === "phase-3" })),
-  steps: Object.fromEntries(Object.entries(registry.steps).map(([id, step]) => [id, { ...step, url: `https://starter.devthomas.site/phases/${step.phase.slice(-1)}` }])),
+  phases: ["phase-1", "phase-2", "phase-3"].map(id => ({ id: id as Progress["phase"]["current"], title: id, url: `https://starter.uppercut-labs.com/phases/${id.slice(-1)}`, preview: id === "phase-3" })),
+  steps: Object.fromEntries(Object.entries(registry.steps).map(([id, step]) => [id, { ...step, url: `https://starter.uppercut-labs.com/phases/${step.phase.slice(-1)}` }])),
 };
 function state(): Progress {
   return { schema_version: 1, starter_pack_version: "0.2.0", updated_at: "2026-09-10T12:00:00Z", phase: { current: "phase-1", status: "in_progress" }, steps: {} };

@@ -10,7 +10,7 @@ import { currentStep, phaseCompletion, phaseGate, record, type Progress } from "
 // These checks read contracts and synthetic state only; no setup commands are executed.
 const registry = parseRegistry(registrySource);
 const catalog = projectCatalog(registry, phaseIds.map(id => ({
-  id, title: id, url: `https://starter.devthomas.site/phases/${id.slice(-1)}`, preview: id === "phase-3",
+  id, title: id, url: `https://starter.uppercut-labs.com/phases/${id.slice(-1)}`, preview: id === "phase-3",
 })));
 const [ide, windows, macos, remote, transfer, authentication, serve, troubleshooting, skill] = await Promise.all([
   "public/setup/ide.md", "public/setup/windows.md", "public/setup/macos.md",

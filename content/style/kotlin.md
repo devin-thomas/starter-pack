@@ -405,8 +405,8 @@ The companion pure Kotlin examples were compiled with warnings treated as errors
 
 House sources establish the originating preferences. Platform sources explain mechanisms; their default stylistic advice does not overrule an explicit house choice. Project-specific configuration and private decision history are intentionally separate from this reusable guide.
 
-- [H1] [Published TypeScript guide, 1.0.0](https://starter.devthomas.site/style/TypeScript)
-- [H2] [Published Godot guide, 1.0.1](https://starter.devthomas.site/style/Godot)
+- [H1] [Published TypeScript guide, 1.0.0](https://starter.uppercut-labs.com/style/TypeScript)
+- [H2] [Published Godot guide, 1.0.1](https://starter.uppercut-labs.com/style/Godot)
 - [S1] [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html)
 - [S2] [Kotlin properties](https://kotlinlang.org/docs/properties.html)
 - [S3] [Kotlin collections overview](https://kotlinlang.org/docs/collections-overview.html)
