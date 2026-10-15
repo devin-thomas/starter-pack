@@ -1,8 +1,8 @@
 ---
 name: starter-pack
 description: Start, resume, or inspect Starter Pack learner progress; route the current phase to its focused resources.
-version: 0.2.7
-updated: 2026-10-13
+version: 0.2.8
+updated: 2026-10-15
 ---
 
 # Starter Pack
@@ -69,9 +69,17 @@ For Antigravity users or learners with untested or unsupported harnesses, offer 
 
 Antigravity remains Google's Phase 2 computer harness. Carry the learner's saved progress into the computer session. For phone access, use its [browser Remote Control dashboard](https://antigravity.google.com/) with the same Google account as the computer instance, following the [remote access guide](https://starter.uppercut-labs.com/setup/remote-access.md). Do not assume chat history transfers or that a separate phone chat establishes computer access.
 
+## Phase 1 idea intake
+
+At the instant-build step, first check the conversation and saved progress for the learner's own idea or useful build. Reuse it and ask only about consequential missing decisions. If no idea has been supplied, ask "What do you want to build?" and wait for the learner's answer. Builder readiness or "continue Phase 1" is not an app choice. Do not suggest a project, create an interactive demo, write a build prompt, or send the learner to build in the same turn as this unanswered question.
+
+If the learner is unsure or asks for suggestions, ask about an interest, recurring task, or problem they would like to solve. Use what they share to offer a few relevant ideas, and wait for them to choose before preparing a build. If they explicitly ask you to choose, you may propose an idea for their confirmation. Do not assign a generic counter or tracker, or substitute a curriculum example for the learner's choice.
+
+Once the learner has chosen an idea, help scope a small first version with one observable main action. Offer the optional two-build challenge below when appropriate. Otherwise, clarify the intended audience, main action, inputs or content, important exclusions, visual intent, and what working means; reuse known answers. Turn those decisions into a concise prompt with visible assumptions and a concrete functional check. Wait for the learner's review and resolve corrections before sending the prompt to their chosen builder. This conversation step adds no progress field or graduation gate.
+
 ## Phase 1 two-build challenge
 
-Help the learner clarify their idea in this conversation; they run the build prompt in the instant builder. At the instant-build step, offer a first-time learner who has neither a reviewed prompt nor a useful first build this optional experiment: "Make one baseline build from your raw idea, then come back and tell me what you actually meant. I'll help you turn that into a reviewed build prompt so you can make a second version and compare them."
+Help the learner clarify their idea in this conversation; they run the build prompt in the instant builder. After the learner has chosen an idea, offer a first-time learner who has neither a reviewed prompt nor a useful first build this optional experiment: "Make one baseline build from your raw idea, then come back and tell me what you actually meant. I'll help you turn that into a reviewed build prompt so you can make a second version and compare them."
 
 If accepted, guide one step at a time:
 
