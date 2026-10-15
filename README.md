@@ -4,6 +4,9 @@ A free guide from Devin Thomas at Uppercut Labs for making and deploying softwar
 
 Visit [Starter Pack](https://starter.devthomas.site).
 
+The product and package name `dvn` is always lowercase. Published skill
+declarations use the lowercase filename `dvn.json`.
+
 ## Public style guides
 
 The site publishes stable coding style guides under [`/style`](https://starter.devthomas.site/style):
