@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-test("proposed two-host release preserves Worker identity and defensive bindings with redirects off", async () => {
+test("follow-up releases preserve the approved two-host routing state and defensive bindings", async () => {
   const config = JSON.parse(await readFile("wrangler.jsonc", "utf8"));
   assert.equal(config.name, "starter-pack");
   assert.equal(config.main, "src/worker.ts");
@@ -17,5 +17,5 @@ test("proposed two-host release preserves Worker identity and defensive bindings
     { name: "FEEDBACK_TOTAL_LIMITER", namespace_id: "1002", simple: { limit: 30, period: 60 } },
   ]);
   assert.deepEqual(config.assets, { binding: "ASSETS", run_worker_first: true, directory: "./dist", html_handling: "none", not_found_handling: "404-page" });
-  assert.deepEqual(config.vars, { LEGACY_HUMAN_REDIRECTS: "disabled" });
+  assert.deepEqual(config.vars, { LEGACY_HUMAN_REDIRECTS: "enabled" });
 });

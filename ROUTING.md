@@ -6,12 +6,13 @@ the same reading-page list to content generation and the Worker; public owned
 skill lessons extend that list. The local integration test checks that the list
 equals the actual built HTML inventory, excluding the 404 and Workbench download.
 
-## Source preparation and activation
+## Approved routing state
 
-`LEGACY_HUMAN_REDIRECTS` defaults to `disabled`. Only the exact value `enabled`
-activates old-origin GET/HEAD reading-page redirects. A domain attachment does
-not enable redirects. Production deployment and switch changes require the
-owner's separate release approval.
+`LEGACY_HUMAN_REDIRECTS` defaults to `enabled` after the owner-approved
+2026-10-15 cutover. Follow-up deployments preserve that approved state. Only the
+exact value `enabled` activates old-origin GET/HEAD reading-page redirects.
+New-host staging and first-response rollback explicitly override it to `disabled`.
+Production deployments and switch changes still require the owner's approval.
 
 The Worker constructs a fixed canonical destination, preserving the requested
 path and query. Reading-page extensionless, trailing-slash and `.html` aliases

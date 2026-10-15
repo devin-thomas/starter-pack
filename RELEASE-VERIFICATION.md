@@ -2,7 +2,9 @@
 
 Source preparation is not live acceptance. Production changes, new domain
 attachment, legacy redirect activation, provider configuration and real feedback
-delivery require separate owner approval.
+delivery require separate owner approval. The initial Worker cutover passed its
+release gates on 2026-10-15. The checked-in redirect default now matches that
+approved enabled state; each follow-up source release remains owner-gated.
 
 ## Source and local gates
 
@@ -18,7 +20,7 @@ redirects and wrong destinations. Feedback tests reject mismatched, missing,
 forged and sibling origins. Do not substitute a static-file preview for the
 Worker/static-assets tests.
 
-## Live HTTP gates: pending release
+## Live HTTP release gates
 
 Use normal DNS and TLS, no host-file or IP override. Build the exact approved
 source revision first. After owner-approved new-host activation, run:
@@ -29,6 +31,11 @@ npm run verify:legacy -- https://starter.devthomas.site --before-redirects
 npm run verify:deployment -- https://starter-pack.uppercut-labs.workers.dev
 ```
 
+The `--before-redirects` check belongs to explicit new-host staging with
+`wrangler deploy --var LEGACY_HUMAN_REDIRECTS:disabled`. For routine releases
+after cutover, retain the enabled default and run the legacy command without
+that option.
+
 Only after new-host P0 acceptance and approval to enable the redirect switch:
 
 ```sh
@@ -38,7 +45,12 @@ npm run verify:legacy -- https://starter.devthomas.site
 The legacy script tests the old host separately; it never relies on following a
 redirect to read machine resources. It checks all pre-migration pinned files and
 all built machine/static bodies, GET/HEAD, all reading destinations, downloads,
-CORS and private-path denials. A failed P0 check halts rollout. Disable the legacy
+CORS and private-path denials. Catalog comparison ignores only validated build
+timestamps, matching the canonical verifier. The served robots policy must retain
+the exact source suffix; only the SHA-256-pinned Cloudflare managed preamble in the
+test fixture is permitted, and learner-resource access must still pass. Any changed
+provider preamble requires review. All other bodies, including every
+pinned release and packet, require exact bytes. A failed P0 check halts rollout. Disable the legacy
 redirect switch first; restore a known-good Worker version separately if needed.
 
 Style audits target the exact configured canonical origin and reject redirect
@@ -46,7 +58,7 @@ responses. The workflow's optional `verify_live` input is for an already approve
 deployed release; pull requests and source pushes run local checks without making
 live acceptance claims. The workflow does not deploy.
 
-## True agent smoke matrix: pending release
+## True agent smoke matrix
 
 Use a real network-capable model/tool client. Have it retrieve the URL itself and
 identify the resource's title, version or a specific instruction from the returned
