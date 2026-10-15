@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { handleFeedback, notification, parseSubmission, type FeedbackEnv } from "../src/worker";
+import worker, { handleFeedback, notification, parseSubmission, type FeedbackEnv } from "../src/worker";
 import siteOrigins from "../src/site-origin.json";
 
 const base = { kind: "feedback", phase: "general", message: "The setup steps helped." };
@@ -192,6 +192,22 @@ test("declared oversized bodies are rejected before delivery", async () => {
   const h = harness();
   assert.equal((await handleFeedback(request(base, { "Content-Length": "48001" }), h.env, h.send)).status, 400);
   assert.equal(h.calls.length, 0);
+});
+
+test("actual Worker entry preserves valid old and new feedback POSTs while page redirects are enabled", async (t) => {
+  for (const target of Object.values(siteOrigins)) {
+    const h = harness();
+    h.env.LEGACY_HUMAN_REDIRECTS = "enabled";
+    t.mock.method(globalThis, "fetch", h.send);
+    const input = new Request(target + "/api/feedback", { method: "POST", headers: { Origin: target, "Content-Type": "application/json", "CF-Connecting-IP": "192.0.2.1" }, body: JSON.stringify(base) });
+    const response = await worker.fetch(input, h.env);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("Location"), null);
+    assert.equal(response.headers.get("Access-Control-Allow-Origin"), null);
+    assert.deepEqual(await response.json(), { ok: true });
+    assert.equal(h.calls.length, 1);
+    t.mock.restoreAll();
+  }
 });
 
 test("delivery failures expose neither visitor data nor webhook configuration", async (t) => {

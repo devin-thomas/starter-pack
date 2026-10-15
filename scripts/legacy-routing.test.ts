@@ -2,9 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import test from "node:test";
-import { build } from "esbuild";
-import { Miniflare, convertV4MiniflareOptions } from "miniflare";
-import { unstable_getMiniflareWorkerOptions } from "wrangler";
+import { createLocalWorker } from "./local-worker";
 import { files, loadContent, routes } from "./content";
 import worker, { readingRoute } from "../src/worker";
 import origins from "../src/site-origin.json";
@@ -13,13 +11,11 @@ const digest = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest(
 
 test("Worker and real static-assets pipeline preserve the legacy routing contract", { timeout: 30_000 }, async (t) => {
   await loadContent();
-  const output = await build({ entryPoints: ["src/worker.ts"], bundle: true, write: false, format: "esm", platform: "browser" });
-  const { workerOptions: { modulesRules: _moduleRules, ...workerOptions } } = unstable_getMiniflareWorkerOptions("wrangler.jsonc");
   const config = JSON.parse(await readFile("wrangler.jsonc", "utf8"));
   assert.equal(config.assets.run_worker_first, true);
   assert.equal(config.assets.html_handling, "none");
   assert.equal(config.vars.LEGACY_HUMAN_REDIRECTS, "disabled");
-  const mf = new Miniflare(convertV4MiniflareOptions({ ...workerOptions, modules: true, script: output.outputFiles[0].text, bindings: { LEGACY_HUMAN_REDIRECTS: "enabled" } }));
+  const mf = await createLocalWorker("enabled");
   t.after(() => mf.dispose());
   const fetch = async (origin: string, path: string, method = "GET") => {
     const response = await mf.dispatchFetch(origin + path, { method, redirect: "manual" });
@@ -66,6 +62,14 @@ test("Worker and real static-assets pipeline preserve the legacy routing contrac
     assert.equal((await head.arrayBuffer()).byteLength, 0);
   }
   assert.equal((await fetch(origins.legacyOrigin, "/artifacts/progress-workbench/catalog.json")).headers.get("Access-Control-Allow-Origin"), "*");
+  for (const path of ["/agent/catalog.json", "/guide", "/skills/starter-pack/current/SKILL.md"]) {
+    assert.equal((await fetch(origins.canonicalOrigin, path)).headers.get("Access-Control-Allow-Origin"), null, path);
+  }
+  for (const method of ["POST", "OPTIONS"]) {
+    const denied = await fetch(origins.canonicalOrigin, "/api/feedback", method);
+    assert.equal(denied.status, method === "POST" ? 403 : 405);
+    assert.equal(denied.headers.get("Access-Control-Allow-Origin"), null);
+  }
   for (const host of [origins.canonicalOrigin, origins.workerOrigin, "https://starter.devthomas.site.evil.example", "https://unrelated.example"]) {
     assert.equal((await fetch(host, "/guide")).status, 200, host);
   }

@@ -9,10 +9,10 @@ const { data: expected, content } = matter(input);
 const markdown = content.trimStart();
 const liveAt = process.argv.indexOf("--live");
 const live = liveAt >= 0 ? new URL(process.argv[liveAt + 1]) : null;
-if (live && (live.protocol !== "https:" || live.hostname !== "starter.devthomas.site")) throw new Error("Live checks require the canonical HTTPS host");
+if (live && (live.origin !== siteOrigins.canonicalOrigin)) throw new Error("Live checks require the canonical HTTPS host");
 async function read(route, contentType) {
   if (!live) return readFile(`dist${route === "/style" ? "/style.html" : route === expected.route ? `${route}.html` : route}`, "utf8");
-  const response = await fetch(new URL(route,live), { signal:AbortSignal.timeout(15000),cache:"no-store" });
+  const response = await fetch(new URL(route,live), { redirect:"manual",signal:AbortSignal.timeout(15000),cache:"no-store" });
   assert.equal(response.status, 200, `${route}: HTTP ${response.status}`);
   assert(contentType.test(response.headers.get("content-type") || ""), `${route}: wrong MIME type`);
   return response.text();

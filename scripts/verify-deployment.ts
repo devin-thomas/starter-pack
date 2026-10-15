@@ -7,8 +7,11 @@ import { readFile } from "node:fs/promises";
 import { validCatalog } from "../src/workbench/model";
 import { parseRegistry } from "../src/workbench/registry";
 import { assertSameAgentCatalog } from "./deployment-catalog";
+import siteOrigins from "../src/site-origin.json";
+import { assertPinnedBytes } from "./migration-contract";
+import baseline from "./fixtures/pre-domain-migration-releases.json";
 
-const base = new URL(process.argv[2] || "https://starter.devthomas.site");
+const base = new URL(process.argv[2] || siteOrigins.canonicalOrigin);
 const local = process.argv.includes("--local");
 if (local && (base.protocol !== "http:" || base.hostname !== "127.0.0.1")) throw new Error("Local verification requires an explicit HTTP loopback URL.");
 if (!local && base.protocol !== "https:")
@@ -26,8 +29,8 @@ try {
 
 async function readBytes(route: string, expectedType: RegExp) {
   const url = new URL(route, base);
-  const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
+  const response = await fetch(url, { signal: AbortSignal.timeout(15_000), redirect: "manual" });
+  if (response.status !== 200 || response.headers.has("Location")) throw new Error(`${url}: expected direct 200, received HTTP ${response.status}`);
   if (!expectedType.test(response.headers.get("content-type") || "")) {
     throw new Error(
       `${url}: unexpected content type ${response.headers.get("content-type")}`,
@@ -41,6 +44,10 @@ async function readBytes(route: string, expectedType: RegExp) {
 async function read(route: string, expectedType: RegExp) {
   const body = (await readBytes(route, expectedType)).toString("utf8");
   if (!body.trim()) throw new Error(`${route}: empty text response`);
+  if (expectedType.test("text/html")) {
+    const canonical = siteOrigins.canonicalOrigin + new URL(route, base).pathname;
+    if (!body.includes(`<link rel="canonical" href="${canonical}"`)) throw new Error(`${route}: wrong canonical URL`);
+  }
   return body;
 }
 
@@ -95,6 +102,9 @@ await Promise.all([
       throw new Error("GitHub startup packet is missing or differs from this release.");
   }),
 ]);
+for (const [file, hash] of Object.entries(baseline.files)) {
+  assertPinnedBytes(await readBytes(file.slice("public".length), /text\/plain/), hash, file);
+}
 const start = await read("/agent/start.md", /text\/plain/);
 assertGoogleResourceAccess(await read("/robots.txt", /text\/plain/));
 const packet = await read("/agent/phase-1-packet.txt", /text\/plain/);
@@ -116,15 +126,15 @@ if (JSON.stringify(workbenchManifest) !== JSON.stringify(JSON.parse(await readFi
 if (!/^[a-f0-9]{64}$/.test(workbenchManifest.sha256) || !Number.isSafeInteger(workbenchManifest.bytes) || workbenchManifest.bytes <= 0)
   throw new Error("Workbench integrity manifest is invalid.");
 for (const route of ["/artifacts/progress-workbench/index.html", "/artifacts/progress-workbench/", "/artifacts/progress-workbench"]) {
-  const response = await fetch(new URL(route, base), { signal: AbortSignal.timeout(15_000) });
-  if (!response.ok || !response.headers.get("content-type")?.includes("application/octet-stream") || !response.headers.get("content-disposition")?.includes('attachment; filename="index.html"'))
+  const response = await fetch(new URL(route, base), { signal: AbortSignal.timeout(15_000), redirect: "manual" });
+  if (response.status !== 200 || response.headers.has("Location") || !response.headers.get("content-type")?.includes("application/octet-stream") || !response.headers.get("content-disposition")?.includes('attachment; filename="index.html"'))
     throw new Error(`${route}: Workbench must be served as a file download.`);
   const bytes = Buffer.from(await response.arrayBuffer());
   if (bytes.length !== workbenchManifest.bytes || createHash("sha256").update(bytes).digest("hex") !== workbenchManifest.sha256)
     throw new Error(`${route}: Workbench download differs from its published integrity manifest.`);
 }
-const workbenchCatalog = await fetch(new URL("/artifacts/progress-workbench/catalog.json", base), { headers: { Origin: "http://127.0.0.1:8000" }, signal: AbortSignal.timeout(15_000) });
-if (!workbenchCatalog.ok || workbenchCatalog.headers.get("access-control-allow-origin") !== "*")
+const workbenchCatalog = await fetch(new URL("/artifacts/progress-workbench/catalog.json", base), { headers: { Origin: "http://127.0.0.1:8000" }, signal: AbortSignal.timeout(15_000), redirect: "manual" });
+if (workbenchCatalog.status !== 200 || workbenchCatalog.headers.has("Location") || workbenchCatalog.headers.get("access-control-allow-origin") !== "*")
   throw new Error("Workbench guide labels must support anonymous cross-origin reads.");
 const labels = await workbenchCatalog.text();
 if (labels !== await readFile("dist/artifacts/progress-workbench/catalog.json", "utf8") || !validCatalog(JSON.parse(labels))) throw new Error("Live Workbench catalog differs or is invalid.");

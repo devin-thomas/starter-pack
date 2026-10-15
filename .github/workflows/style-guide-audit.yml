@@ -2,6 +2,11 @@ name: Style guide audit
 
 on:
   workflow_dispatch:
+    inputs:
+      verify_live:
+        description: 'Verify an owner-approved deployed migration'
+        type: boolean
+        default: false
   pull_request:
     paths: ['content/style/**', 'scripts/**', 'src/App.tsx', 'src/index.css', 'package*.json', '.github/workflows/style-guide-audit.yml']
   push:
@@ -38,14 +43,14 @@ jobs:
         env:
           STYLE_BROWSER_MODULE: file:///tmp/style-audit-browser/node_modules/playwright/index.mjs
         run: node scripts/style-guide-browser.mjs
-      - name: Verify canonical live resources after automatic deployment
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Verify canonical live resources after owner-approved release
+        if: github.event_name == 'workflow_dispatch' && inputs.verify_live
         run: |
           for attempt in $(seq 1 12); do
-            if node scripts/style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live.json \
-              && node scripts/godot-style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live-godot.json \
-              && node scripts/kotlin-style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live-kotlin.json \
-              && node scripts/wip-style-guide-surfaces.mjs --live https://starter.devthomas.site > audit-live-wip.json; then
+            if node scripts/style-guide-surfaces.mjs --live https://starter.uppercut-labs.com > audit-live.json \
+              && node scripts/godot-style-guide-surfaces.mjs --live https://starter.uppercut-labs.com > audit-live-godot.json \
+              && node scripts/kotlin-style-guide-surfaces.mjs --live https://starter.uppercut-labs.com > audit-live-kotlin.json \
+              && node scripts/wip-style-guide-surfaces.mjs --live https://starter.uppercut-labs.com > audit-live-wip.json; then
               cat audit-live.json
               cat audit-live-godot.json
               cat audit-live-kotlin.json
@@ -56,6 +61,9 @@ jobs:
           done
           echo 'Canonical live resources did not match this source revision.' >&2
           exit 1
+      - name: Verify distinct legacy direct reads and human redirects
+        if: github.event_name == 'workflow_dispatch' && inputs.verify_live
+        run: npm run verify:legacy > audit-legacy.json
       - run: git rev-parse HEAD > audit-source-revision.txt
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
@@ -64,6 +72,7 @@ jobs:
           path: |
             audit-check.log
             audit-live.json
+            audit-legacy.json
             audit-live-godot.json
             audit-live-kotlin.json
             audit-live-wip.json

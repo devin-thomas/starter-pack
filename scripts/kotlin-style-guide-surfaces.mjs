@@ -24,14 +24,14 @@ for (const forbidden of ["Pending owner decision", "0.1.0-draft", "One remaining
 
 const liveAt = process.argv.indexOf("--live");
 const live = liveAt >= 0 ? new URL(process.argv[liveAt + 1]) : null;
-if (live && (live.protocol !== "https:" || live.hostname !== "starter.devthomas.site")) {
+if (live && (live.origin !== siteOrigins.canonicalOrigin)) {
   throw new Error("Live checks require the canonical HTTPS host");
 }
 
 async function read(route, contentType) {
   if (live) {
     const response = await fetch(new URL(route, live), {
-      signal: AbortSignal.timeout(15_000),
+      redirect: "manual", signal: AbortSignal.timeout(15_000),
       cache: "no-store",
     });
     assert.equal(response.status, 200, `${route}: HTTP ${response.status}`);
