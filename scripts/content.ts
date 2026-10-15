@@ -8,6 +8,7 @@ import { googleResourcePolicy } from "./crawler-policy";
 import { createHash } from "node:crypto";
 import { parseRegistry, projectPhaseRequirements } from "../src/workbench/registry";
 import siteOrigins from "../src/site-origin.json";
+import { readingRoutes, staticRoutes } from "../src/reading-routes";
 
 const headingIcons: Readonly<Record<string, string>> = {
   "How the companion works": "compass",
@@ -98,31 +99,9 @@ function accentHeadings(html: string) {
 }
 
 export const origin = siteOrigins.canonicalOrigin;
-const staticRoutes = [
-  "/",
-  "/guide",
-  "/style",
-  "/style/TypeScript",
-  "/style/Godot",
-  "/style/Kotlin",
-  "/style/React-TypeScript",
-  "/style/Python",
-  "/style/Swift-SwiftUI",
-  "/style/JavaScript",
-  "/style/Dart-Flutter",
-  "/phases/1",
-  "/phases/2",
-  "/phases/3",
-  "/recommendations",
-  "/resources",
-  "/artifacts",
-  "/about",
-  "/contact",
-  "/help/cloudflare-iphone",
-];
 export let routes = [...staticRoutes];
 export function addSkillRoutes(slugs: string[]) {
-  routes = [...staticRoutes, "/skills", "/skills/recommendations", ...slugs.map((s) => `/skills/${s}`)];
+  routes = readingRoutes(slugs);
 }
 export function normalizeGeneratedText(value: string) {
   return value.replace(/\r\n?/g, "\n");

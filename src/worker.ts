@@ -1,5 +1,10 @@
+import siteOrigins from "./site-origin.json";
+import skillManifest from "../content/skills/manifest.json";
+import { readingRoutes } from "./reading-routes";
+
 interface Limiter { limit(options: { key: string }): Promise<{ success: boolean }> }
 export interface FeedbackEnv {
+  LEGACY_HUMAN_REDIRECTS?: string;
   ASSETS: { fetch(request: Request): Promise<Response> };
   FEEDBACK_WEBHOOK_URL?: string;
   FEEDBACK_RATE_LIMITER: Limiter;
@@ -101,11 +106,35 @@ export async function handleFeedback(request: Request, env: FeedbackEnv, send: t
   }
 }
 
+const humanRoutes = new Map(readingRoutes(skillManifest.skills.filter(skill => skill.public && !skill.recommendationOnly).map(skill => skill.slug)).flatMap(route =>
+  [...new Set([route, route === "/" ? "/index.html" : `${route}.html`, route === "/" ? "/" : `${route}/`])].map(alias => [alias, route] as const),
+));
+
+export function readingRoute(pathname: string): string | undefined {
+  return humanRoutes.get(pathname);
+}
+
 export default {
-  fetch(request: Request, env: FeedbackEnv) {
-    const pathname = new URL(request.url).pathname;
-    if (pathname === "/api/feedback") return handleFeedback(request, env);
-    if (pathname.startsWith("/api/")) return Promise.resolve(reply(404, "Not found."));
+  fetch(request: Request, env: FeedbackEnv): Promise<Response> {
+    const url = new URL(request.url);
+    if (url.pathname === "/api/feedback") return handleFeedback(request, env);
+    if (url.pathname.startsWith("/api/")) return Promise.resolve(reply(404, "Not found."));
+    if (request.method !== "GET" && request.method !== "HEAD") return Promise.resolve(reply(405, "Use GET or HEAD."));
+    if (url.pathname === "/artifacts/progress-workbench" || url.pathname === "/artifacts/progress-workbench/") {
+      url.pathname = "/artifacts/progress-workbench/index.html";
+      return env.ASSETS.fetch(new Request(url, request));
+    }
+    const route = readingRoute(url.pathname);
+    if (route !== undefined) {
+      if (url.origin === siteOrigins.legacyOrigin && env.LEGACY_HUMAN_REDIRECTS === "enabled") {
+        const target = new URL(siteOrigins.canonicalOrigin);
+        target.pathname = url.pathname;
+        target.search = url.search;
+        return Promise.resolve(Response.redirect(target.href, 308));
+      }
+      url.pathname = route === "/" ? "/index.html" : `${route}.html`;
+      return env.ASSETS.fetch(new Request(url, request));
+    }
     return env.ASSETS.fetch(request);
   },
 };
