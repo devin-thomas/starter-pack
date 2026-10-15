@@ -14,7 +14,7 @@ test("Worker and real static-assets pipeline preserve the legacy routing contrac
   const config = JSON.parse(await readFile("wrangler.jsonc", "utf8"));
   assert.equal(config.assets.run_worker_first, true);
   assert.equal(config.assets.html_handling, "none");
-  assert.equal(config.vars.LEGACY_HUMAN_REDIRECTS, "disabled");
+  assert.equal(config.vars.LEGACY_HUMAN_REDIRECTS, "enabled");
   const mf = await createLocalWorker("enabled");
   t.after(() => mf.dispose());
   const fetch = async (origin: string, path: string, method = "GET") => {

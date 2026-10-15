@@ -1,8 +1,19 @@
 # Owner-gated release and rollback
 
-This is prepared source. Do not run production commands until the owner records
+The initial domain cutover was owner-approved and verified on 2026-10-15.
+The checked-in redirect default now records its enabled state, so routine
+deployments cannot silently undo the cutover. Every follow-up deployment still
+requires owner approval. Do not run production commands until the owner records
 approval for the exact source revision, existing `starter-pack` Worker, new custom
 domain attachment and redirect stage. A successful PR build is not release approval.
+
+## Routine releases after cutover
+
+For an approved follow-up revision, `npx wrangler deploy` preserves enabled
+legacy reading-page redirects. Run the canonical, fallback and legacy verifiers
+without `--before-redirects`. Do not disable working redirects merely to publish
+an ordinary source update. The two stages below apply to a separately approved
+new-host rollout or explicit restaging operation.
 
 ## Stop before deployment when
 
@@ -23,8 +34,10 @@ domain attachment and redirect stage. A successful PR build is not release appro
    Read secrets by binding name only. Recheck immediately before the write.
 2. Build/check the approved revision. Review `wrangler.jsonc`: same Worker,
    both old and new custom domains, Workers fallback enabled, unchanged rate
-   limiter namespaces/limits and assets binding, redirect switch `disabled`.
-3. After approval, deploy that exact source with `npx wrangler deploy`. The custom
+   limiter namespaces/limits and assets binding. Require an explicit redirect-off
+   override for this staging operation; the routine default is now enabled.
+3. After approval, deploy that exact source with
+   `npx wrangler deploy --var LEGACY_HUMAN_REDIRECTS:disabled`. The custom
    domain route may create DNS/certificate state; do not create a separate CNAME
    manually or treat a zone wildcard certificate as tested hostname TLS.
 4. Run the new-host and Workers verifiers and legacy `--before-redirects` check
@@ -35,7 +48,8 @@ domain attachment and redirect stage. A successful PR build is not release appro
 
 Only after the Stage 1 P0 results pass and the owner approves this stage, deploy
 the same tested revision with `npx wrangler deploy --var LEGACY_HUMAN_REDIRECTS:enabled`.
-Record the override and resulting version; the checked-in default stays disabled.
+Record the override and resulting version. The checked-in enabled default retains
+this approved state on later ordinary releases.
 Run the distinct legacy verifier, canonical/fallback checks and real-agent probes
 again. Any P0 failure halts rollout. Do not update consumers first.
 

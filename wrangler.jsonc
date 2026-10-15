@@ -41,6 +41,6 @@
     }
   ],
   "vars": {
-    "LEGACY_HUMAN_REDIRECTS": "disabled"
+    "LEGACY_HUMAN_REDIRECTS": "enabled"
   }
 }
