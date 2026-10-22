@@ -14,8 +14,9 @@ The site publishes stable coding style guides under [`/style`](https://starter.u
 - [TypeScript](https://starter.uppercut-labs.com/style/TypeScript)
 - [Godot](https://starter.uppercut-labs.com/style/Godot) — hard-pinned to Godot 4.7.2 with GDScript as the primary language.
 - [Kotlin](https://starter.uppercut-labs.com/style/Kotlin) — language conventions with an Android TV profile.
+- [Rust](https://starter.uppercut-labs.com/style/Rust) — **stable 1.0.0; finished and approved**, with all 36 rules authoritative for agent use.
 
-React + TypeScript, Python, Swift + SwiftUI, JavaScript, Dart + Flutter, and [Rust](https://starter.uppercut-labs.com/style/Rust) are available as **in-progress review guides**. Pending owner choices are labeled in their source; the prepared wording is not a stable house standard.
+React + TypeScript, Python, Swift + SwiftUI, JavaScript, and Dart + Flutter retain their separately recorded in-progress review statuses. Their accepted rules can be read and applied; specifically pending alternatives are not authoritative. Rust has no remaining owner decisions or additional guide-level approval gate.
 
 Agent-readable forms are generated with the human pages:
 
@@ -27,7 +28,7 @@ Agent-readable forms are generated with the human pages:
 - `https://starter.uppercut-labs.com/style/Rust.json`
 - `https://starter.uppercut-labs.com/style/catalog.json`
 
-Stable public guides contain accepted rules. In-progress guides distinguish inherited principles, prepared translations, and pending owner choices. Private deliberation and rejected alternatives remain outside this repository's published surface.
+Stable public guides contain accepted rules and are authoritative for agent use. Merge and website deployment are separate delivery steps, not unfinished-design labels. In-progress guides identify their actual pending choices; they are not a reason to ignore already accepted guidance. Private deliberation and rejected alternatives remain outside this repository's published surface.
 
 ## Use and reuse
 

@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import matter from "gray-matter";
 
+// Keep the existing command compatible; each guide declares its own maturity.
 const specs = [
   {
     "id": "react-typescript",
@@ -75,8 +76,9 @@ const specs = [
     "rules": 36,
     "headings": 40,
     "pending": [],
-    "accepted": "RS025",
-    "version": "0.9.0-review.2"
+    "accepted": "RS036",
+    "version": "1.0.0",
+    "status": "stable"
   }
 ];
 const liveAt = process.argv.indexOf("--live");
@@ -101,7 +103,8 @@ const results = [];
 for (const spec of specs) {
   const parsed = matter(await readFile("content/style/" + spec.id + ".md", "utf8"));
   const data = parsed.data, markdown = parsed.content.trimStart();
-  assert.equal(data.status, "in-progress", spec.id + ": status");
+  const expectedStatus = spec.status ?? "in-progress";
+  assert.equal(data.status, expectedStatus, spec.id + ": status");
   assert.equal(data.version, spec.version, spec.id + ": version");
   assert.equal(data.accepted_through, spec.accepted, spec.id + ": accepted_through");
   assert.equal(data.route, spec.route, spec.id + ": route");
@@ -113,29 +116,48 @@ for (const spec of specs) {
     assert(markdown.includes("Accepted RX-Q01 A"), "React accepted decision marker");
     assert(!markdown.includes("Pending RX-Q01"), "React decision remains pending");
   } else if (spec.id === "rust") {
+    assert.deepEqual(ids, Array.from({ length: 36 }, (_, index) => `RS${String(index + 1).padStart(3, "0")}`), "Rust accepted rule sequence");
     assert(markdown.includes("Accepted RS-Q01 B"), "Rust accepted decision marker");
-    assert(!markdown.includes("Pending RS-Q01"), "Rust decision remains pending");
+    assert(markdown.includes("Stable 1.0.0 — finished and approved"), "Rust completed authority marker");
+    assert(markdown.includes("All 36 rules, RS001–RS036, are authoritative"), "Rust full-guide authority");
+    const intro = await readFile("content/style/rust-intro.md", "utf8");
+    assert(intro.includes("Rust 1.0.0 is the stable house guide"), "Rust introduction authority");
+    for (const forbidden of ["Pending RS-Q01", "**In progress", "**in progress", "status: in-progress", "0.9.0-review", "retains its review status", "remains in progress", "proposed house contract", "Rust-native translations are prepared wording", "guide-level review status", "examples in this draft"]) {
+      assert(!markdown.includes(forbidden) && !intro.includes(forbidden), "Rust stale provisional wording: " + forbidden);
+    }
   } else for (const decision of spec.pending) assert(markdown.includes("Pending " + decision), spec.id + ": missing " + decision);
   assert(!/\bCTX:[A-Z][A-Z0-9_-]*|\(private (?:planning|source) evidence\)/.test(markdown), spec.id + ": unsupported source annotation");
   const json = JSON.parse(await read(spec.route + ".json", /application\/json/));
+  for (const field of ["status", "version", "accepted_through"]) {
+    assert.equal(json[field], data[field], spec.id + ": JSON metadata " + field);
+  }
   assert.equal(json.markdown, markdown, spec.id + ": JSON/source parity");
   const raw = await read(spec.route + ".md", /text\/plain/);
   assert.equal(raw, markdown, spec.id + ": Markdown/source parity");
   const html = await read(spec.route, /text\/html/);
   const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").replace(/<!--[\s\S]*?-->/g, "");
   assert(visible.includes("Copy for agent") && visible.includes("style-guide-prose"), spec.id + ": human page");
-  assert(visible.includes('class="style-status"') && visible.includes("In progress"), spec.id + ": in-progress badge");
+  if (expectedStatus === "stable") {
+    assert(!visible.includes('class="style-status"'), spec.id + ": stable guide shows provisional badge");
+    assert(visible.includes("finished and approved"), spec.id + ": visible completion marker");
+  } else {
+    assert(visible.includes('class="style-status"') && visible.includes("In progress"), spec.id + ": in-progress badge");
+  }
   assert(!new RegExp("<h2[^>]*>[^<]*" + spec.prefix + "\\d{3}\\s*[—-]").test(visible), spec.id + ": internal IDs leaked");
   const href = 'href="' + spec.route + '"', at = hub.indexOf(href);
   assert(at >= 0, spec.id + ": hub link");
   const card = hub.slice(hub.lastIndexOf("<a", at), hub.indexOf("</a>", at) + 4);
-  assert(card.includes("style-status") && !card.includes("<p"), spec.id + ": hub card");
+  assert(!card.includes("<p"), spec.id + ": hub card has no redundant description");
+  assert.equal(card.includes("style-status"), expectedStatus !== "stable", spec.id + ": hub status badge");
   const entry = catalog.guides.find((item) => item.id === spec.id);
-  assert(entry && entry.status === "in-progress", spec.id + ": catalog status");
+  assert(entry, spec.id + ": catalog entry");
+  for (const field of ["status", "version", "accepted_through"]) {
+    assert.equal(entry[field], data[field], spec.id + ": catalog metadata " + field);
+  }
   assert.equal(entry.markdown, siteOrigins.canonicalOrigin + spec.route + ".md", spec.id + ": catalog markdown");
   assert.equal(agentCatalog.resources.find((item) => item.id === "style-" + spec.id)?.markdown, entry.markdown, spec.id + ": agent catalog");
   assert(llms.includes(spec.route + ".md"), spec.id + ": llms");
   assert(sitemap.includes(siteOrigins.canonicalOrigin + spec.route), spec.id + ": sitemap");
-  results.push({ id: spec.id, rules: ids.length, markdownSha256: createHash("sha256").update(raw).digest("hex") });
+  results.push({ id: spec.id, status: expectedStatus, version: data.version, acceptedThrough: data.accepted_through, rules: ids.length, markdownSha256: createHash("sha256").update(raw).digest("hex") });
 }
 console.log(JSON.stringify({ surface: live ? live.href : "built dist", status: "passed", guides: results }));

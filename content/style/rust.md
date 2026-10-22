@@ -3,26 +3,26 @@ id: rust
 title: Rust
 summary: An explicit Rust house style built around truthful types, owned state, native enums, deliberate failure contracts, and small safety boundaries.
 human_summary: Rust makes ownership and borrowing part of the type system; this guide applies the house conventions to values, resources, errors, and concurrent work.
-status: in-progress
+status: stable
 updated: "2026-10-22"
-accepted_through: RS025
-version: 0.9.0-review.2
+accepted_through: RS036
+version: 1.0.0
 route: /style/Rust
 ---
 
 # Rust Style Guide
 
-> **In progress.** RS-Q01 B is accepted. No owner-choice questions remain; the complete guide retains its review status.
+> **Stable 1.0.0 — finished and approved.** All 36 rules, RS001–RS036, are authoritative house conventions. No owner decisions or additional guide-level approval remain.
 
-For agents: this guide translates established TypeScript, Godot, and Kotlin conventions into Rust's actual semantics. RS025 records the accepted unsafe policy and its rationale; the remaining Rust-native wording retains its guide-level review status. Preserve the target repository's existing contracts; publication does not authorize a migration, a toolchain upgrade, or silently weakening a stricter local policy.
+For agents: read and apply this completed guide when working on Rust. It translates established TypeScript, Godot, and Kotlin conventions into Rust's actual semantics, including the accepted unsafe policy and rationale in RS025. Do not defer its use for further style approval. Preserve the target repository's existing contracts; this guide does not authorize a migration, a toolchain upgrade, or silently weakening a stricter local policy.
 
 ## Scope
 
 This guide covers first-party Rust language, data, ownership, resource, and tooling conventions. It applies to libraries, command-line tools, services, and native integrations without requiring a particular application framework, async runtime, error crate, serialization library, or workspace architecture.
 
-The accepted guides establish the preference for explicit contracts, meaningful states, one authoritative writer, and narrow exceptions. Developing Python, Swift, JavaScript, React, and Dart guides provide comparison points, but their pending choices are not treated as accepted decisions. Rust-native translations are prepared wording, not invented historical owner votes. [H1][H2][H3][H4]
+The accepted guides establish the preference for explicit contracts, meaningful states, one authoritative writer, and narrow exceptions. Developing Python, Swift, JavaScript, React, and Dart guides provide comparison points, but their pending choices are not treated as accepted decisions. The Rust conventions below are accepted as a complete guide. [H1][H2][H3][H4]
 
-Use the language's own mechanisms: ordinary immutable bindings are `let`, values are usually structs and enums, fallible operations return `Result`, and complete enum consumers use exhaustive `match`. The words “must” and “prefer” below describe the proposed house contract, not requirements imposed by every Rust project.
+Use the language's own mechanisms: ordinary immutable bindings are `let`, values are usually structs and enums, fallible operations return `Result`, and complete enum consumers use exhaustive `match`. The words “must” and “prefer” below describe the accepted house contract, not requirements imposed by every Rust project.
 
 ## RS001 — Write explicit, precise contracts
 
@@ -473,11 +473,11 @@ Do not silently change crate APIs, wire formats, stored data, dependencies, edit
 
 Report formatting, compilation, static checks, unit tests, integration tests, benchmarks, and device/deployment evidence separately. Keep secrets and private payloads out of source and diagnostics. Mark unexecuted checks honestly. [H3:K037/K038]
 
-## Review and release boundary
+## Authority and application
 
-RS-Q01 B is accepted, including its rationale and conditions in RS025. No owner-choice questions remain. The complete guide remains **in progress** for guide-level review; the accepted unsafe decision is preserved independently of that publication status.
+This is the finished, owner-approved Rust 1.0.0 house guide. RS001–RS036 are accepted, including RS-Q01 B and its rationale and conditions in RS025. No further style decisions or guide-level approval are required before agents read and apply it. Future additions can be proposed as later revisions; they do not make this accepted version provisional.
 
-Runtime selection, crate choices, toolchain versions, feature matrices, and target platforms remain repository decisions. Acceptance of the unsafe policy does not itself migrate an implementation repository or change an existing project's stricter restrictions.
+Runtime selection, crate choices, toolchain versions, feature matrices, and target platforms remain repository decisions. Applying this guide does not itself migrate an implementation repository or change an existing project's stricter restrictions. Source merge and website deployment are separate delivery steps, not conditions on the guide's accepted status.
 
 ## Validation scope
 
@@ -485,7 +485,7 @@ On 2026-10-22, all nine Rust code fences were compiled independently with `rustc
 
 The fences passed `rustfmt 1.8.0` with style edition 2024 and a 100-column width, and Clippy 0.1.90 with warnings treated as errors. The audit allowed `clippy::unused_unit` specifically for RS001 and unused declarations specifically because these are standalone guide fragments. No broader lint allowance was needed.
 
-The publication checks separately verify metadata, rule IDs, the human page, raw Markdown/JSON parity, and discovery links. Those checks alone do not compile Rust. The example checks establish behavior in the stated configuration; they do not establish a global MSRV or certify every prose rule, an async runtime, FFI soundness, hardware, or an application's release readiness. All examples in this draft use safe Rust.
+The publication checks separately verify metadata, rule IDs, the human page, raw Markdown/JSON parity, and discovery links. Those checks alone do not compile Rust. The example checks establish behavior in the stated configuration; they do not establish a global MSRV or certify every prose rule, an async runtime, FFI soundness, hardware, or an application's release readiness. All examples in this guide use safe Rust.
 
 ## Sources and reference map
 
