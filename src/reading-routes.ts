@@ -10,6 +10,7 @@ export const staticRoutes = [
   "/style/Swift-SwiftUI",
   "/style/JavaScript",
   "/style/Dart-Flutter",
+  "/style/Rust",
   "/phases/1",
   "/phases/2",
   "/phases/3",

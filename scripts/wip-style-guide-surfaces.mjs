@@ -67,6 +67,16 @@ const specs = [
     ],
     "accepted": "draft",
     "version": "0.9.0-review.1"
+  },
+  {
+    "id": "rust",
+    "route": "/style/Rust",
+    "prefix": "RS",
+    "rules": 36,
+    "headings": 40,
+    "pending": ["RS-Q01"],
+    "accepted": "draft",
+    "version": "0.9.0-review.1"
   }
 ];
 const liveAt = process.argv.indexOf("--live");

@@ -76,7 +76,7 @@ for (const route of ["/skills", ...skillCatalog.skills.map((entry: { html: strin
       throw new Error(`Live skill resource differs: ${resource}`);
   }
 }
-for (const [route, title] of [["/style/TypeScript", "TypeScript"], ["/style/Godot", "Godot"], ["/style/Kotlin", "Kotlin"], ["/style/React-TypeScript", "React + TypeScript"], ["/style/Python", "Python"], ["/style/Swift-SwiftUI", "Swift + SwiftUI"], ["/style/JavaScript", "JavaScript"], ["/style/Dart-Flutter", "Dart + Flutter"]] as const) {
+for (const [route, title] of [["/style/TypeScript", "TypeScript"], ["/style/Godot", "Godot"], ["/style/Kotlin", "Kotlin"], ["/style/React-TypeScript", "React + TypeScript"], ["/style/Python", "Python"], ["/style/Swift-SwiftUI", "Swift + SwiftUI"], ["/style/JavaScript", "JavaScript"], ["/style/Dart-Flutter", "Dart + Flutter"], ["/style/Rust", "Rust"]] as const) {
   const styleHtml = await read(route, /text\/html/);
   const visibleStyleHtml = styleHtml.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
   if (!visibleStyleHtml.includes(title) || !visibleStyleHtml.includes("Copy for agent") || !visibleStyleHtml.includes("style-guide-prose")) {
@@ -109,14 +109,14 @@ const start = await read("/agent/start.md", /text\/plain/);
 assertGoogleResourceAccess(await read("/robots.txt", /text\/plain/));
 const packet = await read("/agent/phase-1-packet.txt", /text\/plain/);
 if (packet !== await readFile("dist/agent/phase-1-packet.txt", "utf8")) throw new Error("Instruction packet differs from the built curriculum.");
-for (const route of ["/prompts/get-started.txt", "/agent/start.md", "/agent/resource-links.md", "/skills/starter-pack/current/SKILL.md", "/style/TypeScript.md", "/style/Godot.md", "/style/Kotlin.md", "/style/React-TypeScript.md", "/style/Python.md", "/style/Swift-SwiftUI.md", "/style/JavaScript.md", "/style/Dart-Flutter.md"])
+for (const route of ["/prompts/get-started.txt", "/agent/start.md", "/agent/resource-links.md", "/skills/starter-pack/current/SKILL.md", "/style/TypeScript.md", "/style/Godot.md", "/style/Kotlin.md", "/style/React-TypeScript.md", "/style/Python.md", "/style/Swift-SwiftUI.md", "/style/JavaScript.md", "/style/Dart-Flutter.md", "/style/Rust.md"])
   if (await read(route, /text\/plain/) !== await readFile(`dist${route}`, "utf8")) throw new Error(`Live startup instructions differ: ${route}`);
 for (const route of ["/phases/1.md", "/phases/2.md", "/artifacts/progress/README.md", "/artifacts/progress-workbench/README.md", "/skills/computer-setup/current/SKILL.md", "/skills/quick-build/current/SKILL.md", "/setup/file-transfer.md", "/setup/authentication.md", "/setup/private-workbench.md", "/setup/tool-troubleshooting.md", "/setup/programmatic-harness.md", "/setup/codex-readiness.md"])
   if (await read(route, /text\/plain/) !== await readFile(`dist${route}`, "utf8")) throw new Error(`Live instructions differ: ${route}`);
 const requirementsBody = await read("/agent/requirements.json", /application\/json/);
 if (requirementsBody !== await readFile("dist/agent/requirements.json", "utf8")) throw new Error("Live requirements differ from this build.");
 const requirements = parseRegistry(JSON.parse(requirementsBody));
-for (const route of ["/schemas/requirements.schema.json", "/schemas/starter-progress.schema.json", "/setup/computer-setup.manifest.json", "/skills/versions.json", "/style/TypeScript.json", "/style/Godot.json", "/style/Kotlin.json", "/style/React-TypeScript.json", "/style/Python.json", "/style/Swift-SwiftUI.json", "/style/JavaScript.json", "/style/Dart-Flutter.json", "/style/catalog.json"])
+for (const route of ["/schemas/requirements.schema.json", "/schemas/starter-progress.schema.json", "/setup/computer-setup.manifest.json", "/skills/versions.json", "/style/TypeScript.json", "/style/Godot.json", "/style/Kotlin.json", "/style/React-TypeScript.json", "/style/Python.json", "/style/Swift-SwiftUI.json", "/style/JavaScript.json", "/style/Dart-Flutter.json", "/style/Rust.json", "/style/catalog.json"])
   if (await read(route, /application\/json/) !== await readFile(`dist${route}`, "utf8")) throw new Error(`Live contract differs: ${route}`);
 if (!start.includes("Starter Pack skill"))
   throw new Error("The agent start resource is missing.");

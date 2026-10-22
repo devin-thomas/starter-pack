@@ -141,7 +141,7 @@ export async function loadContent(): Promise<SiteData> {
     ),
   };
   const styleGuides: SiteData["styles"]["guides"] = await Promise.all(
-    ["typescript", "godot", "kotlin", "react-typescript", "python", "swift-swiftui", "javascript", "dart-flutter"].map(async (id) => {
+    ["typescript", "godot", "kotlin", "react-typescript", "python", "swift-swiftui", "javascript", "dart-flutter", "rust"].map(async (id) => {
       const raw = await readFile(`content/style/${id}.md`, "utf8");
       const { data, content } = matter(raw);
       for (const field of ["id", "title", "summary", "human_summary", "status", "accepted_through", "version", "route"]) {

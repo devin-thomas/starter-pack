@@ -13,6 +13,9 @@ The site publishes stable coding style guides under [`/style`](https://starter.u
 
 - [TypeScript](https://starter.uppercut-labs.com/style/TypeScript)
 - [Godot](https://starter.uppercut-labs.com/style/Godot) — hard-pinned to Godot 4.7.2 with GDScript as the primary language.
+- [Kotlin](https://starter.uppercut-labs.com/style/Kotlin) — language conventions with an Android TV profile.
+
+React + TypeScript, Python, Swift + SwiftUI, JavaScript, Dart + Flutter, and [Rust](https://starter.uppercut-labs.com/style/Rust) are available as **in-progress review guides**. Pending owner choices are labeled in their source; the prepared wording is not a stable house standard.
 
 Agent-readable forms are generated with the human pages:
 
@@ -20,9 +23,11 @@ Agent-readable forms are generated with the human pages:
 - `https://starter.uppercut-labs.com/style/TypeScript.json`
 - `https://starter.uppercut-labs.com/style/Godot.md`
 - `https://starter.uppercut-labs.com/style/Godot.json`
+- `https://starter.uppercut-labs.com/style/Rust.md`
+- `https://starter.uppercut-labs.com/style/Rust.json`
 - `https://starter.uppercut-labs.com/style/catalog.json`
 
-Public guides contain only accepted rules. Private deliberation and rejected alternatives remain outside this repository's published surface.
+Stable public guides contain accepted rules. In-progress guides distinguish inherited principles, prepared translations, and pending owner choices. Private deliberation and rejected alternatives remain outside this repository's published surface.
 
 ## Use and reuse
 

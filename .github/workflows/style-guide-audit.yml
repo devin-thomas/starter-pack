@@ -86,5 +86,6 @@ jobs:
             content/style/swift-swiftui.md
             content/style/javascript.md
             content/style/dart-flutter.md
+            content/style/rust.md
           retention-days: 14
           if-no-files-found: error
