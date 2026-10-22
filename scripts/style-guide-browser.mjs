@@ -18,6 +18,7 @@ const guides = [
   { slug: "Swift-SwiftUI", internalId: /^SW\d{3}/, headingCount: 37, data: JSON.parse(await readFile(path.join(root,"style/Swift-SwiftUI.json"),"utf8")) },
   { slug: "JavaScript", internalId: /^JS\d{3}/, headingCount: 30, data: JSON.parse(await readFile(path.join(root,"style/JavaScript.json"),"utf8")) },
   { slug: "Dart-Flutter", internalId: /^DF\d{3}/, headingCount: 37, data: JSON.parse(await readFile(path.join(root,"style/Dart-Flutter.json"),"utf8")) },
+  { slug: "Rust", internalId: /^RS\d{3}/, headingCount: 40, data: JSON.parse(await readFile(path.join(root,"style/Rust.json"),"utf8")) },
 ];
 
 const mime = { ".html":"text/html", ".js":"application/javascript", ".css":"text/css", ".json":"application/json", ".md":"text/plain", ".txt":"text/plain", ".svg":"image/svg+xml", ".png":"image/png", ".woff2":"font/woff2", ".woff":"font/woff" };
