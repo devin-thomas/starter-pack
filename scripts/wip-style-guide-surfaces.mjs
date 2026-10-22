@@ -74,9 +74,9 @@ const specs = [
     "prefix": "RS",
     "rules": 36,
     "headings": 40,
-    "pending": ["RS-Q01"],
-    "accepted": "draft",
-    "version": "0.9.0-review.1"
+    "pending": [],
+    "accepted": "RS025",
+    "version": "0.9.0-review.2"
   }
 ];
 const liveAt = process.argv.indexOf("--live");
@@ -112,6 +112,9 @@ for (const spec of specs) {
   if (spec.id === "react-typescript") {
     assert(markdown.includes("Accepted RX-Q01 A"), "React accepted decision marker");
     assert(!markdown.includes("Pending RX-Q01"), "React decision remains pending");
+  } else if (spec.id === "rust") {
+    assert(markdown.includes("Accepted RS-Q01 B"), "Rust accepted decision marker");
+    assert(!markdown.includes("Pending RS-Q01"), "Rust decision remains pending");
   } else for (const decision of spec.pending) assert(markdown.includes("Pending " + decision), spec.id + ": missing " + decision);
   assert(!/\bCTX:[A-Z][A-Z0-9_-]*|\(private (?:planning|source) evidence\)/.test(markdown), spec.id + ": unsupported source annotation");
   const json = JSON.parse(await read(spec.route + ".json", /application\/json/));

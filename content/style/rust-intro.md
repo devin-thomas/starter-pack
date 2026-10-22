@@ -4,8 +4,8 @@ Rust makes ownership and borrowing part of the source contract. This guide carri
 
 ## What is settled and what is not
 
-The cross-language principles have established precedent. Their Rust wording is a review draft, with one unresolved owner choice: whether first-party unsafe is limited to necessary platform/FFI adapters or may also serve a demonstrated systems or performance requirement. The guide explains both choices and the safety obligations shared by either one.
+The cross-language principles have established precedent. RS-Q01 B is now accepted: narrowly contained first-party unsafe may serve necessary integration and demonstrated systems or performance requirements. The guide explains why this exception is necessary for systems work and how explicit evidence, ownership, and safety obligations preserve the house strictness. No owner-choice questions remain; the complete guide retains its review status.
 
 ## How to apply it
 
-Read the rules alongside the target repository's toolchain, public contracts, and existing decisions. Keep runtime, dependencies, targets, and application architecture specific to the project. The in-progress status does not authorize a migration or a new unsafe exception.
+Read the rules alongside the target repository's toolchain, public contracts, and existing decisions. Keep runtime, dependencies, targets, and application architecture specific to the project. Apply the accepted unsafe policy through its documented conditions and preserve any stricter local restriction until an authorized project change updates it.

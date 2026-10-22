@@ -5,16 +5,16 @@ summary: An explicit Rust house style built around truthful types, owned state, 
 human_summary: Rust makes ownership and borrowing part of the type system; this guide applies the house conventions to values, resources, errors, and concurrent work.
 status: in-progress
 updated: "2026-10-22"
-accepted_through: draft
-version: 0.9.0-review.1
+accepted_through: RS025
+version: 0.9.0-review.2
 route: /style/Rust
 ---
 
 # Rust Style Guide
 
-> **In progress.** Remaining owner choice: RS-Q01, the permitted scope of first-party `unsafe`.
+> **In progress.** RS-Q01 B is accepted. No owner-choice questions remain; the complete guide retains its review status.
 
-For agents: this is a review draft, not a stable house standard. It translates established TypeScript, Godot, and Kotlin conventions into Rust's actual semantics. The pending section is a proposal, not permission. Preserve the target repository's existing contracts; publication does not authorize a migration or a toolchain upgrade.
+For agents: this guide translates established TypeScript, Godot, and Kotlin conventions into Rust's actual semantics. RS025 records the accepted unsafe policy and its rationale; the remaining Rust-native wording retains its guide-level review status. Preserve the target repository's existing contracts; publication does not authorize a migration, a toolchain upgrade, or silently weakening a stricter local policy.
 
 ## Scope
 
@@ -363,23 +363,23 @@ Keep filesystem, clock, process, network, and provider access visible where they
 
 A command-line entry point may be thin while a library module owns reusable behavior, but do not create a workspace or library crate merely to satisfy a diagram. Separate pure logic from integration only where the boundary actually helps ownership, reuse, or testing. [H3:K013/K017/K031]
 
-## RS025 — Safe Rust is the default; unsafe scope is an owner choice
+## RS025 — Allow justified unsafe at explicit systems boundaries
 
 Use safe Rust for ordinary first-party logic. Never reach for `unsafe`, `transmute`, unchecked indexing, or invented lifetimes to silence a borrow checker or type mismatch. A compiler inconvenience is not a demonstrated unsafe requirement.
 
-**Pending RS-Q01.** The existing guides establish narrow, justified exceptions but do not decide whether first-party unsafe may extend beyond FFI/platform integration. The following conservative candidate is displayed for review and is not acceptance.
+**Accepted RS-Q01 B — 2026-10-22.** Permit necessary FFI/platform adapters and narrowly contained first-party systems or performance implementations when a demonstrated requirement is not met by a reasonable safe design.
 
 <!-- DECISION:RS-Q01:START -->
 
-Candidate A: restrict first-party `unsafe` to a necessary, narrowly contained FFI or platform adapter. Keep application and domain logic safe. A systems optimization that would require new first-party unsafe is a separate owner decision, with the safe alternative and measured requirement presented first.
+**Why this exception is intentional.** These conventions also serve native integrations, emulator and game tooling, hardware access, and audio/media systems. Such work can require operations whose safety conditions the compiler cannot establish, or a concrete latency, throughput, or memory requirement that reasonable safe implementations do not meet. Restricting unsafe by its location alone can move the same obligations into another language or a dependency without resolving them. B makes a justified first-party implementation eligible so those obligations can remain local, visible, and owned in Rust. The decision still accounts for safe library options, maintenance cost, and evidence.
 
-Candidate B: also permit a narrowly contained first-party systems or performance implementation when a demonstrated requirement is not met by the reasonable safe design. Require an explicit repository decision, evidence for the tradeoff, and the same safety obligations as an FFI adapter.
+The usual strictness still governs evidence, types, ownership, and review. Use compiler-checked safe code wherever it meets the requirement. At the exceptional boundary, document and uphold the safety conditions the compiler cannot establish. `unsafe` is not inherently faster and does not relax Rust's validity, aliasing, lifetime, or concurrency requirements. A performance justification needs representative measurements; an integration or hardware justification needs the actual API, memory, or platform constraint. Speculative speedups and borrow-checker workarounds do not qualify. [R23][R36][R37]
 
-Until this choice is resolved, this guide grants no new unsafe exception. Existing explicit repository decisions remain the authority for their own scope.
+Record the requirement, reasonable safe alternatives considered, chosen boundary, safety invariants, and relevant verification in the owning repository's decision record. Prefer a maintained safe API when it meets the need. Keep the unsafe implementation small and expose a safe API only when its guarantees are established for every safe caller. Apply RS026 to the implementation and caller contracts. Existing stricter repository policies remain effective until an authorized project change updates them.
 
 <!-- DECISION:RS-Q01:END -->
 
-Both choices require reviewable safety invariants, correct caller obligations, a narrow implementation boundary, and relevant verification. Neither permits a blanket unsafe escape hatch. Dependency implementations are a separate audit surface; a first-party lint setting does not prove a dependency graph contains no unsafe. [H1:D013][H3:K011/K035][R23]
+Ordinary application and domain logic stays safe. This accepted exception requires a demonstrated need and an accountable implementation boundary. Dependency implementations are a separate audit surface; a first-party lint setting does not prove a dependency graph contains no unsafe. [H1:D013][H3:K011/K035][R23]
 
 ## RS026 — Unsafe and FFI boundaries must establish their guarantees
 
@@ -475,9 +475,9 @@ Report formatting, compilation, static checks, unit tests, integration tests, be
 
 ## Review and release boundary
 
-The guide remains **in progress** until RS-Q01 and final guide-level approval are resolved. Most wording follows accepted cross-language principles; this does not turn the Rust draft into a previously accepted standard. Pending candidate text grants no implementation permission.
+RS-Q01 B is accepted, including its rationale and conditions in RS025. No owner-choice questions remain. The complete guide remains **in progress** for guide-level review; the accepted unsafe decision is preserved independently of that publication status.
 
-The sole owner choice concerns the allowed scope of first-party unsafe. Runtime selection, crate choices, toolchain versions, feature matrices, and target platforms remain repository decisions and are not additional unanswered style questions. No implementation repository has been migrated by preparing this guide.
+Runtime selection, crate choices, toolchain versions, feature matrices, and target platforms remain repository decisions. Acceptance of the unsafe policy does not itself migrate an implementation repository or change an existing project's stricter restrictions.
 
 ## Validation scope
 
@@ -530,3 +530,5 @@ House sources establish the originating preferences. Rust's documentation establ
 - [R33] [Standard library: destructor omissions and forget](https://doc.rust-lang.org/std/mem/fn.forget.html)
 - [R34] [Tokio: task JoinHandle](https://docs.rs/tokio/latest/tokio/task/struct.JoinHandle.html)
 - [R35] [Tokio: blocking task cancellation](https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html)
+- [R36] [Rust Reference: unsafe proof obligations](https://doc.rust-lang.org/reference/unsafe-keyword.html)
+- [R37] [Rust Reference: undefined behavior and soundness](https://doc.rust-lang.org/reference/behavior-considered-undefined.html)
