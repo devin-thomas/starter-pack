@@ -3,18 +3,18 @@ id: react-typescript
 title: React + TypeScript
 summary: An explicit React house style extending the TypeScript contract with owned state, deliberate effects, small component APIs, and a scoped Next.js profile.
 human_summary: React is a UI framework; this guide applies Devin’s TypeScript ownership and contract rules to components, hooks, effects, browser boundaries, and an optional Next.js profile.
-status: in-progress
-updated: "2026-09-27"
-accepted_through: RX006
-version: 0.9.0-review.2
+status: stable
+updated: "2026-10-23"
+accepted_through: RX033
+version: 1.0.0
 route: /style/React-TypeScript
 ---
 
 # React + TypeScript Style Guide
 
-> **In progress.** RX-Q01 A accepted; final guide-level review remains.
+> **Stable 1.0.0 — finished and approved.** All 33 rules, RX001–RX033, are authoritative house conventions. No owner decisions or additional guide-level approval remain.
 
-For agents: this is a published review draft, not a stable house standard. Apply accepted stable guides first. Within this guide, owner-choice sections explicitly marked pending remain unresolved; displayed candidate text is not approval. Do not migrate an existing repository merely because this draft is public.
+For agents: apply this completed guide alongside TypeScript 1.0.0 when working on React + TypeScript. RX006 records the accepted React hook-binding exception. Preserve the target repository's existing contracts; accepting this guide does not itself authorize an application migration or dependency upgrade.
 
 ## Scope
 
@@ -24,7 +24,7 @@ Do not translate Android service ownership into a browser service layer by defau
 
 ## RX001 — Keep the TypeScript contract intact
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 First-party React source follows explicit annotations, named data types, meaningful nullish distinctions, constrained unions, reliable strictness, and narrow imports. JSX does not exempt event callbacks, derived values, or destructuring patterns from source-visible contracts. Annotate an entire destructuring pattern; annotating a renamed property is not valid destructuring type syntax.
 
@@ -34,7 +34,7 @@ Retain the accepted compiler safety baseline and add the repository's JSX, modul
 
 ## RX002 — Return the render contract actually promised
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 Give named components explicit return types. Use `ReactElement` for a component that returns an element and `ReactElement | null` when intentional absence is part of its API. Use `ReactNode` for genuine arbitrary renderable content, not merely to avoid describing a narrower result. Server async components declare the corresponding `Promise<...>` result under their framework contract.
 
@@ -44,7 +44,7 @@ Keep `children` and named slots explicit in the props type. Do not wrap every de
 
 ## RX003 — Treat props as small, named contracts
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Use a named `type` for a reusable props record and readonly fields for its owned snapshot data. A callback in the record does not make it an implementation interface. Name alternatives rather than combining mutually dependent optional fields and booleans.
 
@@ -54,7 +54,7 @@ A child receives the values and capabilities it needs: a title and `onRenameRequ
 
 ## RX004 — Use named functions and exports; preserve framework entry points
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Use function declarations for named components, hooks, and ordinary operations. Use explicitly typed arrows for supplied behavior and first-class function values. Prefer named exports and keep internal helpers unexported.
 
@@ -64,7 +64,7 @@ An actual framework entry file may require a default export. Keep that exception
 
 ## RX005 — Use library generics without creating a house hook framework
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Write a hook type argument when it supplies meaningful domain information, such as a closed screen-state union or a nullable DOM reference. Library `useState<T>` and `useRef<T>` do not need two application uses to justify their generic signatures.
 
@@ -76,7 +76,7 @@ Do not introduce `useGenericFeature`, a universal async-state engine, or custom 
 
 *Accepted owner decision — RX-Q01 A.*
 
-**Accepted RX-Q01 A.** This React-specific exception is approved; the rest of the guide remains in progress pending final guide-level review.
+**Accepted RX-Q01 A.** This React-specific exception is part of the completed guide.
 
 <!-- DECISION:RX-Q01:START -->
 
@@ -105,7 +105,7 @@ Do not reassign a render snapshot or mutate it through either spelling. Updates 
 
 ## RX007 — State is a render snapshot, not a mutable record
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 Read the state for the current render and request a next value through the setter or owner command. Never assign to the captured state variable or mutate its published arrays, objects, or nested fields. Copy the structures that actually change and avoid retaining writable aliases.
 
@@ -115,7 +115,7 @@ Reading a variable immediately after requesting an update is not confirmation th
 
 ## RX008 — Model related alternatives as named variants
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Use named variants such as `SignedOut`, `SigningIn`, `SignedIn`, and `SignInFailed`, composed into an owned union with `kind`. Do not let independent `isLoading`, `hasError`, `user`, and `message` fields admit combinations the feature cannot mean.
 
@@ -125,7 +125,7 @@ Complete consumers retain the shared `assertNever` rule. A query library's exter
 
 ## RX009 — Use reducers for coupled transitions, not ceremonial actions
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 Keep a simple independent value in local state. Move coordinated transitions into a pure reducer or named transition function when several events share invariants or the transition needs direct tests. Choose by responsibility rather than a fixed count of useState calls.
 
@@ -135,7 +135,7 @@ An action describes a real transition; it must not become a global string-comman
 
 ## RX010 — Keep derived values derived
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Compute a filtered list, selected record, count, or label from the authoritative values instead of maintaining another synchronized copy in state. A selected identifier normally remains the source; the corresponding record is looked up from the current collection.
 
@@ -145,7 +145,7 @@ Memoize a calculation only for an actual performance reason. Memoization is not 
 
 ## RX011 — Separate editable drafts from committed data
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 A form may own a local editable draft while a repository, service, or server owns committed data. Name that distinction and decide when the draft is initialized, saved, discarded, or invalidated by a different entity. Passing an initial value does not imply perpetual bidirectional synchronization.
 
@@ -155,7 +155,7 @@ Validate at submission and preserve a failed draft for deliberate recovery. Do n
 
 ## RX012 — Commands go through semantic callbacks
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Prefer `onSaveRequested`, `onSelectionChanged`, or `onDeleteRequested` over handing a child a general-purpose mutable store. A low-level controlled input can expose a typed value-change callback; it does not need a domain-event object for every keystroke.
 
@@ -165,7 +165,7 @@ Adapt a framework event into a domain value at the UI boundary. Use the correctl
 
 ## RX013 — A custom hook owns a coherent relationship
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 A hook combines React-dependent behavior with one understandable responsibility, such as subscribing to an owner or coordinating a form draft. A pure calculation remains an ordinary function. Moving an entire application component into `useApplication` does not improve ownership.
 
@@ -175,7 +175,7 @@ Call ordinary hooks in React's supported locations and preserve their order. Do 
 
 ## RX014 — Context distributes dependencies; it does not justify global state
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Choose the owner and lifetime before choosing Context. Place a provider at the narrowest useful composition boundary and expose a typed read/command contract. Do not hide arbitrary services behind an untyped global context to avoid passing dependencies.
 
@@ -185,7 +185,7 @@ Split unrelated concerns when their ownership or update patterns differ, not jus
 
 ## RX015 — Adapt external stores with a truthful snapshot contract
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 An owner outside React needs an intentional subscription adapter. Where appropriate, use `useSyncExternalStore` with a subscription and a stable snapshot representation rather than improvised effect-and-force-render plumbing.
 
@@ -195,7 +195,7 @@ Do not return a newly allocated snapshot on every read when nothing changed. For
 
 ## RX016 — Rendering must not perform observable work
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 Keep render calculations repeatable for their inputs. Do not start a request, connect a player, write storage, register listeners, or publish analytics from the component body. A locally constructed temporary value is different from mutating an external owner.
 
@@ -205,7 +205,7 @@ User commands belong in event handling; ongoing external relationships belong at
 
 ## RX017 — Effects synchronize external relationships
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 Use an effect when a rendered identity must establish, update, or end a relationship with something external to React. Do not use effects to chain internal calculations or to infer that a user clicked Save from an unrelated state change.
 
@@ -215,7 +215,7 @@ Keep independent relationships in separate effects when their lifetimes differ. 
 
 ## RX018 — Dependencies and cleanup describe actual lifetime
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 List reactive dependencies truthfully. Do not suppress a dependency warning merely to force an empty dependency list; change the ownership or callback structure when the dependency should not restart the work.
 
@@ -225,7 +225,7 @@ An effect callback returns synchronous cleanup or nothing, not a Promise. Start 
 
 ## RX019 — Async results belong to an identity and failure owner
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Await work that must complete and supervise deliberately detached work. A `void` callback type does not prove an async handler's rejection is handled. Adapt framework callbacks through a safe command boundary and ensure a terminal error handler cannot create an unowned rejection.
 
@@ -235,7 +235,7 @@ Cancel obsolete requests when the underlying API supports it; otherwise reject s
 
 ## RX020 — Updaters and initializers remain pure
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 A state updater computes the next value from its argument. Do not send a request, schedule a save, start a timeout, or call another setter from that updater. Compute the transition separately and let the command/lifecycle owner perform required effects.
 
@@ -245,7 +245,7 @@ Likewise, an initializer should not acquire a live external resource that depend
 
 ## RX021 — Refs hold imperative handles, not hidden rendered state
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 Use a ref for an imperative handle or a value whose mutation does not itself need to render. Render-visible state belongs in a reactive owner. A ref is nullable when its target can be absent; narrow before using it rather than asserting presence.
 
@@ -255,7 +255,7 @@ Access DOM handles in the appropriate event or lifecycle phase. Pair resource at
 
 ## RX022 — Identity, navigation, and clocks stay semantic
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Use stable domain identities for repeated content and meaningful component identity for deliberate reset. Do not generate random keys on every render or restore a selected item by an index that can now identify something else.
 
@@ -265,7 +265,7 @@ Choose a single authoritative clock for timers and progress, and label primitive
 
 ## RX023 — Failures remain meaningful at the screen boundary
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Distinguish loading, empty success, unavailable content, invalid input, and rejected commands. Preserve expected alternatives in typed state and provide a usable recovery action where the product supports it. A catch-all spinner is not an error policy.
 
@@ -275,7 +275,7 @@ Render error boundaries do not automatically handle every event-handler or async
 
 ## RX024 — Preserve semantic HTML and interaction contracts
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 Use actual buttons, links, labels, and form controls for their intended jobs. A visually styled div does not inherit keyboard activation, focus behavior, or accessible naming. Keep visible state and assistive descriptions consistent.
 
@@ -285,7 +285,7 @@ Manage focus for a real transition, not whenever data refreshes. Keep actions av
 
 ## RX025 — Persist and deserialize at explicit boundaries
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Treat local storage, IndexedDB, downloaded files, route payloads, and remote responses as runtime boundaries. Parse unknown data, validate schema/version and business constraints, then normalize into owned types. A JSON.parse result annotated as a domain record is not proof.
 
@@ -295,7 +295,7 @@ Name the persistence owner and its migration, conflict, and failure behavior. Do
 
 ## RX026 — Performance work must preserve the contract
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Measure meaningful bottlenecks before adding broad memoization, manual caches, context fragmentation, or custom equality. Do not use memoization as a correctness mechanism or assume a compiler optimization creates an ownership guarantee.
 
@@ -305,7 +305,7 @@ Keep expensive work out of blocking interaction paths when measurements justify 
 
 ## RX027 — Keep Next.js rules scoped to Next.js applications
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 The following server rules apply only where the app actually uses Next.js App Router or an explicitly verified compatible runtime. Keep Server and Client Component boundaries intentional. Mark the smallest interactive client boundary rather than converting the entire application to a client bundle.
 
@@ -315,7 +315,7 @@ Use serializable boundary data according to the framework's real contract; do no
 
 ## RX028 — Authorize server operations at their real boundary
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 Validate input and enforce authentication and authorization for each exposed server operation. A hidden button, a route wrapper, or a server-only import is not resource authorization. Return the minimum safe data needed by the consumer.
 
@@ -325,7 +325,7 @@ Scope shared caches and request context so one user's data cannot become another
 
 ## RX029 — Make server data freshness and invalidation explicit
 
-*Prepared native translation — not a separate historical owner vote.*
+*Accepted React convention.*
 
 Document which layer owns retrieval, caching, optimistic changes, invalidation, and reconciliation. Do not maintain competing server and client truths because both layers can fetch the same entity.
 
@@ -335,7 +335,7 @@ Use the pinned framework's actual cache/revalidation behavior instead of assumin
 
 ## RX030 — Organize around features and deliberate entry points
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Colocate a feature's components, contracts, hooks, adapters, and relevant tests. Keep routing/composition files readable as composition rather than application-wide mutation owners. Move a helper into shared code only when it is genuinely shared.
 
@@ -345,7 +345,7 @@ Avoid global models/managers/utils buckets and sweeping barrel exports. Split a 
 
 ## RX031 — Test public behavior and temporal failure cases
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Test pure transitions without rendering when they have no UI dependency. Use component tests for interaction semantics and integration/browser tests for real navigation, persistence, focus, hydration, and provider relationships.
 
@@ -355,17 +355,17 @@ Add regression cases for stale request completion, cleanup, identity changes, re
 
 ## RX032 — Make enforcement and evidence specific
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Pin formatting, the actual TypeScript compiler, React-aware static checks, test tools, and relevant framework configuration. Run formatting, type checking, enabled correctness checks, and applicable tests as separate meaningful gates. Tune lint behavior to the accepted binding and explicit-annotation rules.
 
-Do not claim that TypeScript compilation tests DOM interaction or that a formatter proves hook lifetime. The examples in this packet have only the checks recorded in VALIDATION.md; framework builds and real browser behavior need their own evidence. A migration of an existing app is separate work from accepting the guide.
+Do not claim that TypeScript compilation tests DOM interaction or that a formatter proves hook lifetime. Publication checks establish resource consistency; example compilation, framework builds, and real browser behavior need their own evidence. A migration of an existing app is separate work from accepting the guide.
 
 **Basis:** [TS:D003](https://starter.uppercut-labs.com/style/TypeScript) · [TS:D025](https://starter.uppercut-labs.com/style/TypeScript) · [KT:K035-K037](https://starter.uppercut-labs.com/style/Kotlin)
 
 ## RX033 — Agents preserve product, dependency, and deployment contracts
 
-*Inherited principle — target-language wording remains a draft.*
+*Accepted inherited principle.*
 
 Read the local instructions, feature owner, route, data contract, and tests before editing. Make the smallest coherent change at the real boundary. Do not turn a style correction into a new global store, router, server framework, database, UI library, or dependency upgrade.
 
@@ -375,6 +375,6 @@ Preserve public URLs, permissions, persistence schemas, environment contracts, a
 
 ## Review and release boundary
 
-This guide is intentionally published as **in progress**. RX-Q01 A is an accepted owner decision; the remaining prepared rule wording still awaits final guide-level review. Publishing this review surface does not mark the guide stable, authorize application migrations, upgrade project toolchains, or certify an implementation.
+React + TypeScript 1.0.0 is finished and owner-approved. All 33 rules are accepted, including RX-Q01 A in RX006. Agents may apply the complete guide without another guide-level approval gate. Future improvements do not make this version provisional.
 
-No implementation repository has been migrated by publishing this draft. Repository-specific dependency versions, product requirements, storage formats, and deployment policies remain external to this reusable style contract.
+Accepting or publishing this guide does not certify an implementation. Repository-specific dependency versions, product requirements, storage formats, and deployment policies remain external to this reusable style contract.

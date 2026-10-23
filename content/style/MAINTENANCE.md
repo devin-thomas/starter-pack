@@ -1,6 +1,6 @@
 # Maintaining the published style guides
 
-TypeScript has a stable 1.0.0 core, Godot a stable 1.0.1 core, Kotlin a stable 1.0.0 core with an Android TV profile, and Rust a stable 1.0.0 core. Their accepted rules are published in `typescript.md`, `godot.md`, `kotlin.md`, and `rust.md`; metadata drives the human pages, Markdown, JSON, catalog, and discovery entries. React + TypeScript, Python, Swift + SwiftUI, JavaScript, and Dart + Flutter retain their separately recorded review statuses. Planning is not stored in public content.
+TypeScript has a stable 1.0.0 core, Godot a stable 1.0.1 core, Kotlin a stable 1.0.0 core with an Android TV profile, React + TypeScript a stable 1.0.0 companion, and Rust a stable 1.0.0 core. Their accepted rules are published in `typescript.md`, `godot.md`, `kotlin.md`, `react-typescript.md`, and `rust.md`; metadata drives the human pages, Markdown, JSON, catalog, and discovery entries. Python, Swift + SwiftUI, JavaScript, and Dart + Flutter retain their separately recorded review statuses. Planning is not stored in public content.
 
 Run `npm run format:style` when changing TypeScript code fences, then `npm run check`. The TypeScript checker compiles its examples with the accepted strict flags, checks explicit declaration contracts, tests rejected type operations, and runs executable behavior tests. The Godot release is hard-pinned to Godot 4.7.2; Starter Pack CI verifies its public 25-rule surface and metadata but does not claim to execute Godot without a pinned Godot binary. Project-level Godot enforcement belongs in the target Godot repository as described by G024. The Godot 1.0.1 examples and the G024 script gate were checked by hand against the official Godot 4.7.2 macOS build on 2026-09-25; repeat that check with a real 4.7.2 binary when changing GDScript examples.
 
@@ -24,7 +24,13 @@ Track merge, deployment, live verification, and implementation-specific validati
 
 ## In-progress review guides
 
-React RX-Q01 A is accepted; Python PY-Q01–Q03, Swift SW-Q01–Q02, JavaScript JS-Q01–Q02, and Dart/Flutter DF-Q01–Q02 retain their existing decision records. Their five guide statuses are unchanged by this Rust release. Agents may read these guides and use clearly accepted rules; pending alternatives are not authoritative. Browser and surface checks verify publication mechanics and decision markers; they do not certify framework/device behavior.
+Python PY-Q01–Q03, Swift SW-Q01–SW-Q02, JavaScript JS-Q01–JS-Q02, and Dart/Flutter DF-Q01–DF-Q02 retain their existing decision records and review statuses. Agents may read these guides and use clearly accepted rules; pending alternatives are not authoritative. Browser and surface checks verify publication mechanics and decision markers; they do not certify framework/device behavior.
+
+## React + TypeScript 1.0.0
+
+React + TypeScript is finished and owner-approved: `status: stable`, `version: 1.0.0`, `accepted_through: RX033`. All 33 rules are authoritative alongside TypeScript 1.0.0. RX-Q01 A remains accepted in RX006; there is no further guide-level approval gate. The scoped Next.js profile applies only to Next.js projects.
+
+The guide, introduction, README, human page, Markdown/JSON resources and catalogs share this status. Surface checks require the full rule sequence, matching metadata, no provisional badges, and no stale draft wording. These publication checks do not certify example execution or an application's compliance; implementation review and validation are separate work.
 
 ## Rust 1.0.0
 

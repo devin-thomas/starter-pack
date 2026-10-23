@@ -13,8 +13,9 @@ const specs = [
     "rules": 33,
     "headings": 35,
     "pending": [],
-    "accepted": "RX006",
-    "version": "0.9.0-review.2"
+    "accepted": "RX033",
+    "version": "1.0.0",
+    "status": "stable"
   },
   {
     "id": "python",
@@ -115,6 +116,13 @@ for (const spec of specs) {
   if (spec.id === "react-typescript") {
     assert(markdown.includes("Accepted RX-Q01 A"), "React accepted decision marker");
     assert(!markdown.includes("Pending RX-Q01"), "React decision remains pending");
+    assert.deepEqual(ids, Array.from({ length: 33 }, (_, index) => `RX${String(index + 1).padStart(3, "0")}`), "React accepted rule sequence");
+    assert(markdown.includes("All 33 rules, RX001–RX033, are authoritative"), "React full-guide authority");
+    const intro = await readFile("content/style/react-typescript-intro.md", "utf8");
+    assert(intro.includes("React + TypeScript 1.0.0 is the stable house guide"), "React introduction authority");
+    for (const forbidden of ["**In progress", "**in progress", "0.9.0-review", "remains a draft", "not a separate historical owner vote", "rest of the guide remains", "awaits final guide-level review", "VALIDATION.md", "published review draft", "still being reviewed"]) {
+      assert(!markdown.includes(forbidden) && !intro.includes(forbidden), "React stale provisional wording: " + forbidden);
+    }
   } else if (spec.id === "rust") {
     assert.deepEqual(ids, Array.from({ length: 36 }, (_, index) => `RS${String(index + 1).padStart(3, "0")}`), "Rust accepted rule sequence");
     assert(markdown.includes("Accepted RS-Q01 B"), "Rust accepted decision marker");

@@ -2,7 +2,7 @@
 
 A free guide from Devin Thomas at Uppercut Labs for making and deploying software with your own AI agent. No Starter Pack account or learner database.
 
-The next release uses [Starter Pack](https://starter.uppercut-labs.com) as its canonical address. The current live site remains at [https://starter.devthomas.site](https://starter.devthomas.site) until the separately approved domain cutover.
+[Starter Pack](https://starter.uppercut-labs.com) is the canonical live site. The former `starter.devthomas.site` address redirects human reading pages while preserving pinned agent resources.
 
 The product and package name `dvn` is always lowercase. Published skill
 declarations use the lowercase filename `dvn.json`.
@@ -14,9 +14,10 @@ The site publishes stable coding style guides under [`/style`](https://starter.u
 - [TypeScript](https://starter.uppercut-labs.com/style/TypeScript)
 - [Godot](https://starter.uppercut-labs.com/style/Godot) — hard-pinned to Godot 4.7.2 with GDScript as the primary language.
 - [Kotlin](https://starter.uppercut-labs.com/style/Kotlin) — language conventions with an Android TV profile.
+- [React + TypeScript](https://starter.uppercut-labs.com/style/React-TypeScript) — **stable 1.0.0; finished and approved**, with all 33 rules authoritative alongside TypeScript 1.0.0.
 - [Rust](https://starter.uppercut-labs.com/style/Rust) — **stable 1.0.0; finished and approved**, with all 36 rules authoritative for agent use.
 
-React + TypeScript, Python, Swift + SwiftUI, JavaScript, and Dart + Flutter retain their separately recorded in-progress review statuses. Their accepted rules can be read and applied; specifically pending alternatives are not authoritative. Rust has no remaining owner decisions or additional guide-level approval gate.
+Python, Swift + SwiftUI, JavaScript, and Dart + Flutter retain their separately recorded in-progress review statuses. Their accepted rules can be read and applied; specifically pending alternatives are not authoritative. React + TypeScript and Rust have no remaining owner decisions or additional guide-level approval gate.
 
 Agent-readable forms are generated with the human pages:
 
@@ -24,6 +25,8 @@ Agent-readable forms are generated with the human pages:
 - `https://starter.uppercut-labs.com/style/TypeScript.json`
 - `https://starter.uppercut-labs.com/style/Godot.md`
 - `https://starter.uppercut-labs.com/style/Godot.json`
+- `https://starter.uppercut-labs.com/style/React-TypeScript.md`
+- `https://starter.uppercut-labs.com/style/React-TypeScript.json`
 - `https://starter.uppercut-labs.com/style/Rust.md`
 - `https://starter.uppercut-labs.com/style/Rust.json`
 - `https://starter.uppercut-labs.com/style/catalog.json`

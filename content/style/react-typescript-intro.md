@@ -4,7 +4,7 @@ React is a UI framework; this guide applies Devin’s TypeScript ownership and c
 
 ## What is settled and what is not
 
-This page is intentionally public while the guide is still being reviewed. Established house principles are translated into this ecosystem, but any section marked as an owner choice remains unresolved unless it explicitly says accepted. The status badge and raw Markdown preserve that distinction for both people and coding agents.
+React + TypeScript 1.0.0 is the stable house guide. All 33 rules are finished and approved, including the React hook-binding exception in RX006. Agents may read and apply the complete guide alongside TypeScript 1.0.0 without further style approval. Keep framework, dependency, and deployment choices specific to the project.
 
 ## How to apply it
 
