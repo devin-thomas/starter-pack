@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactElement } from "react";
 
 export const iconNames = [
   "arrow-right",
@@ -27,16 +27,18 @@ export const iconNames = [
 ] as const;
 export type IconName = (typeof iconNames)[number];
 
+type IconProps = {
+  readonly name: IconName;
+  readonly size?: number;
+  readonly className?: string;
+};
+
 export function Icon({
   name,
   size = 20,
   className = "",
-}: {
-  name: IconName;
-  size?: number;
-  className?: string;
-}) {
-  const mask = `url("/icons/interface/${name}.svg")`;
+}: IconProps): ReactElement {
+  const mask: string = `url("/icons/interface/${name}.svg")`;
   return (
     <span
       aria-hidden="true"
@@ -51,6 +53,11 @@ export function Icon({
   );
 }
 
+type BrandDefinition = {
+  readonly name: string;
+  readonly color: boolean;
+};
+
 const brands = {
   chatgpt: { name: "ChatGPT", color: false },
   claude: { name: "Claude", color: true },
@@ -64,28 +71,32 @@ const brands = {
   replit: { name: "Replit", color: true },
   vercel: { name: "Vercel", color: false },
   tailscale: { name: "Tailscale", color: false },
-};
+} as const satisfies Readonly<Record<string, BrandDefinition>>;
 export type BrandName = keyof typeof brands;
+
+type CommonAgent = {
+  readonly name: BrandName;
+  readonly label: string;
+};
 
 export const commonAgents = [
   { name: "chatgpt", label: "ChatGPT" },
   { name: "claude", label: "Claude" },
   { name: "antigravity", label: "Antigravity" },
   { name: "cursor", label: "Cursor" },
-] as const;
+] as const satisfies readonly CommonAgent[];
 
 export function isBrandName(name: string): name is BrandName {
   return Object.hasOwn(brands, name);
 }
 
-export function BrandIcon({
-  name,
-  size = 24,
-}: {
-  name: BrandName;
-  size?: number;
-}) {
-  const src = `/icons/brands/${name}.${name === "google-ai-studio" ? "png" : "svg"}`;
+type BrandIconProps = {
+  readonly name: BrandName;
+  readonly size?: number;
+};
+
+export function BrandIcon({ name, size = 24 }: BrandIconProps): ReactElement {
+  const src: string = `/icons/brands/${name}.${name === "google-ai-studio" ? "png" : "svg"}`;
   const style: CSSProperties = { width: size, height: size };
   return brands[name].color ? (
     <img
@@ -109,17 +120,21 @@ export function BrandIcon({
   );
 }
 
-export function AgentBrands() {
+export function AgentBrands(): ReactElement {
   return (
     <div className="agent-destinations">
       <p>Supported chat agents</p>
       <ul className="agent-brands" aria-label="Agents for your starting prompt">
-        {commonAgents.filter(({ name }) => name !== "antigravity").map(({ name, label }) => (
-          <li key={name}>
-            <BrandIcon name={name} />
-            <span>{label}</span>
-          </li>
-        ))}
+        {commonAgents
+          .filter(({ name }: CommonAgent): boolean => name !== "antigravity")
+          .map(
+            ({ name, label }: CommonAgent): ReactElement => (
+              <li key={name}>
+                <BrandIcon name={name} />
+                <span>{label}</span>
+              </li>
+            ),
+          )}
       </ul>
     </div>
   );

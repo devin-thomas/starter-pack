@@ -10,7 +10,7 @@ Kotlin has 38 accepted rules, with K002 using native `val`/`var` binding semanti
 
 The checker uses the repository's native TypeScript 7 executable for independent type checks. Its syntax-inspection pass uses the pinned `@typescript/typescript6` compatibility API because TypeScript 7.0 does not expose the classic compiler API. This split is deliberate; do not replace the actual compiler check with a parser-only check. The installed lockfile records the precise dependencies.
 
-This is guide-example enforcement, not a claim that every legacy source file in Starter Pack has already migrated to this house style. Architectural rules still require review. The general D025 enforcement contract is tool-agnostic; this repository pins one concrete implementation for the examples.
+Guide-example enforcement does not claim that every legacy source file in Starter Pack has migrated to this house style. The React UI and feedback Worker additionally use the complete TypeScript safety baseline, readonly named data contracts, explicit component contracts and an application formatting gate. Workbench and build-script migration is partial; architectural rules and remaining boundary validation require review. The general D025 enforcement contract is tool-agnostic; this repository pins concrete checks for the examples and application.
 
 Example markers are HTML comments and do not appear in the human reading surface. The three D023 module files form one small multi-file example; other blocks are checked independently. Do not convert illustrative route strings into real site paths to satisfy a link checker. Link checks must distinguish actual metadata/Markdown links from source-code examples.
 

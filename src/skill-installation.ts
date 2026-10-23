@@ -1,14 +1,32 @@
-import type { SkillEntry } from "./App";
+import type { SkillEntry } from "./site-data";
 
-export const skillsPackage = "@uppercut-labs/skills";
-export const skillsPackageUrl = `https://www.npmjs.com/package/${skillsPackage}`;
-export const skillsInstallDescription = `${skillsPackage} is the premier and primary way to get Uppercut Labs agent skills. Pick a skill and the installer brings along its required skill dependencies. Requires Node.js 22 or newer.`;
-export const skillHosts = ["codex", "claude", "cursor", "antigravity", "grokbot", "grokcli"] as const;
+export type SkillInstallation = {
+  readonly package: string;
+  readonly description: string;
+  readonly command: string;
+  readonly prompt: string;
+};
+
+export const skillsPackage: string = "@uppercut-labs/skills";
+export const skillsPackageUrl: string = `https://www.npmjs.com/package/${skillsPackage}`;
+export const skillsInstallDescription: string = `${skillsPackage} is the premier and primary way to get Uppercut Labs agent skills. Pick a skill and the installer brings along its required skill dependencies. Requires Node.js 22 or newer.`;
+export const skillHosts = [
+  "codex",
+  "claude",
+  "cursor",
+  "antigravity",
+  "grokbot",
+  "grokcli",
+] as const;
 export type SkillHost = (typeof skillHosts)[number];
 
-export function skillInstallation(entry?: SkillEntry, host: SkillHost = "codex") {
+export function skillInstallation(
+  entry?: SkillEntry,
+  host: SkillHost = "codex",
+): SkillInstallation {
   if (entry?.package) {
-    if (!entry.package.name) throw new Error(`No published package for ${entry.id}`);
+    if (!entry.package.name)
+      throw new Error(`No published package for ${entry.id}`);
     return {
       package: entry.package.name,
       description: `${skillsPackage} is the primary way to get the collection's skills. ${entry.title} currently ships separately inside ${entry.package.name}, so use its package command below.`,
@@ -28,7 +46,7 @@ export function skillInstallation(entry?: SkillEntry, host: SkillHost = "codex")
   };
 }
 
-export function skillInstallationMarkdown(entry?: SkillEntry) {
-  const installation = skillInstallation(entry);
+export function skillInstallationMarkdown(entry?: SkillEntry): string {
+  const installation: SkillInstallation = skillInstallation(entry);
   return `## Get ${entry?.title ?? "the skills"}\n\n${installation.description}\n\n\`\`\`sh\n${installation.command}\n\`\`\`\n\n${entry && !entry.package ? "Run in your project folder. This command selects Codex; replace codex with your host: " + skillHosts.join(", ") + ".\n\n" : ""}Copy this prompt to your agent:\n\n\`\`\`text\n${installation.prompt}\n\`\`\`\n\n[npm package](${skillsPackageUrl})\n`;
 }

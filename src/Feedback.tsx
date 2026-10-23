@@ -1,26 +1,80 @@
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import type {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  ReactElement,
+  RefObject,
+  SetStateAction,
+} from "react";
 
-type Kind = "feedback" | "feature" | "story";
-type SubmissionState = "idle" | "sending" | "success" | "error";
+type FeedbackKind = "feedback" | "feature" | "story";
+type SubmissionIdle = { readonly kind: "idle" };
+type SubmissionSending = { readonly kind: "sending" };
+type SubmissionSuccess = { readonly kind: "success" };
+type SubmissionError = { readonly kind: "error"; readonly message: string };
+type SubmissionState =
+  | SubmissionIdle
+  | SubmissionSending
+  | SubmissionSuccess
+  | SubmissionError;
 
-export function Feedback() {
-  const id = useId();
-  const [kind, setKind] = useState<Kind>("feedback");
-  const [state, setState] = useState<SubmissionState>("idle");
-  const [error, setError] = useState("");
-  const status = useRef<HTMLDivElement>(null);
-  const inFlight = useRef(false);
+type FeedbackPayload = {
+  readonly kind: FeedbackKind;
+  readonly phase: string;
+  readonly name: string;
+  readonly email: string;
+  readonly message: string;
+  readonly projectTitle: string;
+  readonly projectUrl: string;
+  readonly lessons: string;
+  readonly allowFeature: boolean;
+  readonly website: string;
+};
 
-  useEffect(() => {
-    if (state === "error" || state === "success") status.current?.focus();
+type FeedbackRequest = {
+  readonly controller: AbortController;
+  readonly timeoutId: number;
+};
+
+export function Feedback(): ReactElement {
+  const id: string = useId();
+  const [kind, setKind]: [
+    FeedbackKind,
+    Dispatch<SetStateAction<FeedbackKind>>,
+  ] = useState<FeedbackKind>("feedback");
+  const [state, setState]: [
+    SubmissionState,
+    Dispatch<SetStateAction<SubmissionState>>,
+  ] = useState<SubmissionState>({ kind: "idle" });
+  const status: RefObject<HTMLDivElement | null> =
+    useRef<HTMLDivElement | null>(null);
+  const activeRequest: RefObject<FeedbackRequest | null> =
+    useRef<FeedbackRequest | null>(null);
+
+  useEffect((): void => {
+    if (state.kind === "error" || state.kind === "success")
+      status.current?.focus();
   }, [state]);
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  useLayoutEffect((): (() => void) => {
+    return (): void => {
+      let request: FeedbackRequest | null = activeRequest.current;
+      activeRequest.current = null;
+      if (request !== null) {
+        window.clearTimeout(request.timeoutId);
+        request.controller.abort();
+      }
+    };
+  }, []);
+
+  function submit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
-    if (inFlight.current) return;
-    const data = new FormData(event.currentTarget);
-    const read = (name: string) => String(data.get(name) ?? "").trim();
-    const payload = {
+    if (activeRequest.current !== null) return;
+    let data: FormData = new FormData(event.currentTarget);
+    const read: (name: string) => string = (name: string): string =>
+      String(data.get(name) ?? "").trim();
+    const payload: FeedbackPayload = {
       kind,
       phase: read("phase"),
       name: read("name"),
@@ -33,74 +87,147 @@ export function Feedback() {
       website: read("website"),
     };
     if (!payload.message || (kind === "story" && !payload.projectTitle)) {
-      setError("Add a message and, for a project story, a project name before sending.");
-      setState("error");
+      setState({
+        kind: "error",
+        message:
+          "Add a message and, for a project story, a project name before sending.",
+      });
       status.current?.focus();
       return;
     }
-    inFlight.current = true;
-    setState("sending");
-    setError("");
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 30_000);
+    let controller: AbortController = new AbortController();
+    let request: FeedbackRequest = {
+      controller,
+      timeoutId: window.setTimeout((): void => controller.abort(), 30_000),
+    };
+    activeRequest.current = request;
+    setState({ kind: "sending" });
+    void deliver(payload, request).catch((cause: unknown): void => {
+      console.error("Unexpected feedback submission failure.", cause);
+    });
+  }
+
+  async function deliver(
+    payload: FeedbackPayload,
+    request: FeedbackRequest,
+  ): Promise<void> {
     try {
-      const response = await fetch("/api/feedback", {
+      let response: Response = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-        signal: controller.signal,
+        signal: request.controller.signal,
       });
       if (!response.ok) {
         throw new Error(response.status === 429 ? "rate-limit" : "delivery");
       }
       const result: unknown = await response.json();
-      if (!result || typeof result !== "object" || !("ok" in result) || result.ok !== true) {
+      if (
+        !result ||
+        typeof result !== "object" ||
+        !("ok" in result) ||
+        result.ok !== true
+      ) {
         throw new Error("delivery");
       }
-      setState("success");
-    } catch (cause) {
-      setError(cause instanceof Error && cause.message === "rate-limit"
-        ? "Too many messages were sent recently. Please wait a few minutes and try again. Your text is still here."
-        : "We could not confirm delivery. Your text is still here. A delayed notification may still arrive. Please try later, or email starter@devthomas.site.");
-      setState("error");
+      if (activeRequest.current !== request) return;
+      setState({ kind: "success" });
+    } catch (cause: unknown) {
+      if (activeRequest.current !== request) return;
+      const message: string =
+        cause instanceof Error && cause.message === "rate-limit"
+          ? "Too many messages were sent recently. Please wait a few minutes and try again. Your text is still here."
+          : "We could not confirm delivery. Your text is still here. A delayed notification may still arrive. Please try later, or email starter@devthomas.site.";
+      setState({ kind: "error", message });
     } finally {
-      window.clearTimeout(timeout);
-      inFlight.current = false;
+      window.clearTimeout(request.timeoutId);
+      if (activeRequest.current === request) activeRequest.current = null;
     }
   }
 
   return (
     <div className="feedback-page">
       <div className="page-heading">
-        <span className="eyebrow"><span className="small-rule" />GET IN TOUCH</span>
+        <span className="eyebrow">
+          <span className="small-rule" />
+          GET IN TOUCH
+        </span>
         <h1>Help shape Starter Pack.</h1>
-        <p>Share feedback, suggest a feature, or tell us what you made and learned along the way.</p>
+        <p>
+          Share feedback, suggest a feature, or tell us what you made and
+          learned along the way.
+        </p>
       </div>
-      <p className="feedback-contact">Prefer email? Write to <a href="mailto:starter@devthomas.site">starter@devthomas.site</a>.</p>
-      <div ref={status} tabIndex={-1} className={`feedback-status feedback-status--${state}`} role="status" aria-live="polite" aria-atomic="true">
-        {state === "sending" && "Sending your message..."}
-        {state === "error" && error}
-        {state === "success" && "Thank you. Your message was sent to the Starter Pack team."}
+      <p className="feedback-contact">
+        Prefer email? Write to{" "}
+        <a href="mailto:starter@devthomas.site">starter@devthomas.site</a>.
+      </p>
+      <div
+        ref={status}
+        tabIndex={-1}
+        className={`feedback-status feedback-status--${state.kind}`}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {state.kind === "sending" && "Sending your message..."}
+        {state.kind === "error" && state.message}
+        {state.kind === "success" &&
+          "Thank you. Your message was sent to the Starter Pack team."}
       </div>
-      {state === "success" ? (
-        <button className="secondary-action" type="button" onClick={() => { setState("idle"); setKind("feedback"); }}>Send another message</button>
+      {state.kind === "success" ? (
+        <button
+          className="secondary-action"
+          type="button"
+          onClick={(): void => {
+            setState({ kind: "idle" });
+            setKind("feedback");
+          }}
+        >
+          Send another message
+        </button>
       ) : (
-        <form className="feedback-form" method="post" action="/api/feedback" onSubmit={submit} aria-describedby={`${id}-privacy`}>
-          <noscript><p className="feedback-privacy">This form needs JavaScript to send. You can email starter@devthomas.site instead.</p></noscript>
-          <fieldset disabled={state === "sending"}>
-            <legend className="feedback-sr-only">Your message to Starter Pack</legend>
+        <form
+          className="feedback-form"
+          method="post"
+          action="/api/feedback"
+          onSubmit={submit}
+          aria-describedby={`${id}-privacy`}
+        >
+          <noscript>
+            <p className="feedback-privacy">
+              This form needs JavaScript to send. You can email
+              starter@devthomas.site instead.
+            </p>
+          </noscript>
+          <fieldset disabled={state.kind === "sending"}>
+            <legend className="feedback-sr-only">
+              Your message to Starter Pack
+            </legend>
             <div className="feedback-row">
-              <label htmlFor={`${id}-kind`}>I'd like to
-                <select id={`${id}-kind`} name="kind" value={kind} onChange={(event) => {
-                  const value = event.target.value;
-                  if (value === "feedback" || value === "feature" || value === "story") setKind(value);
-                }}>
+              <label htmlFor={`${id}-kind`}>
+                I'd like to
+                <select
+                  id={`${id}-kind`}
+                  name="kind"
+                  value={kind}
+                  onChange={(event: ChangeEvent<HTMLSelectElement>): void => {
+                    const value: string = event.currentTarget.value;
+                    if (
+                      value === "feedback" ||
+                      value === "feature" ||
+                      value === "story"
+                    )
+                      setKind(value);
+                  }}
+                >
                   <option value="feedback">Give feedback</option>
                   <option value="feature">Request a feature</option>
                   <option value="story">Share a project or story</option>
                 </select>
               </label>
-              <label htmlFor={`${id}-phase`}>Which part of the process?
+              <label htmlFor={`${id}-phase`}>
+                Which part of the process?
                 <select id={`${id}-phase`} name="phase" defaultValue="general">
                   <option value="general">General / more than one phase</option>
                   <option value="1">Phase 1</option>
@@ -111,44 +238,125 @@ export function Feedback() {
             </div>
             {kind === "story" && (
               <div className="feedback-story">
-                <label htmlFor={`${id}-project`}>Project name (required)
-                  <input id={`${id}-project`} name="projectTitle" required maxLength={160} autoComplete="off" />
+                <label htmlFor={`${id}-project`}>
+                  Project name (required)
+                  <input
+                    id={`${id}-project`}
+                    name="projectTitle"
+                    required
+                    maxLength={160}
+                    autoComplete="off"
+                  />
                 </label>
-                <label htmlFor={`${id}-url`}>Project link (optional)
-                  <input id={`${id}-url`} name="projectUrl" type="url" pattern="https?://.+" maxLength={2000} placeholder="https://..." aria-describedby={`${id}-url-help`} />
+                <label htmlFor={`${id}-url`}>
+                  Project link (optional)
+                  <input
+                    id={`${id}-url`}
+                    name="projectUrl"
+                    type="url"
+                    pattern="https?://.+"
+                    maxLength={2000}
+                    placeholder="https://..."
+                    aria-describedby={`${id}-url-help`}
+                  />
                 </label>
-                <p id={`${id}-url-help`} className="feedback-help">A public website, repository, or demo. Use an http:// or https:// link that you are comfortable sharing.</p>
+                <p id={`${id}-url-help`} className="feedback-help">
+                  A public website, repository, or demo. Use an http:// or
+                  https:// link that you are comfortable sharing.
+                </p>
               </div>
             )}
-            <label htmlFor={`${id}-message`}>{kind === "story" ? "Tell us your story (required)" : kind === "feature" ? "What would you like to see? (required)" : "Your feedback (required)"}
-              <textarea id={`${id}-message`} name="message" required maxLength={6000} rows={6} aria-describedby={`${id}-message-help`} />
+            <label htmlFor={`${id}-message`}>
+              {kind === "story"
+                ? "Tell us your story (required)"
+                : kind === "feature"
+                  ? "What would you like to see? (required)"
+                  : "Your feedback (required)"}
+              <textarea
+                id={`${id}-message`}
+                name="message"
+                required
+                maxLength={6000}
+                rows={6}
+                aria-describedby={`${id}-message-help`}
+              />
             </label>
-            <p id={`${id}-message-help`} className="feedback-help">{kind === "story" ? "What did you make, who is it for, and how did the process help?" : kind === "feature" ? "What are you trying to do, and what would make it easier?" : "What worked well, or where did you get stuck? Include the page or step if you can."} Up to 6,000 characters.</p>
+            <p id={`${id}-message-help`} className="feedback-help">
+              {kind === "story"
+                ? "What did you make, who is it for, and how did the process help?"
+                : kind === "feature"
+                  ? "What are you trying to do, and what would make it easier?"
+                  : "What worked well, or where did you get stuck? Include the page or step if you can."}{" "}
+              Up to 6,000 characters.
+            </p>
             {kind === "story" && (
-              <label htmlFor={`${id}-lessons`}>What did you learn? (optional)
-                <textarea id={`${id}-lessons`} name="lessons" maxLength={4000} rows={4} placeholder="A surprise, a challenge you overcame, or advice for the next person." />
+              <label htmlFor={`${id}-lessons`}>
+                What did you learn? (optional)
+                <textarea
+                  id={`${id}-lessons`}
+                  name="lessons"
+                  maxLength={4000}
+                  rows={4}
+                  placeholder="A surprise, a challenge you overcame, or advice for the next person."
+                />
               </label>
             )}
             <div className="feedback-row">
-              <label htmlFor={`${id}-name`}>Name (optional)
-                <input id={`${id}-name`} name="name" autoComplete="name" maxLength={100} />
+              <label htmlFor={`${id}-name`}>
+                Name (optional)
+                <input
+                  id={`${id}-name`}
+                  name="name"
+                  autoComplete="name"
+                  maxLength={100}
+                />
               </label>
-              <label htmlFor={`${id}-email`}>Email for a reply (optional)
-                <input id={`${id}-email`} name="email" type="email" autoComplete="email" maxLength={254} />
+              <label htmlFor={`${id}-email`}>
+                Email for a reply (optional)
+                <input
+                  id={`${id}-email`}
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  maxLength={254}
+                />
               </label>
             </div>
             {kind === "story" && (
               <label className="feedback-consent" htmlFor={`${id}-feature`}>
-                <input id={`${id}-feature`} name="allowFeature" type="checkbox" />
-                <span>You may feature my submitted story, project link, and name on Starter Pack. My email will never be published. (Optional)</span>
+                <input
+                  id={`${id}-feature`}
+                  name="allowFeature"
+                  type="checkbox"
+                />
+                <span>
+                  You may feature my submitted story, project link, and name on
+                  Starter Pack. My email will never be published. (Optional)
+                </span>
               </label>
             )}
             <div className="feedback-trap" aria-hidden="true">
               <label htmlFor={`${id}-website`}>Leave this field empty</label>
-              <input id={`${id}-website`} name="website" tabIndex={-1} autoComplete="off" />
+              <input
+                id={`${id}-website`}
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+              />
             </div>
-            <p id={`${id}-privacy`} className="feedback-privacy">Your submission is processed by Cloudflare and Make and delivered to Devin's Gmail inbox. It stays private unless you give permission to feature your story. Nothing is published automatically. Please leave out passwords, API keys, private conversations, and progress files. <a href="/about#feedback-and-project-stories">How submissions are handled</a></p>
-            <button className="primary-action" type="submit">{state === "sending" ? "Sending..." : "Send message"}</button>
+            <p id={`${id}-privacy`} className="feedback-privacy">
+              Your submission is processed by Cloudflare and Make and delivered
+              to Devin's Gmail inbox. It stays private unless you give
+              permission to feature your story. Nothing is published
+              automatically. Please leave out passwords, API keys, private
+              conversations, and progress files.{" "}
+              <a href="/about#feedback-and-project-stories">
+                How submissions are handled
+              </a>
+            </p>
+            <button className="primary-action" type="submit">
+              {state.kind === "sending" ? "Sending..." : "Send message"}
+            </button>
           </fieldset>
         </form>
       )}

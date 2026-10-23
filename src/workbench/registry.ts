@@ -316,7 +316,8 @@ export function parseRegistry(value: unknown): RequirementsRegistry {
     }
   }
   for (const [id, step] of Object.entries(steps)) {
-    const expected = participates.get(id)!;
+    const expected: ReadonlySet<Phase> | undefined = participates.get(id);
+    if (!expected) invalid("steps." + id + ".gate_for", "gate participation for every registered step");
     if (step.gate_for.length !== expected.size || step.gate_for.some(phaseId => !expected.has(phaseId))) {
       invalid("steps." + id + ".gate_for", "exactly the phases whose gate expressions include this outcome");
     }

@@ -32,7 +32,7 @@ test(
     const transport: typeof fetch = async (input, init) => {
       const response = await mf.dispatchFetch(
         input instanceof Request ? input.url : String(input),
-        { method: init?.method, redirect: "manual" },
+        { ...(init?.method === undefined ? {} : { method: init.method }), redirect: "manual" },
       );
       return new Response(await response.arrayBuffer(), {
         status: response.status,

@@ -29,13 +29,19 @@ const origin = siteOrigins.canonicalOrigin;
 const metadataUrl = `${origin}/artifacts/progress-workbench/catalog.json`;
 const maxBytes = 2 * 1024 * 1024;
 
-function element<T extends HTMLElement>(id: string) {
-  const result = document.getElementById(id);
+function element(id: string): HTMLElement {
+  let result: HTMLElement | null = document.getElementById(id);
   if (!result) throw new Error(`Missing Workbench element: ${id}`);
-  return result as T;
+  return result;
 }
 
-const picker = element<HTMLInputElement>("progress-file");
+function controlElement<T extends HTMLElement>(id: string, elementConstructor: new () => T): T {
+  let result: HTMLElement = element(id);
+  if (!(result instanceof elementConstructor)) throw new Error(`Unexpected Workbench control: ${id}`);
+  return result;
+}
+
+let picker: HTMLInputElement = controlElement("progress-file", HTMLInputElement);
 const notice = element("notice");
 let catalog = __WORKBENCH_CATALOG__;
 let progress: Progress | undefined;
@@ -83,14 +89,22 @@ function date(value: string) {
   return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleString();
 }
 
-async function copy(text: string) {
+function reportCopyFailure(): void {
+  notice.textContent = "Copying is unavailable. Reopen this Workbench and try again.";
+}
+
+function copy(text: string): void {
+  void writeClipboardOrShowFallback(text).catch(reportCopyFailure);
+}
+
+async function writeClipboardOrShowFallback(text: string): Promise<void> {
   try {
     await navigator.clipboard.writeText(text);
     notice.textContent = "Copied. Paste it into your agent.";
   } catch {
-    const fallback = element<HTMLTextAreaElement>("copy-fallback");
+    let fallback: HTMLTextAreaElement = controlElement("copy-fallback", HTMLTextAreaElement);
     fallback.value = text;
-    element<HTMLDialogElement>("copy-dialog").showModal();
+    controlElement("copy-dialog", HTMLDialogElement).showModal();
     fallback.focus();
     fallback.select();
   }
@@ -178,7 +192,7 @@ function renderDiagnostics() {
   target.append(node("strong", "Progress needs attention"));
   const list = node("ul");
   for (const diagnostic of diagnostics.slice(0, 8)) list.append(node("li", diagnostic));
-  target.append(list, action("Copy sanitized diagnostics", () => void copy(`Starter Pack Workbench ${catalog.version}\n${diagnostics.join("\n")}\nNo progress values or custom field names are included. Read the local JSON before repairing it.`)));
+  target.append(list, action("Copy sanitized diagnostics", (): void => copy(`Starter Pack Workbench ${catalog.version}\n${diagnostics.join("\n")}\nNo progress values or custom field names are included. Read the local JSON before repairing it.`)));
 }
 
 function renderGateStatus(target: HTMLElement, phase: Phase) {
@@ -310,7 +324,7 @@ function render() {
     if (!progress) return;
     const next = currentStep(progress, catalog);
     const details = next ? `Current recorded step: ${titleFor(next[0], catalog)}.\n${next[1].next_action ?? ""}\n${next[1].blocker ? `Blocker: ${next[1].blocker}` : ""}` : "Check the current phase requirements and help me close out or choose the next action from my saved progress.";
-    void copy(`Continue my Starter Pack from starter-progress.json, saved ${progress.updated_at}.\n${details}\nRead the current file before acting, preserve completed work, and update it as we go. Refer back to my local Progress Workbench to show the result.`);
+    copy(`Continue my Starter Pack from starter-progress.json, saved ${progress.updated_at}.\n${details}\nRead the current file before acting, preserve completed work, and update it as we go. Refer back to my local Progress Workbench to show the result.`);
   }, "terminal"), link("Open phase guidance", phase.url));
   current.append(actions);
   const steps = element("steps");
@@ -460,9 +474,9 @@ if (Object.values(siteOrigins).some(value => new URL(value).hostname === locatio
   });
   element("refresh").addEventListener("click", () => mode === "http" ? void loadHttp() : picker.click());
   element("copy-summary").addEventListener("click", () => {
-    if (progress) void copy(summary(progress, catalog));
+    if (progress) copy(summary(progress, catalog));
   });
-  element("close-copy").addEventListener("click", () => element<HTMLDialogElement>("copy-dialog").close());
+  element("close-copy").addEventListener("click", (): void => controlElement("copy-dialog", HTMLDialogElement).close());
   document.addEventListener("dragover", (event) => {
     event.preventDefault();
     document.body.classList.add("dragging");

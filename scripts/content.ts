@@ -2,7 +2,7 @@ import { readFile, readdir, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
 import { Marked } from "marked";
-import type { SiteData } from "../src/App";
+import type { SiteData, SkillLesson } from "../src/site-data";
 import { skillInstallation, skillInstallationMarkdown } from "../src/skill-installation";
 import { googleResourcePolicy } from "./crawler-policy";
 import { createHash } from "node:crypto";
@@ -99,8 +99,8 @@ function accentHeadings(html: string) {
 }
 
 export const origin = siteOrigins.canonicalOrigin;
-export let routes = [...staticRoutes];
-export function addSkillRoutes(slugs: string[]) {
+export let routes: readonly string[] = [...staticRoutes];
+export function addSkillRoutes(slugs: readonly string[]): void {
   routes = readingRoutes(slugs);
 }
 export function normalizeGeneratedText(value: string) {
@@ -273,7 +273,7 @@ export async function loadContent(): Promise<SiteData> {
     if (sourced === packaged)
       throw new Error(`content/skills/manifest.json: skill "${entry.id}" needs either public source fields or a package, not both or neither`);
   }
-  const skillLessons: SiteData["skills"]["lessons"] = {};
+  let skillLessons: Record<string, SkillLesson> = {};
   const lessonFiles = (await readdir("content/skills")).filter((f) => f.endsWith(".md"));
   const seenSkillIds = new Set<string>();
   for (const file of lessonFiles) {
@@ -290,13 +290,14 @@ export async function loadContent(): Promise<SiteData> {
       throw new Error(`content/skills/${file}: duplicate lesson for skill_id "${fm.skill_id}"`);
     seenSkillIds.add(fm.skill_id);
     const html = accentHeadings(await renderProse(content.replace(/^# .+\r?\n/m, "")));
-    const lesson: SiteData["skills"]["lessons"][string] = {
+    const lesson: SkillLesson = {
       skillId: fm.skill_id,
       updated: String(fm.updated),
       html,
+      ...(fm.video && typeof fm.video === "object" && fm.video.url
+        ? { video: { url: fm.video.url, ...(fm.video.title ? { title: fm.video.title } : {}) } }
+        : {}),
     };
-    if (fm.video && typeof fm.video === "object" && fm.video.url)
-      lesson.video = { url: fm.video.url, ...(fm.video.title ? { title: fm.video.title } : {}) };
     skillLessons[fm.skill_id] = lesson;
   }
 

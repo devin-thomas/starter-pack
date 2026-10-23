@@ -8,7 +8,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-import App from "../src/App";
+import { App } from "../src/App";
 import siteOrigins from "../src/site-origin.json";
 import baseline from "./fixtures/pre-domain-migration-releases.json";
 import { generateResources, loadContent, origin, startupPacketRelease } from "./content";

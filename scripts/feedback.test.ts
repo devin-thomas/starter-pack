@@ -24,7 +24,7 @@ function harness(options: { ipAllowed?: boolean; totalAllowed?: boolean; respons
     FEEDBACK_TOTAL_LIMITER: { async limit({ key }) { limits.push(`total:${key}`); return { success: options.totalAllowed ?? true }; } },
   };
   const send: typeof fetch = async (input, init) => {
-    calls.push({ url: String(input), init });
+    calls.push({ url: String(input), ...(init === undefined ? {} : { init }) });
     return options.response?.() ?? Response.json({ ok: true });
   };
   return { env, send, calls, limits };

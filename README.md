@@ -67,6 +67,16 @@ The build generates semantic HTML, focused Markdown and JSON, public style-guide
 
 GitHub runs `npm ci` and `npm run check` on Node.js 24 for pushes to `main` and pull requests. These checks do not deploy the site; production deployment remains explicit.
 
+The React UI and feedback Worker use the full TypeScript guide safety baseline
+through `tsconfig.app.json`. The shared configuration also enables exact optional
+properties, explicit returns, override checks, and switch fallthrough checks for
+the build scripts and Workbench. Those older modules still need a separate
+checked-index and index-signature migration. `npm run format:app` formats the
+application sources; `npm run check:format` enforces the same scope in CI.
+The browser audit also runs `npm run test:controls` with its isolated pinned
+Playwright installation, using synthetic clipboard and feedback boundaries to
+verify cleanup, stale completions, and recovery without sending a message.
+
 ## Deploy
 
 Authenticate Wrangler to the Cloudflare account that owns the configured domain, then run `npm run deploy`. This also checks the site through the computer's normal DNS resolver; unresolved DNS is a failed release check even when the upload succeeded.

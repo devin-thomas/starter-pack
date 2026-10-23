@@ -4,7 +4,7 @@ import { build } from "esbuild";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import standaloneCode from "ajv/dist/standalone/index.js";
-import type { SiteData } from "../src/App";
+import type { SiteData } from "../src/site-data";
 import { validCatalog } from "../src/workbench/model";
 import { parseRegistry, projectCatalog, phaseIds } from "../src/workbench/registry";
 import { interfaceIcons, extraIcons, brandIcons } from "../src/workbench/icons";

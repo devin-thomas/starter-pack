@@ -1,8 +1,20 @@
-import { type ReactNode, useState } from "react";
+import { useState } from "react";
+import type {
+  ChangeEvent,
+  Dispatch,
+  ReactElement,
+  ReactNode,
+  SetStateAction,
+} from "react";
 import { CopyText } from "./CopyText";
 import siteOrigins from "./site-origin.json";
 import { Feedback } from "./Feedback";
-import { skillHosts, skillInstallation, skillsPackageUrl, type SkillHost } from "./skill-installation";
+import {
+  skillHosts,
+  skillInstallation,
+  skillsPackageUrl,
+} from "./skill-installation";
+import type { SkillHost, SkillInstallation } from "./skill-installation";
 import { motion, useReducedMotion } from "motion/react";
 import {
   Icon,
@@ -10,103 +22,76 @@ import {
   BrandIcon,
   commonAgents,
   isBrandName,
-  type IconName,
 } from "./Icons";
+import type { IconName } from "./Icons";
 
-export interface SkillEntry {
-  id: string;
-  slug: string;
-  title: string;
-  summary: string;
-  category: string;
-  order: number;
-  /** Public source repository fields; absent for a skill that ships only inside a package. */
-  sourceRepo?: string;
-  sourcePath?: string;
-  sourceVersion: string | null;
-  sourceRevision?: string;
-  sourceRef?: string;
-  /** A skill delivered inside a package; `name` stays null until the package is published. */
-  package?: { registry: "npm"; name: string | null; skillPath: string };
-  public: boolean;
-  ownedBy: string;
-  relatedSkills: string[];
-  prerequisites: { skillId?: string; platform?: string; application?: string; reason?: string }[];
-  recommendationOnly: boolean;
-}
+import type {
+  PackageEntry,
+  PhaseEntry,
+  PhaseOutlineEntry,
+  RecommendationEntry,
+  SiteData,
+  SiteSkills,
+  SkillEntry,
+  SkillLesson,
+  SkillPrerequisite,
+  SkillRecommendation,
+  SkillRecommendationGroup,
+  StyleGuideEntry,
+} from "./site-data";
 
-export interface SkillLesson {
-  skillId: string;
-  updated: string;
-  html: string;
-  video?: { url: string; title?: string };
-}
+// Preserve the existing import boundary while consumers move to site-data.
+export type {
+  PackageEntry,
+  SiteData,
+  SkillEntry,
+  SkillLesson,
+} from "./site-data";
 
-export interface PackageEntry {
-  name: string;
-  title: string;
-  summary: string;
-  repository: string;
-}
+type PhaseSummary = {
+  readonly number: number;
+  readonly title: string;
+  readonly shortLabel: string;
+  readonly icon: IconName;
+  readonly description: string;
+  readonly outcome: string;
+};
 
-export interface SiteData {
-  pages: { guide: string; about: string; cloudflareIphone: string };
-  phases: {
-    id: string;
-    title: string;
-    summary: string;
-    status: string;
-    order: number;
-    html: string;
-    outline: { id: string; labelHtml: string; lesson: boolean }[];
-  }[];
-  recommendations: {
-    id: string;
-    name: string;
-    category: string;
-    requirement: string;
-    status: string;
-    recommended_by: string;
-    checked_at: string;
-    reason: string;
-    url: string;
-    referral?: { url: string; disclosure: string };
-  }[];
-  packages: PackageEntry[];
-  skills: {
-    manifest: SkillEntry[];
-    lessons: Record<string, SkillLesson>;
-    recommendations: { group: string; description: string; items: { name: string; title: string; description: string; author: string; url: string }[] }[];
-  };
-  styles: {
-    guides: {
-      id: string;
-      title: string;
-      summary: string;
-      humanSummary: string;
-      status: string;
-      updated: string;
-      acceptedThrough: string;
-      version: string;
-      route: string;
-      introHtml: string;
-      html: string;
-      outline: { id: string; labelHtml: string }[];
-    }[];
-  };
-  prompt: string;
-  phase2Prompt: string;
-  instructionPacket: string;
-}
+type CommonAgent = (typeof commonAgents)[number];
 
-const milestones = [
-  "Make something new",
-  "Harness your power",
-  "Build something great",
+const phaseSummaries: readonly PhaseSummary[] = [
+  {
+    number: 1,
+    title: "Make something new",
+    shortLabel: "Make",
+    icon: "sprout",
+    description:
+      "Set up your accounts. Make one small thing work. A phone is enough to begin.",
+    outcome: "A working first build",
+  },
+  {
+    number: 2,
+    title: "Harness your power",
+    shortLabel: "Harness",
+    icon: "blocks",
+    description:
+      "Set up your computer. Shape a real idea, build it, and put it online.",
+    outcome: "A meaningful project, live",
+  },
+  {
+    number: 3,
+    title: "Build something great",
+    shortLabel: "Build",
+    icon: "compass",
+    description:
+      "A look ahead at deeper planning, deliberate decisions, and larger builds.",
+    outcome: "Preview of what comes next",
+  },
 ];
-const phaseIcons = ["sprout", "blocks", "compass"] as const;
-const phaseShortLabels = ["Make", "Harness", "Build"];
-const nav = [
+
+type NavigationLink = readonly [href: string, label: string];
+
+const nav: readonly NavigationLink[] = [
   ["/guide", "Guide"],
   ["/skills", "Skills"],
   ["/style", "Style guides"],
@@ -116,17 +101,99 @@ const nav = [
   ["/contact", "Share feedback"],
 ];
 
+type PromptProps = {
+  readonly prompt: string;
+  readonly phase2?: boolean;
+  readonly home?: boolean;
+  readonly instructionPacket?: string;
+};
+
+type ExternalLinkProps = {
+  readonly href: string;
+  readonly children: ReactNode;
+  readonly label?: string;
+};
+
+type PhaseContentProps = {
+  readonly phase: PhaseEntry;
+  readonly prompt: string;
+  readonly phase2Prompt: string;
+  readonly instructionPacket: string;
+};
+
+type ResourceListProps = {
+  readonly items: readonly Resource[];
+};
+
+type ResourcesProps = {
+  readonly phase?: number;
+};
+
+type AgentFilesProps = {
+  readonly phase: number;
+};
+
+type RecommendationCardProps = {
+  readonly item: RecommendationEntry;
+};
+
+type ContextRailProps = {
+  readonly phase: number;
+  readonly recommendations: readonly RecommendationEntry[];
+};
+
+type SkillInstallProps = {
+  readonly entry?: SkillEntry;
+};
+
+type SkillPageProps = {
+  readonly entry: SkillEntry;
+  readonly lesson: SkillLesson;
+  readonly manifest: readonly SkillEntry[];
+  readonly lessons: Readonly<Record<string, SkillLesson>>;
+};
+
+type SkillsHubProps = {
+  readonly skills: SiteSkills;
+  readonly packages: readonly PackageEntry[];
+};
+
+type SkillRecommendationsProps = {
+  readonly groups: readonly SkillRecommendationGroup[];
+};
+
+type StyleHubProps = {
+  readonly guides: readonly StyleGuideEntry[];
+};
+
+type StyleGuideProps = {
+  readonly guide: StyleGuideEntry;
+};
+
+type AppProps = {
+  readonly path: string;
+  readonly data: SiteData;
+};
+
+type PageHeadingProps = {
+  readonly label: string;
+  readonly title: string;
+  readonly description: string;
+};
+
+type CopyStatus = "idle" | "copied" | "failed";
+
+type ResolvedSkillPage = {
+  readonly entry: SkillEntry;
+  readonly lesson: SkillLesson;
+};
+
 function Prompt({
   prompt,
   phase2 = false,
   home = false,
   instructionPacket,
-}: {
-  prompt: string;
-  phase2?: boolean;
-  home?: boolean;
-  instructionPacket?: string;
-}) {
+}: PromptProps): ReactElement {
   return (
     <section
       id="starting-prompt"
@@ -158,8 +225,22 @@ function Prompt({
       {!phase2 && instructionPacket && (
         <details className="prompt-explainer packet-recovery">
           <summary>Chat can't open the guide?</summary>
-          <CopyText text={instructionPacket} label="Phase 1 instruction packet" buttonLabel="Copy instruction packet" copiedLabel="Instruction packet copied" instruction="Paste into the same chat. Keep your existing progress." download="/agent/phase-1-packet.txt" />
-          <a className="text-link" href="/agent/phase-1-packet.txt" download="starter-pack-phase-1.txt"><Icon name="download" size={17} /> Download instruction packet (.txt)</a>
+          <CopyText
+            text={instructionPacket}
+            label="Phase 1 instruction packet"
+            buttonLabel="Copy instruction packet"
+            copiedLabel="Instruction packet copied"
+            instruction="Paste into the same chat. Keep your existing progress."
+            download="/agent/phase-1-packet.txt"
+          />
+          <a
+            className="text-link"
+            href="/agent/phase-1-packet.txt"
+            download="starter-pack-phase-1.txt"
+          >
+            <Icon name="download" size={17} /> Download instruction packet
+            (.txt)
+          </a>
         </details>
       )}
     </section>
@@ -170,18 +251,17 @@ function ExternalLink({
   href,
   children,
   label,
-}: {
-  href: string;
-  children: ReactNode;
-  label?: string;
-}) {
-  const internal = new URL(href, resourceOrigin).origin === resourceOrigin;
+}: ExternalLinkProps): ReactElement {
+  const internal: boolean =
+    new URL(href, resourceOrigin).origin === resourceOrigin;
   return (
     <a
       href={href}
       target={internal ? undefined : "_blank"}
       rel={internal ? undefined : "noopener noreferrer"}
-      aria-label={label ? internal ? label : `${label} (opens in a new tab)` : undefined}
+      aria-label={
+        label ? (internal ? label : `${label} (opens in a new tab)`) : undefined
+      }
     >
       {children}
       {!internal && <span className="sr-only"> (opens in a new tab)</span>}
@@ -191,14 +271,13 @@ function ExternalLink({
 
 function PhaseContent({
   phase,
-  data,
-}: {
-  phase: SiteData["phases"][number];
-  data: SiteData;
-}) {
-  const boundary =
+  prompt,
+  phase2Prompt,
+  instructionPacket,
+}: PhaseContentProps): ReactElement {
+  const boundary: string =
     phase.order === 1 ? "use-the-setup-you-have" : "complete-computer-setup";
-  const split =
+  const split: number =
     phase.order < 3 ? phase.html.indexOf(`<h2 id="${boundary}"`) : -1;
   if (phase.order < 3 && split < 0)
     throw new Error(`Missing phase ${phase.order} handoff position`);
@@ -208,14 +287,23 @@ function PhaseContent({
         <details>
           <summary>Steps and lessons in this phase</summary>
           <ol>
-            {phase.outline.map((item) => (
-              <li key={item.id} className={item.lesson ? "outline-lesson" : undefined}>
-                <a href={`#${item.id}`}>
-                  {item.lesson && <span className="outline-label">Lesson</span>}
-                  <span dangerouslySetInnerHTML={{ __html: item.labelHtml }} />
-                </a>
-              </li>
-            ))}
+            {phase.outline.map(
+              (item: PhaseOutlineEntry): ReactElement => (
+                <li
+                  key={item.id}
+                  className={item.lesson ? "outline-lesson" : undefined}
+                >
+                  <a href={`#${item.id}`}>
+                    {item.lesson && (
+                      <span className="outline-label">Lesson</span>
+                    )}
+                    <span
+                      dangerouslySetInnerHTML={{ __html: item.labelHtml }}
+                    />
+                  </a>
+                </li>
+              ),
+            )}
           </ol>
         </details>
       </nav>
@@ -228,9 +316,9 @@ function PhaseContent({
       {split >= 0 && (
         <>
           <Prompt
-            prompt={phase.order === 1 ? data.prompt : data.phase2Prompt}
+            prompt={phase.order === 1 ? prompt : phase2Prompt}
             phase2={phase.order === 2}
-            instructionPacket={data.instructionPacket}
+            instructionPacket={instructionPacket}
           />
           <article
             className="prose"
@@ -242,45 +330,39 @@ function PhaseContent({
   );
 }
 
-function PhaseCards() {
+function PhaseCards(): ReactElement {
   return (
     <div className="phase-cards">
-      {milestones.map((title, i) => (
-        <a
-          href={`/phases/${i + 1}`}
-          className={`phase-card phase-${i + 1}`}
-          key={title}
-        >
-          <span className="concept-icon">
-            <Icon name={phaseIcons[i]} size={24} />
-          </span>
-          <span className="eyebrow">
-            PHASE 0{i + 1}
-            {i === 2 && " / PREVIEW"}
-          </span>
-          <h3>{title}</h3>
-          <p>
-            {
-              [
-                "Set up your accounts. Make one small thing work. A phone is enough to begin.",
-                "Set up your computer. Shape a real idea, build it, and put it online.",
-                "A look ahead at deeper planning, deliberate decisions, and larger builds.",
-              ][i]
-            }
-          </p>
-          <span className="card-link">
-            {i === 2 ? "Explore the preview" : "Open phase"}
-            <Icon name="arrow-right" size={16} />
-          </span>
-        </a>
-      ))}
+      {phaseSummaries.map(
+        (summary: PhaseSummary): ReactElement => (
+          <a
+            href={`/phases/${summary.number}`}
+            className={`phase-card phase-${summary.number}`}
+            key={summary.number}
+          >
+            <span className="concept-icon">
+              <Icon name={summary.icon} size={24} />
+            </span>
+            <span className="eyebrow">
+              PHASE 0{summary.number}
+              {summary.number === 3 && " / PREVIEW"}
+            </span>
+            <h3>{summary.title}</h3>
+            <p>{summary.description}</p>
+            <span className="card-link">
+              {summary.number === 3 ? "Explore the preview" : "Open phase"}
+              <Icon name="arrow-right" size={16} />
+            </span>
+          </a>
+        ),
+      )}
     </div>
   );
 }
 
-const resourceOrigin = siteOrigins.canonicalOrigin;
+const resourceOrigin: string = siteOrigins.canonicalOrigin;
 type Resource = readonly [path: string, label: string, description?: string];
-const templateResources: Resource[] = [
+const templateResources: readonly Resource[] = [
   [
     "/artifacts/progress-workbench/README.md",
     "Progress Workbench instructions",
@@ -301,36 +383,38 @@ const templateResources: Resource[] = [
   ["/skills/versions.json", "Skill versions"],
 ];
 
-function ResourceList({ items }: { items: Resource[] }) {
+function ResourceList({ items }: ResourceListProps): ReactElement {
   return (
     <div className="resource-list">
-      {items.map(([path, label, description]) => (
-        <div className="resource-item" key={path}>
-          <div className="resource-heading">
-            <span className="resource-symbol">
-              <Icon name={resourceIcon(path)} size={21} />
-            </span>
-            <div>
-              <strong>{label}</strong>
-              {description && <small>{description}</small>}
+      {items.map(
+        ([path, label, description]: Resource): ReactElement => (
+          <div className="resource-item" key={path}>
+            <div className="resource-heading">
+              <span className="resource-symbol">
+                <Icon name={resourceIcon(path)} size={21} />
+              </span>
+              <div>
+                <strong>{label}</strong>
+                {description && <small>{description}</small>}
+              </div>
             </div>
+            <CopyText
+              text={`${resourceOrigin}${path}`}
+              label={`${label} address`}
+              alwaysVisible
+              buttonLabel="Copy address"
+              copiedLabel="Address copied"
+              instruction="Paste into your agent."
+            />
           </div>
-          <CopyText
-            text={`${resourceOrigin}${path}`}
-            label={`${label} address`}
-            alwaysVisible
-            buttonLabel="Copy address"
-            copiedLabel="Address copied"
-            instruction="Paste into your agent."
-          />
-        </div>
-      ))}
+        ),
+      )}
     </div>
   );
 }
 
-function Resources({ phase }: { phase?: number }) {
-  const items: Resource[] = phase
+function Resources({ phase }: ResourcesProps): ReactElement {
+  const items: readonly Resource[] = phase
     ? [
         [`/phases/${phase}.md`, "Phase guide for your agent"],
         [`/phases/${phase}.json`, "Phase data"],
@@ -390,7 +474,7 @@ function Resources({ phase }: { phase?: number }) {
   );
 }
 
-function AgentFiles({ phase }: { phase: number }) {
+function AgentFiles({ phase }: AgentFilesProps): ReactElement {
   return (
     <details className="content-section agent-files">
       <summary>Files for your agent</summary>
@@ -404,23 +488,23 @@ function AgentFiles({ phase }: { phase: number }) {
   );
 }
 
-function RecommendationCard({
-  item,
-}: {
-  item: SiteData["recommendations"][number];
-}) {
-  const devinsPick = item.id === "chatgpt" || item.id === "google-ai-studio";
-  const internal = new URL(item.url, resourceOrigin).origin === resourceOrigin;
+function RecommendationCard({ item }: RecommendationCardProps): ReactElement {
+  const devinsPick: boolean =
+    item.id === "chatgpt" || item.id === "google-ai-studio";
+  const internal: boolean =
+    new URL(item.url, resourceOrigin).origin === resourceOrigin;
   return (
     <article className="recommendation">
       <div className="recommendation-top">
         <span className="eyebrow">{item.category.replaceAll("_", " ")}</span>
-        <span className={`requirement ${devinsPick ? "devin-pick" : `requirement-${item.requirement}`}`}>
+        <span
+          className={`requirement ${devinsPick ? "devin-pick" : `requirement-${item.requirement}`}`}
+        >
           {devinsPick
             ? "Devin's Pick"
             : item.status === "deprecated"
-            ? "Deprecated"
-            : item.requirement.replaceAll("_", " ")}
+              ? "Deprecated"
+              : item.requirement.replaceAll("_", " ")}
         </span>
       </div>
       <h2>
@@ -439,24 +523,39 @@ function RecommendationCard({
           <Icon name={internal ? "arrow-right" : "arrow-up-right"} size={17} />
         </ExternalLink>
       </h2>
-      {item.reason.split("\n\n").map((paragraph, index) => (
-        <p key={index}>
-          {item.id === "primary-ai-phone-app"
-            ? paragraph.split(/(ChatGPT|Claude|Cursor)/g).map((part, partIndex) =>
-                /^(ChatGPT|Claude|Cursor)$/.test(part)
-                  ? <strong key={partIndex}>{part}</strong>
-                  : part,
-              )
-            : paragraph}
-        </p>
-      ))}
+      {item.reason.split("\n\n").map(
+        (paragraph: string, index: number): ReactElement => (
+          <p key={index}>
+            {item.id === "primary-ai-phone-app"
+              ? paragraph
+                  .split(/(ChatGPT|Claude|Cursor)/g)
+                  .map(
+                    (part: string, partIndex: number): ReactElement | string =>
+                      /^(ChatGPT|Claude|Cursor)$/.test(part) ? (
+                        <strong key={partIndex}>{part}</strong>
+                      ) : (
+                        part
+                      ),
+                  )
+              : paragraph}
+          </p>
+        ),
+      )}
       {item.referral && (
         <div className="recommendation-referral">
-          <p>No AI subscription yet? If you decide to try ChatGPT, you can use my optional referral link.</p>
           <p>
-            <ExternalLink href={item.referral.url}>Use my ChatGPT referral</ExternalLink>
+            No AI subscription yet? If you decide to try ChatGPT, you can use my
+            optional referral link.
+          </p>
+          <p>
+            <ExternalLink href={item.referral.url}>
+              Use my ChatGPT referral
+            </ExternalLink>
             {" or "}
-            <ExternalLink href="https://chatgpt.com/">go directly to ChatGPT</ExternalLink>.
+            <ExternalLink href="https://chatgpt.com/">
+              go directly to ChatGPT
+            </ExternalLink>
+            .
           </p>
           <p>{item.referral.disclosure}</p>
         </div>
@@ -481,10 +580,13 @@ function resourceIcon(href: string): IconName {
   return "file-text";
 }
 
-function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
-  const checked = data.recommendations
-    .map((item) => item.checked_at)
-    .filter(Boolean)
+function ContextRail({
+  phase,
+  recommendations,
+}: ContextRailProps): ReactElement {
+  const checked: string | undefined = recommendations
+    .map((item: RecommendationEntry): string => item.checked_at)
+    .filter((date: string): boolean => date.length > 0)
     .sort()
     .at(-1);
   return (
@@ -494,18 +596,33 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
         <div className="need-item">
           <Icon name="terminal" size={18} />
           <div>
-            <strong>{phase === 2 ? "One development harness" : "An AI companion on your phone"}</strong>
-            <p>{phase === 2 ? "Choose a harness for your project work." : "Supported phone companions:"}</p>
+            <strong>
+              {phase === 2
+                ? "One development harness"
+                : "An AI companion on your phone"}
+            </strong>
+            <p>
+              {phase === 2
+                ? "Choose a harness for your project work."
+                : "Supported phone companions:"}
+            </p>
             <ul
               className="rail-agent-options"
               aria-label="Common AI agent options"
             >
-              {commonAgents.filter(({ name }) => phase === 2 || name !== "antigravity").map(({ name, label }) => (
-                <li key={name}>
-                  <BrandIcon name={name} size={20} />
-                  <span>{label}</span>
-                </li>
-              ))}
+              {commonAgents
+                .filter(
+                  ({ name }: CommonAgent): boolean =>
+                    phase === 2 || name !== "antigravity",
+                )
+                .map(
+                  ({ name, label }: CommonAgent): ReactElement => (
+                    <li key={name}>
+                      <BrandIcon name={name} size={20} />
+                      <span>{label}</span>
+                    </li>
+                  ),
+                )}
             </ul>
           </div>
         </div>
@@ -544,26 +661,22 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
         <span className="eyebrow">THE PATH</span>
         <h2>One milestone at a time.</h2>
         <ol className="milestone-list">
-          {milestones.map((title, i) => (
-            <li
-              key={title}
-              className={`phase-${i + 1} ${phase === i + 1 ? "current" : ""}`}
-            >
-              <span className="rail-number">
-                <Icon name={phaseIcons[i]} size={17} />
-              </span>
-              <div>
-                <strong>{title}</strong>
-                <small>
-                  {i === 0
-                    ? "A working first build"
-                    : i === 1
-                      ? "A meaningful project, live"
-                      : "Preview of what comes next"}
-                </small>
-              </div>
-            </li>
-          ))}
+          {phaseSummaries.map(
+            (summary: PhaseSummary): ReactElement => (
+              <li
+                key={summary.number}
+                className={`phase-${summary.number} ${phase === summary.number ? "current" : ""}`}
+              >
+                <span className="rail-number">
+                  <Icon name={summary.icon} size={17} />
+                </span>
+                <div>
+                  <strong>{summary.title}</strong>
+                  <small>{summary.outcome}</small>
+                </div>
+              </li>
+            ),
+          )}
         </ol>
       </section>
       <section className="privacy-note">
@@ -587,43 +700,114 @@ function ContextRail({ phase, data }: { phase: number; data: SiteData }) {
   );
 }
 
-const categoryLabels: Record<string, string> = {
-  plan: "Plan", build: "Build", specialized: "Specialized", fun: "Fun",
+const categoryLabels: Readonly<Record<string, string>> = {
+  plan: "Plan",
+  build: "Build",
+  specialized: "Specialized",
+  fun: "Fun",
 };
 
-function SkillInstall({ entry }: { entry?: SkillEntry }) {
-  const [host, setHost] = useState<SkillHost>("codex");
-  const installation = skillInstallation(entry, host);
+function SkillInstall({ entry }: SkillInstallProps): ReactElement {
+  const [host, setHost]: [SkillHost, Dispatch<SetStateAction<SkillHost>>] =
+    useState<SkillHost>("codex");
+  const installation: SkillInstallation = skillInstallation(entry, host);
   return (
     <section id="get-skills" className="content-section skill-install">
-      <h2>{entry ? `Get ${entry.title}` : "Get the skills with Uppercut Labs"}</h2>
+      <h2>
+        {entry ? `Get ${entry.title}` : "Get the skills with Uppercut Labs"}
+      </h2>
       <p>{installation.description}</p>
-      <p><ExternalLink href={skillsPackageUrl}>Meet @uppercut-labs/skills on npm<Icon name="arrow-up-right" size={12} /></ExternalLink></p>
+      <p>
+        <ExternalLink href={skillsPackageUrl}>
+          Meet @uppercut-labs/skills on npm
+          <Icon name="arrow-up-right" size={12} />
+        </ExternalLink>
+      </p>
       {entry && !entry.package && (
-        <label className="skill-host">Your agent
-          <select value={host} onChange={(event) => {
-            const selected = skillHosts.find((candidate) => candidate === event.target.value);
-            if (selected) setHost(selected);
-          }}>
-            {skillHosts.map((value) => <option key={value} value={value}>{value}</option>)}
+        <label className="skill-host">
+          Your agent
+          <select
+            value={host}
+            onChange={(event: ChangeEvent<HTMLSelectElement>): void => {
+              const selected: SkillHost | undefined = skillHosts.find(
+                (candidate: SkillHost): boolean =>
+                  candidate === event.currentTarget.value,
+              );
+              if (selected) setHost(selected);
+            }}
+          >
+            {skillHosts.map(
+              (value: SkillHost): ReactElement => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ),
+            )}
           </select>
         </label>
       )}
-      <pre className="skill-command"><code>{installation.command}</code></pre>
-      <CopyText key={installation.command} text={installation.command} label="Terminal command" buttonLabel="Copy command" copiedLabel="Command copied" disclosureLabel="Read or select the command" instruction={entry ? "Run in your project folder." : "Run in your terminal to browse available skills."} />
-      {!entry && <p className="muted">To install one, use <code>npx @uppercut-labs/skills add &lt;skillname&gt; --host &lt;host&gt; --project .</code>. Each skill page has a ready-to-copy command. Cappy ships separately in its own package.</p>}
+      <pre className="skill-command">
+        <code>{installation.command}</code>
+      </pre>
+      <CopyText
+        key={installation.command}
+        text={installation.command}
+        label="Terminal command"
+        buttonLabel="Copy command"
+        copiedLabel="Command copied"
+        disclosureLabel="Read or select the command"
+        instruction={
+          entry
+            ? "Run in your project folder."
+            : "Run in your terminal to browse available skills."
+        }
+      />
+      {!entry && (
+        <p className="muted">
+          To install one, use{" "}
+          <code>
+            npx @uppercut-labs/skills add &lt;skillname&gt; --host &lt;host&gt;
+            --project .
+          </code>
+          . Each skill page has a ready-to-copy command. Cappy ships separately
+          in its own package.
+        </p>
+      )}
       <h3>Let your agent take it from here</h3>
-      <CopyText text={installation.prompt} label={entry ? `Install ${entry.title} with your agent` : "Choose and install skills with your agent"} buttonLabel="Copy prompt for your agent" />
+      <CopyText
+        text={installation.prompt}
+        label={
+          entry
+            ? `Install ${entry.title} with your agent`
+            : "Choose and install skills with your agent"
+        }
+        buttonLabel="Copy prompt for your agent"
+      />
     </section>
   );
 }
 
-function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; lesson: SkillLesson; manifest: SkillEntry[]; lessons: Record<string, SkillLesson> }) {
-  const relatedEntries = entry.relatedSkills
-    .map((id) => manifest.find((s) => s.id === id))
-    .filter((s): s is SkillEntry => s != null && s.public && !s.recommendationOnly);
-  const skillPrereqs = entry.prerequisites.filter((p) => p.skillId);
-  const platformPrereqs = entry.prerequisites.filter((p) => p.platform || p.application);
+function SkillPage({
+  entry,
+  lesson,
+  manifest,
+  lessons,
+}: SkillPageProps): ReactElement {
+  const relatedEntries: readonly SkillEntry[] = entry.relatedSkills
+    .map((id: string): SkillEntry | undefined =>
+      manifest.find((skill: SkillEntry): boolean => skill.id === id),
+    )
+    .filter(
+      (skill: SkillEntry | undefined): skill is SkillEntry =>
+        skill !== undefined && skill.public && !skill.recommendationOnly,
+    );
+  const skillPrereqs: readonly SkillPrerequisite[] = entry.prerequisites.filter(
+    (prerequisite: SkillPrerequisite): boolean => Boolean(prerequisite.skillId),
+  );
+  const platformPrereqs: readonly SkillPrerequisite[] =
+    entry.prerequisites.filter((prerequisite: SkillPrerequisite): boolean =>
+      Boolean(prerequisite.platform || prerequisite.application),
+    );
 
   return (
     <>
@@ -636,18 +820,25 @@ function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; le
       {lesson.video && (
         <div className="skill-video">
           <video controls src={lesson.video.url}>
-            {lesson.video.title && <track kind="captions" label={lesson.video.title} />}
+            {lesson.video.title && (
+              <track kind="captions" label={lesson.video.title} />
+            )}
           </video>
         </div>
       )}
-      <article className="prose" dangerouslySetInnerHTML={{ __html: lesson.html }} />
+      <article
+        className="prose"
+        dangerouslySetInnerHTML={{ __html: lesson.html }}
+      />
       {platformPrereqs.length > 0 && (
         <section className="skill-meta-section">
           <h2>Compatibility</h2>
           <ul>
-            {platformPrereqs.map((p, i) => (
-              <li key={i}>{p.reason || p.platform || p.application}</li>
-            ))}
+            {platformPrereqs.map(
+              (p: SkillPrerequisite, i: number): ReactElement => (
+                <li key={i}>{p.reason || p.platform || p.application}</li>
+              ),
+            )}
           </ul>
         </section>
       )}
@@ -657,11 +848,19 @@ function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; le
             <>
               <h2>Prerequisites</h2>
               <ul>
-                {skillPrereqs.map((p) => {
-                  const linked = manifest.find((s) => s.id === p.skillId);
+                {skillPrereqs.map((p: SkillPrerequisite): ReactElement => {
+                  const linked: SkillEntry | undefined = manifest.find(
+                    (skill: SkillEntry): boolean => skill.id === p.skillId,
+                  );
                   return (
                     <li key={p.skillId}>
-                      {linked && lessons[linked.slug] ? <a href={`/skills/${linked.slug}`}>{linked.title}</a> : linked ? <strong>{linked.title}</strong> : p.skillId}
+                      {linked && lessons[linked.id] ? (
+                        <a href={`/skills/${linked.slug}`}>{linked.title}</a>
+                      ) : linked ? (
+                        <strong>{linked.title}</strong>
+                      ) : (
+                        p.skillId
+                      )}
                       {p.reason && ` — ${p.reason}`}
                     </li>
                   );
@@ -673,11 +872,18 @@ function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; le
             <>
               <h2>Related skills</h2>
               <ul>
-                {relatedEntries.map((s) => (
-                  <li key={s.id}>
-                    {lessons[s.slug] ? <a href={`/skills/${s.slug}`}>{s.title}</a> : <strong>{s.title}</strong>} — {s.summary}
-                  </li>
-                ))}
+                {relatedEntries.map(
+                  (s: SkillEntry): ReactElement => (
+                    <li key={s.id}>
+                      {lessons[s.id] ? (
+                        <a href={`/skills/${s.slug}`}>{s.title}</a>
+                      ) : (
+                        <strong>{s.title}</strong>
+                      )}{" "}
+                      — {s.summary}
+                    </li>
+                  ),
+                )}
               </ul>
             </>
           )}
@@ -687,20 +893,41 @@ function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; le
         <h2>Source</h2>
         {entry.package ? (
           <p>
-            Ships with the {entry.package.name ? (
-              <a href={`https://www.npmjs.com/package/${entry.package.name}`} target="_blank" rel="noopener noreferrer">
-                {entry.package.name}<Icon name="arrow-up-right" size={13} /><span className="sr-only"> (opens in a new tab)</span>
+            Ships with the{" "}
+            {entry.package.name ? (
+              <a
+                href={`https://www.npmjs.com/package/${entry.package.name}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {entry.package.name}
+                <Icon name="arrow-up-right" size={13} />
+                <span className="sr-only"> (opens in a new tab)</span>
               </a>
-            ) : entry.title} npm package at <code>{entry.package.skillPath}</code>.
+            ) : (
+              entry.title
+            )}{" "}
+            npm package at <code>{entry.package.skillPath}</code>.
             {!entry.package.name && " The package is not published yet."}
-            {entry.sourceVersion && <span className="metadata"> v{entry.sourceVersion}</span>}
+            {entry.sourceVersion && (
+              <span className="metadata"> v{entry.sourceVersion}</span>
+            )}
           </p>
         ) : (
           <p>
-            Canonical implementation: <a href={`https://github.com/${entry.sourceRepo}/tree/${entry.sourceRef}/${(entry.sourcePath ?? "").replace(/\/[^/]+$/, "")}`} target="_blank" rel="noopener noreferrer">
-              {entry.sourceRepo}<Icon name="arrow-up-right" size={13} /><span className="sr-only"> (opens in a new tab)</span>
+            Canonical implementation:{" "}
+            <a
+              href={`https://github.com/${entry.sourceRepo}/tree/${entry.sourceRef}/${(entry.sourcePath ?? "").replace(/\/[^/]+$/, "")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {entry.sourceRepo}
+              <Icon name="arrow-up-right" size={13} />
+              <span className="sr-only"> (opens in a new tab)</span>
             </a>
-            {entry.sourceVersion && <span className="metadata"> v{entry.sourceVersion}</span>}
+            {entry.sourceVersion && (
+              <span className="metadata"> v{entry.sourceVersion}</span>
+            )}
           </p>
         )}
       </section>
@@ -712,9 +939,16 @@ function SkillPage({ entry, lesson, manifest, lessons }: { entry: SkillEntry; le
   );
 }
 
-function SkillsHub({ data }: { data: SiteData }) {
-  const categories = data.skills.manifest[0] ? [...new Set(data.skills.manifest.map((s) => s.category))] : [];
-  const orderedCategories = ["plan", "build", "specialized", "fun"].filter((c) => categories.includes(c));
+function SkillsHub({ skills, packages }: SkillsHubProps): ReactElement {
+  const categories: readonly string[] = skills.manifest.map(
+    (skill: SkillEntry): string => skill.category,
+  );
+  const orderedCategories: readonly string[] = [
+    "plan",
+    "build",
+    "specialized",
+    "fun",
+  ].filter((category: string): boolean => categories.includes(category));
   return (
     <>
       <PageHeading
@@ -723,54 +957,92 @@ function SkillsHub({ data }: { data: SiteData }) {
         description="Agent skills that help you plan, build, maintain, and ship. Pick what fits your current job."
       />
       <p className="muted">
-        Skills are reusable instructions your agent follows. You do not need all of them. Start with the one that matches your next step.
+        Skills are reusable instructions your agent follows. You do not need all
+        of them. Start with the one that matches your next step.
       </p>
-      <p className="muted">Looking for installable software? <a href="#packages">Browse Uppercut Labs packages</a>.</p>
+      <p className="muted">
+        Looking for installable software?{" "}
+        <a href="#packages">Browse Uppercut Labs packages</a>.
+      </p>
       <SkillInstall />
-      {orderedCategories.map((cat) => (
-        <section key={cat} className="content-section">
-          <h2>{categoryLabels[cat] || cat}</h2>
-          <div className="recommendation-list">
-            {data.skills.manifest
-              .filter((s) => s.category === cat && s.public && !s.recommendationOnly)
-              .sort((a, b) => a.order - b.order)
-              .map((s) => {
-                const hasLesson = !!data.skills.lessons[s.id];
-                return hasLesson ? (
-                  <a key={s.id} href={`/skills/${s.slug}`} className="recommendation skill-card">
-                    <h3>{s.title}</h3>
-                    <p>{s.summary}</p>
-                  </a>
-                ) : (
-                  <div key={s.id} className="recommendation skill-card">
-                    <h3>{s.title}</h3>
-                    <p>{s.summary}</p>
-                  </div>
-                );
-              })}
-          </div>
-        </section>
-      ))}
+      {orderedCategories.map(
+        (cat: string): ReactElement => (
+          <section key={cat} className="content-section">
+            <h2>{categoryLabels[cat] || cat}</h2>
+            <div className="recommendation-list">
+              {skills.manifest
+                .filter(
+                  (s: SkillEntry): boolean =>
+                    s.category === cat && s.public && !s.recommendationOnly,
+                )
+                .sort(
+                  (a: SkillEntry, b: SkillEntry): number => a.order - b.order,
+                )
+                .map((s: SkillEntry): ReactElement => {
+                  const hasLesson: boolean = Boolean(skills.lessons[s.id]);
+                  return hasLesson ? (
+                    <a
+                      key={s.id}
+                      href={`/skills/${s.slug}`}
+                      className="recommendation skill-card"
+                    >
+                      <h3>{s.title}</h3>
+                      <p>{s.summary}</p>
+                    </a>
+                  ) : (
+                    <div key={s.id} className="recommendation skill-card">
+                      <h3>{s.title}</h3>
+                      <p>{s.summary}</p>
+                    </div>
+                  );
+                })}
+            </div>
+          </section>
+        ),
+      )}
       <section id="packages" className="content-section">
         <h2>Uppercut Labs packages</h2>
-        <p>The skills installer, plus tools and visual libraries published on npm.</p>
+        <p>
+          The skills installer, plus tools and visual libraries published on
+          npm.
+        </p>
         <div className="recommendation-list">
-          {data.packages.map((entry) => (
-            <div key={entry.name} className="recommendation skill-card package-card">
-              <h3>{entry.title}</h3>
-              <p>{entry.summary}</p>
-              <code>{entry.name}</code>
-              <div className="package-links">
-                <ExternalLink href={`https://www.npmjs.com/package/${entry.name}`} label={`${entry.title} on npm`}>npm package<Icon name="arrow-up-right" size={12} /></ExternalLink>
-                <ExternalLink href={entry.repository} label={`${entry.title} source on GitHub`}>Source<Icon name="arrow-up-right" size={12} /></ExternalLink>
+          {packages.map(
+            (entry: PackageEntry): ReactElement => (
+              <div
+                key={entry.name}
+                className="recommendation skill-card package-card"
+              >
+                <h3>{entry.title}</h3>
+                <p>{entry.summary}</p>
+                <code>{entry.name}</code>
+                <div className="package-links">
+                  <ExternalLink
+                    href={`https://www.npmjs.com/package/${entry.name}`}
+                    label={`${entry.title} on npm`}
+                  >
+                    npm package
+                    <Icon name="arrow-up-right" size={12} />
+                  </ExternalLink>
+                  <ExternalLink
+                    href={entry.repository}
+                    label={`${entry.title} source on GitHub`}
+                  >
+                    Source
+                    <Icon name="arrow-up-right" size={12} />
+                  </ExternalLink>
+                </div>
               </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       </section>
       <section className="content-section">
         <h2>Third-party recommendations</h2>
-        <p>Skills and resources from other authors that complement this collection.</p>
+        <p>
+          Skills and resources from other authors that complement this
+          collection.
+        </p>
         <a className="text-link" href="/skills/recommendations">
           Browse recommendations
           <Icon name="arrow-right" size={15} />
@@ -780,7 +1052,9 @@ function SkillsHub({ data }: { data: SiteData }) {
   );
 }
 
-function SkillRecommendations({ data }: { data: SiteData }) {
+function SkillRecommendations({
+  groups,
+}: SkillRecommendationsProps): ReactElement {
   return (
     <>
       <PageHeading
@@ -788,31 +1062,38 @@ function SkillRecommendations({ data }: { data: SiteData }) {
         title="Worth learning from."
         description="Third-party skills and resources that complement the Starter Pack collection. These are not authored or maintained by Devin."
       />
-      {data.skills.recommendations.map((group) => (
-        <section key={group.group} className="content-section">
-          <div className="section-heading">
-            <h2>{group.group}</h2>
-            <p className="muted">{group.description}</p>
-          </div>
-          <div className="recommendation-list">
-            {group.items.map((item) => (
-              <div key={item.name} className="recommendation skill-card">
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <span className="metadata">By {item.author}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      ))}
+      {groups.map(
+        (group: SkillRecommendationGroup): ReactElement => (
+          <section key={group.group} className="content-section">
+            <div className="section-heading">
+              <h2>{group.group}</h2>
+              <p className="muted">{group.description}</p>
+            </div>
+            <div className="recommendation-list">
+              {group.items.map(
+                (item: SkillRecommendation): ReactElement => (
+                  <div key={item.name} className="recommendation skill-card">
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                    <span className="metadata">By {item.author}</span>
+                  </div>
+                ),
+              )}
+            </div>
+          </section>
+        ),
+      )}
       <p className="muted">
-        All skills above are authored by their respective creators. Source and installation:{" "}
+        All skills above are authored by their respective creators. Source and
+        installation:{" "}
         <ExternalLink href="https://github.com/mattpocock/skills">
-          mattpocock/skills<Icon name="arrow-up-right" size={12} />
+          mattpocock/skills
+          <Icon name="arrow-up-right" size={12} />
         </ExternalLink>{" "}
         and{" "}
         <ExternalLink href="https://aihero.dev/skills">
-          aihero.dev<Icon name="arrow-up-right" size={12} />
+          aihero.dev
+          <Icon name="arrow-up-right" size={12} />
         </ExternalLink>
       </p>
       <a href="/skills" className="text-link">
@@ -823,9 +1104,7 @@ function SkillRecommendations({ data }: { data: SiteData }) {
   );
 }
 
-type StyleGuideEntry = SiteData["styles"]["guides"][number];
-
-function StyleHub({ data }: { data: SiteData }) {
+function StyleHub({ guides }: StyleHubProps): ReactElement {
   return (
     <>
       <PageHeading
@@ -834,14 +1113,16 @@ function StyleHub({ data }: { data: SiteData }) {
         description="The coding conventions I use for my own projects and agent-directed work."
       />
       <div className="style-guide-grid">
-        {data.styles.guides.map((guide) => (
-          <a className="style-guide-card" href={guide.route} key={guide.id}>
-            <h2>{guide.title}</h2>
-            {guide.status === "in-progress" && (
-              <span className="style-status">In progress</span>
-            )}
-          </a>
-        ))}
+        {guides.map(
+          (guide: StyleGuideEntry): ReactElement => (
+            <a className="style-guide-card" href={guide.route} key={guide.id}>
+              <h2>{guide.title}</h2>
+              {guide.status === "in-progress" && (
+                <span className="style-status">In progress</span>
+              )}
+            </a>
+          ),
+        )}
       </div>
       <p className="muted style-hub-note">
         More languages will appear here as their guides take shape.
@@ -850,8 +1131,11 @@ function StyleHub({ data }: { data: SiteData }) {
   );
 }
 
-function StyleAgentLinks({ guide }: { guide: StyleGuideEntry }): ReactNode {
-  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">("idle");
+function StyleAgentLinks({ guide }: StyleGuideProps): ReactElement {
+  const [copyStatus, setCopyStatus]: [
+    CopyStatus,
+    Dispatch<SetStateAction<CopyStatus>>,
+  ] = useState<CopyStatus>("idle");
   const markdownUrl: string = `${resourceOrigin}${guide.route}.md`;
 
   async function copyAgentLink(): Promise<void> {
@@ -874,7 +1158,9 @@ function StyleAgentLinks({ guide }: { guide: StyleGuideEntry }): ReactNode {
       </span>
       {copyStatus === "failed" && (
         <span className="style-agent-fallback" role="status">
-          <label htmlFor="style-agent-address">Copy unavailable. Select this address:</label>
+          <label htmlFor="style-agent-address">
+            Copy unavailable. Select this address:
+          </label>
           <input id="style-agent-address" readOnly value={markdownUrl} />
         </span>
       )}
@@ -882,7 +1168,7 @@ function StyleAgentLinks({ guide }: { guide: StyleGuideEntry }): ReactNode {
   );
 }
 
-function StyleGuidePage({ guide }: { guide: StyleGuideEntry }) {
+function StyleGuidePage({ guide }: StyleGuideProps): ReactElement {
   return (
     <>
       <PageHeading
@@ -916,21 +1202,42 @@ function StyleGuidePage({ guide }: { guide: StyleGuideEntry }) {
   );
 }
 
-export default function App({ path, data }: { path: string; data: SiteData }) {
-  const normalized = path.replace(/\/$/, "") || "/";
-  const phaseNumber = /^\/phases\/[123]$/.test(normalized)
+function findSkillPage(
+  slug: string | null,
+  skills: SiteSkills,
+): ResolvedSkillPage | undefined {
+  if (!slug) return undefined;
+  const entry: SkillEntry | undefined = skills.manifest.find(
+    (skill: SkillEntry): boolean =>
+      skill.slug === slug && skill.public && !skill.recommendationOnly,
+  );
+  const lesson: SkillLesson | undefined = entry
+    ? skills.lessons[entry.id]
+    : undefined;
+  return entry && lesson ? { entry, lesson } : undefined;
+}
+
+export function App({ path, data }: AppProps): ReactElement {
+  const normalized: string = path.replace(/\/$/, "") || "/";
+  const phaseNumber: number = /^\/phases\/[123]$/.test(normalized)
     ? Number(normalized.at(-1))
     : 0;
-  const phase = data.phases.find((item) => item.order === phaseNumber);
-  const skillSlug = normalized.startsWith("/skills/") ? normalized.slice("/skills/".length) : null;
-  const skillPage = skillSlug ? (() => {
-    const entry = data.skills.manifest.find((s) => s.slug === skillSlug && s.public && !s.recommendationOnly);
-    const lesson = entry ? data.skills.lessons[entry.id] : undefined;
-    return entry && lesson ? { entry, lesson } : null;
-  })() : null;
-  const styleGuide = data.styles.guides.find((guide) => guide.route === normalized);
-  const styleRoute = normalized === "/style" || normalized.startsWith("/style/");
-  const reducedMotion = useReducedMotion();
+  const phase: PhaseEntry | undefined = data.phases.find(
+    (item: PhaseEntry): boolean => item.order === phaseNumber,
+  );
+  const skillSlug: string | null = normalized.startsWith("/skills/")
+    ? normalized.slice("/skills/".length)
+    : null;
+  const skillPage: ResolvedSkillPage | undefined = findSkillPage(
+    skillSlug,
+    data.skills,
+  );
+  const styleGuide: StyleGuideEntry | undefined = data.styles.guides.find(
+    (guide: StyleGuideEntry): boolean => guide.route === normalized,
+  );
+  const styleRoute: boolean =
+    normalized === "/style" || normalized.startsWith("/style/");
+  const reducedMotion: boolean | null = useReducedMotion();
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main">
@@ -970,32 +1277,42 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
         </a>
       </header>
       {!styleRoute && (
-      <nav className="progress-rail" aria-label="The three phases">
-        {milestones.map((title, index) => (
-          <a
-            href={`/phases/${index + 1}`}
-            key={title}
-            className={`phase-${index + 1} ${phaseNumber === index + 1 ? "active" : ""}`}
-            aria-current={phaseNumber === index + 1 ? "page" : undefined}
-          >
-            <span className="step-number">
-              <Icon name={phaseIcons[index]} size={22} />
-            </span>
-            <span className="progress-label">
-              <small>
-                {index === 2 ? "PHASE 3 / PREVIEW" : `PHASE ${index + 1}`}
-              </small>
-              <span className="phase-full-label">{title}</span>
-              <span className="phase-short-label">
-                {phaseShortLabels[index]}
-              </span>
-            </span>
-            {index === 2 && (
-              <Icon name="lock-keyhole" className="preview-icon" size={14} />
-            )}
-          </a>
-        ))}
-      </nav>
+        <nav className="progress-rail" aria-label="The three phases">
+          {phaseSummaries.map(
+            (summary: PhaseSummary): ReactElement => (
+              <a
+                href={`/phases/${summary.number}`}
+                key={summary.number}
+                className={`phase-${summary.number} ${phaseNumber === summary.number ? "active" : ""}`}
+                aria-current={
+                  phaseNumber === summary.number ? "page" : undefined
+                }
+              >
+                <span className="step-number">
+                  <Icon name={summary.icon} size={22} />
+                </span>
+                <span className="progress-label">
+                  <small>
+                    {summary.number === 3
+                      ? "PHASE 3 / PREVIEW"
+                      : `PHASE ${summary.number}`}
+                  </small>
+                  <span className="phase-full-label">{summary.title}</span>
+                  <span className="phase-short-label">
+                    {summary.shortLabel}
+                  </span>
+                </span>
+                {summary.number === 3 && (
+                  <Icon
+                    name="lock-keyhole"
+                    className="preview-icon"
+                    size={14}
+                  />
+                )}
+              </a>
+            ),
+          )}
+        </nav>
       )}
       <div className={`workspace${styleRoute ? " style-workspace" : ""}`}>
         <main id="main" className="workspace-main">
@@ -1021,18 +1338,25 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                     your first working idea to a project you can put online.
                   </p>
                 </div>
-                <Prompt prompt={data.prompt} instructionPacket={data.instructionPacket} home />
+                <Prompt
+                  prompt={data.prompt}
+                  instructionPacket={data.instructionPacket}
+                  home
+                />
                 <a className="browse-link" href="/guide">
                   <Icon name="book-open" size={17} />
                   Prefer to look around? Browse the guide
                   <Icon name="arrow-right" size={16} />
                 </a>
-                <section className="content-section how-it-works" aria-labelledby="codex-start">
+                <section
+                  className="content-section how-it-works"
+                  aria-labelledby="codex-start"
+                >
                   <span className="eyebrow">BUILD WITH CODEX</span>
                   <h2 id="codex-start">Let Codex carry the work forward.</h2>
                   <p>
-                    On your computer, paste the starting prompt into Codex.
-                    The pack gives it instructions for setup, private progress,
+                    On your computer, paste the starting prompt into Codex. The
+                    pack gives it instructions for setup, private progress,
                     planning, building, and deployment. You choose the result,
                     handle sign-ins and approvals, and try what it builds.
                   </p>
@@ -1084,7 +1408,10 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   dangerouslySetInnerHTML={{ __html: data.pages.guide }}
                 />
 
-                <Prompt prompt={data.prompt} instructionPacket={data.instructionPacket} />
+                <Prompt
+                  prompt={data.prompt}
+                  instructionPacket={data.instructionPacket}
+                />
               </>
             ) : normalized === "/help/cloudflare-iphone" ? (
               <>
@@ -1096,11 +1423,16 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 <div className="phase-content help-guide">
                   <article
                     className="prose"
-                    dangerouslySetInnerHTML={{ __html: data.pages.cloudflareIphone }}
+                    dangerouslySetInnerHTML={{
+                      __html: data.pages.cloudflareIphone,
+                    }}
                   />
                 </div>
                 <div className="step-actions">
-                  <a className="secondary-action" href="/phases/1#extra-credit-put-your-app-online">
+                  <a
+                    className="secondary-action"
+                    href="/phases/1#extra-credit-put-your-app-online"
+                  >
                     Back to Phase 1 extra credit
                   </a>
                 </div>
@@ -1121,7 +1453,12 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                     </p>
                   </div>
                 )}
-                <PhaseContent phase={phase} data={data} />
+                <PhaseContent
+                  phase={phase}
+                  prompt={data.prompt}
+                  phase2Prompt={data.phase2Prompt}
+                  instructionPacket={data.instructionPacket}
+                />
                 <AgentFiles phase={phaseNumber} />
                 <div className="step-actions">
                   <a
@@ -1159,7 +1496,10 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   Tool links open in a new tab so you can return to the pack.
                 </p>
                 <div className="recommendation-groups">
-                  <section id="choose-your-agent" className="recommendation-group">
+                  <section
+                    id="choose-your-agent"
+                    className="recommendation-group"
+                  >
                     <div className="recommendation-group-heading">
                       <span className="eyebrow">HARNESS</span>
                       <h2>Choose your development harness</h2>
@@ -1171,22 +1511,51 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                     </div>
                     <div className="recommendation-list">
                       {data.recommendations
-                        .filter((item) => item.category === "harness")
-                        .map((item) => (
-                          <RecommendationCard item={item} key={item.id} />
-                        ))}
+                        .filter(
+                          (item: RecommendationEntry): boolean =>
+                            item.category === "harness",
+                        )
+                        .map(
+                          (item: RecommendationEntry): ReactElement => (
+                            <RecommendationCard item={item} key={item.id} />
+                          ),
+                        )}
                     </div>
                   </section>
-                  <section id="choose-your-ide" className="recommendation-group sr-only">
+                  <section
+                    id="choose-your-ide"
+                    className="recommendation-group sr-only"
+                  >
                     <div className="recommendation-group-heading">
                       <span className="eyebrow">COMPUTER SETUP</span>
                       <h2>Your IDE follows your harness</h2>
-                      <p>Your agent installs and configures it as part of the approved setup batch.</p>
+                      <p>
+                        Your agent installs and configures it as part of the
+                        approved setup batch.
+                      </p>
                     </div>
                     <ul>
-                      <li><strong>Antigravity:</strong> <ExternalLink href="https://antigravity.google/download">Antigravity IDE</ExternalLink></li>
-                      <li><strong>Cursor:</strong> <ExternalLink href="https://cursor.com/download">Cursor</ExternalLink></li>
-                      <li><strong>All other routes, including ChatGPT/Codex and Claude Code:</strong> <ExternalLink href="https://code.visualstudio.com/">VS Code</ExternalLink></li>
+                      <li>
+                        <strong>Antigravity:</strong>{" "}
+                        <ExternalLink href="https://antigravity.google/download">
+                          Antigravity IDE
+                        </ExternalLink>
+                      </li>
+                      <li>
+                        <strong>Cursor:</strong>{" "}
+                        <ExternalLink href="https://cursor.com/download">
+                          Cursor
+                        </ExternalLink>
+                      </li>
+                      <li>
+                        <strong>
+                          All other routes, including ChatGPT/Codex and Claude
+                          Code:
+                        </strong>{" "}
+                        <ExternalLink href="https://code.visualstudio.com/">
+                          VS Code
+                        </ExternalLink>
+                      </li>
                     </ul>
                   </section>
                   <section className="recommendation-group">
@@ -1194,16 +1563,21 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                       <span className="eyebrow">REQUIRED</span>
                       <h2>Core accounts and tools</h2>
                       <p>
-                        Start with a companion on your phone, then prepare
-                        these apps and accounts.
+                        Start with a companion on your phone, then prepare these
+                        apps and accounts.
                       </p>
                     </div>
                     <div className="recommendation-list">
                       {data.recommendations
-                        .filter((item) => item.requirement === "required")
-                        .map((item) => (
-                          <RecommendationCard item={item} key={item.id} />
-                        ))}
+                        .filter(
+                          (item: RecommendationEntry): boolean =>
+                            item.requirement === "required",
+                        )
+                        .map(
+                          (item: RecommendationEntry): ReactElement => (
+                            <RecommendationCard item={item} key={item.id} />
+                          ),
+                        )}
                     </div>
                   </section>
                   <section className="recommendation-group">
@@ -1217,20 +1591,26 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                     </div>
                     <div className="recommendation-list">
                       {data.recommendations
-                        .filter((item) => item.category === "instant-builder")
-                        .sort((a, b) =>
-                          a.id === "google-ai-studio"
-                            ? -1
-                            : b.id === "google-ai-studio"
-                              ? 1
-                              : 0,
+                        .filter(
+                          (item: RecommendationEntry): boolean =>
+                            item.category === "instant-builder",
                         )
-                        .map((item) => (
-                          <RecommendationCard
-                            item={item}
-                            key={item.id}
-                          />
-                        ))}
+                        .sort(
+                          (
+                            a: RecommendationEntry,
+                            b: RecommendationEntry,
+                          ): number =>
+                            a.id === "google-ai-studio"
+                              ? -1
+                              : b.id === "google-ai-studio"
+                                ? 1
+                                : 0,
+                        )
+                        .map(
+                          (item: RecommendationEntry): ReactElement => (
+                            <RecommendationCard item={item} key={item.id} />
+                          ),
+                        )}
                     </div>
                   </section>
                   <section className="recommendation-group">
@@ -1244,16 +1624,21 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                     </div>
                     <div className="recommendation-list">
                       {data.recommendations
-                        .filter((item) => item.requirement === "optional")
-                        .map((item) => (
-                          <RecommendationCard item={item} key={item.id} />
-                        ))}
+                        .filter(
+                          (item: RecommendationEntry): boolean =>
+                            item.requirement === "optional",
+                        )
+                        .map(
+                          (item: RecommendationEntry): ReactElement => (
+                            <RecommendationCard item={item} key={item.id} />
+                          ),
+                        )}
                     </div>
                   </section>
                 </div>
               </>
             ) : normalized === "/style" ? (
-              <StyleHub data={data} />
+              <StyleHub guides={data.styles.guides} />
             ) : styleGuide ? (
               <StyleGuidePage guide={styleGuide} />
             ) : normalized === "/resources" ? (
@@ -1287,23 +1672,28 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 </p>
                 <section className="content-section">
                   <h2>Phase guides</h2>
-                  {[1, 2, 3].map((number) => (
-                    <details
-                      className="phase-resource agent-files"
-                      key={number}
-                    >
-                      <summary>
-                        Phase {number}: {milestones[number - 1]}
-                      </summary>
-                      <p>
-                        <a className="text-link" href={`/phases/${number}`}>
-                          Read Phase {number}{" "}
-                          <Icon name="arrow-right" size={15} />
-                        </a>
-                      </p>
-                      <Resources phase={number} />
-                    </details>
-                  ))}
+                  {phaseSummaries.map(
+                    (summary: PhaseSummary): ReactElement => (
+                      <details
+                        className="phase-resource agent-files"
+                        key={summary.number}
+                      >
+                        <summary>
+                          Phase {summary.number}: {summary.title}
+                        </summary>
+                        <p>
+                          <a
+                            className="text-link"
+                            href={`/phases/${summary.number}`}
+                          >
+                            Read Phase {summary.number}{" "}
+                            <Icon name="arrow-right" size={15} />
+                          </a>
+                        </p>
+                        <Resources phase={summary.number} />
+                      </details>
+                    ),
+                  )}
                 </section>
               </>
             ) : normalized === "/artifacts" ? (
@@ -1318,10 +1708,26 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                   Your completed progress and private project notes stay in your
                   own storage.
                 </p>
-                <section className="field-lesson" aria-labelledby="workbench-download">
-                  <h2 id="workbench-download">See your progress on your own computer</h2>
-                  <p>Download the Workbench, then open it with your saved progress JSON. Your agent keeps the record up to date. This site stays a shared guide.</p>
-                  <a className="primary-action" href="/artifacts/progress-workbench/index.html" download="index.html">Download Progress Workbench <Icon name="download" size={18} /></a>
+                <section
+                  className="field-lesson"
+                  aria-labelledby="workbench-download"
+                >
+                  <h2 id="workbench-download">
+                    See your progress on your own computer
+                  </h2>
+                  <p>
+                    Download the Workbench, then open it with your saved
+                    progress JSON. Your agent keeps the record up to date. This
+                    site stays a shared guide.
+                  </p>
+                  <a
+                    className="primary-action"
+                    href="/artifacts/progress-workbench/index.html"
+                    download="index.html"
+                  >
+                    Download Progress Workbench{" "}
+                    <Icon name="download" size={18} />
+                  </a>
                 </section>
                 <ResourceList items={templateResources} />
                 <p>
@@ -1353,11 +1759,16 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
                 </a>
               </>
             ) : normalized === "/skills" ? (
-              <SkillsHub data={data} />
+              <SkillsHub skills={data.skills} packages={data.packages} />
             ) : normalized === "/skills/recommendations" ? (
-              <SkillRecommendations data={data} />
+              <SkillRecommendations groups={data.skills.recommendations} />
             ) : normalized.startsWith("/skills/") && skillPage ? (
-              <SkillPage entry={skillPage.entry} lesson={skillPage.lesson} manifest={data.skills.manifest} lessons={data.skills.lessons} />
+              <SkillPage
+                entry={skillPage.entry}
+                lesson={skillPage.lesson}
+                manifest={data.skills.manifest}
+                lessons={data.skills.lessons}
+              />
             ) : (
               <>
                 <PageHeading
@@ -1373,7 +1784,12 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
             )}
           </motion.div>
         </main>
-        {!styleRoute && <ContextRail phase={phaseNumber} data={data} />}
+        {!styleRoute && (
+          <ContextRail
+            phase={phaseNumber}
+            recommendations={data.recommendations}
+          />
+        )}
       </div>
       <footer className="site-footer">
         <div>
@@ -1381,15 +1797,17 @@ export default function App({ path, data }: { path: string; data: SiteData }) {
           <span>By Devin Thomas / Uppercut Labs</span>
         </div>
         <nav aria-label="Footer">
-          {nav.map(([href, label]) => (
-            <a
-              key={href}
-              href={href}
-              aria-current={normalized === href ? "page" : undefined}
-            >
-              {label}
-            </a>
-          ))}
+          {nav.map(
+            ([href, label]: NavigationLink): ReactElement => (
+              <a
+                key={href}
+                href={href}
+                aria-current={normalized === href ? "page" : undefined}
+              >
+                {label}
+              </a>
+            ),
+          )}
           <a href="/prompts/get-started.txt" download>
             <Icon name="download" size={13} />
             Download prompt (.txt)
@@ -1404,11 +1822,7 @@ function PageHeading({
   label,
   title,
   description,
-}: {
-  label: string;
-  title: string;
-  description: string;
-}) {
+}: PageHeadingProps): ReactElement {
   return (
     <div className="page-heading">
       <span className="eyebrow">

@@ -1,4 +1,4 @@
-export const staticRoutes = [
+export const staticRoutes: readonly string[] = [
   "/",
   "/guide",
   "/style",
@@ -22,6 +22,11 @@ export const staticRoutes = [
   "/help/cloudflare-iphone",
 ];
 
-export function readingRoutes(slugs: string[]) {
-  return [...staticRoutes, "/skills", "/skills/recommendations", ...slugs.map(slug => `/skills/${slug}`)];
+export function readingRoutes(slugs: readonly string[]): readonly string[] {
+  return [
+    ...staticRoutes,
+    "/skills",
+    "/skills/recommendations",
+    ...slugs.map((slug: string): string => `/skills/${slug}`),
+  ];
 }

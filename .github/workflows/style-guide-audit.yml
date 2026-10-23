@@ -8,10 +8,10 @@ on:
         type: boolean
         default: false
   pull_request:
-    paths: ['content/style/**', 'scripts/**', 'src/App.tsx', 'src/index.css', 'package*.json', '.github/workflows/style-guide-audit.yml']
+    paths: ['content/style/**', 'scripts/**', 'src/**', 'tsconfig*.json', 'package*.json', '.github/workflows/style-guide-audit.yml']
   push:
     branches: [main]
-    paths: ['content/style/**', 'scripts/**', 'src/App.tsx', 'src/index.css', 'package*.json', '.github/workflows/style-guide-audit.yml']
+    paths: ['content/style/**', 'scripts/**', 'src/**', 'tsconfig*.json', 'package*.json', '.github/workflows/style-guide-audit.yml']
 
 permissions:
   contents: read
@@ -43,6 +43,10 @@ jobs:
         env:
           STYLE_BROWSER_MODULE: file:///tmp/style-audit-browser/node_modules/playwright/index.mjs
         run: node scripts/style-guide-browser.mjs
+      - name: Verify control lifetime and recovery with synthetic boundaries
+        env:
+          STYLE_BROWSER_MODULE: file:///tmp/style-audit-browser/node_modules/playwright/index.mjs
+        run: npm run test:controls
       - name: Verify canonical live resources after owner-approved release
         if: github.event_name == 'workflow_dispatch' && inputs.verify_live
         run: |

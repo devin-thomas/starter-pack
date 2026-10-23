@@ -1,5 +1,22 @@
-import { useId, useRef, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
+import type { Dispatch, ReactElement, RefObject, SetStateAction } from "react";
 import { Icon } from "./Icons";
+
+type CopyTextProps = {
+  readonly text: string;
+  readonly label: string;
+  readonly buttonLabel?: string;
+  readonly copiedLabel?: string;
+  readonly instruction?: string;
+  readonly alwaysVisible?: boolean;
+  readonly disclosureLabel?: string;
+  readonly download?: string;
+};
+
+type CopyIdle = { readonly kind: "idle" };
+type CopySucceeded = { readonly kind: "copied"; readonly text: string };
+type CopyFailed = { readonly kind: "failed"; readonly text: string };
+type CopyState = CopyIdle | CopySucceeded | CopyFailed;
 
 export function CopyText({
   text,
@@ -10,36 +27,52 @@ export function CopyText({
   alwaysVisible = false,
   disclosureLabel = "Read or select the full prompt",
   download,
-}: {
-  text: string;
-  label: string;
-  buttonLabel?: string;
-  copiedLabel?: string;
-  instruction?: string;
-  alwaysVisible?: boolean;
-  disclosureLabel?: string;
-  download?: string;
-}) {
-  const id = useId();
-  const field = useRef<HTMLTextAreaElement>(null);
-  const disclosure = useRef<HTMLDetailsElement>(null);
-  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
+}: CopyTextProps): ReactElement {
+  const id: string = useId();
+  const field: RefObject<HTMLTextAreaElement | null> =
+    useRef<HTMLTextAreaElement | null>(null);
+  const disclosure: RefObject<HTMLDetailsElement | null> =
+    useRef<HTMLDetailsElement | null>(null);
+  const activeCopy: RefObject<symbol | null> = useRef<symbol | null>(null);
+  const [state, setState]: [CopyState, Dispatch<SetStateAction<CopyState>>] =
+    useState<CopyState>({ kind: "idle" });
+  const status: CopyState["kind"] =
+    state.kind === "idle" || state.text === text ? state.kind : "idle";
 
-  async function copy() {
+  useLayoutEffect((): (() => void) => {
+    // Invalidate before a completion can affect a newly committed prompt.
+    return (): void => {
+      activeCopy.current = null;
+    };
+  }, [text]);
+
+  function copy(): void {
+    void copyText().catch((cause: unknown): void => {
+      console.error("Unexpected clipboard command failure.", cause);
+    });
+  }
+
+  async function copyText(): Promise<void> {
+    const operation: symbol = Symbol();
+    activeCopy.current = operation;
     try {
       // Start the write in the tap handler: Safari requires user activation.
       if (!navigator.clipboard) throw new Error("Clipboard unavailable");
       await navigator.clipboard.writeText(text);
-      setStatus("copied");
+      if (activeCopy.current !== operation) return;
+      setState({ kind: "copied", text });
     } catch {
+      if (activeCopy.current !== operation) return;
       if (disclosure.current) disclosure.current.open = true;
-      setStatus("failed");
+      setState({ kind: "failed", text });
       field.current?.focus();
       field.current?.select();
+    } finally {
+      if (activeCopy.current === operation) activeCopy.current = null;
     }
   }
 
-  const selectableText = (
+  const selectableText: ReactElement = (
     <div className="copy-field">
       <label htmlFor={id}>{label}</label>
       <textarea
@@ -56,7 +89,7 @@ export function CopyText({
         <button
           type="button"
           className="text-link"
-          onClick={() => {
+          onClick={(): void => {
             field.current?.focus();
             field.current?.select();
             field.current?.setSelectionRange(0, text.length);

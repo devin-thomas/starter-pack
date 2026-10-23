@@ -3,7 +3,7 @@ import path from "node:path";
 import { build } from "vite";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
-import App from "../src/App";
+import { App } from "../src/App";
 import { buildWorkbench } from "./workbench";
 import { jsonResourceReferences, markdownResourceReferences } from "./style-guide-links";
 import { Ajv2020 } from "ajv/dist/2020.js";

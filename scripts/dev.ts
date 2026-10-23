@@ -10,6 +10,8 @@ const server = await createServer({
   server: { host: "127.0.0.1" },
   appType: "custom",
 });
+// Populate lesson routes before the first request, including direct Skills links.
+await loadContent();
 server.middlewares.use(async (request, response, next) => {
   const pathname =
     new URL(request.url || "/", "http://localhost").pathname.replace(
@@ -61,7 +63,7 @@ server.middlewares.use(async (request, response, next) => {
   if (!routes.includes(pathname)) return next();
   try {
     const data = await loadContent();
-    const { default: App } = await server.ssrLoadModule("/src/App.tsx");
+    const { App } = await server.ssrLoadModule("/src/App.tsx");
     const template = await server.transformIndexHtml(
       pathname,
       await readFile("index.html", "utf8"),
