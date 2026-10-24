@@ -983,6 +983,17 @@ function SkillsHub({ skills, packages }: SkillsHubProps): ReactElement {
         title="Tools for every stage of a build."
         description="Agent skills that help you plan, build, maintain, and ship. Pick what fits your current job."
       />
+      <section
+        className="skill-handoff"
+        aria-label="Choose a skill with your agent"
+      >
+        <AgentBrands />
+        <CopyText
+          text="Read https://starter.uppercut-labs.com/skills.json and help me choose and install the public skill that fits my project."
+          label="Choose a public skill"
+          buttonLabel="Copy prompt for your agent"
+        />
+      </section>
       <p className="muted">
         Skills are reusable instructions your agent follows. You do not need all
         of them. Start with the one that matches your next step.

@@ -103,3 +103,13 @@ test("Cappy compatibility keeps every platform and application subject beside it
   for (const requirement of expected) assert.ok(text.includes(requirement), requirement);
   assert.equal([...compatibility.matchAll(/<li>/g)].length, expected.length);
 });
+
+
+test("the skill catalog gives agents its canonical catalog before detailed installation steps", async (): Promise<void> => {
+  const data: SiteData = await loadContent();
+  const html: string = renderToStaticMarkup(createElement(App, { path: "/skills", data }));
+  const handoff: number = html.indexOf('aria-label="Choose a skill with your agent"');
+  const installation: number = html.indexOf('id="get-skills"');
+  assert.ok(handoff > 0 && installation > handoff);
+  assert.ok(html.includes("Read https://starter.uppercut-labs.com/skills.json and help me choose and install the public skill that fits my project."));
+});
