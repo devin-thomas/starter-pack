@@ -1,62 +1,28 @@
 ---
 skill_id: execute-task-cycles
-updated: 2026-09-17
+updated: 2026-10-23
 ---
 
 # Execute Task Cycles
 
-Run Execute Task sequentially across a multi-task backlog until the cycle limit or backlog is exhausted.
+Continue an authorized backlog through automatic repair, verification, and delivery, including while you are AFK.
 
 ## Use this when
 
-You have multiple tasks ready for implementation and want your agent to work through them one at a time, in order, without manual re-invocation between each task. Execute Task Cycles automates the loop: it runs a complete Execute Task pass, confirms success, then starts the next one.
-
-Not the right fit for a single task (use Execute Task directly) or for writing the execution contract itself (use Task Execution Prompt).
+You want several tasks, an implementation phase, or an entire authorized backlog completed. The agent resumes saved scope and honors your explicit task, time, cost, and host limits.
 
 ## How it works
 
-Execute Task Cycles wraps Execute Task in a bounded sequential controller:
+Each cycle selects eligible work through [Execute Task](/skills/execute-task), verifies its result, saves progress, and selects the next ready item. Repairable failures trigger repair rather than an immediate owner handoff.
 
-1. **Resolve the cycle limit** — Uses your supplied limit if you provide one ("next 5 tasks", "max_cycles=10"). Otherwise defaults to 100 as a safety ceiling, not a promise to complete that many.
+When a meaningful owner decision or genuine human blocker remains, the agent records it, asks asynchronously when supported, and attempts notification through an available authorized channel. It keeps the affected task pending and completes independent ready work while waiting.
 
-2. **Run one Execute Task pass per cycle** — Each cycle is a fresh invocation of the complete Execute Task workflow: canonical-prompt resolution, task selection from current state, implementation, validation, and reporting.
-
-3. **Check before continuing** — Starts the next cycle only after the preceding pass produces a terminal "Complete" result and repository/task-source state is consistent. Every new cycle begins with fresh evidence while treating all changes from earlier successful cycles as current state.
-
-4. **Stop on any non-complete result** — If a task is blocked, requires approval, hits an inconsistent state, or fails validation, the controller stops immediately. It does not skip to a fallback task or retry.
-
-5. **Stop at the limit** — Even if more executable tasks remain, the controller stops when the cycle limit is reached.
-
-6. **Report the aggregate** — Produces one final report covering all completed cycles: each task's identifier, result, changed files, validation evidence, and timing, plus the stopping reason.
-
-## Inputs
-
-- **A repository with a multi-task backlog** — Linear, GitHub Issues, or Markdown ticket files
-- **Optionally, a cycle limit** — a number like "5 tasks" or "max_cycles=10" (defaults to 100)
-- **Optionally, a canonical execution prompt** — inherited by each inner Execute Task pass
+The run ends when the authorized scope is complete, an explicit limit is reached, the user stops it, or all remaining work depends on unresolved human blockers. It has no invented default task-count cutoff.
 
 ## Outputs
 
-- Multiple completed tasks, each with validated implementation
-- An aggregate report covering: effective maximum, completed cycle count, per-cycle details (task, result, files, validation, timing), and the stopping reason
-- Updated task-source state reflecting all completed work
+A resumable record of completed work, verification, pending questions, and the next safe action.
 
-## Prerequisites
+## Try it
 
-A repository with decomposed tasks ready for implementation. Execute Task is the inner loop — Execute Task Cycles runs it repeatedly.
-
-## Installation and use
-
-Execute Task Cycles is available as an agent skill. Invoke it when you want multiple tasks processed:
-
-```
-Read the Execute Task Cycles skill and work through the next 5 tasks in this repository.
-```
-
-The skill triggers only on explicit multi-task signals: "process the next 10 tasks", "work through all remaining issues", "keep completing tasks until done." Generic continuation language does not activate it.
-
-## Example
-
-> "Work through all remaining tasks in the backlog for this repository."
-
-The agent resolves the default limit of 100, then runs Execute Task passes sequentially. Cycle 1 completes PRJ-042 (pagination). Cycle 2 completes PRJ-043 (search filters). Cycle 3 encounters PRJ-044 which is marked as requiring human approval — the controller stops and reports: "2 cycles completed. Cycle 3 stopped: PRJ-044 requires approval. Elapsed: 34 minutes total."
+> Use Execute Task Cycles to complete the approved implementation backlog. Repair failures automatically, notify me of owner decisions, and continue independent work while I am away.

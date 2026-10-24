@@ -816,6 +816,20 @@ function SkillPage({
         title={entry.title}
         description={entry.summary}
       />
+      <section
+        className="skill-handoff"
+        aria-label="Use this skill with your agent"
+      >
+        <AgentBrands />
+        <CopyText
+          text={`Read https://starter.uppercut-labs.com/skills/${entry.slug}.md and help me install and use ${entry.title} for my project.`}
+          label={`Get started with ${entry.title}`}
+          buttonLabel="Copy prompt for your agent"
+        />
+        <ExternalLink href={`https://dvn.pw/${entry.slug}`}>
+          Use with dvn
+        </ExternalLink>
+      </section>
       <SkillInstall entry={entry} />
       {lesson.video && (
         <div className="skill-video">

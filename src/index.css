@@ -1994,3 +1994,8 @@ a.skill-card:hover {
 .style-agent-inline { flex-wrap: wrap; }
 .style-agent-fallback { display: grid; gap: 6px; flex-basis: 100%; min-width: 0; }
 .style-agent-fallback input { box-sizing: border-box; width: 100%; min-width: 0; padding: 6px; color: var(--text); background: var(--surface); border: 1px solid var(--line); font: inherit; }
+
+.skill-handoff { margin-block: 18px 32px; }
+.skill-handoff .agent-destinations { margin-block: 0 12px; }
+.skill-handoff .agent-destinations > p { display: none; }
+.skill-handoff > a { display: inline-block; margin-top: 12px; }

@@ -69,3 +69,20 @@ test("a cold dev server serves a direct skill lesson before any other page", { t
     assert.equal(hub.status, 200, route);
   }
 });
+
+test("every owned public skill has a teaching page and public sources only", async (): Promise<void> => {
+  const data: SiteData = await loadContent();
+  const expected: readonly string[] = ["starter-pack", "computer-setup", "grill-to-build", "task-execution-prompt", "long-horizon-dashboard", "quick-build", "execute-task", "execute-task-cycles", "surface-sweep", "surface-sweep-showcase", "no-useless-copy", "style", "pwa-development", "vidchopper-cli", "perfect-playlist", "programmatic-harness", "branded-sign-in", "agent-cli", "immutable-reports", "cappy"];
+  assert.deepEqual(data.skills.manifest.map((entry: SkillEntry): string => entry.id).sort(), [...expected].sort());
+  for (const entry of data.skills.manifest) {
+    assert.ok(data.skills.lessons[entry.id], entry.id);
+    const html: string = renderToStaticMarkup(createElement(App, { path: `/skills/${entry.slug}`, data }));
+    assert.ok(html.includes(`https://dvn.pw/${entry.slug}`), entry.id);
+    assert.ok(html.includes(`https://starter.uppercut-labs.com/skills/${entry.slug}.md`), entry.id);
+    assert.ok(!html.includes("private-skills"), entry.id);
+  }
+  for (const id of ["execute-task", "execute-task-cycles", "task-execution-prompt"]) {
+    assert.match(data.skills.lessons[id]!.html, /repair/i);
+    assert.match(data.skills.lessons[id]!.html, /independent/i);
+  }
+});

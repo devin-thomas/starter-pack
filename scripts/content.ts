@@ -273,6 +273,13 @@ export async function loadContent(): Promise<SiteData> {
     if (sourced === packaged)
       throw new Error(`content/skills/manifest.json: skill "${entry.id}" needs either public source fields or a package, not both or neither`);
   }
+  const publicRepositories: readonly string[] = ["devin-thomas/skills", "devin-thomas/starter-pack", "devin-thomas/vid-chopper"];
+  for (const entry of skillManifest) {
+    if (!entry.public || entry.recommendationOnly || !/^[a-z][a-z0-9-]*$/.test(entry.slug))
+      throw new Error(`Public skill catalog contains an invalid entry: ${entry.id}`);
+    if (entry.package ? entry.package.name !== "@uppercut-labs/cappy" : !publicRepositories.includes(entry.sourceRepo ?? ""))
+      throw new Error(`Public skill catalog contains an unapproved source: ${entry.id}`);
+  }
   let skillLessons: Record<string, SkillLesson> = {};
   const lessonFiles = (await readdir("content/skills")).filter((f) => f.endsWith(".md"));
   const seenSkillIds = new Set<string>();
@@ -299,6 +306,10 @@ export async function loadContent(): Promise<SiteData> {
         : {}),
     };
     skillLessons[fm.skill_id] = lesson;
+  }
+
+  for (const entry of skillManifest) {
+    if (!seenSkillIds.has(entry.id)) throw new Error(`Missing public skill lesson: ${entry.id}`);
   }
 
   const skillRecommendations: SiteData["skills"]["recommendations"] = JSON.parse(

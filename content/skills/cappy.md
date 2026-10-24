@@ -1,6 +1,6 @@
 ---
 skill_id: cappy
-updated: 2026-09-27
+updated: 2026-10-23
 ---
 
 # Cappy
@@ -63,3 +63,9 @@ The skill reads before it records: it asks before OBS records the screen and bef
 > "My Godot party game has a board turn I want to capture for the trailer, and I want the same shot again after I change the camera."
 
 The agent checks Node 24, installs the Cappy package, copies in the addon, and registers a `board_turn` scenario with a `seed` parameter. It writes a config with a `trailer` preset that cuts a clip from `DICE_ROLLED` to `TURN_ENDED`, runs `cappy doctor` (all checks pass) and `cappy scenarios` (it lists `board_turn`), then asks before recording. `cappy run board_turn --param seed=7 --preset trailer` produces a master, the clip, and a manifest marked `succeeded`. After the camera change, `cappy compare-builds board_turn base new-camera --param seed=7` captures both builds and shows exactly where the frames differ.
+
+## MCP connections
+
+Cappy 1.0.1 includes a local MCP server. From a local agent environment, launch it with `npx @uppercut-labs/cappy mcp -C /absolute/path/to/game` using your actual game folder. Its tools use the same project configuration and environment as the CLI. Check the installed version first; the older 0.1.0 release has no MCP command.
+
+The hosted dvn connection can load the public Cappy skill and references. Capturing footage still runs through the local Cappy CLI or local MCP server on the computer with the game and OBS.
