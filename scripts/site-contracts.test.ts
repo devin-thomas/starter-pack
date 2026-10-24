@@ -86,3 +86,20 @@ test("every owned public skill has a teaching page and public sources only", asy
     assert.match(data.skills.lessons[id]!.html, /independent/i);
   }
 });
+
+test("Cappy compatibility keeps every platform and application subject beside its requirement", async (): Promise<void> => {
+  const data: SiteData = await loadContent();
+  const html: string = renderToStaticMarkup(createElement(App, { path: "/skills/cappy", data }));
+  const compatibility: string | undefined = /<h2>Compatibility<\/h2>([\s\S]*?)<\/section>/.exec(html)?.[1];
+  assert.ok(compatibility);
+  const text: string = compatibility.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&");
+  const expected: readonly string[] = [
+    "macOS: Accepted with real OBS, FFmpeg, and Godot 4.7.2",
+    "Windows: Accepted with real OBS, FFmpeg, and Godot 4.7.2",
+    "Linux: Accepted; real OBS capture not yet verified",
+    "Node.js 24+: Cappy runs from its npm package",
+    "OBS Studio 28+ and FFmpeg: Needed for capture",
+  ];
+  for (const requirement of expected) assert.ok(text.includes(requirement), requirement);
+  assert.equal([...compatibility.matchAll(/<li>/g)].length, expected.length);
+});

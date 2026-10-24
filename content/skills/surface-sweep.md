@@ -1,6 +1,6 @@
 ---
 skill_id: surface-sweep
-updated: 2026-09-17
+updated: 2026-10-23
 ---
 
 # Surface Sweep
@@ -14,6 +14,8 @@ You have a working web app and want thorough visual quality assurance — catchi
 Not the right fit for screenshot collection alone, a new visual identity, backend-only testing, or building a public showcase (use Surface Sweep Showcase when you also want a showcase).
 
 ## How it works
+
+Dark Reader is enabled by default after a verified extension preflight; the sweep records extension-on compatibility separately from native-theme checks with the extension off, and discloses unavailable coverage.
 
 Surface Sweep follows a five-stage correction loop:
 

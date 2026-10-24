@@ -700,6 +700,12 @@ function ContextRail({
   );
 }
 
+const platformLabels: Readonly<Record<string, string>> = {
+  macos: "macOS",
+  windows: "Windows",
+  linux: "Linux",
+};
+
 const categoryLabels: Readonly<Record<string, string>> = {
   plan: "Plan",
   build: "Build",
@@ -850,7 +856,14 @@ function SkillPage({
           <ul>
             {platformPrereqs.map(
               (p: SkillPrerequisite, i: number): ReactElement => (
-                <li key={i}>{p.reason || p.platform || p.application}</li>
+                <li key={i}>
+                  <strong>
+                    {p.application ??
+                      platformLabels[p.platform ?? ""] ??
+                      p.platform}
+                  </strong>
+                  {p.reason && <>: {p.reason}</>}
+                </li>
               ),
             )}
           </ul>
