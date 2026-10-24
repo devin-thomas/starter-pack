@@ -20,7 +20,7 @@ For agents: read and apply this completed guide when working on Rust. It transla
 
 This guide covers first-party Rust language, data, ownership, resource, and tooling conventions. It applies to libraries, command-line tools, services, and native integrations without requiring a particular application framework, async runtime, error crate, serialization library, or workspace architecture.
 
-The accepted guides establish the preference for explicit contracts, meaningful states, one authoritative writer, and narrow exceptions. React + TypeScript is also an accepted companion guide. Developing Python, Swift, JavaScript, and Dart guides provide comparison points, but their pending choices are not treated as accepted decisions. The Rust conventions below are accepted as a complete guide. [H1][H2][H3][H4]
+The accepted guides establish the preference for explicit contracts, meaningful states, one authoritative writer, and narrow exceptions. React + TypeScript is also an accepted companion guide. The accepted Python, Swift, JavaScript, and Dart guides provide companion ecosystem conventions. The Rust conventions below are accepted as a complete guide. [H1][H2][H3][H4]
 
 Use the language's own mechanisms: ordinary immutable bindings are `let`, values are usually structs and enums, fallible operations return `Result`, and complete enum consumers use exhaustive `match`. The words “must” and “prefer” below describe the accepted house contract, not requirements imposed by every Rust project.
 

@@ -17,9 +17,14 @@ The site publishes stable coding style guides under [`/style`](https://starter.u
 - [React + TypeScript](https://starter.uppercut-labs.com/style/React-TypeScript) — **stable 1.0.0; finished and approved**, with all 33 rules authoritative alongside TypeScript 1.0.0.
 - [Rust](https://starter.uppercut-labs.com/style/Rust) — **stable 1.0.0; finished and approved**, with all 36 rules authoritative for agent use.
 
-Python, Swift + SwiftUI, JavaScript, and Dart + Flutter retain their separately recorded in-progress review statuses. Their accepted rules can be read and applied; specifically pending alternatives are not authoritative. React + TypeScript and Rust have no remaining owner decisions or additional guide-level approval gate.
+All nine guides are finalized and authoritative for agent use.
 
-Agent-readable forms are generated with the human pages:
+- [Python](https://starter.uppercut-labs.com/style/Python)
+- [Swift + SwiftUI](https://starter.uppercut-labs.com/style/Swift-SwiftUI)
+- [JavaScript](https://starter.uppercut-labs.com/style/JavaScript)
+- [Dart + Flutter](https://starter.uppercut-labs.com/style/Dart-Flutter)
+
+Every guide has matching `.md` and `.json` resources at its page URL. Agent-readable forms are generated with the human pages:
 
 - `https://starter.uppercut-labs.com/style/TypeScript.md`
 - `https://starter.uppercut-labs.com/style/TypeScript.json`
@@ -31,7 +36,7 @@ Agent-readable forms are generated with the human pages:
 - `https://starter.uppercut-labs.com/style/Rust.json`
 - `https://starter.uppercut-labs.com/style/catalog.json`
 
-Stable public guides contain accepted rules and are authoritative for agent use. Merge and website deployment are separate delivery steps, not unfinished-design labels. In-progress guides identify their actual pending choices; they are not a reason to ignore already accepted guidance. Private deliberation and rejected alternatives remain outside this repository's published surface.
+Stable public guides contain accepted rules and are authoritative for agent use. Merge and website deployment are separate delivery steps, not unfinished-design labels. Private deliberation and rejected alternatives remain outside this repository's published surface.
 
 ## Use and reuse
 

@@ -27,7 +27,7 @@
     "format:app": "prettier --write \"src/*.{ts,tsx}\"",
     "check:format": "prettier --check \"src/*.{ts,tsx}\"",
     "check:style": "node scripts/style-guide-check.mjs && tsx --test scripts/style-guide-links.test.ts",
-    "verify:style": "node scripts/style-guide-surfaces.mjs && node scripts/godot-style-guide-surfaces.mjs && node scripts/kotlin-style-guide-surfaces.mjs && node scripts/wip-style-guide-surfaces.mjs",
+    "verify:style": "node scripts/style-guide-surfaces.mjs && node scripts/godot-style-guide-surfaces.mjs && node scripts/kotlin-style-guide-surfaces.mjs && node scripts/companion-style-guide-surfaces.mjs",
     "test:routes": "tsx --test scripts/legacy-routing.test.ts scripts/local-deployment.test.ts scripts/seo-migration.test.ts",
     "test:controls": "node scripts/react-controls-browser.mjs",
     "verify:legacy": "tsx scripts/verify-legacy.ts"

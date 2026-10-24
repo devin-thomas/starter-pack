@@ -54,11 +54,11 @@ jobs:
             if node scripts/style-guide-surfaces.mjs --live https://starter.uppercut-labs.com > audit-live.json \
               && node scripts/godot-style-guide-surfaces.mjs --live https://starter.uppercut-labs.com > audit-live-godot.json \
               && node scripts/kotlin-style-guide-surfaces.mjs --live https://starter.uppercut-labs.com > audit-live-kotlin.json \
-              && node scripts/wip-style-guide-surfaces.mjs --live https://starter.uppercut-labs.com > audit-live-wip.json; then
+              && node scripts/companion-style-guide-surfaces.mjs --live https://starter.uppercut-labs.com > audit-live-companions.json; then
               cat audit-live.json
               cat audit-live-godot.json
               cat audit-live-kotlin.json
-              cat audit-live-wip.json
+              cat audit-live-companions.json
               exit 0
             fi
             sleep 15
@@ -79,7 +79,7 @@ jobs:
             audit-legacy.json
             audit-live-godot.json
             audit-live-kotlin.json
-            audit-live-wip.json
+            audit-live-companions.json
             audit-source-revision.txt
             style-guide-browser-report/
             content/style/typescript.md

@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import matter from "gray-matter";
 
-// Keep the existing command compatible; each guide declares its own maturity.
+// Verify the complete accepted companion guides across every published surface.
 const specs = [
   {
     "id": "react-typescript",
@@ -12,8 +12,7 @@ const specs = [
     "prefix": "RX",
     "rules": 33,
     "headings": 35,
-    "pending": [],
-    "accepted": "RX033",
+        "accepted": "RX033",
     "version": "1.0.0",
     "status": "stable"
   },
@@ -23,13 +22,9 @@ const specs = [
     "prefix": "PY",
     "rules": 35,
     "headings": 37,
-    "pending": [
-      "PY-Q01",
-      "PY-Q02",
-      "PY-Q03"
-    ],
-    "accepted": "draft",
-    "version": "0.9.0-review.1"
+        "accepted": "PY035",
+    "version": "1.0.0",
+    "status": "stable"
   },
   {
     "id": "swift-swiftui",
@@ -37,12 +32,9 @@ const specs = [
     "prefix": "SW",
     "rules": 35,
     "headings": 37,
-    "pending": [
-      "SW-Q01",
-      "SW-Q02"
-    ],
-    "accepted": "draft",
-    "version": "0.9.0-review.1"
+        "accepted": "SW035",
+    "version": "1.0.0",
+    "status": "stable"
   },
   {
     "id": "javascript",
@@ -50,12 +42,9 @@ const specs = [
     "prefix": "JS",
     "rules": 28,
     "headings": 30,
-    "pending": [
-      "JS-Q01",
-      "JS-Q02"
-    ],
-    "accepted": "draft",
-    "version": "0.9.0-review.1"
+        "accepted": "JS028",
+    "version": "1.0.0",
+    "status": "stable"
   },
   {
     "id": "dart-flutter",
@@ -63,12 +52,9 @@ const specs = [
     "prefix": "DF",
     "rules": 35,
     "headings": 37,
-    "pending": [
-      "DF-Q01",
-      "DF-Q02"
-    ],
-    "accepted": "draft",
-    "version": "0.9.0-review.1"
+        "accepted": "DF035",
+    "version": "1.0.0",
+    "status": "stable"
   },
   {
     "id": "rust",
@@ -76,8 +62,7 @@ const specs = [
     "prefix": "RS",
     "rules": 36,
     "headings": 40,
-    "pending": [],
-    "accepted": "RS036",
+        "accepted": "RS036",
     "version": "1.0.0",
     "status": "stable"
   }
@@ -104,7 +89,7 @@ const results = [];
 for (const spec of specs) {
   const parsed = matter(await readFile("content/style/" + spec.id + ".md", "utf8"));
   const data = parsed.data, markdown = parsed.content.trimStart();
-  const expectedStatus = spec.status ?? "in-progress";
+  const expectedStatus = spec.status;
   assert.equal(data.status, expectedStatus, spec.id + ": status");
   assert.equal(data.version, spec.version, spec.id + ": version");
   assert.equal(data.accepted_through, spec.accepted, spec.id + ": accepted_through");
@@ -133,7 +118,17 @@ for (const spec of specs) {
     for (const forbidden of ["Pending RS-Q01", "**In progress", "**in progress", "status: in-progress", "0.9.0-review", "retains its review status", "remains in progress", "proposed house contract", "Rust-native translations are prepared wording", "guide-level review status", "examples in this draft"]) {
       assert(!markdown.includes(forbidden) && !intro.includes(forbidden), "Rust stale provisional wording: " + forbidden);
     }
-  } else for (const decision of spec.pending) assert(markdown.includes("Pending " + decision), spec.id + ": missing " + decision);
+  }
+  assert.deepEqual(ids, Array.from({ length: spec.rules }, (_, index) => `${spec.prefix}${String(index + 1).padStart(3, "0")}`), spec.id + ": accepted rule sequence");
+  for (const decision of markdown.matchAll(/<!-- DECISION:([A-Z]+-Q\d+):START -->/g)) {
+    assert(markdown.includes("Accepted " + decision[1] + (spec.id === "rust" ? " B" : " A")), spec.id + ": accepted owner choice " + decision[1]);
+  }
+  const intro = await readFile("content/style/" + spec.id + "-intro.md", "utf8");
+  for (const forbidden of ["**In progress", "**in progress", "0.9.0-review", "remains a draft", "not a separate historical owner vote", "published review draft", "still being reviewed", "VALIDATION.md", "Pending " + spec.prefix + "-Q"]) {
+    assert(!markdown.includes(forbidden) && !intro.includes(forbidden), spec.id + ": stale provisional wording: " + forbidden);
+  }
+  assert(!hub.includes('class="style-status"'), "hub contains provisional status badges");
+  assert.equal(catalog.status, "stable", "catalog finalized status");
   assert(!/\bCTX:[A-Z][A-Z0-9_-]*|\(private (?:planning|source) evidence\)/.test(markdown), spec.id + ": unsupported source annotation");
   const json = JSON.parse(await read(spec.route + ".json", /application\/json/));
   for (const field of ["status", "version", "accepted_through"]) {
