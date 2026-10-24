@@ -5,7 +5,7 @@ import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { App } from "../src/App";
-import type { SiteData, SkillEntry } from "../src/site-data";
+import type { SiteData, SkillEntry, SkillLesson } from "../src/site-data";
 import { loadContent } from "./content";
 
 test("skill links resolve lessons by ID when the URL slug differs", async (): Promise<void> => {
@@ -82,8 +82,10 @@ test("every owned public skill has a teaching page and public sources only", asy
     assert.ok(!html.includes("private-skills"), entry.id);
   }
   for (const id of ["execute-task", "execute-task-cycles", "task-execution-prompt"]) {
-    assert.match(data.skills.lessons[id]!.html, /repair/i);
-    assert.match(data.skills.lessons[id]!.html, /independent/i);
+    const lesson: SkillLesson | undefined = data.skills.lessons[id];
+    assert.ok(lesson);
+    assert.match(lesson.html, /repair/i);
+    assert.match(lesson.html, /independent/i);
   }
 });
 
