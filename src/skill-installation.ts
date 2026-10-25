@@ -25,15 +25,13 @@ export function skillInstallation(
   host: SkillHost = "codex",
 ): SkillInstallation {
   if (entry?.id === "agent-prompt") {
-    const archive: string =
-      "https://github.com/devin-thomas/skills/releases/download/v1.0.2/uppercut-labs-skills-1.0.2.tgz";
     return {
       package: skillsPackage,
       description:
-        "Agent Prompt ships in the tested 1.0.2 installer archive on GitHub. npm currently serves 1.0.1; use this archive to install the new skill.",
-      command: `npx --package=${archive} uppercut-skills add agent-prompt --host ${host} --project .`,
+        "Install Agent Prompt with the Uppercut Labs skills installer.",
+      command: `npx ${skillsPackage}@1.0.2 add agent-prompt --host ${host} --project .`,
       prompt:
-        "Read https://starter.uppercut-labs.com/skills/agent-prompt.md and install Agent Prompt for this project's agent host using its linked installer archive, then help me use it.",
+        "Install agent-prompt for this project's agent host using @uppercut-labs/skills@1.0.2, then help me add a branded handoff that follows the project's visual style.",
     };
   }
   if (entry?.package) {
