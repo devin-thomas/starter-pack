@@ -72,7 +72,7 @@ test("a cold dev server serves a direct skill lesson before any other page", { t
 
 test("every owned public skill has a teaching page and public sources only", async (): Promise<void> => {
   const data: SiteData = await loadContent();
-  const expected: readonly string[] = ["starter-pack", "computer-setup", "grill-to-build", "task-execution-prompt", "long-horizon-dashboard", "quick-build", "execute-task", "execute-task-cycles", "surface-sweep", "surface-sweep-showcase", "no-useless-copy", "style", "pwa-development", "vidchopper-cli", "perfect-playlist", "programmatic-harness", "branded-sign-in", "agent-cli", "immutable-reports", "cappy"];
+  const expected: readonly string[] = ["starter-pack", "computer-setup", "grill-to-build", "task-execution-prompt", "long-horizon-dashboard", "quick-build", "execute-task", "execute-task-cycles", "surface-sweep", "surface-sweep-showcase", "no-useless-copy", "style", "pwa-development", "vidchopper-cli", "perfect-playlist", "programmatic-harness", "branded-sign-in", "agent-cli", "immutable-reports", "cappy", "agent-prompt"];
   assert.deepEqual(data.skills.manifest.map((entry: SkillEntry): string => entry.id).sort(), [...expected].sort());
   for (const entry of data.skills.manifest) {
     assert.ok(data.skills.lessons[entry.id], entry.id);
