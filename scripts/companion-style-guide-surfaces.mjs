@@ -10,10 +10,10 @@ const specs = [
     "id": "react-typescript",
     "route": "/style/React-TypeScript",
     "prefix": "RX",
-    "rules": 33,
-    "headings": 35,
-        "accepted": "RX033",
-    "version": "1.0.0",
+    "rules": 34,
+    "headings": 36,
+        "accepted": "RX034",
+    "version": "1.1.0",
     "status": "stable"
   },
   {
@@ -40,10 +40,10 @@ const specs = [
     "id": "javascript",
     "route": "/style/JavaScript",
     "prefix": "JS",
-    "rules": 28,
-    "headings": 30,
-        "accepted": "JS028",
-    "version": "1.0.0",
+    "rules": 29,
+    "headings": 31,
+        "accepted": "JS029",
+    "version": "1.1.0",
     "status": "stable"
   },
   {
@@ -101,10 +101,10 @@ for (const spec of specs) {
   if (spec.id === "react-typescript") {
     assert(markdown.includes("Accepted RX-Q01 A"), "React accepted decision marker");
     assert(!markdown.includes("Pending RX-Q01"), "React decision remains pending");
-    assert.deepEqual(ids, Array.from({ length: 33 }, (_, index) => `RX${String(index + 1).padStart(3, "0")}`), "React accepted rule sequence");
-    assert(markdown.includes("All 33 rules, RX001–RX033, are authoritative"), "React full-guide authority");
+    assert.deepEqual(ids, Array.from({ length: 34 }, (_, index) => `RX${String(index + 1).padStart(3, "0")}`), "React accepted rule sequence");
+    assert(markdown.includes("All 34 rules, RX001–RX034, are authoritative"), "React full-guide authority");
     const intro = await readFile("content/style/react-typescript-intro.md", "utf8");
-    assert(intro.includes("React + TypeScript 1.0.0 is the stable house guide"), "React introduction authority");
+    assert(intro.includes("React + TypeScript 1.1.0 is the stable house guide"), "React introduction authority");
     for (const forbidden of ["**In progress", "**in progress", "0.9.0-review", "remains a draft", "not a separate historical owner vote", "rest of the guide remains", "awaits final guide-level review", "VALIDATION.md", "published review draft", "still being reviewed"]) {
       assert(!markdown.includes(forbidden) && !intro.includes(forbidden), "React stale provisional wording: " + forbidden);
     }
@@ -139,6 +139,10 @@ for (const spec of specs) {
   assert.equal(raw, markdown, spec.id + ": Markdown/source parity");
   const html = await read(spec.route, /text\/html/);
   const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").replace(/<!--[\s\S]*?-->/g, "");
+  if (["javascript", "react-typescript"].includes(spec.id)) {
+    assert(visible.includes("Use text and proper icons; emoji require an explicit request"), spec.id + ": visible emoji policy");
+    assert(markdown.includes("Do not add emoji unless the user explicitly requests them"), spec.id + ": agent emoji policy");
+  }
   assert(visible.includes("Copy for agent") && visible.includes("style-guide-prose"), spec.id + ": human page");
   if (expectedStatus === "stable") {
     assert(!visible.includes('class="style-status"'), spec.id + ": stable guide shows provisional badge");

@@ -14,10 +14,10 @@ The site publishes stable coding style guides under [`/style`](https://starter.u
 - [TypeScript](https://starter.uppercut-labs.com/style/TypeScript)
 - [Godot](https://starter.uppercut-labs.com/style/Godot) — hard-pinned to Godot 4.7.2 with GDScript as the primary language.
 - [Kotlin](https://starter.uppercut-labs.com/style/Kotlin) — language conventions with an Android TV profile.
-- [React + TypeScript](https://starter.uppercut-labs.com/style/React-TypeScript) — **stable 1.0.0; finished and approved**, with all 33 rules authoritative alongside TypeScript 1.0.0.
+- [React + TypeScript](https://starter.uppercut-labs.com/style/React-TypeScript) — **stable 1.1.0; finished and approved**, with all 34 rules authoritative alongside TypeScript 1.1.0.
 - [Rust](https://starter.uppercut-labs.com/style/Rust) — **stable 1.0.0; finished and approved**, with all 36 rules authoritative for agent use.
 
-All nine guides are finalized and authoritative for agent use.
+All nine guides are finalized and authoritative for agent use. TypeScript, JavaScript, and React + TypeScript 1.1.0 default UI to text and proper icons; emoji require an explicit user request.
 
 - [Python](https://starter.uppercut-labs.com/style/Python)
 - [Swift + SwiftUI](https://starter.uppercut-labs.com/style/Swift-SwiftUI)

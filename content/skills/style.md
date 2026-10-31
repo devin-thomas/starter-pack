@@ -1,6 +1,6 @@
 ---
 skill_id: style
-updated: 2026-10-23
+updated: 2026-10-31
 ---
 
 # Style
@@ -13,7 +13,7 @@ Ask an agent to follow your coding conventions, review a diff, or refactor code 
 
 ## How it works
 
-The agent reads the [style catalog](/style), loads the matching guide, and applies its accepted rules. React and JavaScript also use the TypeScript companion. Existing repository instructions and explicit user requirements take precedence.
+The agent reads the [style catalog](/style), loads the matching guide, and applies its accepted rules. React and JavaScript also use the TypeScript companion. Existing repository instructions and explicit user requirements take precedence. For JavaScript, TypeScript, and React UI, the guides default to text and proper icons; emoji require an explicit user request, with source and rendered output checked before handoff.
 
 For existing code, the default is a scan with concrete locations and proposed changes. Ask for `style refactor` to apply those changes and run the repository checks. New code follows the matching guide directly.
 

@@ -4,21 +4,21 @@ title: React + TypeScript
 summary: An explicit React house style extending the TypeScript contract with owned state, deliberate effects, small component APIs, and a scoped Next.js profile.
 human_summary: React is a UI framework; this guide applies Devin’s TypeScript ownership and contract rules to components, hooks, effects, browser boundaries, and an optional Next.js profile.
 status: stable
-updated: "2026-10-23"
-accepted_through: RX033
-version: 1.0.0
+updated: "2026-10-31"
+accepted_through: RX034
+version: 1.1.0
 route: /style/React-TypeScript
 ---
 
 # React + TypeScript Style Guide
 
-> **Stable 1.0.0 — finished and approved.** All 33 rules, RX001–RX033, are authoritative house conventions. No owner decisions or additional guide-level approval remain.
+> **Stable 1.1.0 — finished and approved.** All 34 rules, RX001–RX034, are authoritative house conventions. No owner decisions or additional guide-level approval remain.
 
-For agents: apply this completed guide alongside TypeScript 1.0.0 when working on React + TypeScript. RX006 records the accepted React hook-binding exception. Preserve the target repository's existing contracts; accepting this guide does not itself authorize an application migration or dependency upgrade.
+For agents: apply this completed guide alongside TypeScript 1.1.0 when working on React + TypeScript. RX006 records the accepted React hook-binding exception. Preserve the target repository's existing contracts; accepting this guide does not itself authorize an application migration or dependency upgrade.
 
 ## Scope
 
-This framework companion inherits TypeScript 1.0.0; it does not replace or weaken that language guide. It covers React components, hooks, state, effects, browser boundaries, and an explicitly conditional Next.js App Router profile. Plain React does not become Next.js merely by adopting the guide. Project-specific router, data client, state library, CSS system, deployment adapter, React Compiler configuration, and dependency versions remain repository decisions.
+This framework companion inherits TypeScript 1.1.0; it does not replace or weaken that language guide. It covers React components, hooks, state, effects, browser boundaries, and an explicitly conditional Next.js App Router profile. Plain React does not become Next.js merely by adopting the guide. Project-specific router, data client, state library, CSS system, deployment adapter, React Compiler configuration, and dependency versions remain repository decisions.
 
 Do not translate Android service ownership into a browser service layer by default. Transfer the responsibility and lifetime principles, then use the runtime actually present. Framework conventions that genuinely differ from first-party defaults must be narrow and visible.
 
@@ -30,7 +30,7 @@ First-party React source follows explicit annotations, named data types, meaning
 
 Retain the accepted compiler safety baseline and add the repository's JSX, module, and runtime settings. Do not turn a type disagreement into `any`, a non-null assertion, or a double assertion. An inherited rule may be relaxed only by a recorded, scoped decision such as RX-Q01—not by a formatter preset.
 
-**Basis:** [TS:D001-D025](https://starter.uppercut-labs.com/style/TypeScript)
+**Basis:** [TS:D001-D026](https://starter.uppercut-labs.com/style/TypeScript)
 
 ## RX002 — Return the render contract actually promised
 
@@ -373,8 +373,16 @@ Preserve public URLs, permissions, persistence schemas, environment contracts, a
 
 **Basis:** [GD:G025](https://starter.uppercut-labs.com/style/Godot) · [KT:K038](https://starter.uppercut-labs.com/style/Kotlin)
 
+## RX034 — Use text and proper icons; emoji require an explicit request
+
+Apply TypeScript D026 to React UI: default to clear text labels and the project's established icon components or consistent SVG assets. Do not add emoji unless the user explicitly requests them. A button such as “Start an inquiry” can stand on its text; if an arrow helps, use a matching SVG icon. A playful visual direction does not request emoji.
+
+Check JSX text, string props, accessible labels, data-driven labels, Unicode escapes, HTML entities, CSS-generated content, and image assets in source and rendered UI before handoff. Give meaningful icons an accessible name through the control's label; hide purely decorative icons from assistive technology. Preserve user-authored/imported content and explicitly requested emoji features under D026's content exceptions.
+
+**Basis:** [TS:D026](https://starter.uppercut-labs.com/style/TypeScript#use-text-and-proper-icons-emoji-require-an-explicit-request)
+
 ## Review and release boundary
 
-React + TypeScript 1.0.0 is finished and owner-approved. All 33 rules are accepted, including RX-Q01 A in RX006. Agents may apply the complete guide without another guide-level approval gate. Future improvements do not make this version provisional.
+React + TypeScript 1.1.0 is finished and owner-approved. All 34 rules are accepted, including RX-Q01 A in RX006. Agents may apply the complete guide without another guide-level approval gate. Future improvements do not make this version provisional.
 
 Accepting or publishing this guide does not certify an implementation. Repository-specific dependency versions, product requirements, storage formats, and deployment policies remain external to this reusable style contract.

@@ -4,21 +4,21 @@ title: JavaScript
 summary: A checked-JavaScript house style using JSDoc and static analysis to preserve explicit contracts without TypeScript source syntax.
 human_summary: JavaScript remains executable source while JSDoc and static checking make contracts visible; this guide defines when that tradeoff is appropriate and how to keep it safe.
 status: stable
-updated: "2026-10-23"
-accepted_through: JS028
-version: 1.0.0
+updated: "2026-10-31"
+accepted_through: JS029
+version: 1.1.0
 route: /style/JavaScript
 ---
 
 # JavaScript Style Guide
 
-> **Stable 1.0.0 — finished and approved.**
+> **Stable 1.1.0 — finished and approved.**
 
-For agents: all 28 rules, JS001–JS028, are authoritative. Apply this stable house guide to its stated language and ecosystem scope.
+For agents: all 29 rules, JS001–JS029, are authoritative. Apply this stable house guide to its stated language and ecosystem scope.
 
 ## Scope
 
-This is a checked-JavaScript companion to TypeScript 1.0.0. It covers JavaScript source that remains JavaScript at runtime while using TypeScript-supported JSDoc contracts and a separate static-check step. The remaining scope decision determines whether new checked JavaScript is a general option or primarily for scripts/configuration/interoperability.
+This is a checked-JavaScript companion to TypeScript 1.1.0. It covers JavaScript source that remains JavaScript at runtime while using TypeScript-supported JSDoc contracts and a separate static-check step. JS001 defines the accepted scope for new checked JavaScript.
 
 It is not an unchecked-JavaScript substitute with equivalent guarantees. It does not mandate transpilation, change a runtime, or convert existing applications automatically. Node, browser, bundler, CommonJS, and ESM boundaries retain their real repository configuration. A static check can exist without an emit/build transformation.
 
@@ -305,8 +305,16 @@ Record justified exceptions and report the exact files and tools checked. A guid
 
 **Basis:** [GD:G025](https://starter.uppercut-labs.com/style/Godot) · [KT:K038](https://starter.uppercut-labs.com/style/Kotlin)
 
+## JS029 — Use text and proper icons; emoji require an explicit request
+
+Apply TypeScript D026 to JavaScript websites and applications: default to clear text labels and the project's established icon set or consistent SVG assets. Do not add emoji unless the user explicitly requests them, including as arrows, button icons, decorative labels, or sample copy. A request for an icon or a playful design does not request emoji.
+
+Review DOM text, templates, Unicode escapes, HTML entities, CSS-generated content, and image assets in both source and rendered UI before handoff. Preserve user-authored/imported content and explicitly requested emoji features under D026's content exceptions.
+
+**Basis:** [TS:D026](https://starter.uppercut-labs.com/style/TypeScript#use-text-and-proper-icons-emoji-require-an-explicit-request)
+
 ## Release and application
 
-All 28 rules, JS001–JS028, are authoritative in version 1.0.0.
+All 29 rules, JS001–JS029, are authoritative in version 1.1.0.
 
 Repository-specific dependency versions, product requirements, storage formats, and deployment policies remain in the target repository.

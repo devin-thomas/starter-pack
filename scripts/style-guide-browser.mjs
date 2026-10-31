@@ -10,13 +10,13 @@ const output = path.resolve("style-guide-browser-report");
 await mkdir(output,{recursive:true});
 
 const guides = [
-  { slug: "TypeScript", internalId: /^D\d{3}/, headingCount: 27, data: JSON.parse(await readFile(path.join(root,"style/TypeScript.json"),"utf8")) },
+  { slug: "TypeScript", internalId: /^D\d{3}/, headingCount: 28, data: JSON.parse(await readFile(path.join(root,"style/TypeScript.json"),"utf8")) },
   { slug: "Godot", internalId: /^G\d{3}/, headingCount: 27, data: JSON.parse(await readFile(path.join(root,"style/Godot.json"),"utf8")) },
   { slug: "Kotlin", internalId: /^K\d{3}/, headingCount: 41, data: JSON.parse(await readFile(path.join(root,"style/Kotlin.json"),"utf8")) },
-  { slug: "React-TypeScript", internalId: /^RX\d{3}/, headingCount: 35, data: JSON.parse(await readFile(path.join(root,"style/React-TypeScript.json"),"utf8")) },
+  { slug: "React-TypeScript", internalId: /^RX\d{3}/, headingCount: 36, data: JSON.parse(await readFile(path.join(root,"style/React-TypeScript.json"),"utf8")) },
   { slug: "Python", internalId: /^PY\d{3}/, headingCount: 37, data: JSON.parse(await readFile(path.join(root,"style/Python.json"),"utf8")) },
   { slug: "Swift-SwiftUI", internalId: /^SW\d{3}/, headingCount: 37, data: JSON.parse(await readFile(path.join(root,"style/Swift-SwiftUI.json"),"utf8")) },
-  { slug: "JavaScript", internalId: /^JS\d{3}/, headingCount: 30, data: JSON.parse(await readFile(path.join(root,"style/JavaScript.json"),"utf8")) },
+  { slug: "JavaScript", internalId: /^JS\d{3}/, headingCount: 31, data: JSON.parse(await readFile(path.join(root,"style/JavaScript.json"),"utf8")) },
   { slug: "Dart-Flutter", internalId: /^DF\d{3}/, headingCount: 37, data: JSON.parse(await readFile(path.join(root,"style/Dart-Flutter.json"),"utf8")) },
   { slug: "Rust", internalId: /^RS\d{3}/, headingCount: 40, data: JSON.parse(await readFile(path.join(root,"style/Rust.json"),"utf8")) },
 ];

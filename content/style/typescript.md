@@ -4,9 +4,9 @@ title: TypeScript
 summary: A strict, explicit TypeScript house style built around readable contracts, deliberate state modeling, and compiler-enforced clarity.
 human_summary: TypeScript is JavaScript with a static type system, giving you earlier feedback about mismatched values and clearer contracts without leaving the JavaScript ecosystem.
 status: stable
-updated: "2026-09-23"
-accepted_through: D025
-version: 1.0.0
+updated: "2026-10-31"
+accepted_through: D026
+version: 1.1.0
 route: /style/TypeScript
 ---
 
@@ -826,6 +826,14 @@ This is not a complete package manifest; the repository supplies its test comman
 Mechanically check only rules that are trustworthy. Do not blindly enable presets that erase explicit annotations, rewrite intentional mutable `let` bindings to `const`, or treat bare `void promise` as sufficient handling. Keep formatter and lint responsibilities separate. Suppress only a narrowly inapplicable rule, explain the reason, and detect unused suppressions. Deliberately exclude generated/vendor code rather than disguising owned code as external.
 
 Architectural judgment remains necessary for correct validation, alias ownership, genuine generic reuse, class suitability, domain-error semantics, and task supervision. Passing automation is not proof of all those properties.
+
+## D026 — Use text and proper icons; emoji require an explicit request
+
+Use clear text labels for first-party website and application UI. When an icon adds meaning, use the project's established icon set or a consistent SVG asset. Do not add emoji unless the user explicitly requests them; a playful tone, colorful design, or a request for an arrow or icon is not an emoji request. Omit an unnecessary icon.
+
+Apply this default to buttons, links, navigation, headings, cards, badges, empty states, notifications, and generated sample copy. It covers literal emoji, Unicode escapes, HTML entities, CSS-generated content, and emoji images used as decoration or icon substitutes. Changing the encoding does not satisfy the rule. For a call to action such as “Start an inquiry,” use the text alone or a matching SVG arrow rather than an emoji glyph.
+
+Preserve emoji in user-authored content, imported data, and explicitly requested emoji features. Those content cases do not authorize decorative emoji elsewhere. Before handing off a new or changed UI, inspect both its source and rendered output for unrequested emoji, including labels, generated content, and assets; replace them with text or proper icons. A text search alone is not a complete check of rendered content.
 
 ## Scope and future additions
 

@@ -16,7 +16,7 @@ const fence = /^```(ts|json)\n([\s\S]*?)^```/gm;
 const matches = [...source.matchAll(fence)];
 assert.equal(matches.filter((match) => match[1] === "ts").length, 30, "Account for every published TypeScript example");
 const decisionIds = [...source.matchAll(/^## D(\d{3}) — /gm)].map((match) => Number(match[1]));
-assert.deepEqual(decisionIds, Array.from({ length: 25 }, (_, index) => index + 1));
+assert.deepEqual(decisionIds, Array.from({ length: 26 }, (_, index) => index + 1));
 assert(!/throw new Error\("Example"\)|\/\/ \.\.\./.test(source), "No placeholder implementation in the public guide");
 
 if (!skipFormat) {

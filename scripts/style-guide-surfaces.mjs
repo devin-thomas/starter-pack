@@ -25,6 +25,8 @@ assert.equal(raw,markdown,"raw Markdown/source parity");
 const html = await read(expected.route,/text\/html/);
 const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,"").replace(/<!--[\s\S]*?-->/g,"");
 assert(visible.includes("Copy for agent") && visible.includes("style-guide-prose") && visible.includes("Why use TypeScript"),"human-first page contract");
+assert(visible.includes("Use text and proper icons; emoji require an explicit request"), "visible emoji policy");
+assert(markdown.includes("Do not add emoji unless the user explicitly requests them"), "agent emoji policy");
 assert(!/<h2[^>]*>[^<]*D\d{3}\s*[—-]/.test(visible),"internal IDs leaked into human headings");
 assert(!visible.includes("Agent access"),"obsolete large agent panel");
 const hub = (await read("/style",/text\/html/)).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,"");
