@@ -228,7 +228,7 @@ function Prompt({
       )}
       {!phase2 && instructionPacket && (
         <details className="prompt-explainer packet-recovery">
-          <summary>Chat can't open the guide?</summary>
+          <summary>Can't open the guide? Copy instruction packet</summary>
           <CopyText
             text={instructionPacket}
             label="Phase 1 instruction packet"
