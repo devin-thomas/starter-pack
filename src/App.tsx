@@ -1515,7 +1515,8 @@ export function App({ path, data }: AppProps): ReactElement {
                     <Icon name="book-open" size={18} />
                     <p>
                       This is a preview. The complete Phase 3 curriculum is not
-                      part of this release.
+                      part of this release. If you haven&apos;t completed Phase
+                      2, <a href="/phases/2">continue with Phase 2</a>.
                     </p>
                   </div>
                 )}

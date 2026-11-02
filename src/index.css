@@ -913,6 +913,10 @@ h3 {
 .notice p {
   margin: 0;
 }
+.notice a {
+  color: var(--accent);
+  text-decoration: underline;
+}
 .resource-list {
   border: 1px solid var(--line);
   border-radius: 7px;
