@@ -226,3 +226,60 @@ test("delivery failures expose neither visitor data nor webhook configuration", 
   assert.ok(!serialized.includes("private"));
   assert.ok(!serialized.includes("hook.us2.make.com"));
 });
+
+test("an uncertain accepted submission is not sent to the webhook twice", async () => {
+  const { FeedbackReceipt } = await import("../src/worker");
+  const objects = new Map<string, InstanceType<typeof FeedbackReceipt>>();
+  const namespace: NonNullable<FeedbackEnv["FEEDBACK_DEDUP"]> = {
+    idFromName(name) { return name; },
+    get(id) {
+      const key = String(id);
+      let object = objects.get(key);
+      if (!object) {
+        const values = new Map<string, unknown>();
+        let tail: Promise<unknown> = Promise.resolve();
+        object = new FeedbackReceipt({
+          storage: {
+            async get<T>(name: string) { return values.get(name) as T | undefined; },
+            async put<T>(name: string, value: T) { values.set(name, value); },
+            async deleteAll() { values.clear(); },
+            async setAlarm(_time: number) {},
+          },
+          blockConcurrencyWhile<T>(callback: () => Promise<T>): Promise<T> {
+            const next = tail.then(callback); tail = next.catch(() => undefined); return next;
+          },
+        });
+        objects.set(key, object);
+      }
+      return object;
+    },
+  };
+  const h = harness({ response: () => new Response("lost acknowledgement", { status: 500 }) });
+  h.env.FEEDBACK_DEDUP = namespace;
+  const headers = { "Idempotency-Key": "f01519cb-b5ad-4267-9b79-f5c770263722" };
+  assert.equal((await handleFeedback(request(base, headers), h.env, h.send)).status, 502);
+  assert.equal((await handleFeedback(request(base, headers), h.env, h.send)).status, 502);
+  assert.equal(h.calls.length, 1);
+  assert.equal((await handleFeedback(request({ ...base, message: "Changed" }, headers), h.env, h.send)).status, 502);
+  assert.equal(h.calls.length, 1);
+});
+
+test("a confirmed retry returns success without a second webhook request", async () => {
+  const { FeedbackReceipt } = await import("../src/worker");
+  const values = new Map<string, unknown>();
+  const object = new FeedbackReceipt({
+    storage: {
+      async get<T>(key: string) { return values.get(key) as T | undefined; },
+      async put<T>(key: string, value: T) { values.set(key, value); },
+      async deleteAll() { values.clear(); },
+      async setAlarm(_time: number) {},
+    },
+    async blockConcurrencyWhile<T>(callback: () => Promise<T>) { return callback(); },
+  });
+  const h = harness();
+  h.env.FEEDBACK_DEDUP = { idFromName(name) { return name; }, get() { return object; } };
+  const headers = { "Idempotency-Key": "f01519cb-b5ad-4267-9b79-f5c770263722" };
+  assert.equal((await handleFeedback(request(base, headers), h.env, h.send)).status, 200);
+  assert.equal((await handleFeedback(request(base, headers), h.env, h.send)).status, 200);
+  assert.equal(h.calls.length, 1);
+});

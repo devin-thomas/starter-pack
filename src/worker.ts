@@ -25,8 +25,75 @@ export interface FeedbackEnv {
   LEGACY_HUMAN_REDIRECTS?: string;
   ASSETS: { fetch(request: Request): Promise<Response> };
   FEEDBACK_WEBHOOK_URL?: string;
+  FEEDBACK_DEDUP?: {
+    idFromName(name: string): unknown;
+    get(id: unknown): { fetch(request: Request): Promise<Response> };
+  };
   FEEDBACK_RATE_LIMITER: Limiter;
   FEEDBACK_TOTAL_LIMITER: Limiter;
+}
+
+type ReceiptState = {
+  readonly digest: string;
+  readonly status: "pending" | "sent";
+};
+interface ReceiptStorage {
+  get<T>(key: string): Promise<T | undefined>;
+  put<T>(key: string, value: T): Promise<void>;
+  deleteAll(): Promise<void>;
+  setAlarm(time: number): Promise<void>;
+}
+interface ReceiptContext {
+  readonly storage: ReceiptStorage;
+  blockConcurrencyWhile<T>(callback: () => Promise<T>): Promise<T>;
+}
+
+// One object per client-generated submission. A pending record is deliberately
+// never retried: the upstream recipient may have accepted before a timeout.
+export class FeedbackReceipt {
+  constructor(private readonly context: ReceiptContext) {}
+
+  async fetch(request: Request): Promise<Response> {
+    const input: unknown = await request.json();
+    if (
+      !isRecord(input) ||
+      typeof input["digest"] !== "string" ||
+      !/^[0-9a-f]{64}$/.test(input["digest"])
+    )
+      return Response.json({ ok: false }, { status: 400 });
+    const digest: string = input["digest"];
+    const operation: string = new URL(request.url).pathname;
+    return this.context.blockConcurrencyWhile(async (): Promise<Response> => {
+      const existing: ReceiptState | undefined =
+        await this.context.storage.get<ReceiptState>("receipt");
+      if (operation === "/claim") {
+        if (existing)
+          return Response.json({
+            state: existing.digest === digest ? existing.status : "conflict",
+          });
+        await this.context.storage.put("receipt", {
+          digest,
+          status: "pending",
+        } satisfies ReceiptState);
+        await this.context.storage.setAlarm(
+          Date.now() + 7 * 24 * 60 * 60 * 1000,
+        );
+        return Response.json({ state: "claimed" });
+      }
+      if (operation === "/sent" && existing?.digest === digest) {
+        await this.context.storage.put("receipt", {
+          digest,
+          status: "sent",
+        } satisfies ReceiptState);
+        return Response.json({ state: "sent" });
+      }
+      return Response.json({ ok: false }, { status: 409 });
+    });
+  }
+
+  async alarm(): Promise<void> {
+    await this.context.storage.deleteAll();
+  }
 }
 
 let origins: ReadonlySet<string> = new Set(Object.values(siteOrigins));
@@ -235,12 +302,72 @@ export async function handleFeedback(
           : "Invalid submission.",
     );
   }
-  const submissionId: string = crypto.randomUUID();
-  let deliveryStage: string = "configuration";
+  let hook: URL;
   try {
-    let hook: URL = new URL(env.FEEDBACK_WEBHOOK_URL);
+    hook = new URL(env.FEEDBACK_WEBHOOK_URL);
     if (hook.protocol !== "https:" || hook.hostname !== "hook.us2.make.com")
       throw new Error("Invalid notification configuration.");
+  } catch {
+    return reply(
+      502,
+      "We couldn't confirm delivery. Your text is still here. Please email starter@devthomas.site.",
+    );
+  }
+  const requestedId: string | null = request.headers.get("Idempotency-Key");
+  if (
+    requestedId &&
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      requestedId,
+    )
+  )
+    return reply(400, "Invalid submission identity.");
+  const submissionId: string = requestedId ?? crypto.randomUUID();
+  let receipt: { fetch(request: Request): Promise<Response> } | undefined;
+  let digest: string = "";
+  if (requestedId) {
+    if (!env.FEEDBACK_DEDUP)
+      return reply(
+        503,
+        "The form is temporarily unavailable. Please email starter@devthomas.site.",
+      );
+    digest = [
+      ...new Uint8Array(
+        await crypto.subtle.digest(
+          "SHA-256",
+          new TextEncoder().encode(JSON.stringify(data)),
+        ),
+      ),
+    ]
+      .map((byte: number): string => byte.toString(16).padStart(2, "0"))
+      .join("");
+    try {
+      receipt = env.FEEDBACK_DEDUP.get(
+        env.FEEDBACK_DEDUP.idFromName(submissionId),
+      );
+      const claim: Response = await receipt.fetch(
+        new Request("https://receipt.internal/claim", {
+          method: "POST",
+          body: JSON.stringify({ digest }),
+        }),
+      );
+      const result: unknown = await claim.json();
+      if (!claim.ok || !isRecord(result))
+        throw new Error("Receipt unavailable.");
+      if (result["state"] === "sent") return reply(200);
+      if (result["state"] !== "claimed")
+        return reply(
+          502,
+          "We couldn't confirm delivery. Your text is still here. A delayed notification may arrive; please email starter@devthomas.site rather than resending this message.",
+        );
+    } catch {
+      return reply(
+        503,
+        "The form is temporarily unavailable. Your text is still here; please email starter@devthomas.site.",
+      );
+    }
+  }
+  let deliveryStage: string = "configuration";
+  try {
     deliveryStage = "request";
     let response: Response = await send(hook, {
       method: "POST",
@@ -259,6 +386,15 @@ export async function handleFeedback(
     const acknowledgement: unknown = await response.json();
     if (!isRecord(acknowledgement) || acknowledgement["ok"] !== true)
       throw new Error("Notification not confirmed.");
+    if (receipt) {
+      const saved: Response = await receipt.fetch(
+        new Request("https://receipt.internal/sent", {
+          method: "POST",
+          body: JSON.stringify({ digest }),
+        }),
+      );
+      if (!saved.ok) throw new Error("Receipt not saved.");
+    }
     return reply(200);
   } catch {
     console.error(
