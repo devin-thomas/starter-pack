@@ -191,6 +191,13 @@ p {
   border-left: 1px solid var(--line-strong);
   margin: 0 5px;
 }
+.resume-hint {
+  margin: 0;
+  padding: 0 20px 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
 .header-links {
   display: flex;
   align-items: center;

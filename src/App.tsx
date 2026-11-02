@@ -218,6 +218,12 @@ function Prompt({
         }
         download={phase2 ? "/prompts/phase-2.txt" : "/prompts/get-started.txt"}
       />
+      {!phase2 && (
+        <p className="resume-hint">
+          Returning? Attach your saved progress file or paste its full contents
+          with the prompt.
+        </p>
+      )}
       {!phase2 && instructionPacket && (
         <details className="prompt-explainer packet-recovery">
           <summary>Chat can't open the guide?</summary>
