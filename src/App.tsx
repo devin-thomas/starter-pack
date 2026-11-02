@@ -323,6 +323,15 @@ function PhaseContent({
             phase2={phase.order === 2}
             instructionPacket={instructionPacket}
           />
+          {phase.order === 2 && (
+            <p className="prose">
+              Want to see your saved progress?{" "}
+              <a href="/artifacts#workbench-download">
+                Download the Progress Workbench
+              </a>
+              .
+            </p>
+          )}
           <article
             className="prose"
             dangerouslySetInnerHTML={{ __html: phase.html.slice(split) }}

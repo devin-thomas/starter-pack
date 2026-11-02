@@ -23,7 +23,7 @@ You can use Codex for the ordinary setup and build path without running this exp
 
 ## See your progress locally
 
-When Computer Setup begins, your agent prepares a downloadable **Progress Workbench** alongside your progress file. It opens the local view as soon as Python is available and preserves any customization you already made. This website does not receive your progress or host a personal dashboard.
+When Computer Setup begins, your agent prepares a downloadable **Progress Workbench** alongside your progress file. It opens the local view as soon as Python is available and preserves any customization you already made. You can also [download the Workbench](/artifacts#workbench-download) to open with your saved progress. This website does not receive your progress or host a personal dashboard.
 
 Your agent also asks which email to use for development accounts and notifications if you have not already chosen them. You can use one address, give a service its own address, or leave the choice for later. These choices do not change your Git identity.
 
