@@ -46,7 +46,7 @@ None. Works with any framework or UI layer.
 
 No Useless Copy is available as an agent skill. Point your agent at it during UI work:
 
-```
+```text
 Read the No Useless Copy skill and review the copy in this interface.
 ```
 

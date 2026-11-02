@@ -78,7 +78,7 @@ None for standalone use. Works with any existing repository layout.
 
 Grill to Build is available as an agent skill. Point your agent at the canonical source:
 
-```
+```text
 Read the Grill to Build skill and help me plan [your idea].
 ```
 

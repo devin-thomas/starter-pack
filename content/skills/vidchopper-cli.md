@@ -54,7 +54,7 @@ On macOS, the app and CLI are ad-hoc signed rather than notarized. If macOS bloc
 
 VidChopper CLI is a product-specific agent skill. The canonical implementation lives in the VidChopper repository, not in the general skills collection. Point your agent at it when working with VidChopper:
 
-```
+```text
 Read the VidChopper CLI skill and help me export chapter clips from this video.
 ```
 

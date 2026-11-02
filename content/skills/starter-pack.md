@@ -47,7 +47,7 @@ None. This is the entry point for the entire curriculum.
 
 Copy the starting prompt from the site or download the instruction packet:
 
-```
+```text
 https://starter.uppercut-labs.com/#starting-prompt
 ```
 

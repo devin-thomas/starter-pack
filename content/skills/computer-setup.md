@@ -55,7 +55,7 @@ Phase 1 completion with a working phone companion and signed-in GitHub Mobile. N
 
 Computer Setup is loaded automatically by the Starter Pack companion when you reach Phase 2 on a computer. You can also point your agent at it directly:
 
-```
+```text
 Read the Computer Setup skill and help me prepare my computer for Phase 2.
 ```
 

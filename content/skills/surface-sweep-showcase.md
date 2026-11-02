@@ -46,7 +46,7 @@ Surface Sweep is a required dependency — this skill runs it as its first stage
 
 Surface Sweep Showcase is available as an agent skill. Point your agent at it when you want QA plus a showcase:
 
-```
+```text
 Read the Surface Sweep Showcase skill and create a showcase for this app.
 ```
 
