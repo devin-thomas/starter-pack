@@ -221,7 +221,9 @@ function Prompt({
       {!phase2 && (
         <p className="resume-hint">
           Returning? Attach your saved progress file or paste its full contents
-          with the prompt.
+          with the prompt.{" "}
+          <a href="/artifacts#workbench-download">View your progress locally</a>
+          .
         </p>
       )}
       {!phase2 && instructionPacket && (
