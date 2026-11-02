@@ -104,7 +104,6 @@ const nav: readonly NavigationLink[] = [
 type PromptProps = {
   readonly prompt: string;
   readonly phase2?: boolean;
-  readonly home?: boolean;
   readonly instructionPacket?: string;
 };
 
@@ -191,7 +190,6 @@ type ResolvedSkillPage = {
 function Prompt({
   prompt,
   phase2 = false,
-  home = false,
   instructionPacket,
 }: PromptProps): ReactElement {
   return (
@@ -211,9 +209,7 @@ function Prompt({
       <CopyText
         text={prompt}
         label={phase2 ? "Phase 2 handoff text" : "Starting prompt text"}
-        buttonLabel={
-          home ? "Get Started" : phase2 ? "Copy Phase 2 handoff" : "Copy prompt"
-        }
+        buttonLabel={phase2 ? "Copy Phase 2 handoff" : "Copy prompt"}
         copiedLabel={phase2 ? "Handoff copied" : "Prompt copied"}
         instruction={
           phase2
@@ -229,6 +225,7 @@ function Prompt({
             text={instructionPacket}
             label="Phase 1 instruction packet"
             buttonLabel="Copy instruction packet"
+            disclosureLabel="Read or select the instruction packet"
             copiedLabel="Instruction packet copied"
             instruction="Paste into the same chat. Keep your existing progress."
             download="/agent/phase-1-packet.txt"
@@ -434,7 +431,7 @@ function Resources({ phase }: ResourcesProps): ReactElement {
         [
           "/agent/start.md",
           "Agent entry point",
-          "The first file your agent reads after you send the starting prompt.",
+          "General startup instructions. The starting prompt directs your agent to the Phase 1 packet.",
         ],
         [
           "/skills/starter-pack/SKILL.md",
@@ -787,7 +784,9 @@ function SkillInstall({ entry }: SkillInstallProps): ReactElement {
             ? `Install ${entry.title} with your agent`
             : "Choose and install skills with your agent"
         }
-        buttonLabel="Copy prompt for your agent"
+        buttonLabel="Copy installation prompt"
+        copiedLabel="Installation prompt copied"
+        disclosureLabel="Read or select the installation prompt"
       />
     </section>
   );
@@ -830,7 +829,9 @@ function SkillPage({
         <CopyText
           text={`Read https://starter.uppercut-labs.com/skills/${entry.slug}.md and help me install and use ${entry.title} for my project.`}
           label={`Get started with ${entry.title}`}
-          buttonLabel="Copy prompt for your agent"
+          buttonLabel="Copy lesson prompt"
+          copiedLabel="Lesson prompt copied"
+          disclosureLabel="Read or select the lesson prompt"
         />
         <ExternalLink href={`https://dvn.pw/${entry.slug}`}>
           Use with dvn
@@ -991,7 +992,9 @@ function SkillsHub({ skills, packages }: SkillsHubProps): ReactElement {
         <CopyText
           text="Read https://starter.uppercut-labs.com/skills.json and help me choose and install the public skill that fits my project."
           label="Choose a public skill"
-          buttonLabel="Copy prompt for your agent"
+          buttonLabel="Copy selection prompt"
+          copiedLabel="Selection prompt copied"
+          disclosureLabel="Read or select the selection prompt"
         />
       </section>
       <p className="muted">
@@ -1379,7 +1382,6 @@ export function App({ path, data }: AppProps): ReactElement {
                 <Prompt
                   prompt={data.prompt}
                   instructionPacket={data.instructionPacket}
-                  home
                 />
                 <a className="browse-link" href="/guide">
                   <Icon name="book-open" size={17} />

@@ -125,7 +125,11 @@ export function CopyText({
         </button>
         {instruction && <span>{instruction}</span>}
       </div>
-      <div className="copy-status" role="status" aria-live="polite">
+      <div
+        className={`copy-status${status === "copied" ? " sr-only" : ""}`}
+        role="status"
+        aria-live="polite"
+      >
         {status === "copied" && `${copiedLabel}. ${instruction}`}
         {status === "failed" &&
           "Copy did not work. Select the text and copy it using your device's menu."}
