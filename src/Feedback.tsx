@@ -229,7 +229,7 @@ export function Feedback(): ReactElement {
               <label htmlFor={`${id}-phase`}>
                 Which part of the process?
                 <select id={`${id}-phase`} name="phase" defaultValue="general">
-                  <option value="general">General / more than one phase</option>
+                  <option value="general">General / multiple phases</option>
                   <option value="1">Phase 1</option>
                   <option value="2">Phase 2</option>
                   <option value="3">Phase 3</option>
