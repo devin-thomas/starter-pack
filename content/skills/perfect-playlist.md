@@ -47,7 +47,7 @@ Perfect Playlist uses a deterministic final-mile approach where discovery is sep
 
 Perfect Playlist is available as an agent skill. Point your agent at it when you want to create a playlist:
 
-```
+```text
 Read the Perfect Playlist skill and help me build a playlist.
 ```
 

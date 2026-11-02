@@ -48,7 +48,7 @@ None for auditing or debugging existing apps. For new builds, a web app foundati
 
 PWA Development is available as an agent skill. Point your agent at it for any PWA lifecycle work:
 
-```
+```text
 Read the PWA Development skill and help me add offline support to this app.
 ```
 

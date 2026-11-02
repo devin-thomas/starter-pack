@@ -862,6 +862,10 @@ h3 {
   border: 1px solid var(--line);
   border-radius: 7px;
 }
+.prose pre:has(> code.language-text) {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 .prose table {
   display: block;
   max-width: 100%;

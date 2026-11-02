@@ -52,7 +52,7 @@ When Quick Build is part of Starter Pack, reuse the Codex readiness checkpoint (
 
 Quick Build is available as an agent skill. Point your agent at the canonical source and ask it to scope and build a small app:
 
-```
+```text
 Read the Quick Build skill and help me build [your idea].
 ```
 
