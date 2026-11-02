@@ -30,6 +30,7 @@
     "verify:style": "node scripts/style-guide-surfaces.mjs && node scripts/godot-style-guide-surfaces.mjs && node scripts/kotlin-style-guide-surfaces.mjs && node scripts/companion-style-guide-surfaces.mjs",
     "test:routes": "tsx --test scripts/legacy-routing.test.ts scripts/local-deployment.test.ts scripts/seo-migration.test.ts",
     "test:controls": "node scripts/react-controls-browser.mjs",
+    "test:usability": "node scripts/site-usability-browser.mjs",
     "verify:legacy": "tsx scripts/verify-legacy.ts"
   },
   "dependencies": {

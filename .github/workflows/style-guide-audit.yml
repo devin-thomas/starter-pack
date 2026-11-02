@@ -8,10 +8,10 @@ on:
         type: boolean
         default: false
   pull_request:
-    paths: ['content/style/**', 'scripts/**', 'src/**', 'tsconfig*.json', 'package*.json', '.github/workflows/style-guide-audit.yml']
+    paths: ['content/style/**', 'content/skills/**', 'content/pages/cloudflare-iphone.md', 'scripts/**', 'src/**', 'tsconfig*.json', 'package*.json', '.github/workflows/style-guide-audit.yml']
   push:
     branches: [main]
-    paths: ['content/style/**', 'scripts/**', 'src/**', 'tsconfig*.json', 'package*.json', '.github/workflows/style-guide-audit.yml']
+    paths: ['content/style/**', 'content/skills/**', 'content/pages/cloudflare-iphone.md', 'scripts/**', 'src/**', 'tsconfig*.json', 'package*.json', '.github/workflows/style-guide-audit.yml']
 
 permissions:
   contents: read
@@ -47,6 +47,11 @@ jobs:
         env:
           STYLE_BROWSER_MODULE: file:///tmp/style-audit-browser/node_modules/playwright/index.mjs
         run: npm run test:controls
+      - name: Verify prompt readability and core website usability
+        env:
+          STYLE_BROWSER_MODULE: file:///tmp/style-audit-browser/node_modules/playwright/index.mjs
+          USABILITY_BROWSER_OUTPUT: ${{ runner.temp }}/site-usability-report
+        run: npm run test:usability
       - name: Verify canonical live resources after owner-approved release
         if: github.event_name == 'workflow_dispatch' && inputs.verify_live
         run: |
@@ -82,6 +87,7 @@ jobs:
             audit-live-companions.json
             audit-source-revision.txt
             style-guide-browser-report/
+            ${{ runner.temp }}/site-usability-report/
             content/style/typescript.md
             content/style/godot.md
             content/style/kotlin.md
