@@ -191,6 +191,12 @@ p {
   border-left: 1px solid var(--line-strong);
   margin: 0 5px;
 }
+.header-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
 .header-guide {
   display: flex;
   align-items: center;
@@ -1516,9 +1522,6 @@ a.skill-card:hover {
   .header-status {
     display: none;
   }
-  .header-guide {
-    margin-left: auto;
-  }
   .phase-cards {
     grid-template-columns: 1fr;
   }
@@ -1678,9 +1681,6 @@ a.skill-card:hover {
   }
   .header-status {
     display: none;
-  }
-  .header-guide {
-    margin-left: auto;
   }
   .progress-rail {
     min-height: 72px;

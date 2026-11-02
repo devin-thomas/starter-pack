@@ -1312,10 +1312,19 @@ export function App({ path, data }: AppProps): ReactElement {
           <span className="status-divider" />
           No account required
         </div>
-        <a className="header-guide" href={styleRoute ? "/style" : "/skills"}>
-          <Icon name="book-open" size={16} />
-          {styleRoute ? "Style guides" : "Skills"}
-        </a>
+        <nav className="header-links" aria-label="Site links">
+          <a
+            className="header-guide"
+            href={styleRoute ? "/style" : "/skills"}
+            aria-label={styleRoute ? "Style guides" : undefined}
+          >
+            <Icon name="book-open" size={16} />
+            {styleRoute ? "Style" : "Skills"}
+          </a>
+          <a className="header-guide" href="/contact">
+            Feedback
+          </a>
+        </nav>
       </header>
       {!styleRoute && (
         <nav className="progress-rail" aria-label="The three phases">
