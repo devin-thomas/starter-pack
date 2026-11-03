@@ -1,8 +1,8 @@
 ---
 name: starter-pack
 description: Start, resume, or inspect Starter Pack learner progress; route the current phase to its focused resources.
-version: 0.2.10
-updated: 2026-10-15
+version: 0.2.11
+updated: 2026-11-02
 ---
 
 # Starter Pack
