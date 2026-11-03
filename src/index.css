@@ -59,7 +59,8 @@ a:focus-visible,
 button:focus-visible,
 textarea:focus-visible,
 input:focus-visible,
-summary:focus-visible {
+summary:focus-visible,
+pre[tabindex]:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
@@ -1537,6 +1538,11 @@ a.skill-card:hover {
 .style-guide-prose pre code {
   padding: 0;
   background: transparent;
+}
+.style-guide-intro pre:has(> code[class*="language-"]:not(.language-text)),
+.style-guide-prose pre:has(> code[class*="language-"]:not(.language-text)) {
+  white-space: pre;
+  overflow-wrap: normal;
 }
 .style-guide-prose ul {
   padding-left: 22px;

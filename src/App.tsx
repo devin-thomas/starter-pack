@@ -5,6 +5,7 @@ import type {
   ReactElement,
   ReactNode,
   SetStateAction,
+  SyntheticEvent,
 } from "react";
 import { CopyText } from "./CopyText";
 import siteOrigins from "./site-origin.json";
@@ -227,7 +228,22 @@ function Prompt({
         </p>
       )}
       {!phase2 && instructionPacket && (
-        <details className="prompt-explainer packet-recovery">
+        <details
+          className="prompt-explainer packet-recovery"
+          onToggle={(event: SyntheticEvent<HTMLDetailsElement>): void => {
+            const section: HTMLDetailsElement = event.currentTarget;
+            if (!section.open) return;
+            const action: HTMLButtonElement | null = section.querySelector(
+              ".prompt-controls button",
+            );
+            const bounds: DOMRect | undefined = action?.getBoundingClientRect();
+            if (
+              bounds &&
+              (bounds.top < 0 || bounds.bottom > window.innerHeight)
+            )
+              section.scrollIntoView({ block: "start", behavior: "instant" });
+          }}
+        >
           <summary>Can't open the guide? Copy instruction packet</summary>
           <CopyText
             text={instructionPacket}

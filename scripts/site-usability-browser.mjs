@@ -323,6 +323,15 @@ try {
     assert(observations.every((item) => item.whiteSpace === "pre"), "Program code preserves line structure.");
     assert(observations.every((item) => ["auto", "scroll"].includes(item.overflowX)), "Program code retains an accessible horizontal scroll region.");
     assert(observations.some((item) => item.scrollWidth > item.clientWidth + 1 && item.scrollLeft > 0), "A real long TypeScript example must remain horizontally scrollable.");
+    const longIndex = observations.findIndex((item) => item.scrollWidth > item.clientWidth + 1);
+    const scrollRegion = blocks.nth(longIndex).locator("..");
+    assert.equal(await scrollRegion.getAttribute("tabindex"), "0", "Keyboard users can reach the code region.");
+    assert.equal(await scrollRegion.getAttribute("aria-label"), "Scrollable code example");
+    await scrollRegion.evaluate((node) => { node.scrollLeft = 0; });
+    await scrollRegion.focus();
+    await page.keyboard.press("ArrowRight");
+    await page.waitForTimeout(200);
+    assert(await scrollRegion.evaluate((node) => node.scrollLeft > 0), "Keyboard scroll moves the code region.");
     await noPageOverflow();
     return { blocks: observations.length, scrollable_examples: observations.filter((item) => item.scrollLeft > 0).length };
   });

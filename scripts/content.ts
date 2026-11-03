@@ -98,6 +98,13 @@ function accentHeadings(html: string) {
   );
 }
 
+function focusableProgramExamples(html: string) {
+  return html.replace(
+    /<pre><code class="language-(?!text(?:\s|"))([^"]+)">/g,
+    '<pre tabindex="0" role="region" aria-label="Scrollable code example"><code class="language-$1">',
+  );
+}
+
 export const origin = siteOrigins.canonicalOrigin;
 export let routes: readonly string[] = [...staticRoutes];
 export function addSkillRoutes(slugs: readonly string[]): void {
@@ -157,8 +164,8 @@ export async function loadContent(): Promise<SiteData> {
         .replace(/^> \*\*In progress\.\*\*[^\n]*\r?\n+/m, "")
         .replace(/^For agents:[^\n]*\r?\n+/m, "")
         .replace(/^## [A-Z]+\d{3} — /gm, "## ");
-      const introHtml = accentHeadings(await renderProse(introMarkdown));
-      const html = accentHeadings(await renderProse(humanBody));
+      const introHtml = focusableProgramExamples(accentHeadings(await renderProse(introMarkdown)));
+      const html = focusableProgramExamples(accentHeadings(await renderProse(humanBody)));
       const outline = [...html.matchAll(/<h2\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)]
         .map((match) => ({
           id: match[1],
