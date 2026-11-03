@@ -401,7 +401,7 @@ h3 {
 }
 .primary-action {
   border: 1px solid color-mix(in srgb, var(--accent) 70%, white);
-  background: var(--accent);
+  background: #1768c9;
   color: white;
   box-shadow: 0 10px 25px color-mix(in srgb, var(--accent) 22%, transparent);
 }
@@ -874,6 +874,8 @@ h3 {
 }
 .prose pre {
   overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   background: var(--surface);
   padding: 16px;
   border: 1px solid var(--line);
@@ -914,7 +916,7 @@ h3 {
   margin: 0;
 }
 .notice a {
-  color: var(--accent);
+  color: var(--phase-build);
   text-decoration: underline;
 }
 .resource-list {
