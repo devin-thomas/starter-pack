@@ -1211,6 +1211,9 @@ function StyleAgentLinks({ guide }: StyleGuideProps): ReactElement {
       <button type="button" onClick={copyAgentLink}>
         {copyStatus === "copied" ? "Agent link copied" : "Copy for agent"}
       </button>
+      <a href={`${guide.route}.md`} download>
+        Download agent guide
+      </a>
       <span className="sr-only" role="status">
         {copyStatus === "copied" ? "Style guide address copied." : ""}
       </span>

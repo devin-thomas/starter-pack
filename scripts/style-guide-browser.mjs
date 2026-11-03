@@ -86,6 +86,15 @@ try {
         `${guide.slug}: clipboard link`,
       );
 
+      const downloadLink = page.getByRole("link",{name:"Download agent guide",exact:true});
+      const downloadBox = await downloadLink.boundingBox();
+      const copyBox = await page.getByRole("button",{name:"Agent link copied",exact:true}).boundingBox();
+      assert(downloadBox && copyBox && downloadBox.width >= 24 && downloadBox.height >= 24 && copyBox.width >= 24 && copyBox.height >= 24,`${guide.slug}: controls have usable targets`);
+      assert(downloadBox.x >= copyBox.x + copyBox.width + 8 || downloadBox.y >= copyBox.y + copyBox.height + 8,`${guide.slug}: controls are separated`);
+      assert.equal(await downloadLink.getAttribute("href"), `/style/${guide.slug}.md`, `${guide.slug}: agent download address`);
+      const [download] = await Promise.all([page.waitForEvent("download"),downloadLink.click()]);
+      assert.deepEqual(await readFile(await download.path()),await readFile(path.join(root,`style/${guide.slug}.md`)),`${guide.slug}: downloaded guide bytes`);
+
       const anchor = await page.locator(".style-guide-prose h2").nth(21).getAttribute("id");
       await page.goto(`${origin}/style/${guide.slug}#${anchor}`,{waitUntil:"networkidle"});
       await page.reload({waitUntil:"networkidle"});
@@ -119,7 +128,7 @@ try {
     await page.screenshot({path:path.join(output,`${guide.slug.toLowerCase()}-mobile-clipboard-fallback.png`)});
   }
 
-  report.checks.push("hub navigation", "human intro", "all rule headings", "hidden internal IDs", "clipboard success", "clipboard denial fallback", "small mobile overflow", "anchor reload", "no application page errors");
+  report.checks.push("hub navigation", "human intro", "all rule headings", "hidden internal IDs", "clipboard success", "agent guide download", "clipboard denial fallback", "small mobile overflow", "anchor reload", "no application page errors");
   await context.close();
   assert.deepEqual(report.pageErrors,[]);
 } catch(error) {

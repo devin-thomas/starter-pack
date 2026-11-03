@@ -1470,13 +1470,16 @@ a.skill-card:hover {
 .style-agent-inline {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 16px;
   margin-left: auto;
   color: var(--muted);
   font-size: 12px;
 }
 .style-agent-inline button,
 .style-agent-inline a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
   border: 0;
   padding: 2px 0;
   background: transparent;
