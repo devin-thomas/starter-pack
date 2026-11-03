@@ -435,7 +435,7 @@ async function loadHttp() {
   const requestEpoch = epoch;
   try {
     const response = await fetch(new URL("./starter-progress.json", location.href), { cache: "no-store", credentials: "same-origin", redirect: "error", signal: AbortSignal.timeout(5000) });
-    if (!response.ok) throw new Error("The saved progress file could not be loaded. Open a file, or ask your agent to check the local server or your site sign-in.");
+    if (!response.ok) throw new Error("Could not load starter-progress.json automatically. Your saved progress may have another filename; check the local server or site sign-in if needed.");
     if (Number(response.headers.get("content-length")) > maxBytes) throw new Error("The saved progress file exceeds 2 MB.");
     const raw = await response.text();
     if (requestEpoch !== epoch || mode !== "http") return;
