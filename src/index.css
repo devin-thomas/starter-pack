@@ -1341,6 +1341,13 @@ a.skill-card:hover {
   mask: no-repeat center / contain;
   -webkit-mask: no-repeat center / contain;
 }
+@media (forced-colors: active) {
+  .ui-icon,
+  .brand-icon-mask {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+}
 .brand-icon-neon {
   color: #34d59a;
 }
