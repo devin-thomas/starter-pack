@@ -412,18 +412,23 @@ function fail(error: unknown) {
   loadFailed = true;
   const message = error instanceof Error ? error.message : "The progress file could not be read.";
   notice.textContent = `${message}${progress ? " Showing the last successfully loaded record." : " Open a valid progress file to begin."}`;
-  if (progress && lastSource) element("source").textContent = `${lastSource} · Last successfully loaded copy`;
+  if (progress && lastSource) {
+    const source = mode === "file" ? lastSource.replace(" · Refreshes while this page is visible.", "") : lastSource;
+    element("source").textContent = `${source} · Last successfully loaded copy`;
+  }
 }
 
 async function loadFile(file: File) {
   const requestEpoch = ++epoch;
+  // A manual choice takes precedence even when the chosen file is invalid.
+  // Otherwise an HTTP poll can erase the failure and imply the choice worked.
+  mode = "file";
+  updateRefreshLabel();
   try {
     if (file.size > maxBytes) throw new Error("This file exceeds 2 MB. Ask your agent to keep large artifacts outside the progress file.");
     const raw = await file.text();
     if (requestEpoch !== epoch) return;
     accept(raw, `${file.name} · Reopen after your agent saves changes.`, true);
-    mode = "file";
-    updateRefreshLabel();
   } catch (error) {
     if (requestEpoch === epoch) fail(error);
   }
