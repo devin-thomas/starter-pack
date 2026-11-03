@@ -138,5 +138,7 @@ test("phone-only and returning learners are not treated as having a computer acc
   assert.match(phase, /A computer or existing subscription is not required to begin/);
   assert.ok(packet.includes(skill.trim()), "The fallback packet includes the current companion guidance");
   assert.ok(packet.includes("A computer or existing subscription is not required to begin"));
+  assert.match(packet.slice(0, 2000), /A first visit or missing pasted file does not prove the learner has no prior progress/);
+  assert.match(packet.slice(0, 2000), /do not claim a new record exists without confirmation/);
   assert.doesNotMatch(phase, /Sign in with the account you use on your computer/);
 });
