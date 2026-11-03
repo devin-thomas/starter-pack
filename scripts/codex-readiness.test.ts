@@ -124,3 +124,19 @@ test("learner-facing proof copy describes the same file across both checks", asy
     assert.ok(text.includes("hello Codex"), `${label} describes the resumed content check`);
   }
 });
+
+test("phone-only and returning learners are not treated as having a computer account or a fresh start", async () => {
+  const [skill, phase, packet] = await Promise.all([
+    readFile("public/skills/starter-pack/current/SKILL.md", "utf8"),
+    readFile("content/phases/1.md", "utf8"),
+    instructionPacket(),
+  ]);
+  assert.match(skill, /Missing pasted progress does not mean the learner is new/);
+  assert.match(skill, /ask whether they have a saved record or want help finding it before creating fresh state/);
+  assert.match(skill, /do not assume a computer, account, or subscription exists/);
+  assert.match(skill, /already using a supported app and can send messages/);
+  assert.match(phase, /A computer or existing subscription is not required to begin/);
+  assert.ok(packet.includes(skill.trim()), "The fallback packet includes the current companion guidance");
+  assert.ok(packet.includes("A computer or existing subscription is not required to begin"));
+  assert.doesNotMatch(phase, /Sign in with the account you use on your computer/);
+});
