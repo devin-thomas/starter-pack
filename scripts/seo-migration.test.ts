@@ -38,3 +38,37 @@ test("every indexable reading route has one new canonical, sitemap entry and exa
     assert.equal(readingRoute(path), undefined, path);
   }
 });
+
+test("reading pages identify themselves and link their public Markdown and discovery resources", async () => {
+  const data = await loadContent();
+  for (const route of routes) {
+    const url = origins.canonicalOrigin + route;
+    const file = route === "/" ? "/index" : route;
+    const html = await readFile(`dist${file}.html`, "utf8");
+    const head = html.slice(0, html.indexOf("</head>"));
+    const schema = JSON.parse(head.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)?.[1] ?? "null");
+    assert.ok(schema?.name && schema.description, route);
+    assert.equal(schema.url, url);
+    assert.equal(schema["@context"], "https://schema.org");
+    assert.ok(["TechArticle", "WebPage"].includes(schema["@type"]), route);
+    if (schema.dateModified) assert.match(schema.dateModified, /^\d{4}-\d{2}-\d{2}$/);
+    const title = head.match(/<title>([^<]+)<\/title>/)?.[1];
+    const description = head.match(/<meta name="description" content="([^"]+)"/)?.[1];
+    assert.ok(title && description, route);
+    assert.ok(head.includes(`property="og:title" content="${title}"`), route);
+    assert.ok(head.includes(`property="og:description" content="${description}"`), route);
+    assert.ok(head.includes(`property="og:url" content="${url}"`), route);
+    assert.ok(head.includes(`rel="alternate" type="text/markdown" href="${origins.canonicalOrigin}${file}.md"`), route);
+    assert.ok(head.includes(`rel="describedby" href="${origins.canonicalOrigin}/llms.txt"`), route);
+    const markdown = await readFile(`dist${file}.md`, "utf8");
+    assert.ok(markdown.trim() && !/^\s*(?:<!doctype|<html)/i.test(markdown), route);
+  }
+  const styles = await readFile("dist/style.md", "utf8");
+  for (const guide of data.styles.guides) {
+    assert.ok(styles.includes(guide.route + ".md"), guide.title);
+  }
+  const instructions = await readFile("dist/AGENTS.md", "utf8");
+  assert.ok(instructions.includes("/agent/start.md"));
+  assert.match(instructions, /^## /m);
+  assert.ok((await readFile("dist/llms.txt", "utf8")).includes("/AGENTS.md"));
+});

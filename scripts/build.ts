@@ -4,6 +4,7 @@ import { build } from "vite";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { App } from "../src/App";
+import { addPageHead } from "./page-head";
 import { buildWorkbench } from "./workbench";
 import { jsonResourceReferences, markdownResourceReferences } from "./style-guide-links";
 import { Ajv2020 } from "ajv/dist/2020.js";
@@ -50,34 +51,13 @@ for (const [schemaName, instancePaths] of [
   }
 }
 const template = await readFile("dist/index.html", "utf8");
-const titles: Record<string, string> = {
-  "/": "Starter Pack",
-  "/guide": "Browse the guide",
-  "/style": "Style guides",
-  "/style/TypeScript": "TypeScript Style Guide",
-  "/style/Godot": "Godot Style Guide",
-  "/recommendations": "Recommendations",
-  "/resources": "Skills and agent resources",
-  "/artifacts": "Project templates",
-  "/about": "About this pack",
-  "/contact": "Feedback and project stories",
-  "/help/cloudflare-iphone": "Deploy a static site to Cloudflare from your iPhone",
-  "/skills": "Skills",
-  "/skills/recommendations": "Skill recommendations",
-};
 const analyticsConfig = JSON.parse(await readFile("analytics.json", "utf8"));
 const analyticsToken =
   process.env.CLOUDFLARE_WEB_ANALYTICS_TOKEN || analyticsConfig.beaconId;
 if (analyticsToken && !/^[a-f0-9]{32}$/i.test(analyticsToken))
   throw new Error("Invalid Cloudflare Web Analytics token");
 for (const route of routes) {
-  const phase = data.phases.find((item) => route === `/phases/${item.order}`);
-  const skillSlug = route.startsWith("/skills/") ? route.slice("/skills/".length) : null;
-  const skillEntry = skillSlug ? data.skills.manifest.find((s) => s.slug === skillSlug) : null;
-  const styleGuide = data.styles.guides.find((guide) => guide.route === route);
-  const title = phase?.title || (skillEntry ? skillEntry.title : null) || (styleGuide ? `${styleGuide.title} Style Guide` : null) || titles[route];
-  const description = styleGuide?.humanSummary || "Make your first working app, then build and deploy something meaningful with your own agent.";
-  const html = template
+  const html = addPageHead(template, route, data)
     .replace(
       "<!--app-html-->",
       renderToString(createElement(App, { path: route, data })),
@@ -85,14 +65,6 @@ for (const route of routes) {
     .replace(
       "<!--app-data-->",
       `<script id="site-data" type="application/json">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`,
-    )
-    .replace(
-      "<title>Starter Pack | Uppercut Labs</title>",
-      `<title>${title} | Uppercut Labs</title>`,
-    )
-    .replace(
-      "</head>",
-      `<link rel="canonical" href="${origin}${route}" /><meta name="description" content="${description.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" /></head>`,
     )
     .replace(
       "</body>",

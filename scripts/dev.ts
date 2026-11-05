@@ -4,6 +4,7 @@ import path from "node:path";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { generateResources, loadContent, routes } from "./content";
+import { addPageHead, markdownPath } from "./page-head";
 import { buildWorkbench } from "./workbench";
 
 const server = await createServer({
@@ -31,6 +32,7 @@ server.middlewares.use(async (request, response, next) => {
     return;
   }
   if (
+    routes.some(route => markdownPath(route) === pathname) ||
     /^\/(guide|about)\.(md|json)$/.test(pathname) ||
     /^\/help\/cloudflare-iphone\.(md|json)$/.test(pathname) ||
     /^\/phases\/[123]\.(md|json)$/.test(pathname) ||
@@ -38,6 +40,7 @@ server.middlewares.use(async (request, response, next) => {
     /^\/skills\/[a-z-]+\/SKILL\.md$/.test(pathname) ||
     /^\/skills(?:\/[a-z-]+)?\.(md|json)$/.test(pathname) ||
     [
+      "/AGENTS.md",
       "/agent/catalog.json",
       "/agent/phase-1-packet.txt",
       "/recommendations.json",
@@ -68,7 +71,7 @@ server.middlewares.use(async (request, response, next) => {
       pathname,
       await readFile("index.html", "utf8"),
     );
-    const html = template
+    const html = addPageHead(template, pathname, data)
       .replace(
         "<!--app-html-->",
         renderToString(createElement(App, { path: pathname, data })),

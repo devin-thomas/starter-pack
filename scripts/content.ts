@@ -204,6 +204,7 @@ export async function loadContent(): Promise<SiteData> {
         summary: String(data.summary),
         status: String(data.status),
         order,
+        updated: data.updated instanceof Date ? data.updated.toISOString().slice(0, 10) : String(data.updated),
         html,
         outline,
       };
@@ -591,8 +592,78 @@ export async function generateResources(data: SiteData, output: string) {
     `${output}/sitemap.xml`,
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${routes.map((route) => `<url><loc>${origin}${route}</loc></url>`).join("")}</urlset>`,
   );
-  await write(
-    `${output}/llms.txt`,
-    `# Starter Pack\n\nA guide by Devin Thomas at Uppercut Labs. Fetch only the resource needed for the current action.\n\n- [Start](${origin}/agent/start.md)\n- [Catalog](${origin}/agent/catalog.json)\n- [Requirements](${origin}/agent/requirements.json)\n- [Skills and primary npm installer](${origin}/skills.md)\n${entries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n${styleEntries.map((entry) => `- [${entry.title}](${entry.markdown})`).join("\n")}\n- [Style guide catalog](${origin}/style/catalog.json)\n- [Recommendations](${origin}/recommendations.json)\n`,
-  );
+  const link = (title: string, route: string) => `[${title}](${origin}${route})`;
+  const phaseList = data.phases.map((phase) =>
+    `- ${link(`Phase ${phase.order} — ${phase.title}`, `/phases/${phase.order}.md`)} — ${phase.summary}`).join("\n");
+  const styleList = styleCatalog.map((guide) =>
+    `- [${guide.title}](${guide.markdown}) — ${guide.summary}`).join("\n");
+  const startLinks = [
+    link("Start or resume with a learner", "/agent/start.md"),
+    link("Resource catalog", "/agent/catalog.json"),
+    link("Phase requirements", "/agent/requirements.json"),
+  ].map((item) => `- ${item}`).join("\n");
+
+  await write(`${output}/index.md`, [
+    "# Starter Pack",
+    "Make your first working app with an AI companion, then build and deploy your own project.",
+    `Start with the ${link("starting prompt", "/prompts/get-started.txt")} or ${link("browse the guide", "/guide.md")}. If the companion cannot open the prompt's instructions, use the ${link("Phase 1 instruction packet", "/agent/phase-1-packet.txt")}.`,
+    "## Phases", phaseList,
+    `On a computer, see ${link("Build with Codex", "/guide#build-with-codex")} for setup, saving progress and continuing a session.`,
+  ].join("\n\n") + "\n");
+  await write(`${output}/style.md`, `# Style guides\n\n${styleList}\n\n${link("Style guide catalog (JSON)", "/style/catalog.json")}\n`);
+  await write(`${output}/recommendations.md`, [
+    "# Starter Pack recommendations",
+    "Choose one development harness and one instant builder. Each entry gives its role and the reason for the recommendation.",
+    ...data.recommendations.map((item) => [
+      `## [${item.name}](${item.url})`,
+      `${item.requirement} · ${item.category} · Checked ${item.checked_at}`,
+      item.reason,
+      ...(item.referral ? [`[Optional referral](${item.referral.url}). ${item.referral.disclosure}`] : []),
+    ].join("\n\n")),
+  ].join("\n\n") + "\n");
+  await write(`${output}/skills/recommendations.md`, [
+    "# Third-party skill recommendations",
+    ...data.skills.recommendations.map((group) => [
+      `## ${group.group}`, group.description,
+      group.items.map((item) =>
+        `- [${item.title}](${item.url}) by ${item.author} — ${item.description}`).join("\n"),
+    ].join("\n\n")),
+    link("Uppercut Labs skills", "/skills.md"),
+  ].join("\n\n") + "\n");
+  await write(`${output}/resources.md`, [
+    "# Skills and agent resources", startLinks,
+    [link("Public skills and installation instructions", "/skills.md"),
+      link("Companion resource directory and fallback links", "/agent/resource-links.md"),
+      link("Style guides", "/style.md"), link("Project templates", "/artifacts.md"),
+    ].map((item) => `- ${item}`).join("\n"),
+    "## Phase guides", phaseList,
+  ].join("\n\n") + "\n");
+  const artifacts = await readFile("public/artifacts/index.md", "utf8");
+  await write(`${output}/artifacts.md`, `${artifacts.trimEnd()}\n\n## Progress Workbench\n\n${link("Download Progress Workbench", "/artifacts/progress-workbench/index.html")} and follow the ${link("Workbench instructions", "/artifacts/progress-workbench/README.md")}.\n`);
+
+  // The public About page is the source of the contact and submission guidance.
+  const about = await readFile("content/pages/about.md", "utf8");
+  const contact = normalizeGeneratedText(about).split("\n## Feedback and project stories\n")[1]?.split("\n## ")[0].trim();
+  if (!contact) throw new Error("Missing feedback and project stories section in about.md");
+  await write(`${output}/contact.md`, `# Feedback and project stories\n\n${contact}\n`);
+
+  await write(`${output}/AGENTS.md`, [
+    "# Using Starter Pack with an agent",
+    "## Usage",
+    `For questions about the public curriculum, look up the relevant ${link("guide", "/guide.md")}, ${link("style guide", "/style.md")} or ${link("skill", "/skills.md")}. Fetch only the resource needed for the current task.`,
+    "When a learner asks to start or resume the pack, follow the companion instructions and preserve their existing progress.",
+    startLinks,
+    "## Setup and installation",
+    `For computer setup, follow the ${link("Computer Setup instructions", "/skills/computer-setup/SKILL.md")} and review the proposed installation with the learner. For an individual skill, use the installation instructions in its ${link("public skill listing", "/skills.md")}.`,
+    "## Verification and limits",
+    `Check progress against the ${link("phase requirements", "/agent/requirements.json")}. If a resource is unavailable, use the exact fallback in the ${link("resource directory", "/agent/resource-links.md")}. The learner controls installation, account changes and publication.`,
+  ].join("\n\n") + "\n");
+  await write(`${output}/llms.txt`, [
+    "# Starter Pack",
+    "> A guide by Devin Thomas at Uppercut Labs for building and deploying software with your own agent.",
+    "## Using the pack", `- ${link("Agent instructions", "/AGENTS.md")}\n${startLinks}`,
+    "## Curriculum", phaseList,
+    "## Style guides", `${styleList}\n- ${link("Style guide catalog", "/style/catalog.json")}`,
+    "## Skills and tools", `- ${link("Skills and primary npm installer", "/skills.md")}\n- ${link("Recommendations", "/recommendations.json")}`,
+  ].join("\n\n") + "\n");
 }

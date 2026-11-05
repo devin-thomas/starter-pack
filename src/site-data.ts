@@ -65,6 +65,7 @@ export type PhaseOutlineEntry = {
 };
 
 export type PhaseEntry = {
+  readonly updated: string;
   readonly id: string;
   readonly title: string;
   readonly summary: string;
