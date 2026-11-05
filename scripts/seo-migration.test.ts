@@ -41,6 +41,7 @@ test("every indexable reading route has one new canonical, sitemap entry and exa
 
 test("reading pages identify themselves and link their public Markdown and discovery resources", async () => {
   const data = await loadContent();
+  const titles = new Set<string>();
   for (const route of routes) {
     const url = origins.canonicalOrigin + route;
     const file = route === "/" ? "/index" : route;
@@ -55,6 +56,8 @@ test("reading pages identify themselves and link their public Markdown and disco
     const title = head.match(/<title>([^<]+)<\/title>/)?.[1];
     const description = head.match(/<meta name="description" content="([^"]+)"/)?.[1];
     assert.ok(title && description, route);
+    assert.ok(!titles.has(title), `Duplicate title on ${route}`);
+    titles.add(title);
     assert.ok(head.includes(`property="og:title" content="${title}"`), route);
     assert.ok(head.includes(`property="og:description" content="${description}"`), route);
     assert.ok(head.includes(`property="og:url" content="${url}"`), route);

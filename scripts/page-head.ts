@@ -52,7 +52,7 @@ export function addPageHead(template: string, route: string, data: SiteData) {
     url,
     dateModified,
   };
-  const fullTitle = escapeHtml(`${title} | Uppercut Labs`);
+  const fullTitle = escapeHtml(`${title}${skill ? " skill" : ""} | Uppercut Labs`);
   const content = escapeHtml(description);
   const head = [
     `<link rel="canonical" href="${url}" />`,
