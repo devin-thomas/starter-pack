@@ -27,7 +27,7 @@ Copy these exactly when your app asks:
 3. Upload the icon you saved. You can only set the icon here: ChatGPT cannot change it after the plugin is created.
 4. Paste the name `Starter Pack` and the description `Read-only Starter Pack course guidance: phase steps, your next step and current skills.`
 5. Paste the URL `https://starter.uppercut-labs.com/mcp`.
-6. Set **Authentication** to **No authentication**, tick **I understand**, then choose **Create as a plugin**.
+6. Set **Authentication** to **No authentication**, then tick **I understand and want to continue**. Tick this last; changing the URL clears it. Then choose **Create as a plugin**.
 7. Choose **Connect**. In a chat, ask: "Use Starter Pack: what does Phase 1 require?"
 
 **Undo.** In Claude, open **Connectors**, select **Starter Pack** and choose **Remove**. A connector cannot be renamed, and Claude allows only one connector per URL, so to fix a typo in the name, remove it and then add it again with the same URL. In Claude Code, run `claude mcp remove starter-pack`. In ChatGPT, open **Settings**, select the **Starter Pack** plugin and choose **Delete app**; to fix the icon, name or description, delete it and create it again with the steps above. Removing it changes nothing in your progress.

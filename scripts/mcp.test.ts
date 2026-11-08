@@ -306,4 +306,7 @@ test("the advertised icon is the published plugin icon and fits ChatGPT's upload
   assert.ok(source.length <= 10 * 1024, `icon is ${source.length} bytes; the form accepts at most 10 KB`);
   const guide = await readFile("content/pages/guide.md", "utf8");
   assert.match(guide, /\]\(\/plugins\/starter-pack-icon\.png\)/);
+  const order = ["Upload the icon", "Paste the name", "Paste the URL", "No authentication", "I understand", "Create as a plugin", "Choose **Connect**"].map((step) => guide.indexOf(step));
+  assert.ok(order.every((at, index) => at > 0 && (index === 0 || at > order[index - 1]!)), "ChatGPT steps keep the form's order; the URL field clears the confirmation box");
+  assert.match(guide, /Tick this last; changing the URL clears it\./);
 });
