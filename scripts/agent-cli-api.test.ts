@@ -442,3 +442,10 @@ test("the site's llms.txt lists both lessons in level order and the API's docume
     await rm(folder, { recursive: true, force: true });
   }
 });
+
+test("the Phase 3 page's Level 2 section links both lessons", async () => {
+  const page = await text("content/phases/3.md");
+  const level2 = page.slice(page.indexOf("### Level 2: Operable"), page.indexOf("### Level 3"));
+  assert.ok(level2.includes("](/phases/3/agent-cli)") && level2.includes("](/phases/3/agent-api)"));
+  assert.match(page, /^status: preview$/m);
+});
