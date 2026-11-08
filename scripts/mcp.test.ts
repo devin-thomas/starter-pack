@@ -310,3 +310,12 @@ test("the advertised icon is the published plugin icon and fits ChatGPT's upload
   assert.ok(order.every((at, index) => at > 0 && (index === 0 || at > order[index - 1]!)), "ChatGPT steps keep the form's order; the URL field clears the confirmation box");
   assert.match(guide, /Tick this last; changing the URL clears it\./);
 });
+
+test("the homepage links to the guide's connector section and offers no Codex sign-in", async () => {
+  const home = await readFile("dist/index.html", "utf8");
+  const guide = await readFile("dist/guide.html", "utf8");
+  const anchor = "optional-connect-the-starter-pack-to-claude-or-chatgpt";
+  assert.match(guide, new RegExp(`<h2 id="${anchor}"`), "the guide still has the connector section");
+  assert.match(home, new RegExp(`<a class="text-link" href="/guide#${anchor}">How to add the connector`));
+  assert.doesNotMatch(home, /BUILD WITH CODEX|codex-start|start Codex through your ChatGPT sign-in/);
+});
