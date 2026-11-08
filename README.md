@@ -46,7 +46,7 @@ Copyright (c) 2026 Devin Thomas. All rights reserved. You may read, examine, ref
 
 Found a confusing step or something that does not work? [Report a problem](https://github.com/devin-thomas/starter-pack/issues/new?template=bug_report.yml) with the page or phase, what you tried, and your device/browser/AI app. Reports are public: do not attach private progress files, conversations, account details, or credentials.
 
-For private feedback, feature requests, and project stories, use [the contact form](https://starter.uppercut-labs.com/contact) or email starter@devthomas.site. Story submissions include an optional permission-to-feature checkbox; nothing is published automatically.
+For private feedback, feature requests, and project stories, use [the contact form](https://starter.uppercut-labs.com/contact) or email starter@uppercut-labs.com. Story submissions include an optional permission-to-feature checkbox; nothing is published automatically.
 
 `src/worker.ts` routes static content and handles `/api/feedback`. It validates bounded JSON, checks the exact approved request origin, applies per-IP and overall per-location rate limits, and forwards escaped notification content to a private Make webhook. Make sends only to the owner's fixed recipient and responds with `{"ok":true}` after Gmail accepts the notification. No visitor-controlled recipient or automatic reply is used. Failures preserve the form text and never claim confirmed delivery. Cloudflare's rate limits are approximate per location, not a global spending cap. See [routing](ROUTING.md) and [telemetry preparation](TELEMETRY.md).
 

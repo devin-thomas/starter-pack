@@ -277,7 +277,7 @@ export async function handleFeedback(
   if (!env.FEEDBACK_WEBHOOK_URL)
     return reply(
       503,
-      "The form is temporarily unavailable. Please email starter@devthomas.site.",
+      "The form is temporarily unavailable. Please email starter@uppercut-labs.com.",
     );
   const ip: string | null = request.headers.get("CF-Connecting-IP");
   if (!ip) return reply(403, "Unable to verify this request.");
@@ -317,7 +317,7 @@ export async function handleFeedback(
   } catch {
     return reply(
       502,
-      "We couldn't confirm delivery. Your text is still here. Please email starter@devthomas.site.",
+      "We couldn't confirm delivery. Your text is still here. Please email starter@uppercut-labs.com.",
     );
   }
   const requestedId: string | null = request.headers.get("Idempotency-Key");
@@ -335,7 +335,7 @@ export async function handleFeedback(
     if (!env.FEEDBACK_DEDUP)
       return reply(
         503,
-        "The form is temporarily unavailable. Please email starter@devthomas.site.",
+        "The form is temporarily unavailable. Please email starter@uppercut-labs.com.",
       );
     digest = [
       ...new Uint8Array(
@@ -364,12 +364,12 @@ export async function handleFeedback(
       if (result["state"] !== "claimed")
         return reply(
           502,
-          "We couldn't confirm delivery. Your text is still here. A delayed notification may arrive; please email starter@devthomas.site rather than resending this message.",
+          "We couldn't confirm delivery. Your text is still here. A delayed notification may arrive; please email starter@uppercut-labs.com rather than resending this message.",
         );
     } catch {
       return reply(
         503,
-        "The form is temporarily unavailable. Your text is still here; please email starter@devthomas.site.",
+        "The form is temporarily unavailable. Your text is still here; please email starter@uppercut-labs.com.",
       );
     }
   }
@@ -411,7 +411,7 @@ export async function handleFeedback(
     );
     return reply(
       502,
-      "We couldn't confirm delivery. Your text is still here. Please try later or email starter@devthomas.site; a delayed notification may still arrive.",
+      "We couldn't confirm delivery. Your text is still here. Please try later or email starter@uppercut-labs.com; a delayed notification may still arrive.",
     );
   }
 }

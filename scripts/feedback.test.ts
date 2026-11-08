@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import worker, { handleFeedback, notification, parseSubmission, type FeedbackEnv } from "../src/worker";
 import siteOrigins from "../src/site-origin.json";
@@ -282,4 +283,13 @@ test("a confirmed retry returns success without a second webhook request", async
   assert.equal((await handleFeedback(request(base, headers), h.env, h.send)).status, 200);
   assert.equal((await handleFeedback(request(base, headers), h.env, h.send)).status, 200);
   assert.equal(h.calls.length, 1);
+});
+
+test("visitor-facing fallbacks name the current contact address", async () => {
+  for (const file of ["src/worker.ts", "src/Feedback.tsx", "content/pages/about.md"]) {
+    const text = await readFile(file, "utf8");
+    assert.doesNotMatch(text, /starter@devthomas\.site/, `${file} names the retired address`);
+  }
+  const worker = await readFile("src/worker.ts", "utf8");
+  assert.equal(worker.match(/email starter@uppercut-labs\.com/g)?.length, 6);
 });
