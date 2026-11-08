@@ -6,6 +6,7 @@ import { renderToString } from "react-dom/server";
 import { App } from "../src/App";
 import { addPageHead } from "./page-head";
 import { buildWorkbench } from "./workbench";
+import { exampleRoutedPaths } from "../src/example-sites";
 import { jsonResourceReferences, markdownResourceReferences } from "./style-guide-links";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
@@ -163,7 +164,9 @@ for (const file of outputFiles.filter(
       const href = attrs.get("href");
       if (!href) continue;
       const url = new URL(href, baseUrl);
-      if (/\.(md|json|txt)$/i.test(url.pathname) && !attrs.has("download"))
+      // Example sites model a learner's own website, which links its machine-readable files.
+      const exampleSite = path.resolve(file).startsWith(path.resolve("dist/examples") + path.sep);
+      if (/\.(md|json|txt)$/i.test(url.pathname) && !attrs.has("download") && !exampleSite)
         invalidLinks.add(
           `${file}: raw resource link ${href} must be a copyable URL or an explicit download`,
         );
@@ -211,6 +214,8 @@ for (const file of outputFiles.filter(
     const url = new URL(decodeHtml(reference), baseUrl);
     if (url.origin !== origin) continue;
     const pathname = decodeURIComponent(url.pathname);
+    // Moved (301) and withdrawn (410) example pages are answered by the Worker, not a file.
+    if (exampleRoutedPaths().has(pathname)) continue;
     const candidate = path.resolve("dist", "." + pathname);
     if (
       !candidate.startsWith(path.resolve("dist") + path.sep) &&

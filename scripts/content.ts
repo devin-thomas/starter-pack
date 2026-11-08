@@ -2,13 +2,14 @@ import { readFile, readdir, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
 import { Marked } from "marked";
-import type { SiteData, SkillLesson } from "../src/site-data";
+import type { LessonEntry, SiteData, SkillLesson } from "../src/site-data";
 import { skillInstallation, skillInstallationMarkdown } from "../src/skill-installation";
 import { googleResourcePolicy } from "./crawler-policy";
 import { createHash } from "node:crypto";
 import { parseRegistry, projectPhaseRequirements } from "../src/workbench/registry";
 import siteOrigins from "../src/site-origin.json";
 import { readingRoutes, staticRoutes } from "../src/reading-routes";
+import { generateExampleSite, loadExampleSite } from "./example-site";
 
 const headingIcons: Readonly<Record<string, string>> = {
   "How the companion works": "compass",
@@ -221,6 +222,30 @@ export async function loadContent(): Promise<SiteData> {
       };
     }),
   );
+  // Level lessons: one Markdown source each, rendered on their own reading route.
+  const lessons: LessonEntry[] = [];
+  for (const file of (await readdir("content/lessons")).filter((name) => name.endsWith(".md")).sort()) {
+    const { data, content } = matter(await readFile(`content/lessons/${file}`, "utf8"));
+    for (const field of ["id", "phase", "label", "title", "summary", "route", "status"]) {
+      if (typeof data[field] !== "string" || !data[field].trim())
+        throw new Error(`content/lessons/${file}: missing ${field}`);
+    }
+    if (`${data.id}.md` !== file || !/^\/phases\/[123]\/[a-z0-9-]+$/.test(data.route) ||
+        !staticRoutes.includes(data.route) || !Number.isInteger(data.level) || !data.updated)
+      throw new Error(`content/lessons/${file}: invalid lesson metadata`);
+    lessons.push({
+      id: data.id,
+      phase: data.phase,
+      level: data.level,
+      label: data.label,
+      title: data.title,
+      summary: data.summary,
+      route: data.route,
+      status: data.status,
+      updated: data.updated instanceof Date ? data.updated.toISOString().slice(0, 10) : String(data.updated),
+      html: accentHeadings(await renderProse(content.replace(/^# .+\r?\n/m, ""))),
+    });
+  }
   const recommendations: SiteData["recommendations"] = JSON.parse(
     await readFile("content/recommendations.json", "utf8"),
   );
@@ -335,6 +360,7 @@ export async function loadContent(): Promise<SiteData> {
 
   return {
     phases,
+    lessons,
     pages,
     recommendations,
     packages,
@@ -523,6 +549,19 @@ export async function generateResources(data: SiteData, output: string) {
       ),
     );
   }
+  for (const lesson of data.lessons) {
+    const raw = await readFile(`content/lessons/${lesson.id}.md`, "utf8");
+    const parsed = matter(raw);
+    await write(`${output}${lesson.route}.md`, parsed.content.trimStart());
+    await write(`${output}${lesson.route}.json`, JSON.stringify({
+      id: lesson.id, kind: "lesson", phase: lesson.phase, level: lesson.level,
+      title: lesson.title, summary: lesson.summary, status: lesson.status,
+      updated: lesson.updated, html: `${origin}${lesson.route}`,
+      markdown: parsed.content.trimStart(),
+    }, null, 2));
+  }
+  const exampleSite = await loadExampleSite();
+  await generateExampleSite(output, origin);
   await write(
     `${output}/recommendations.json`,
     JSON.stringify(data.recommendations, null, 2),
@@ -565,7 +604,14 @@ export async function generateResources(data: SiteData, output: string) {
           html: `${origin}/skills`,
           markdown: `${origin}/skills.md`,
           json: `${origin}/skills.json`,
-        }, ...skillCatalog.map((entry) => ({ ...entry, kind: "skill" })), {
+        }, ...data.lessons.map((lesson) => ({
+          id: `lesson-${lesson.id}`, kind: "lesson",
+          title: lesson.title,
+          summary: lesson.summary,
+          html: `${origin}${lesson.route}`,
+          markdown: `${origin}${lesson.route}.md`,
+          json: `${origin}${lesson.route}.json`,
+        })), ...skillCatalog.map((entry) => ({ ...entry, kind: "skill" })), {
           id: "cloudflare-iphone", kind: "help",
           title: "Deploy a static site to Cloudflare from your iPhone",
           summary: "Optional, agent-neutral static file upload using Files and Safari, with illustrated steps.",
@@ -598,7 +644,7 @@ export async function generateResources(data: SiteData, output: string) {
   );
   await write(
     `${output}/robots.txt`,
-    `User-agent: *\nAllow: /\n\n# Public learner resources must remain available to Gemini.\n${googleResourcePolicy}\nSitemap: ${origin}/sitemap.xml\n`,
+    `User-agent: *\nAllow: /\n\n# Public learner resources must remain available to Gemini.\n${googleResourcePolicy}\nSitemap: ${origin}/sitemap.xml\nSitemap: ${origin}${exampleSite.config.base}sitemap.xml\n`,
   );
   await write(
     `${output}/sitemap.xml`,
@@ -675,6 +721,10 @@ export async function generateResources(data: SiteData, output: string) {
     "> A guide by Devin Thomas at Uppercut Labs for building and deploying software with your own agent.",
     "## Using the pack", `- ${link("Agent instructions", "/AGENTS.md")}\n${startLinks}`,
     "## Curriculum", phaseList,
+    "## Lessons and examples", [
+      ...data.lessons.map((lesson) => `- ${link(lesson.title, `${lesson.route}.md`)} — ${lesson.summary}`),
+      `- ${link(`${exampleSite.config.name} (fictional example site)`, `${exampleSite.config.base}llms.txt`)} — The example site for the Level 1 lesson.`,
+    ].join("\n"),
     "## Style guides", `${styleList}\n- ${link("Style guide catalog", "/style/catalog.json")}`,
     "## Skills and tools", `- ${link("Skills and primary npm installer", "/skills.md")}\n- ${link("Recommendations", "/recommendations.json")}`,
   ].join("\n\n") + "\n");

@@ -35,6 +35,7 @@ server.middlewares.use(async (request, response, next) => {
     routes.some(route => markdownPath(route) === pathname) ||
     /^\/(guide|about)\.(md|json)$/.test(pathname) ||
     /^\/help\/cloudflare-iphone\.(md|json)$/.test(pathname) ||
+    /^\/phases\/3\/[a-z0-9-]+\.(md|json)$/.test(pathname) ||
     /^\/phases\/[123]\.(md|json)$/.test(pathname) ||
     /^\/style\/(?:(?:TypeScript|Godot|Kotlin|React-TypeScript|Python|Swift-SwiftUI|JavaScript|Dart-Flutter|Rust)\.(?:md|json)|catalog\.json)$/.test(pathname) ||
     /^\/skills\/[a-z-]+\/SKILL\.md$/.test(pathname) ||
@@ -58,6 +59,20 @@ server.middlewares.use(async (request, response, next) => {
           : "text/plain; charset=utf-8",
       );
       response.end(await readFile(path.join(".generated", pathname)));
+    } catch (error) {
+      next(error);
+    }
+    return;
+  }
+  if (pathname.startsWith("/examples/")) {
+    // Example sites are static files; mirror the Worker's clean addresses in development.
+    try {
+      await generateResources(await loadContent(), ".generated");
+      const raw = new URL(request.url || "/", "http://localhost").pathname;
+      const file = raw.endsWith("/") ? raw + "index.html" : /\.[a-z]+$/.test(raw) ? raw : raw + ".html";
+      const type = file.endsWith(".html") ? "text/html" : file.endsWith(".json") ? "application/json" : file.endsWith(".xml") ? "application/xml" : file.endsWith(".js") ? "text/javascript" : "text/plain; charset=utf-8";
+      response.setHeader("Content-Type", type);
+      response.end(await readFile(path.join(".generated", file)));
     } catch (error) {
       next(error);
     }

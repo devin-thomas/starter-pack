@@ -27,6 +27,7 @@ import {
 import type { IconName } from "./Icons";
 
 import type {
+  LessonEntry,
   PackageEntry,
   PhaseEntry,
   PhaseOutlineEntry,
@@ -1317,6 +1318,11 @@ export function App({ path, data }: AppProps): ReactElement {
   const phase: PhaseEntry | undefined = data.phases.find(
     (item: PhaseEntry): boolean => item.order === phaseNumber,
   );
+  const lesson: LessonEntry | undefined = data.lessons.find(
+    (item: LessonEntry): boolean => item.route === normalized,
+  );
+  const railPhase: number =
+    phaseNumber || (lesson ? Number(lesson.phase.at(-1)) : 0);
   const skillSlug: string | null = normalized.startsWith("/skills/")
     ? normalized.slice("/skills/".length)
     : null;
@@ -1384,7 +1390,7 @@ export function App({ path, data }: AppProps): ReactElement {
               <a
                 href={`/phases/${summary.number}`}
                 key={summary.number}
-                className={`phase-${summary.number} ${phaseNumber === summary.number ? "active" : ""}`}
+                className={`phase-${summary.number} ${railPhase === summary.number ? "active" : ""}`}
                 aria-current={
                   phaseNumber === summary.number ? "page" : undefined
                 }
@@ -1534,6 +1540,28 @@ export function App({ path, data }: AppProps): ReactElement {
                     href="/phases/1#extra-credit-put-your-app-online"
                   >
                     Back to Phase 1 extra credit
+                  </a>
+                </div>
+              </>
+            ) : lesson ? (
+              <>
+                <PageHeading
+                  label={lesson.label}
+                  title={lesson.title}
+                  description={lesson.summary}
+                />
+                <div className="phase-content help-guide">
+                  <article
+                    className="prose"
+                    dangerouslySetInnerHTML={{ __html: lesson.html }}
+                  />
+                </div>
+                <div className="step-actions">
+                  <a
+                    className="secondary-action"
+                    href={`/phases/${lesson.phase.at(-1)}`}
+                  >
+                    Back to Phase {lesson.phase.at(-1)}
                   </a>
                 </div>
               </>

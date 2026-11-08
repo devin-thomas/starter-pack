@@ -75,6 +75,19 @@ export type PhaseEntry = {
   readonly outline: readonly PhaseOutlineEntry[];
 };
 
+export type LessonEntry = {
+  readonly id: string;
+  readonly phase: string;
+  readonly level: number;
+  readonly label: string;
+  readonly title: string;
+  readonly summary: string;
+  readonly route: string;
+  readonly status: string;
+  readonly updated: string;
+  readonly html: string;
+};
+
 export type RecommendationReferral = {
   readonly url: string;
   readonly disclosure: string;
@@ -140,6 +153,7 @@ export type SiteStyles = {
 export type SiteData = {
   readonly pages: SitePages;
   readonly phases: readonly PhaseEntry[];
+  readonly lessons: readonly LessonEntry[];
   readonly recommendations: readonly RecommendationEntry[];
   readonly packages: readonly PackageEntry[];
   readonly skills: SiteSkills;

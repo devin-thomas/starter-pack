@@ -21,7 +21,7 @@ test("Worker and real static-assets pipeline preserve the legacy routing contrac
     const response = await mf.dispatchFetch(origin + path, { method, redirect: "manual" });
     return new Response(await response.arrayBuffer(), { status: response.status, headers: Array.from(response.headers.entries()) });
   };
-  const htmlFiles = (await files("dist")).filter(file => file.endsWith(".html") && file !== "dist/404.html" && !file.startsWith("dist/artifacts/progress-workbench/"));
+  const htmlFiles = (await files("dist")).filter(file => file.endsWith(".html") && file !== "dist/404.html" && !file.startsWith("dist/artifacts/progress-workbench/") && !file.startsWith("dist/examples/"));
   assert.deepEqual(new Set(htmlFiles.map(file => file === "dist/index.html" ? "/" : file.slice(4, -5))), new Set(routes));
   for (const route of routes) {
     assert.equal(readingRoute(route), route, route);
@@ -40,7 +40,8 @@ test("Worker and real static-assets pipeline preserve the legacy routing contrac
       }
     }
   }
-  const rawFiles = (await files("dist")).filter(file => !htmlFiles.includes(file) && !["dist/404.html", "dist/_headers", "dist/_redirects"].includes(file));
+  // Example sites route their own pages (clean addresses, 301 and 410); their tests cover them.
+  const rawFiles = (await files("dist")).filter(file => !htmlFiles.includes(file) && !(file.startsWith("dist/examples/") && file.endsWith(".html")) && !["dist/404.html", "dist/_headers", "dist/_redirects"].includes(file));
   for (const file of rawFiles) {
     const path = file.slice(4);
     assert.equal(readingRoute(path), undefined, `machine overlap: ${path}`);

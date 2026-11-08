@@ -1,6 +1,11 @@
 import siteOrigins from "./site-origin.json";
 import skillManifest from "../content/skills/manifest.json";
 import { readingRoutes } from "./reading-routes";
+import {
+  exampleSites,
+  exampleSiteResponse,
+  type ExampleSiteRoutes,
+} from "./example-sites";
 
 type LimitRequest = { readonly key: string };
 type LimitResult = { readonly success: boolean };
@@ -449,6 +454,25 @@ export default {
       url.pathname = "/artifacts/progress-workbench/index.html";
       return env.ASSETS.fetch(new Request(url, request));
     }
+    if (
+      url.origin === siteOrigins.legacyOrigin &&
+      env.LEGACY_HUMAN_REDIRECTS === "enabled" &&
+      exampleSites.some((site: ExampleSiteRoutes): boolean =>
+        `${url.pathname}/`.startsWith(site.base),
+      ) &&
+      // Human example pages move to the canonical host; machine files stay direct.
+      (!/\.[a-z0-9]+$/i.test(url.pathname) || url.pathname.endsWith(".html"))
+    ) {
+      let target: URL = new URL(siteOrigins.canonicalOrigin);
+      target.pathname = url.pathname;
+      target.search = url.search;
+      return Promise.resolve(Response.redirect(target.href, 301));
+    }
+    const example: Promise<Response> | undefined = exampleSiteResponse(
+      request,
+      env.ASSETS,
+    );
+    if (example !== undefined) return example;
     const route: string | undefined = readingRoute(url.pathname);
     if (route !== undefined) {
       if (
