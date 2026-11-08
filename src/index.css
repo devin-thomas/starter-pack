@@ -130,6 +130,8 @@ p {
   top: -70px;
   padding: 14px;
   background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
   z-index: 30;
 }
 .skip-link:focus {

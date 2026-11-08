@@ -201,7 +201,7 @@ export async function renderExampleSite(site: ExampleSite, origin: string): Prom
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<p class="example-note">This is a fictional example site from the Starter Pack <a href="${config.lesson}">Level 1 lesson</a>. The library does not exist.</p>
+<aside class="example-note" aria-label="About this example">This is a fictional example site from the Starter Pack <a href="${config.lesson}">Level 1 lesson</a>. The library does not exist.</aside>
 <header>
 <p class="site-name"><a href="${base}">${escapeHtml(config.name)}</a></p>
 <nav aria-label="Site"><ul>${nav}</ul></nav>
