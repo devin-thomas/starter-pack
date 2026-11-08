@@ -13,15 +13,24 @@ Copy these exactly when your app asks:
 
 - **Name:** `Starter Pack`
 - **URL:** `https://starter.uppercut-labs.com/mcp`
-- **Description** (ChatGPT asks; optional): `Read-only Starter Pack course guidance: phase steps, your next step and current skills.`
+- **Description** (ChatGPT asks): `Read-only Starter Pack course guidance: phase steps, your next step and current skills.`
+- **Icon** (ChatGPT asks): [the Starter Pack icon](/plugins/starter-pack-icon.png), a small PNG file
 
-**Claude app, claude.ai or Claude Desktop.** Open [Claude's add-connector form](https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Starter%20Pack&connectorUrl=https://starter.uppercut-labs.com/mcp), which fills in the name and URL, or go to **Connectors** in Claude's settings and choose **Add custom connector**. Check the name and URL, keep the detected **No sign-in**, add no request headers, then choose **Add**. In a chat, ask: "Use the Starter Pack connector: what does Phase 1 require?" On Claude's Free plan you can add one custom connector; remove this one when Phase 3 asks you to connect your own.
+**Claude app, claude.ai or Claude Desktop.** Open [Claude's add-connector form](https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Starter%20Pack&connectorUrl=https://starter.uppercut-labs.com/mcp), which fills in the name and URL, or go to **Connectors** in Claude's settings and choose **Add custom connector**. Check the name and URL, keep the detected **No sign-in**, add no request headers, then choose **Add**. When Claude shows **Starter Pack**, choose **Connect**. In a chat, ask: "Use the Starter Pack connector: what does Phase 1 require?" On Claude's Free plan you can add one custom connector; remove this one when Phase 3 asks you to connect your own.
 
 **Claude Code.** Run `claude mcp add --transport http starter-pack https://starter.uppercut-labs.com/mcp`.
 
-**ChatGPT on the web.** Open **Plugins**, choose **+**, then **Add custom MCP server**. Enter the name, the optional description and the URL, choose **No authentication**, confirm the warning, then choose **Create as a plugin**. Custom servers depend on your ChatGPT plan and do not work in the phone app; if you do not see the option, skip it.
+**ChatGPT on the web or the desktop app.** The phone app cannot add it. Custom servers depend on your ChatGPT plan; if you do not see **Add custom MCP server**, skip this.
 
-**Undo.** In Claude, open **Connectors**, select **Starter Pack** and choose **Remove**. A connector cannot be renamed, and Claude allows only one connector per URL, so to fix a typo in the name, remove it and then add it again with the same URL. In Claude Code, run `claude mcp remove starter-pack`. In ChatGPT, open **Plugins**, select **Starter Pack** and disconnect or delete it. Removing it changes nothing in your progress.
+1. Open [the Starter Pack icon](/plugins/starter-pack-icon.png) and save the image to your computer.
+2. In ChatGPT, open **Plugins**, choose **Add**, then **Add custom MCP server**.
+3. Upload the icon you saved. You can only set the icon here: ChatGPT cannot change it after the plugin is created.
+4. Paste the name `Starter Pack` and the description `Read-only Starter Pack course guidance: phase steps, your next step and current skills.`
+5. Paste the URL `https://starter.uppercut-labs.com/mcp`.
+6. Set **Authentication** to **No authentication**, tick **I understand**, then choose **Create as a plugin**.
+7. Choose **Connect**. In a chat, ask: "Use Starter Pack: what does Phase 1 require?"
+
+**Undo.** In Claude, open **Connectors**, select **Starter Pack** and choose **Remove**. A connector cannot be renamed, and Claude allows only one connector per URL, so to fix a typo in the name, remove it and then add it again with the same URL. In Claude Code, run `claude mcp remove starter-pack`. In ChatGPT, open **Settings**, select the **Starter Pack** plugin and choose **Delete app**; to fix the icon, name or description, delete it and create it again with the steps above. Removing it changes nothing in your progress.
 
 ## Build with Codex
 

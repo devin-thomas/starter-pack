@@ -860,9 +860,9 @@ export async function handleMcp(
           websiteUrl: canonicalOrigin,
           icons: [
             {
-              src: `${canonicalOrigin}/uppercut-labs-logo.png`,
+              src: `${canonicalOrigin}/plugins/starter-pack-icon.png`,
               mimeType: "image/png",
-              sizes: ["128x128"],
+              sizes: ["512x512"],
             },
           ],
         },

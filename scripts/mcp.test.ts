@@ -54,6 +54,9 @@ test("initialize negotiates a supported protocol and advertises tools only", asy
     assert.deepEqual(Object.keys(result.capabilities), ["tools"]);
     assert.equal(result.serverInfo.name, "starter-pack");
     assert.equal(result.serverInfo.title, "Starter Pack");
+    assert.deepEqual(result.serverInfo.icons, [
+      { src: `${origins.canonicalOrigin}/plugins/starter-pack-icon.png`, mimeType: "image/png", sizes: ["512x512"] },
+    ]);
     assert.match(result.instructions, /Never send passwords/);
   }
   assert.deepEqual((await rpc("ping")).result, {});
@@ -292,4 +295,15 @@ test("the real local Worker serves /mcp from built assets and keeps other routes
   assert.equal((await send(undefined, "GET")).status, 405);
   assert.equal((await mf.dispatchFetch(`${origins.canonicalOrigin}/guide`, { method: "POST" })).status, 405);
   assert.equal((await mf.dispatchFetch(`${origins.canonicalOrigin}/mcp/extra`, { method: "POST" })).status, 405);
+});
+
+test("the advertised icon is the published plugin icon and fits ChatGPT's upload form", async () => {
+  const source = await readFile("public/plugins/starter-pack-icon.png");
+  const built = await readFile("dist/plugins/starter-pack-icon.png");
+  assert.ok(source.equals(built), "built icon keeps the source bytes");
+  assert.ok(source.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])), "PNG");
+  assert.deepEqual([source.readUInt32BE(16), source.readUInt32BE(20)], [512, 512]);
+  assert.ok(source.length <= 10 * 1024, `icon is ${source.length} bytes; the form accepts at most 10 KB`);
+  const guide = await readFile("content/pages/guide.md", "utf8");
+  assert.match(guide, /\]\(\/plugins\/starter-pack-icon\.png\)/);
 });
