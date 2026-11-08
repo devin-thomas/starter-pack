@@ -81,8 +81,9 @@ application sources; `npm run check:format` enforces the same scope in CI.
 The browser audit also runs `npm run test:controls` with its isolated pinned
 Playwright installation, using synthetic clipboard and feedback boundaries to
 verify cleanup, stale completions, and recovery without sending a message.
-It also runs `npm run test:usability` against the production build to check
-prompt copying, narrow-screen text, feedback validation, and resource addresses.
+`npm run test:usability` is a separate local check, not part of the Actions
+workflow. Run it against a production build to check prompt copying,
+narrow-screen text, feedback validation, and resource addresses.
 Both browser commands accept `STYLE_BROWSER_MODULE` for an isolated Playwright
 module. Usability reports and captures go to a temporary directory, or to
 `USABILITY_BROWSER_OUTPUT` outside the source tree.
