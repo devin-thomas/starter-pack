@@ -54,7 +54,7 @@ Run the distinct legacy verifier, canonical/fallback checks and real-agent probe
 again. Any P0 failure halts rollout. Do not update consumers first.
 
 Company showcase publication, analytics/Search Console configuration and a real
-Make/Gmail feedback test require their respective approval and acceptance. They
+Resend feedback email test require their respective approval and acceptance. They
 are not implied by either Worker deployment. Do not send real feedback during
 source or mocked verification.
 

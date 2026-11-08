@@ -6,11 +6,24 @@ Sibling subdomains, alternate ports, HTTP, missing or `null` Origin, forwarded
 host headers and cross-host pairs cannot authorize a request. The API never adds
 wildcard CORS. Cached legacy pages retain their same-host POST endpoint.
 
-`FEEDBACK_WEBHOOK_URL`, the Make scenario and fixed recipient stay unchanged.
-The public contact address is `starter@uppercut-labs.com`. Unit tests use synthetic messages and a
-mock transport. No real notification or analytics configuration change is part
-of source preparation. Keep request bodies, email addresses and webhook URLs out
-of logs and release receipts.
+The Worker emails each accepted submission through Resend
+(`POST https://api.resend.com/emails`) from `Starter Pack <feedback@uppercut-labs.com>`
+to the fixed recipient `starter@uppercut-labs.com`. A valid visitor email becomes
+`reply_to`; it is never a recipient. The message carries the escaped HTML
+notification and a plain-text copy. The submission ID is also Resend's
+`Idempotency-Key`, and the `FeedbackReceipt` Durable Object still claims each
+client submission before delivery and marks it sent after a Resend 2xx. Any
+other Resend outcome, a redirect or a network failure keeps the form text and
+reports unconfirmed delivery.
+
+`FEEDBACK_RESEND_API_KEY` is a Worker secret. Set it with
+`npx wrangler secret put FEEDBACK_RESEND_API_KEY` on stdin; never place it in
+source, client code, logs or public build variables. Without it the form fails
+closed with a 503. Unit tests use synthetic messages and a mock transport. Logs
+hold only the submission ID, the delivery stage and Resend's email ID; keep
+request bodies, email addresses and the key out of logs and release receipts.
+
+The public contact address is `starter@uppercut-labs.com`.
 
 ## Web Analytics: pending owner-authorized verification
 
@@ -40,6 +53,7 @@ CORS policy.
 ## Controlled live feedback: separate approval
 
 After production release, obtain explicit approval for one synthetic live
-submission. Verify the Make JSON acknowledgement and the intended mailbox's
-receipt, without committing message content or private provider responses.
+submission. Verify the 200 response, a single `feedback_notification_sent` log
+line with a Resend email ID, and receipt at `starter@uppercut-labs.com`, without
+committing message content or private provider responses.
 Do not infer delivery from HTTP acceptance, a mocked test, or a successful page.
