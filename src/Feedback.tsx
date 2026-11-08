@@ -397,9 +397,9 @@ export function Feedback(): ReactElement {
               />
             </div>
             <p id={`${id}-privacy`} className="feedback-privacy">
-              Your submission is processed by Cloudflare and Make and delivered
-              to Devin's Gmail inbox. It stays private unless you give
-              permission to feature your story. Nothing is published
+              Your submission is processed by Cloudflare and emailed through
+              Resend to Devin's Starter Pack inbox. It stays private unless you
+              give permission to feature your story. Nothing is published
               automatically. Please leave out passwords, API keys, private
               conversations, and progress files.{" "}
               <a href="/about#feedback-and-project-stories">

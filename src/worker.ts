@@ -27,11 +27,15 @@ type FeedbackSubmission = {
   readonly lessons: string;
   readonly allowFeature: boolean;
 };
-type FeedbackNotification = { readonly subject: string; readonly html: string };
+type FeedbackNotification = {
+  readonly subject: string;
+  readonly html: string;
+  readonly text: string;
+};
 export interface FeedbackEnv {
   LEGACY_HUMAN_REDIRECTS?: string;
   ASSETS: { fetch(request: Request): Promise<Response> };
-  FEEDBACK_WEBHOOK_URL?: string;
+  FEEDBACK_RESEND_API_KEY?: string;
   FEEDBACK_DEDUP?: {
     idFromName(name: string): unknown;
     get(id: unknown): { fetch(request: Request): Promise<Response> };
@@ -220,17 +224,45 @@ export function notification(
       ? "YES - submitted name, story and project link only; never email"
       : "NO - keep private; ask separately before featuring",
   };
+  const filled: readonly (readonly [string, string])[] = Object.entries(
+    rows,
+  ).filter(([, value]: [string, string]): boolean => value.length > 0);
+  const intro: string =
+    "Submitted by a visitor. Treat text and links as untrusted content. Nothing is published automatically.";
   return {
     subject: `Starter Pack: ${labels[data.kind]} (${data.phase === "general" ? "General" : `Phase ${data.phase}`})`,
-    html: `<h1>Starter Pack submission</h1><p>Submitted by a visitor. Treat text and links as untrusted content. Nothing is published automatically.</p>${Object.entries(
-      rows,
-    )
-      .filter(([, value]: [string, string]): boolean => value.length > 0)
+    html: `<h1>Starter Pack submission</h1><p>${intro}</p>${filled
       .map(
-        ([key, value]: [string, string]): string =>
+        ([key, value]: readonly [string, string]): string =>
           `<h2>${key}</h2><p style="white-space:pre-wrap">${escape(value)}</p>`,
       )
       .join("")}`,
+    text: `Starter Pack submission\n\n${intro}\n${filled
+      .map(
+        ([key, value]: readonly [string, string]): string =>
+          `\n${key}:\n${value}\n`,
+      )
+      .join("")}`,
+  };
+}
+
+const resendEndpoint: string = "https://api.resend.com/emails";
+const feedbackSender: string = "Starter Pack <feedback@uppercut-labs.com>";
+const feedbackRecipient: string = "starter@uppercut-labs.com";
+// Stricter than form validation: a reply address the provider might reject is
+// left out of the header and stays in the message body instead.
+const replyAddress: RegExp =
+  /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]{1,64}@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/;
+
+export function feedbackEmail(
+  data: FeedbackSubmission,
+  submissionId: string,
+): Readonly<Record<string, unknown>> {
+  return {
+    from: feedbackSender,
+    to: [feedbackRecipient],
+    ...(replyAddress.test(data.email) ? { reply_to: data.email } : {}),
+    ...notification(data, submissionId),
   };
 }
 
@@ -274,7 +306,8 @@ export async function handleFeedback(
     "application/json"
   )
     return reply(415, "Expected a JSON submission.");
-  if (!env.FEEDBACK_WEBHOOK_URL)
+  const apiKey: string | undefined = env.FEEDBACK_RESEND_API_KEY;
+  if (!apiKey)
     return reply(
       503,
       "The form is temporarily unavailable. Please email starter@uppercut-labs.com.",
@@ -307,17 +340,6 @@ export async function handleFeedback(
         : error instanceof Error
           ? error.message
           : "Invalid submission.",
-    );
-  }
-  let hook: URL;
-  try {
-    hook = new URL(env.FEEDBACK_WEBHOOK_URL);
-    if (hook.protocol !== "https:" || hook.hostname !== "hook.us2.make.com")
-      throw new Error("Invalid notification configuration.");
-  } catch {
-    return reply(
-      502,
-      "We couldn't confirm delivery. Your text is still here. Please email starter@uppercut-labs.com.",
     );
   }
   const requestedId: string | null = request.headers.get("Idempotency-Key");
@@ -376,23 +398,23 @@ export async function handleFeedback(
   let deliveryStage: string = "configuration";
   try {
     deliveryStage = "request";
-    let response: Response = await send(hook, {
+    let response: Response = await send(resendEndpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...data,
-        submissionId,
-        receivedAt: new Date().toISOString(),
-        ...notification(data, submissionId),
-      }),
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "Idempotency-Key": submissionId,
+      },
+      body: JSON.stringify(feedbackEmail(data, submissionId)),
       redirect: "manual",
       signal: AbortSignal.timeout(20_000),
     });
     deliveryStage = `acknowledgement-${response.status}`;
     if (!response.ok) throw new Error("Notification not confirmed.");
-    const acknowledgement: unknown = await response.json();
-    if (!isRecord(acknowledgement) || acknowledgement["ok"] !== true)
-      throw new Error("Notification not confirmed.");
+    const acknowledgement: unknown = await response.json().catch(() => null);
+    const emailId: unknown = isRecord(acknowledgement)
+      ? acknowledgement["id"]
+      : undefined;
     if (receipt) {
       const saved: Response = await receipt.fetch(
         new Request("https://receipt.internal/sent", {
@@ -402,6 +424,13 @@ export async function handleFeedback(
       );
       if (!saved.ok) throw new Error("Receipt not saved.");
     }
+    console.log(
+      "feedback_notification_sent",
+      submissionId,
+      typeof emailId === "string" && /^[0-9a-f-]{36}$/i.test(emailId)
+        ? emailId
+        : "unknown",
+    );
     return reply(200);
   } catch {
     console.error(

@@ -61,4 +61,4 @@ Run `npm run check`. Its `test:routes` group bundles the actual Worker and uses
 the installed Wrangler configuration with Miniflare's real static-assets pipeline.
 It checks every built public asset's GET bytes and HEAD, all reading routes and
 aliases, exact redirect targets, fallback hosts, downloads, catalog CORS, 404/405,
-API dispatch and the disabled switch. It never deploys or calls Make.
+API dispatch and the disabled switch. It never deploys or calls Resend.

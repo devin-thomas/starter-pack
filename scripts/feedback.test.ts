@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import worker, { handleFeedback, notification, parseSubmission, type FeedbackEnv } from "../src/worker";
+import worker, { feedbackEmail, handleFeedback, notification, parseSubmission, type FeedbackEnv } from "../src/worker";
 import siteOrigins from "../src/site-origin.json";
 
 const base = { kind: "feedback", phase: "general", message: "The setup steps helped." };
 const origin = "https://starter.devthomas.site";
+const testKey = "re_test_only_not_a_real_key_0123456789";
+const resendId = "4ef9a417-02e9-4d39-ad75-9611e0fcc33c";
 
 function request(body: unknown = base, headers: Record<string, string> = {}) {
   return new Request(`${origin}/api/feedback`, {
@@ -20,13 +22,13 @@ function harness(options: { ipAllowed?: boolean; totalAllowed?: boolean; respons
   const limits: string[] = [];
   const env: FeedbackEnv = {
     ASSETS: { async fetch() { throw new Error("Feedback must not fetch static assets."); } },
-    FEEDBACK_WEBHOOK_URL: "https://hook.us2.make.com/test-only-not-a-real-webhook",
+    FEEDBACK_RESEND_API_KEY: testKey,
     FEEDBACK_RATE_LIMITER: { async limit({ key }) { limits.push(`ip:${key}`); return { success: options.ipAllowed ?? true }; } },
     FEEDBACK_TOTAL_LIMITER: { async limit({ key }) { limits.push(`total:${key}`); return { success: options.totalAllowed ?? true }; } },
   };
   const send: typeof fetch = async (input, init) => {
     calls.push({ url: String(input), ...(init === undefined ? {} : { init }) });
-    return options.response?.() ?? Response.json({ ok: true });
+    return options.response?.() ?? Response.json({ id: resendId });
   };
   return { env, send, calls, limits };
 }
@@ -67,6 +69,26 @@ test("notification escapes visitor HTML and never uses visitor text in its subje
   assert.ok(output.html.includes("&lt;script&gt;&quot;&amp;&quot;&lt;/script&gt;"));
   assert.ok(output.html.includes("NO - keep private"));
   assert.ok(!output.html.includes("<script>"));
+  assert.ok(output.text.includes('Message:\n<script>"&"</script>'));
+  assert.ok(output.text.includes("Name:\n<img src=x onerror='bad()'>"));
+  assert.ok(!output.text.includes("<h2>"));
+});
+
+test("the email goes only to the Starter Pack inbox, with a reply address only when it is valid", () => {
+  const email = feedbackEmail(parseSubmission({ ...base, email: "ada@example.com" }), "test-id");
+  assert.equal(email.from, "Starter Pack <feedback@uppercut-labs.com>");
+  assert.deepEqual(email.to, ["starter@uppercut-labs.com"]);
+  assert.equal(email.reply_to, "ada@example.com");
+  assert.equal(email.subject, "Starter Pack: Feedback (General)");
+  assert.equal(typeof email.html, "string");
+  assert.equal(typeof email.text, "string");
+  assert.deepEqual(Object.keys(email).sort(), ["from", "html", "reply_to", "subject", "text", "to"]);
+  assert.equal("reply_to" in feedbackEmail(parseSubmission(base), "test-id"), false);
+  for (const unusual of ['"quoted"@example.com', "ada@example..com", "ada@-example.com"]) {
+    const output = feedbackEmail(parseSubmission({ ...base, email: unusual }), "test-id");
+    assert.equal("reply_to" in output, false, unusual);
+    assert.ok(String(output.text).includes(unusual), unusual);
+  }
 });
 
 test("wrong method, origin, or content type is rejected before delivery", async () => {
@@ -83,9 +105,11 @@ test("wrong method, origin, or content type is rejected before delivery", async 
 
 test("missing configuration and unavailable rate limiter fail closed", async () => {
   const h = harness();
-  delete h.env.FEEDBACK_WEBHOOK_URL;
+  delete h.env.FEEDBACK_RESEND_API_KEY;
   assert.equal((await handleFeedback(request(), h.env, h.send)).status, 503);
-  h.env.FEEDBACK_WEBHOOK_URL = "https://hook.us2.make.com/test";
+  h.env.FEEDBACK_RESEND_API_KEY = "";
+  assert.equal((await handleFeedback(request(), h.env, h.send)).status, 503);
+  h.env.FEEDBACK_RESEND_API_KEY = testKey;
   h.env.FEEDBACK_RATE_LIMITER.limit = async () => { throw new Error("Unavailable"); };
   assert.equal((await handleFeedback(request(), h.env, h.send)).status, 503);
   assert.equal(h.calls.length, 0);
@@ -124,45 +148,77 @@ test("streamed body without content-length is bounded and cancelled", async () =
   assert.equal(h.calls.length, 0);
 });
 
-test("HTTP failures, Make Accepted text, and false acknowledgements never report success", async (t) => {
+test("Resend errors, redirects, and network failures never report success", async (t) => {
   t.mock.method(console, "error", () => {});
-  for (const response of [() => new Response("failed", { status: 500 }), () => new Response('{"ok":true}', { status: 302, headers: { Location: "https://evil.example/" } }), () => new Response("Accepted"), () => Response.json({ ok: false }), () => Response.json({ ok: "true" }), () => Response.json(null)]) {
-    const h = harness({ response });
+  t.mock.method(console, "log", () => {});
+  for (const status of [400, 401, 403, 409, 422, 429, 500, 503]) {
+    const h = harness({ response: () => Response.json({ statusCode: status, name: "error", message: `failure for ${testKey}` }, { status }) });
     const result = await handleFeedback(request(), h.env, h.send);
-    assert.equal(result.status, 502);
-    assert.equal((await result.json()).ok, false);
+    assert.equal(result.status, 502, String(status));
+    const body = await result.json();
+    assert.equal(body.ok, false);
+    assert.match(body.error, /couldn't confirm delivery/);
+    assert.equal(h.calls.length, 1);
   }
+  const redirected = harness({ response: () => new Response(JSON.stringify({ id: resendId }), { status: 302, headers: { Location: "https://evil.example/" } }) });
+  assert.equal((await handleFeedback(request(), redirected.env, redirected.send)).status, 502);
   const h = harness();
   const failingSend: typeof fetch = async () => { throw new Error("Network unavailable"); };
   assert.equal((await handleFeedback(request(), h.env, failingSend)).status, 502);
 });
 
-test("unexpected webhook destination is rejected before making a request", async (t) => {
-  t.mock.method(console, "error", () => {});
-  const h = harness();
-  h.env.FEEDBACK_WEBHOOK_URL = "https://evil.example/webhook";
-  assert.equal((await handleFeedback(request(), h.env, h.send)).status, 502);
-  assert.equal(h.calls.length, 0);
+test("any Resend 2xx counts as delivered, even without a readable body", async (t) => {
+  t.mock.method(console, "log", () => {});
+  for (const response of [() => Response.json({ id: resendId }), () => new Response("", { status: 202 }), () => new Response("not json")]) {
+    const h = harness({ response });
+    assert.equal((await handleFeedback(request(), h.env, h.send)).status, 200);
+  }
 });
 
-test("explicit JSON acknowledgement delivers normalized data and reports success", async () => {
+test("a submission is sent to Resend once, with the key, payload and idempotency header", async (t) => {
+  const logs: unknown[][] = [];
+  t.mock.method(console, "log", (...values: unknown[]) => { logs.push(values); });
   const h = harness();
-  const result = await handleFeedback(request({ ...base, email: "ada@example.com" }), h.env, h.send);
+  const id = "0b6f7a3e-5c1d-4e2f-9a8b-7c6d5e4f3a2b";
+  const result = await handleFeedback(request({ ...base, email: "ada@example.com" }, { "Idempotency-Key": id }), { ...h.env, FEEDBACK_DEDUP: memoryReceipts() }, h.send);
   assert.equal(result.status, 200);
   assert.deepEqual(await result.json(), { ok: true });
   assert.equal(result.headers.get("Cache-Control"), "no-store");
   assert.equal(h.calls.length, 1);
   assert.deepEqual(h.limits, ["ip:192.0.2.1", "total:feedback"]);
+  assert.equal(h.calls[0].url, "https://api.resend.com/emails");
+  assert.equal(h.calls[0].init?.method, "POST");
   assert.equal(h.calls[0].init?.redirect, "manual");
+  const headers = new Headers(h.calls[0].init?.headers);
+  assert.equal(headers.get("Authorization"), `Bearer ${testKey}`);
+  assert.equal(headers.get("Content-Type"), "application/json");
+  assert.equal(headers.get("Idempotency-Key"), id);
   const delivered = JSON.parse(String(h.calls[0].init?.body));
-  assert.equal(delivered.email, "ada@example.com");
-  assert.equal(delivered.allowFeature, false);
-  assert.equal(delivered.message, base.message);
-  assert.equal(typeof delivered.submissionId, "string");
-  assert.equal(Number.isNaN(Date.parse(delivered.receivedAt)), false);
+  assert.equal(delivered.from, "Starter Pack <feedback@uppercut-labs.com>");
+  assert.deepEqual(delivered.to, ["starter@uppercut-labs.com"]);
+  assert.equal(delivered.reply_to, "ada@example.com");
+  assert.equal(delivered.subject, "Starter Pack: Feedback (General)");
+  assert.ok(delivered.html.includes(`<h2>Submission ID</h2><p style="white-space:pre-wrap">${id}</p>`));
+  assert.ok(delivered.html.includes(base.message));
+  assert.ok(delivered.text.includes(`Submission ID:\n${id}`));
+  assert.ok(delivered.text.includes(`Message:\n${base.message}`));
+  assert.ok(delivered.text.includes("Reply email:\nada@example.com"));
+  assert.equal(JSON.stringify(delivered).includes(testKey), false);
+  assert.deepEqual(logs, [["feedback_notification_sent", id, resendId]]);
 });
 
-test("each approved host accepts only its own exact Origin and never adds feedback CORS", async () => {
+test("a submission without an identity still gets a generated Resend idempotency key", async (t) => {
+  t.mock.method(console, "log", () => {});
+  const h = harness();
+  assert.equal((await handleFeedback(request(), h.env, h.send)).status, 200);
+  const key = new Headers(h.calls[0].init?.headers).get("Idempotency-Key");
+  assert.match(String(key), /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+  assert.ok(JSON.parse(String(h.calls[0].init?.body)).text.includes(`Submission ID:\n${key}`));
+  assert.equal("reply_to" in JSON.parse(String(h.calls[0].init?.body)), false);
+});
+
+test("each approved host accepts only its own exact Origin and never adds feedback CORS", async (t) => {
+  t.mock.method(console, "log", () => {});
   const approved = Object.values(siteOrigins);
   for (const target of approved) {
     const h = harness();
@@ -200,6 +256,7 @@ test("actual Worker entry preserves valid old and new feedback POSTs while page 
     const h = harness();
     h.env.LEGACY_HUMAN_REDIRECTS = "enabled";
     t.mock.method(globalThis, "fetch", h.send);
+    t.mock.method(console, "log", () => {});
     const input = new Request(target + "/api/feedback", { method: "POST", headers: { Origin: target, "Content-Type": "application/json", "CF-Connecting-IP": "192.0.2.1" }, body: JSON.stringify(base) });
     const response = await worker.fetch(input, h.env);
     assert.equal(response.status, 200);
@@ -211,24 +268,35 @@ test("actual Worker entry preserves valid old and new feedback POSTs while page 
   }
 });
 
-test("delivery failures expose neither visitor data nor webhook configuration", async (t) => {
+test("responses and logs expose neither visitor data nor the Resend key", async (t) => {
   const logs: unknown[][] = [];
   t.mock.method(console, "error", (...values: unknown[]) => { logs.push(values); });
+  t.mock.method(console, "log", (...values: unknown[]) => { logs.push(values); });
   const h = harness();
-  const send: typeof fetch = async () => { throw new Error("private webhook token and visitor message"); };
-  const response = await handleFeedback(request({ ...base, message: "private visitor message" }), h.env, send);
-  assert.equal(response.status, 502);
-  const body = await response.text();
-  assert.ok(!body.includes("private"));
-  assert.ok(!body.includes("hook.us2.make.com"));
-  assert.equal(response.headers.get("Access-Control-Allow-Origin"), null);
+  const visitor = { ...base, email: "ada@example.com", message: "private visitor message" };
+  for (const send of [
+    (async () => { throw new Error(`private ${testKey} and visitor message`); }) as typeof fetch,
+    (async () => Response.json({ message: `API key ${testKey} is invalid` }, { status: 401 })) as typeof fetch,
+    h.send,
+  ]) {
+    const response = await handleFeedback(request(visitor), h.env, send);
+    const body = await response.text();
+    assert.ok(!body.includes("private"));
+    assert.ok(!body.includes(testKey));
+    assert.ok(!body.includes("ada@example.com"));
+    assert.ok(!body.includes("api.resend.com"));
+    assert.equal(response.headers.get("Access-Control-Allow-Origin"), null);
+  }
   const serialized = JSON.stringify(logs);
   assert.ok(serialized.includes("feedback_notification_unconfirmed"));
+  assert.ok(serialized.includes("feedback_notification_sent"));
   assert.ok(!serialized.includes("private"));
-  assert.ok(!serialized.includes("hook.us2.make.com"));
+  assert.ok(!serialized.includes(testKey));
+  assert.ok(!serialized.includes("ada@example.com"));
 });
 
-test("an uncertain accepted submission is not sent to the webhook twice", async () => {
+test("an uncertain accepted submission is not sent to Resend twice", async (t) => {
+  t.mock.method(console, "error", () => {});
   const { FeedbackReceipt } = await import("../src/worker");
   const objects = new Map<string, InstanceType<typeof FeedbackReceipt>>();
   const namespace: NonNullable<FeedbackEnv["FEEDBACK_DEDUP"]> = {
@@ -265,7 +333,8 @@ test("an uncertain accepted submission is not sent to the webhook twice", async 
   assert.equal(h.calls.length, 1);
 });
 
-test("a confirmed retry returns success without a second webhook request", async () => {
+test("a confirmed retry returns success without a second Resend request", async (t) => {
+  t.mock.method(console, "log", () => {});
   const { FeedbackReceipt } = await import("../src/worker");
   const values = new Map<string, unknown>();
   const object = new FeedbackReceipt({
@@ -283,6 +352,7 @@ test("a confirmed retry returns success without a second webhook request", async
   assert.equal((await handleFeedback(request(base, headers), h.env, h.send)).status, 200);
   assert.equal((await handleFeedback(request(base, headers), h.env, h.send)).status, 200);
   assert.equal(h.calls.length, 1);
+  assert.equal(new Headers(h.calls[0].init?.headers).get("Idempotency-Key"), headers["Idempotency-Key"]);
 });
 
 test("visitor-facing fallbacks name the current contact address", async () => {
@@ -291,5 +361,14 @@ test("visitor-facing fallbacks name the current contact address", async () => {
     assert.doesNotMatch(text, /starter@devthomas\.site/, `${file} names the retired address`);
   }
   const worker = await readFile("src/worker.ts", "utf8");
-  assert.equal(worker.match(/email starter@uppercut-labs\.com/g)?.length, 6);
+  assert.equal(worker.match(/email starter@uppercut-labs\.com/g)?.length, 5);
 });
+
+function memoryReceipts(): NonNullable<FeedbackEnv["FEEDBACK_DEDUP"]> {
+  return {
+    idFromName(name) { return name; },
+    get() {
+      return { async fetch(input: Request) { const path = new URL(input.url).pathname; return Response.json({ state: path === "/claim" ? "claimed" : "sent" }); } };
+    },
+  };
+}
