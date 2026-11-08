@@ -6,8 +6,8 @@ Sibling subdomains, alternate ports, HTTP, missing or `null` Origin, forwarded
 host headers and cross-host pairs cannot authorize a request. The API never adds
 wildcard CORS. Cached legacy pages retain their same-host POST endpoint.
 
-`FEEDBACK_WEBHOOK_URL`, the Make scenario, fixed recipient and
-`starter@devthomas.site` stay unchanged. Unit tests use synthetic messages and a
+`FEEDBACK_WEBHOOK_URL`, the Make scenario and fixed recipient stay unchanged.
+The public contact address is `starter@uppercut-labs.com`. Unit tests use synthetic messages and a
 mock transport. No real notification or analytics configuration change is part
 of source preparation. Keep request bodies, email addresses and webhook URLs out
 of logs and release receipts.

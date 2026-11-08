@@ -188,7 +188,7 @@ export function Feedback(): ReactElement {
       const message: string =
         cause instanceof Error && cause.message === "rate-limit"
           ? "Too many messages were sent recently. Please wait a few minutes and try again. Your text is still here."
-          : "We could not confirm delivery. Your text is still here. A delayed notification may still arrive. To avoid sending a duplicate, please email starter@devthomas.site instead of retrying this message.";
+          : "We could not confirm delivery. Your text is still here. A delayed notification may still arrive. To avoid sending a duplicate, please email starter@uppercut-labs.com instead of retrying this message.";
       setState({ kind: "error", message });
     } finally {
       window.clearTimeout(request.timeoutId);
@@ -211,7 +211,8 @@ export function Feedback(): ReactElement {
       </div>
       <p className="feedback-contact">
         Prefer email? Write to{" "}
-        <a href="mailto:starter@devthomas.site">starter@devthomas.site</a>.
+        <a href="mailto:starter@uppercut-labs.com">starter@uppercut-labs.com</a>
+        .
       </p>
       <div
         ref={status}
@@ -248,7 +249,7 @@ export function Feedback(): ReactElement {
           <noscript>
             <p className="feedback-privacy">
               This form needs JavaScript to send. You can email
-              starter@devthomas.site instead.
+              starter@uppercut-labs.com instead.
             </p>
           </noscript>
           <fieldset disabled={state.kind === "sending"}>

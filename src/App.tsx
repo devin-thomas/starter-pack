@@ -93,6 +93,10 @@ const phaseSummaries: readonly PhaseSummary[] = [
 
 type NavigationLink = readonly [href: string, label: string];
 
+// The heading id of the guide's optional connector section, from content/pages/guide.md.
+const guideConnectorHref: string =
+  "/guide#optional-connect-the-starter-pack-to-claude-or-chatgpt";
+
 const nav: readonly NavigationLink[] = [
   ["/guide", "Guide"],
   ["/skills", "Skills"],
@@ -1449,24 +1453,19 @@ export function App({ path, data }: AppProps): ReactElement {
                 </a>
                 <section
                   className="content-section how-it-works"
-                  aria-labelledby="codex-start"
+                  aria-labelledby="connector-start"
                 >
-                  <span className="eyebrow">BUILD WITH CODEX</span>
-                  <h2 id="codex-start">Let Codex carry the work forward.</h2>
+                  <span className="eyebrow">OPTIONAL</span>
+                  <h2 id="connector-start">
+                    Connect the Starter Pack to Claude or ChatGPT.
+                  </h2>
                   <p>
-                    On your computer, paste the starting prompt into Codex. The
-                    pack gives it instructions for setup, private progress,
-                    planning, building, and deployment. You choose the result,
-                    handle sign-ins and approvals, and try what it builds.
+                    The connector lets your chat app look up the course steps,
+                    your next step and the current skills. It reads only the
+                    public course and needs no sign-in.
                   </p>
-                  <p>
-                    New: an optional local workflow lets a program start Codex
-                    through your ChatGPT sign-in and resume its session. We
-                    verified two tasks across a close and restart, checking the
-                    files Codex made each time.
-                  </p>
-                  <a className="text-link" href="/guide#build-with-codex">
-                    See what Codex handles and how to try it
+                  <a className="text-link" href={guideConnectorHref}>
+                    How to add the connector
                     <Icon name="arrow-right" size={15} />
                   </a>
                 </section>
