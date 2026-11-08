@@ -245,9 +245,7 @@ export function allowedHost(hostname: string, host: string): boolean {
   return (
     siteHosts.has(host) ||
     loopbackHosts.has(hostname) ||
-    /^starter-pack(?:-internal-preview)?\.[a-z0-9-]+\.workers\.dev$/.test(
-      hostname,
-    )
+    /^starter-pack(?:-[a-z0-9]+)*\.uppercut-labs\.workers\.dev$/.test(hostname)
   );
 }
 

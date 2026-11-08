@@ -289,10 +289,19 @@ test("the recorded verification example fits the agent-mcp progress contract", (
   assert.equal(sample.learner_confirmed, true);
 });
 
+// Planning and private-repository words, built from parts so this public file never spells them out.
+const planningTerms = new RegExp(["S" + "P3-", "walkthrough", "G" + "RILL", "starter-pack-" + "internal", "devin-thomas\\/"].join("|"));
+
+test("the planning-term check catches every term it guards", () => {
+  for (const planted of ["S" + "P3-006", "a walkthrough", "G" + "RILL-DECISIONS", "starter-pack-" + "internal", "devin-thomas/"])
+    assert.match(`text with ${planted} inside`, planningTerms, planted);
+  assert.doesNotMatch("Lantern Street Tool Library", planningTerms);
+});
+
 test("public example files carry no planning, private dvn material or secrets", async () => {
   const source = await readFile(`${folder}/server.mjs`, "utf8");
   for (const [name, body] of [["README.md", readme], ["server.mjs", source], ["Level 3", level3]] as const) {
-    assert.doesNotMatch(body, /SP3-|walkthrough|GRILL|starter-pack-internal|devin-thomas\//, name);
+    assert.doesNotMatch(body, planningTerms, name);
     assert.doesNotMatch(body, /[\w.+-]+@(?!modelcontextprotocol\/)[\w-]+\.[\w.]+/, name);
     assert.doesNotMatch(body, /\bD[Vv][Nn]\b/, name);
     assert.doesNotMatch(body, /dvn\.pw\/(mcp|sign-in|downloads)/, name);

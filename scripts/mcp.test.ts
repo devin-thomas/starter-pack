@@ -258,7 +258,7 @@ test("HTTP layer: POST JSON only, bounded size, protocol header, Origin and Host
     assert.equal((await handleMcp(post(ok, { Origin: origin }), env)).status, 200, origin);
   for (const url of ["https://evil.example/mcp", "https://starter.uppercut-labs.com.evil.example/mcp"])
     assert.equal((await handleMcp(post(ok, {}, url), env)).status, 403, url);
-  for (const url of [origins.workerOrigin + "/mcp", "https://starter-pack-internal-preview.uppercut-labs.workers.dev/mcp", "http://127.0.0.1:8787/mcp"])
+  for (const url of [origins.workerOrigin + "/mcp", "https://starter-pack-example.uppercut-labs.workers.dev/mcp", "http://127.0.0.1:8787/mcp"])
     assert.equal((await handleMcp(post(ok, {}, url), env)).status, 200, url);
 });
 
