@@ -2,7 +2,7 @@
 
 1. **[Go to the starting prompt](/guide#starting-prompt).** Use **Copy prompt**, then paste it into your agent and send the message. It checks what device and tools you already have, then helps you find the right starting point.
 2. **Take the next useful step.** Your agent reads focused guidance as you need it. You do not need to learn every tool before making something.
-3. **Keep your own record.** Your agent records completed, skipped, and deferred steps in a progress file. During Phase 2 setup, it saves that file to your private GitHub repo as soon as access is ready, before Quick Build begins.
+3. **Keep your own record.** Your agent records completed, skipped, and deferred steps in a progress file. During Phase 2 setup, it saves that file to your private GitHub repo as soon as access is ready, before you plan your project.
 4. **Pick up where you left off.** Attach your saved progress file, or paste your saved progress text, into your agent when you return. Tell it what you have done and ask for clarification whenever you need it.
 
 ## Build with Codex
@@ -19,7 +19,7 @@ The optional local workflow adds a way for software to drive Codex using its man
 
 Want to see it work yourself? After required Computer Setup, tell Codex: **I want to try the optional local Codex programmatic-harness proof.** Your agent loads the reusable instructions and guides the small experiment. It needs an eligible ChatGPT plan, with no OpenAI Platform API key or API billing. See the [Phase 2 workflow](/phases/2#optional-try-a-programmatic-harness-with-codex) for the steps; your agent handles the pinned installation instructions.
 
-You can use Codex for the ordinary setup and build path without running this experiment. The proof is optional and never gates Quick Build. Broader workflows that coordinate many tasks are a next step; the released proof covers local Codex sessions.
+You can use Codex for the ordinary setup and build path without running this experiment. The proof is optional and never gates planning or building your project. Broader workflows that coordinate many tasks are a next step; the released proof covers local Codex sessions.
 
 ## See your progress locally
 

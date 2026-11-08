@@ -1,15 +1,19 @@
 ---
 name: quick-build
-description: Shape a meaningful Starter Pack project with one design interview, an approved plan, a durable build, and live deployment.
-version: 0.2.3
-updated: 2026-10-09
+description: Shape a meaningful Starter Pack project with one design interview, an approved plan, a durable build, and live deployment, when the learner explicitly asks for Quick Build instead of the default Grill to Build.
+version: 0.2.4
+updated: 2026-11-08
 ---
 
 # Quick Build
 
 ## Entry gate
 
-Before the interview, load existing progress and the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json), or the matching generated definitions already supplied. This skill uses resource version `0.2.0`, requirements revision `2026-10-09`. Resolve Quick Build's prerequisites from that registry, not a separately maintained checklist. Computer capability evidence includes the selected editor and actual CLI execution contexts; the remote baseline distinguishes networking on both devices, each file-transfer direction, and one real phone-to-harness action. One successful route does not certify another. Confirm the latest progress and setup state reached a private GitHub repository using the [progress guide](https://starter.uppercut-labs.com/artifacts/progress/README.md); a local commit or empty remote is insufficient.
+In Phase 2, full [Grill to Build](https://starter.uppercut-labs.com/skills/grill-to-build/current/SKILL.md) is the standard planning workflow. Use this skill only when the learner explicitly asked for Quick Build in their own words, or when resuming a Quick Build the learner already chose. Do not choose it for them, suggest it as a shortcut, or switch to it because discovery takes effort. Record the choice in the `quick-build` step's `notes`, for example "Workflow: Quick Build (learner asked on <date>)". An approved Quick Build plan and go-ahead stay valid on resume: continue that build instead of planning again. If the learner asks to switch back, continue with Grill to Build and reuse every answer already given.
+
+Suggest a new project for Phase 2. Reuse or rebuild the Phase 1 instant build only when the learner asks. The Phase 1 Two-Build Challenge is optional and never a prerequisite.
+
+Before the interview, load existing progress and the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json), or the matching generated definitions already supplied. This skill uses resource version `0.2.0`, requirements revision `2026-11-08`. Resolve the prerequisites of the `quick-build` step ("Plan and build your project") from that registry, not a separately maintained checklist. Computer capability evidence includes the selected editor and actual CLI execution contexts; the remote baseline distinguishes networking on both devices, each file-transfer direction, and one real phone-to-harness action. One successful route does not certify another. Confirm the latest progress and setup state reached a private GitHub repository using the [progress guide](https://starter.uppercut-labs.com/artifacts/progress/README.md); a local commit or empty remote is insufficient.
 
 If a prerequisite is missing, preserve results and return to the focused [Computer Setup](https://starter.uppercut-labs.com/skills/computer-setup/current/SKILL.md) action. Reuse verified evidence instead of repeating successful installs, sign-ins, or phone tests. Email preferences and the Workbench are not gates. A historically completed phase retains its revision; on resume do not restart Quick Build because of an obsolete pointer. Reconcile completion first and offer any newly introduced checks separately.
 
@@ -33,7 +37,7 @@ Synthesize the first meaningful action, starting empty state, whose content is u
 
 Write a few plain-language behavioral acceptance checks from the approved promise. Separate build/type checks, layout/accessibility, deployment availability, and the actual live user action. Identify which platform promises need real-device evidence, such as background audio or touch interaction; screenshots or desktop emulation cannot prove those. A clear learner report counts, labeled with device and action. Mark unperformed checks pending instead of claiming success.
 
-Summarize the planned result in plain English. Say: "I wrote the plan and broke the build into steps. You can tell me to go, or ask to inspect the plan or tickets first." Complete this stage only after the learner approves. Revise before building if they request changes.
+Summarize the planned result in plain English. Say: "I wrote the plan and broke the build into steps. You can tell me to go, or ask to inspect the plan or tickets first." Record the approval or requested revisions in the `quick-build` step's `notes` with the date and plan location. Complete this stage only after the learner approves. Revise before building if they request changes.
 
 ## Deliver
 

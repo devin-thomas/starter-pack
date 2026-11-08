@@ -1,6 +1,6 @@
 # Quick Build artifact templates
 
-Version: 0.2.0. Use these when the [Quick Build skill](https://starter.uppercut-labs.com/skills/quick-build/current/SKILL.md) reaches planning, after its canonical prerequisites pass. Make the templates available before the interview, not at Phase 3. Replace bracketed fields with the learner's decisions. Adapt filenames to the repository's conventions. These are public blank templates, not this site's internal planning.
+Version: 0.2.0. Use these when the learner asked for Quick Build and the [Quick Build skill](https://starter.uppercut-labs.com/skills/quick-build/current/SKILL.md) reaches planning, after its canonical prerequisites pass. Phase 2 otherwise plans with the [Grill to Build templates](https://starter.uppercut-labs.com/artifacts/grill-to-build/README.md). Make the templates available before the interview, not at Phase 3. Replace bracketed fields with the learner's decisions. Adapt filenames to the repository's conventions. These are public blank templates, not this site's internal planning.
 
 - [PLAN.md](https://starter.uppercut-labs.com/artifacts/quick-build/PLAN.md): goal, scope, delivery sequence, and approval.
 - [SPEC.md](https://starter.uppercut-labs.com/artifacts/quick-build/SPEC.md): observable product behavior and completion.

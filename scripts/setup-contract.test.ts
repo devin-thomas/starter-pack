@@ -52,7 +52,7 @@ test("optional harness tracking preserves gates and required next actions", () =
   assert.equal(pack.codex_auth, "managed_chatgpt_sign_in");
   assert.equal(pack.codex_billing, "eligible_chatgpt_plan; no_openai_platform_api_key_or_api_billing");
   assert.equal(pack.installation_scope, "project_local_after_explicit_approval");
-  assert.equal(registry.requirements_revision, "2026-10-09");
+  assert.equal(registry.requirements_revision, "2026-11-08");
   assert.deepEqual(registry.phases["phase-2"].gate, { all_of: [
     "computer-setup", "private-progress-repository", "phase-2-remote-baseline",
     "quick-build", "live-deployment", "final-progress-save",
@@ -99,7 +99,7 @@ test("released Codex harness onboarding stays optional and saves only normalized
   for (const document of [phase, guide, starter, setup]) {
     assert.match(document, /managed ChatGPT sign-in/);
     assert.match(document, /API key|API billing/);
-    assert.match(document, /Quick Build/);
+    assert.match(document, /project planning|planning your project/);
     assert.match(document, /explicit opt-in|opt in|opts in|Ask explicitly/i);
   }
   assert.match(guide, /0\.1\.1/);
@@ -358,7 +358,8 @@ test("Docker remains optional and last with licensing and conditional Rosetta ch
 
 test("setup stages skills before use without claiming copied context is a native installation", async () => {
   assert.match(skill, /native_discovered.*context_only.*not_tested/);
-  assert.match(skill, /Stage the current \[Quick Build skill\]/);
+  assert.match(skill, /Stage the current \[Grill to Build skill\][\s\S]*standard Phase 2 planning workflow/);
+  assert.match(skill, /Stage the current \[Quick Build skill\][\s\S]*only when the learner explicitly asks for Quick Build/);
   assert.match(skill, /before their first use/);
   assert.match(skill, /25-skill bundle, orchestration and Phase 3 are not setup requirements/);
   assert.equal(skill, await readFile(`public/skills/computer-setup/${manifest.skill_version}/SKILL.md`, "utf8"));

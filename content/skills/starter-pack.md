@@ -1,6 +1,6 @@
 ---
 skill_id: starter-pack
-updated: 2026-09-17
+updated: 2026-11-08
 ---
 
 # Starter Pack
@@ -25,7 +25,7 @@ The companion skill manages your journey through the three phases:
 
 4. **Record and hand off** — After each session, it runs a closeout check: saves your progress, clears stale pointers, and states what is complete, what is deferred, and the single next action. On a phone without file tools, it gives you the full updated JSON to copy or download.
 
-5. **Transition between phases** — Phase 1 happens on your phone. When you are ready for a computer, the skill hands off your progress with the selected harness, completed work, and next action. Phase 2 starts with Computer Setup and proceeds through Quick Build.
+5. **Transition between phases** — Phase 1 happens on your phone. When you are ready for a computer, the skill hands off your progress with the selected harness, completed work, and next action. Phase 2 starts with Computer Setup, then plans a new project with Grill to Build (or Quick Build, if you ask for it) and builds it.
 
 ## Inputs
 

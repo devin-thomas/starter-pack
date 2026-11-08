@@ -1,6 +1,6 @@
 {
   "version": "0.2.0",
-  "requirements_revision": "2026-10-09",
+  "requirements_revision": "2026-11-08",
   "phases": {
     "phase-1": {
       "gate": {
@@ -488,7 +488,7 @@
       "completion_meaning": "One real phone-to-harness interaction performs a harmless action in the selected computer session through the selected supported route. A phone chatbot login, Tailscale connection or file transfer alone cannot satisfy harness control; native harness control can pass independently of them."
     },
     "quick-build": {
-      "title": "Shape and build your project",
+      "title": "Plan and build your project",
       "phase": "phase-2",
       "requirement": "required",
       "gate_for": [
@@ -504,8 +504,8 @@
         "learner_report",
         "remote_check"
       ],
-      "guide": "/skills/quick-build/current/SKILL.md",
-      "completion_meaning": "The harness has built the learner-approved meaningful project after the explicit go decision, with its intended main flow working and durable source saved to the intended source repository. A disposable demo, build-only pass or progress repository without project source is insufficient."
+      "guide": "/skills/grill-to-build/current/SKILL.md",
+      "completion_meaning": "The learner approved an inspectable plan for a meaningful project, made with full Grill to Build by default or with Quick Build only when the learner explicitly asked for it. After the explicit go decision the harness built it, with its intended main flow working and durable source saved to the intended source repository. A disposable demo, build-only pass, silently shortened plan or progress repository without project source is insufficient."
     },
     "live-deployment": {
       "title": "Verify your live project",
@@ -521,7 +521,7 @@
         "agent_check",
         "learner_report"
       ],
-      "guide": "/skills/quick-build/current/SKILL.md",
+      "guide": "/skills/grill-to-build/current/SKILL.md",
       "completion_meaning": "The intended deployed application performs its primary user behavior at the live URL, with clear agent-tested or learner-reported evidence and target-device gaps stated honestly. HTTP 200, a login page, a screenshot or a successful build alone is not behavioral verification."
     },
     "workbench-publishing-extra-credit": {
@@ -550,7 +550,7 @@
       ],
       "guide": "/phases/2",
       "legacy": true,
-      "completion_meaning": "Preserve this historical aggregate and its evidence as recorded activity, not an automatic alias for Quick Build, verified live behavior or the final private progress save."
+      "completion_meaning": "Preserve this historical aggregate and its evidence as recorded activity, not an automatic alias for the planned and built project, verified live behavior or the final private progress save."
     },
     "cli-contexts": {
       "title": "Commands work in the intended contexts",
@@ -655,7 +655,7 @@
         "agent_check"
       ],
       "guide": "/phases/2",
-      "completion_meaning": "After explicit opt-in and a compatible released workflow, a local two-turn file proof passes with the same session resumed. Record only normalized evidence in artifacts.programmatic_harness. Cloud proof is separate; absence, decline, deferral or failure never blocks Quick Build or graduation. This activity is preparation until the compatible adapter and reusable skill are released."
+      "completion_meaning": "After explicit opt-in and a compatible released workflow, a local two-turn file proof passes with the same session resumed. Record only normalized evidence in artifacts.programmatic_harness. Cloud proof is separate; absence, decline, deferral or failure never blocks project planning, the build or graduation. This activity is preparation until the compatible adapter and reusable skill are released."
     }
   },
   "aliases": {

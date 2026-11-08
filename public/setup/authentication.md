@@ -39,7 +39,7 @@ Keep this nonsecret evidence in private setup/session records. It is not public 
 
 Keep GitHub's email-privacy protection enabled. Determine which unpushed commit contains the unwanted address; changing current configuration does not change existing commits. Propose the narrow repo-local identity correction and, only with explicit approval, correction of the affected unpushed commit. If the single affected commit is HEAD, a scoped authorized amendment may fit; older commits require a separately reviewed history plan. Never rewrite shared history, force-push unrelated work, or disable the safeguard to finish onboarding. [GitHub push privacy protection](https://docs.github.com/en/account-and-profile/how-tos/email-preferences/blocking-command-line-pushes-that-expose-your-personal-email-address).
 
-An auth diagnostic alone is not the final verdict: use the result of the safe, authorized intended save. On an actual failure retain local successes and record the precise auth/permission/identity/remote-save recovery. Independent setup may continue, but private saving is not complete and Quick Build must wait.
+An auth diagnostic alone is not the final verdict: use the result of the safe, authorized intended save. On an actual failure retain local successes and record the precise auth/permission/identity/remote-save recovery. Independent setup may continue, but private saving is not complete and project planning must wait.
 
 ## Save metadata, not credentials
 

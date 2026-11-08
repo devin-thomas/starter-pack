@@ -1,6 +1,6 @@
 ---
 skill_id: quick-build
-updated: 2026-10-05
+updated: 2026-11-08
 ---
 
 # Quick Build
@@ -42,7 +42,7 @@ Quick Build follows five stages in order:
 
 ## Prerequisites
 
-None for standalone use. When used as part of Starter Pack Phase 2, the curriculum contract and its prerequisites apply.
+None for standalone use. In Starter Pack Phase 2, Grill to Build is the standard planning path; Quick Build is used there only when you ask for it, and the curriculum contract and its prerequisites apply.
 
 ## Reuse the Codex readiness check
 

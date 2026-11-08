@@ -1,6 +1,6 @@
 ---
 skill_id: grill-to-build
-updated: 2026-09-23
+updated: 2026-11-08
 ---
 
 # Grill to Build
@@ -11,11 +11,11 @@ Turn a rough idea into an implementation-ready build pack through focused discov
 
 You have an idea for a product, feature, migration, or architecture change and want to resolve uncertainty before writing code. Grill to Build is designed for projects that need more discovery than Quick Build provides — when the scope, domain, or integration surface is large enough that jumping straight to implementation would waste effort.
 
-Not the right fit for small apps that can be scoped in one conversation. Use Quick Build for those.
+It is also the standard way to plan a Starter Pack Phase 2 project, explained for beginners: your agent asks about what the app should do and explains the technical ideas, rather than quizzing you about frameworks. For a small app you want scoped in one conversation, you can ask for Quick Build instead.
 
 ## How it works
 
-Grill to Build maintains five living artifacts and runs a structured pipeline:
+Grill to Build maintains a small set of living artifacts and runs a structured pipeline:
 
 1. **Extract the raw idea** — Inspects your repository and request to pull out everything already known: problem, user, platform, constraints, technology preferences, and existing decisions. Initializes only missing discovery artifacts.
 
@@ -27,11 +27,12 @@ Grill to Build maintains five living artifacts and runs a structured pipeline:
 
 5. **Decompose tickets** — Creates ordered ticket files with a stable prefix, each containing a goal, concrete scope, observable acceptance criteria, and dependencies. Prefers vertical increments over file-level chores.
 
-6. **Build and feed back** — When implementation is requested, starts from the first ticket and routes new information deliberately: requirements update Context and SPEC, architectural decisions update ADR, future ideas go to Ideas.md, and implementation details leave product artifacts alone.
+6. **Build and feed back** — When implementation is requested, starts from the first ticket and routes new information deliberately: requirements update PROJECT.md and SPEC, architectural decisions update ADR, future ideas go to Ideas.md, and implementation details leave product artifacts alone.
 
 ### The artifacts
 
-- **Context.md** — Living, canonical understanding and system model
+- **PROJECT.md** — Living project brief: scope, agreed rules, discovery progress, open questions, and the system model
+- **GLOSSARY.md** — The project's canonical terms only, created once the first term is settled
 - **ADR.md** — Append-only record of consequential decisions (accepted, rejected, proposed, superseded)
 - **Ideas.md** — Valuable work deliberately deferred from current scope
 - **SPEC.md** — Implementation contract, created only after discovery stabilizes
@@ -39,7 +40,7 @@ Grill to Build maintains five living artifacts and runs a structured pipeline:
 
 ## Diagram format is a contract
 
-Grill to Build asks once which living-model format to use: Graphviz DOT, Markdown/Mermaid, Figma/FigJam, Excalidraw, diagrams.net, or no diagram. An explicit choice is binding for the workflow.
+Grill to Build keeps its living model in Markdown/Mermaid unless you choose another format, such as Graphviz DOT, Figma/FigJam, Excalidraw, diagrams.net, or no diagram. It does not open with a format question. An explicit choice is binding for the workflow.
 
 The agent must **not** substitute an AI-generated raster image for the selected diagram format. Image generation is used only when you explicitly choose generated imagery as the diagram source or output method.
 
@@ -66,7 +67,7 @@ For system and architecture diagrams, **Graphviz DOT → SVG (+ optional PNG)** 
 
 ## Outputs
 
-- A synchronized set of Context, ADR, Ideas, SPEC, and ticket artifacts
+- A synchronized set of PROJECT, GLOSSARY, ADR, Ideas, SPEC, and ticket artifacts
 - An implementation-ready build pack with testable acceptance criteria
 - A ubiquitous vocabulary used consistently across all artifacts and code
 

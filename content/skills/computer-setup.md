@@ -1,6 +1,6 @@
 ---
 skill_id: computer-setup
-updated: 2026-10-09
+updated: 2026-11-08
 ---
 
 # Computer Setup
@@ -45,7 +45,7 @@ Computer Setup follows an inspect-approve-install-verify cycle:
 - A private GitHub repository for durable progress saving
 - Verified networking and file transfer between phone and computer
 - A local Progress Workbench for viewing your state
-- A handoff ready for Quick Build
+- A handoff ready for planning your Phase 2 project
 
 ## Prerequisites
 

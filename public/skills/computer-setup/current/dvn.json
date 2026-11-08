@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "skillName": "computer-setup",
-  "skillBlobSha": "e643e227351b9b225e645a940d15d4e7c4245cf7",
+  "skillBlobSha": "faa0bd36a9ab1f56eca311ac7880f9ece3b470cd",
   "auditComplete": true,
   "resources": [
     {
       "key": "requirements",
       "path": "workbench-steps.json",
-      "gitBlobSha": "7a1548a9cf67c19e601f3366a7d9ece67a025626",
+      "gitBlobSha": "35ab9d1109724e1be745751c9c269ceae7e9157e",
       "required": "mandatory",
       "repository": "devin-thomas/starter-pack",
       "root": "content"
@@ -15,7 +15,7 @@
     {
       "key": "progress",
       "path": "progress/README.md",
-      "gitBlobSha": "d8f0d36ccc8464c9c511b663967f9d025e4d4b02",
+      "gitBlobSha": "c394d9d4e1b60d3c5ee467948af1d392a210282d",
       "required": "mandatory",
       "repository": "devin-thomas/starter-pack",
       "root": "public/artifacts"
@@ -31,7 +31,7 @@
     {
       "key": "progress-template",
       "path": "progress/starter-progress.json",
-      "gitBlobSha": "9bf2164770d5b8e779b06c664c2f0ddaa1f0bfc6",
+      "gitBlobSha": "59814f192506f2fb87ee0658fc445f19e46adef0",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/artifacts"
@@ -39,7 +39,7 @@
     {
       "key": "readiness",
       "path": "codex-readiness.md",
-      "gitBlobSha": "042b03f0796c23a4fb18054fdd6826bcc1ed9418",
+      "gitBlobSha": "06cf7173e1940c6cad18e8dba308bfd08ed70d35",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -47,7 +47,7 @@
     {
       "key": "workbench",
       "path": "progress-workbench/README.md",
-      "gitBlobSha": "4868f85606c1d8188a485f99074e4d3badf6f64a",
+      "gitBlobSha": "0ab112e76ffd32c50fddec4630a15c9e38d06c1f",
       "required": "mandatory",
       "repository": "devin-thomas/starter-pack",
       "root": "public/artifacts"
@@ -55,7 +55,7 @@
     {
       "key": "resource-directory",
       "path": "resource-links.md",
-      "gitBlobSha": "2e5a587b7e6a28db4b9bacc5895d90089ffaf91c",
+      "gitBlobSha": "ddb20fb7801fcfc94dd049d34e7ed1598c7e953c",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/agent"
@@ -63,7 +63,7 @@
     {
       "key": "setup-manifest",
       "path": "computer-setup.manifest.json",
-      "gitBlobSha": "2731abce3e9575f6b85a7867916f572096f80cb4",
+      "gitBlobSha": "64f084b88fd55c001518b706a3648f9b8413d292",
       "required": "mandatory",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -71,7 +71,7 @@
     {
       "key": "windows",
       "path": "windows.md",
-      "gitBlobSha": "536dbdc21d719b5d1af2fcbd0057f9faa92ff390",
+      "gitBlobSha": "b1c6ae03c076ca783e86387489d48542f64fdb30",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -79,7 +79,7 @@
     {
       "key": "macos",
       "path": "macos.md",
-      "gitBlobSha": "65da69034b5e639ee9c4cd04535ba7a15c256d8c",
+      "gitBlobSha": "764a9a153bd83b3296d9e767ab10d7ebdda56247",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -87,7 +87,7 @@
     {
       "key": "linux",
       "path": "linux.md",
-      "gitBlobSha": "247535aaaab8927cfe28ce348dc4cb45bcf5fbaf",
+      "gitBlobSha": "dbb9667a3fd773ae133b3e3b56e1a6eaa88ffecd",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -95,7 +95,7 @@
     {
       "key": "setup-state",
       "path": "state.example.json",
-      "gitBlobSha": "2bd5d2312054156f3c01cbd2afe3f8121eac2221",
+      "gitBlobSha": "481ea8db07599b536f30f7ba656c10f78d81f861",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -103,7 +103,7 @@
     {
       "key": "authentication",
       "path": "authentication.md",
-      "gitBlobSha": "3175bc0ed1bcdefdeb8880d7bd3829a9249aa1e3",
+      "gitBlobSha": "133eda389342cc8cf39e4bca8451199c343c2646",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -127,7 +127,7 @@
     {
       "key": "remote-access",
       "path": "remote-access.md",
-      "gitBlobSha": "8ea02bd9e34278ee22a7a501120d2a285fbd332a",
+      "gitBlobSha": "f9e9fbc29c531639128107b040e1b1e9818ce5b0",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup",
@@ -146,7 +146,7 @@
     {
       "key": "private-workbench",
       "path": "private-workbench.md",
-      "gitBlobSha": "ff7d52aaa7bb328fe2f0a2954cb4a17aef994231",
+      "gitBlobSha": "32a90d4b208a3a816e439e610406373a1acac6a0",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -165,7 +165,7 @@
     {
       "key": "programmatic-harness",
       "path": "programmatic-harness.md",
-      "gitBlobSha": "dbc99469f18e0c9f58b259147e462c49390a11cd",
+      "gitBlobSha": "999987ec95a16e385429faf15cb065093fa14fb0",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -288,6 +288,13 @@
       "dependencies": []
     },
     {
+      "key": "grill-to-build",
+      "resources": [],
+      "dependencies": [
+        "grill-to-build"
+      ]
+    },
+    {
       "key": "quick-build",
       "resources": [],
       "dependencies": [
@@ -323,6 +330,14 @@
     }
   ],
   "dependencies": [
+    {
+      "key": "grill-to-build",
+      "canonicalId": "starter-pack/grill-to-build",
+      "required": "stage",
+      "stages": [
+        "grill-to-build"
+      ]
+    },
     {
       "key": "quick-build",
       "canonicalId": "starter-pack/quick-build",

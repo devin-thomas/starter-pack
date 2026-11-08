@@ -25,7 +25,7 @@ const headingIcons: Readonly<Record<string, string>> = {
   "Bring your progress with you": "folder-git-2",
   "Complete Computer Setup": "monitor",
   "Connect and exchange a file": "smartphone",
-  "Have a short design conversation": "list-checks",
+  "Plan your project with your agent": "list-checks",
   "Build and put it online": "rocket",
   "Finish with something you can return to": "check",
   "Choose the idea you want to grow": "sprout",
@@ -470,7 +470,7 @@ export async function generateResources(data: SiteData, output: string) {
     await write(`${output}/skills/${entry.slug}.md`, markdown);
     await write(`${output}/skills/${entry.slug}.json`, JSON.stringify({ ...entry, installation: skillInstallation(entry), markdown }, null, 2));
   }
-  for (const id of ["starter-pack", "computer-setup", "quick-build"]) {
+  for (const id of ["starter-pack", "computer-setup", "grill-to-build", "quick-build"]) {
     await write(
       `${output}/skills/${id}/SKILL.md`,
       await readFile(`public/skills/${id}/current/SKILL.md`, "utf8"),
@@ -496,7 +496,8 @@ export async function generateResources(data: SiteData, output: string) {
           ...(phase.order === 2 ? [
             `- [Computer Setup instructions](${origin}/skills/computer-setup/SKILL.md)`,
             `- [Optional Codex programmatic-harness guide](${origin}/setup/programmatic-harness.md)`,
-            `- [Quick Build instructions](${origin}/skills/quick-build/SKILL.md)`,
+            `- [Grill to Build instructions (standard planning)](${origin}/skills/grill-to-build/SKILL.md)`,
+            `- [Quick Build instructions (only when the learner asks)](${origin}/skills/quick-build/SKILL.md)`,
             `- [Private progress repository instructions](${origin}/artifacts/progress/README.md)`,
             `- [Progress Workbench lifecycle](${origin}/artifacts/progress-workbench/README.md)`,
           ] : []),

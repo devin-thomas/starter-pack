@@ -41,7 +41,7 @@ test("readiness checkpoints cover milestones and the required scenarios", async 
   for (const milestone of [
     "Phase 1 closeout and device/companion handoff",
     "Computer Setup entry and closeout",
-    "Quick Build planning and the transition to approved implementation",
+    "Phase 2 project planning and the transition to approved implementation",
     "deployment/release and phase closeout",
     "after a material change to host, machine, workspace, permissions, runtime, or authentication",
   ]) assert.ok(guide.includes(milestone), milestone);
@@ -96,7 +96,7 @@ test("readiness guide, skills, version catalog, and setup manifest agree", async
   const setup = JSON.parse(await readFile("public/setup/computer-setup.manifest.json", "utf8"));
   const skills = JSON.parse(await readFile("content/skills/manifest.json", "utf8"));
   assert.equal(setup.focused_guides.codex_readiness, "https://starter.uppercut-labs.com/setup/codex-readiness.md");
-  assert.equal(setup.skill_version, "0.2.3");
+  assert.equal(setup.skill_version, "0.2.4");
   assert.equal(setup.required_capabilities.some((item: { id: string }) => item.id === "programmatic-harness"), false);
   for (const skill of versions.skills) {
     const current = await readFile(`public${skill.current}`, "utf8");

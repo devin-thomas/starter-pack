@@ -3,7 +3,8 @@
 These public templates help your agent preserve your work. Filled-in personal progress and confidential project planning belong in your private storage.
 
 - [Progress repository template](https://starter.uppercut-labs.com/artifacts/progress/README.md)
-- [Quick Build planning templates](https://starter.uppercut-labs.com/artifacts/quick-build/README.md)
+- [Grill to Build planning templates](https://starter.uppercut-labs.com/artifacts/grill-to-build/README.md)
+- [Quick Build planning templates](https://starter.uppercut-labs.com/artifacts/quick-build/README.md), used only when you ask for Quick Build
 - [Computer Setup manifest](https://starter.uppercut-labs.com/setup/computer-setup.manifest.json)
 - [Setup state example](https://starter.uppercut-labs.com/setup/state.example.json)
 - [Versioned skills](https://starter.uppercut-labs.com/skills/versions.json)

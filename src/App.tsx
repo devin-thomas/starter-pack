@@ -404,9 +404,14 @@ const templateResources: readonly Resource[] = [
     "Your agent uses this to keep a private record of completed work.",
   ],
   [
+    "/artifacts/grill-to-build/README.md",
+    "Grill to Build templates",
+    "Your agent creates the plan and project notes from these files.",
+  ],
+  [
     "/artifacts/quick-build/README.md",
     "Quick Build templates",
-    "Your agent creates the plan and project notes from these files.",
+    "Used instead when you ask for Quick Build.",
   ],
   ["/setup/computer-setup.manifest.json", "Computer Setup manifest"],
   ["/setup/state.example.json", "Setup state example"],
@@ -454,6 +459,10 @@ function Resources({ phase }: ResourcesProps): ReactElement {
                 "/skills/computer-setup/SKILL.md",
                 "Computer Setup instructions",
               ],
+              [
+                "/skills/grill-to-build/SKILL.md",
+                "Grill to Build instructions",
+              ],
               ["/skills/quick-build/SKILL.md", "Quick Build instructions"],
             ] satisfies Resource[])
           : ([
@@ -477,9 +486,14 @@ function Resources({ phase }: ResourcesProps): ReactElement {
           "How your agent inspects and sets up a computer with your approval.",
         ],
         [
+          "/skills/grill-to-build/SKILL.md",
+          "Grill to Build instructions",
+          "How your agent turns an idea into an approved plan and a live project.",
+        ],
+        [
           "/skills/quick-build/SKILL.md",
           "Quick Build instructions",
-          "How your agent turns an idea into an approved plan and a live project.",
+          "A shorter planning path, used only when you ask for it.",
         ],
         ["/agent/catalog.json", "Resource catalog"],
         ["/recommendations.json", "Recommendations data"],
@@ -600,7 +614,8 @@ function RecommendationCard({ item }: RecommendationCardProps): ReactElement {
 
 function resourceIcon(href: string): IconName {
   if (href.includes("computer-setup")) return "monitor";
-  if (href.includes("quick-build")) return "blocks";
+  if (href.includes("quick-build") || href.includes("grill-to-build"))
+    return "blocks";
   if (href.includes("starter-pack") || href.includes("start.md"))
     return "compass";
   if (href.includes("artifacts")) return "folder-git-2";

@@ -1,6 +1,6 @@
 # Your private progress repository
 
-Version: 0.2.0. Updated October 9, 2026. Your companion keeps this record for you; the website does not store it. During Phase 1 and the start of Phase 2 Computer Setup, use existing local or portable progress. A private repository is not required to graduate Phase 1 or begin installing the tools that enable GitHub access.
+Version: 0.2.0. Updated November 8, 2026. Your companion keeps this record for you; the website does not store it. During Phase 1 and the start of Phase 2 Computer Setup, use existing local or portable progress. A private repository is not required to graduate Phase 1 or begin installing the tools that enable GitHub access.
 
 ## Read progress in the local Workbench
 
@@ -66,7 +66,7 @@ Before the first intended commit/push, follow the [authentication guide](https:/
 
 Review the nonsecret files and actual diff, commit and push them, or save a commit through connected tools. Confirm the resulting revision and files on GitHub. Record the repository URL, branch, and checked result in the `private-progress-repository` step's notes; mark it completed only after the remote save succeeds. A local commit or empty private repository is not enough. Save the latest progress and setup results again before leaving Computer Setup. Keep this initial durable checkpoint distinct from `final-progress-save`, which confirms the Phase 2 closeout is saved too.
 
-If authentication, repository creation, or remote saving fails, keep local or portable state with an exact resume action. Independent setup can continue and completed capability checks remain completed, but Quick Build must not begin until its canonical prerequisites, including private remote progress, are confirmed. On resume, inspect what succeeded and continue from that point.
+If authentication, repository creation, or remote saving fails, keep local or portable state with an exact resume action. Independent setup can continue and completed capability checks remain completed, but project planning must not begin until its canonical prerequisites, including private remote progress, are confirmed. On resume, inspect what succeeded and continue from that point.
 
 ## Create the template
 
@@ -78,7 +78,7 @@ The [schema](https://starter.uppercut-labs.com/schemas/starter-progress.schema.j
 
 ## Requirements and older records
 
-Read the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json), or the matching generated definitions in a supplied packet. This release uses version `0.2.0` and requirements revision `2026-10-09`. Evaluate only the relevant phase's gate and its referenced groups, prerequisites, completion meanings, and accepted evidence. `all_of` means every member; `any_of` means a qualifying choice, not all alternatives. These are registry expressions, not JSON Schema validation keywords. Do not infer gates from labels, counts, or optional preferences or maintain a separate curriculum checklist.
+Read the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json), or the matching generated definitions in a supplied packet. This release uses version `0.2.0` and requirements revision `2026-11-08`. Evaluate only the relevant phase's gate and its referenced groups, prerequisites, completion meanings, and accepted evidence. `all_of` means every member; `any_of` means a qualifying choice, not all alternatives. These are registry expressions, not JSON Schema validation keywords. Do not infer gates from labels, counts, or optional preferences or maintain a separate curriculum checklist.
 
 Retain the original data while reconciling known IDs:
 
@@ -124,7 +124,7 @@ On resume, first check whether the attempted save actually reached the remote; r
 
 Before switching devices or agents, provide canonical progress or its private location, completed required outcomes, genuine blockers, selected optional branches, the computer harness separately from the phone companion, one exact next action, and the schema/resource/requirements revisions with focused references. Preserve answered or declined choices. A new agent must inspect and merge the existing record; chats do not automatically transfer across providers.
 
-Make the companion available in Phase 1, Computer Setup at setup entry, and Quick Build plus its planning templates before the Phase 2 interview. Record the source/version used and whether a skill is supplied as `context_only` or confirmed `native_discovered` using the harness's supported discovery behavior. Copying Markdown into an arbitrary directory is not installation proof. Full skill theory, large engineering bundles, and AFK orchestration remain optional later work.
+Make the companion available in Phase 1, Computer Setup at setup entry, and Grill to Build plus its planning templates before Phase 2 project planning; stage Quick Build and its templates instead only when the learner explicitly asks for it. Record the source/version used and whether a skill is supplied as `context_only` or confirmed `native_discovered` using the harness's supported discovery behavior. Copying Markdown into an arbitrary directory is not installation proof. Full skill theory, large engineering bundles, and AFK orchestration remain optional later work.
 
 At the first harness build, keep a short private Markdown session report. For consequential friction, record the date and relevant OS/harness/resource versions, attempted action, observed result, cause hypothesis labeled as a hypothesis, workaround, actual verification, and unresolved next action. Mark an `expert_intervention` when a beginner likely could not devise the rescue, and whether it should become general guidance. Use `not_tested` when evidence is absent. Append later corrections; do not rewrite old reports or describe ordinary Git history as tamper-proof. No logging service is required and no secrets belong in the report.
 

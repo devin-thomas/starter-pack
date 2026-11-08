@@ -20,7 +20,7 @@ Give one short environment summary, then surface the relevant route: use the alr
 
 ## Reuse at milestones
 
-Reuse this checkpoint at Phase 1 closeout and device/companion handoff; Computer Setup entry and closeout; Quick Build planning and the transition to approved implementation; deployment/release and phase closeout; and after a material change to host, machine, workspace, permissions, runtime, or authentication.
+Reuse this checkpoint at Phase 1 closeout and device/companion handoff; Computer Setup entry and closeout; Phase 2 project planning and the transition to approved implementation; deployment/release and phase closeout; and after a material change to host, machine, workspace, permissions, runtime, or authentication.
 
 Compare the current context with the latest valid check. If it is unchanged, reuse the result. If one part changed, recheck only that part. Do not repeat answered intake, login, installation, the optional offer, or a proof run. A new conversation alone does not establish that the target changed; if target continuity matters and cannot be determined, ask one focused question.
 
