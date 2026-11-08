@@ -22,6 +22,22 @@
       "custom_domain": true
     }
   ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "FEEDBACK_DEDUP",
+        "class_name": "FeedbackReceipt"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "FeedbackReceipt"
+      ]
+    }
+  ],
   "ratelimits": [
     {
       "name": "FEEDBACK_RATE_LIMITER",
