@@ -5,6 +5,24 @@
 3. **Keep your own record.** Your agent records completed, skipped, and deferred steps in a progress file. During Phase 2 setup, it saves that file to your private GitHub repo as soon as access is ready, before you plan your project.
 4. **Pick up where you left off.** Attach your saved progress file, or paste your saved progress text, into your agent when you return. Tell it what you have done and ask for clarification whenever you need it.
 
+## Optional: connect the Starter Pack to Claude or ChatGPT
+
+You never need this to finish a phase. The Starter Pack connector lets Claude or ChatGPT look up the current course steps, work out your next step from the steps you name, and list the current skills. It only reads the public course: it never sees your progress file, accounts or GitHub, needs no sign-in, and refuses passwords, keys and personal details.
+
+Copy these exactly when your app asks:
+
+- **Name:** `Starter Pack`
+- **URL:** `https://starter.uppercut-labs.com/mcp`
+- **Description** (ChatGPT asks; optional): `Read-only Starter Pack course guidance: phase steps, your next step and current skills.`
+
+**Claude app, claude.ai or Claude Desktop.** Open [Claude's add-connector form](https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Starter%20Pack&connectorUrl=https://starter.uppercut-labs.com/mcp), which fills in the name and URL, or go to **Connectors** in Claude's settings and choose **Add custom connector**. Check the name and URL, keep the detected **No sign-in**, add no request headers, then choose **Add**. In a chat, ask: "Use the Starter Pack connector: what does Phase 1 require?" On Claude's Free plan you can add one custom connector; remove this one when Phase 3 asks you to connect your own.
+
+**Claude Code.** Run `claude mcp add --transport http starter-pack https://starter.uppercut-labs.com/mcp`.
+
+**ChatGPT on the web.** Open **Plugins**, choose **+**, then **Add custom MCP server**. Enter the name, the optional description and the URL, choose **No authentication**, confirm the warning, then choose **Create as a plugin**. Custom servers depend on your ChatGPT plan and do not work in the phone app; if you do not see the option, skip it.
+
+**Undo.** In Claude, open **Connectors**, select **Starter Pack** and choose **Remove**. A connector cannot be renamed, and Claude allows only one connector per URL, so to fix a typo in the name, remove it and then add it again with the same URL. In Claude Code, run `claude mcp remove starter-pack`. In ChatGPT, open **Plugins**, select **Starter Pack** and disconnect or delete it. Removing it changes nothing in your progress.
+
 ## Build with Codex
 
 On a computer, open Codex and paste the [starting prompt](#starting-prompt). Bring your saved progress if you are returning. On a phone, begin with your supported companion and carry its handoff into your computer harness for Phase 2. Before the first Phase 1 action, your agent checks the conversation host, selected computer harness, and accessible target separately. The copyable Codex readiness checkpoint is `https://starter.uppercut-labs.com/setup/codex-readiness.md`.

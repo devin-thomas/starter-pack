@@ -7,6 +7,7 @@ import {
   type ExampleSiteRoutes,
 } from "./example-sites";
 import { lanternToolsResponse } from "./example-api";
+import { handleMcp, mcpPath } from "./mcp";
 
 type LimitRequest = { readonly key: string };
 type LimitResult = { readonly success: boolean };
@@ -444,6 +445,7 @@ export default {
   fetch(request: Request, env: FeedbackEnv): Promise<Response> {
     let url: URL = new URL(request.url);
     if (url.pathname === "/api/feedback") return handleFeedback(request, env);
+    if (url.pathname === mcpPath) return handleMcp(request, env);
     if (url.pathname.startsWith("/api/"))
       return Promise.resolve(reply(404, "Not found."));
     const lanternTools: Promise<Response> | undefined = lanternToolsResponse(
