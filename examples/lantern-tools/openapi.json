@@ -1,0 +1,435 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Lantern Street Tool Library API",
+    "version": "1.0.0",
+    "summary": "Read-only lookup of a fictional tool library's tools.",
+    "description": "The Starter Pack's Level 2 reference example. The library does not exist; the catalog is example data. Every operation here is public and read-only and returns only public fields. Lending a tool is a staff operation behind the library's sign-in and is not available through this example. The same lookup is available as the lantern-tools command, and its --json output matches these responses. Rate limit: 60 requests per client per minute, counted per server instance."
+  },
+  "servers": [
+    {
+      "url": "https://starter.uppercut-labs.com/examples/lantern-tools/v1"
+    }
+  ],
+  "paths": {
+    "/tools": {
+      "get": {
+        "operationId": "listTools",
+        "summary": "List tools",
+        "description": "Lists the library's tools in catalog order, optionally filtered. Unknown query parameters are rejected.",
+        "parameters": [
+          {
+            "name": "available",
+            "in": "query",
+            "required": false,
+            "description": "Only tools that can (true) or cannot (false) be borrowed now.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "description": "Only tools in this category, ignoring case.",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The matching tools.",
+            "headers": {
+              "RateLimit-Limit": {
+                "description": "Requests allowed per window.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Requests left in the current window.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the window resets.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "Last-Modified": {
+                "description": "The catalog's last update.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public, short-lived caching.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A query parameter is unknown or invalid (code invalid_parameter).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests (code rate_limited).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools/{id}": {
+      "get": {
+        "operationId": "getTool",
+        "summary": "Get one tool",
+        "description": "Returns one tool's public fields.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The tool id, such as cordless-drill.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The tool.",
+            "headers": {
+              "RateLimit-Limit": {
+                "description": "Requests allowed per window.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Requests left in the current window.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the window resets.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "Last-Modified": {
+                "description": "The catalog's last update.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public, short-lived caching.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The id is malformed or a query parameter was sent (code invalid_parameter).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No tool has that id (code not_found).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests (code rate_limited).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loans": {
+      "post": {
+        "operationId": "createLoan",
+        "summary": "Lend a tool (staff only, not available here)",
+        "description": "A protected write operation, listed to show where it sits. It needs a signed-in staff member, and this public example has no staff sign-in, so every request is rejected with 401 and nothing changes.",
+        "security": [
+          {
+            "staffToken": []
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Staff sign-in is required (code authentication_required).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "Names the required scheme.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "operationId": "getOpenApi",
+        "summary": "This document",
+        "responses": {
+          "200": {
+            "description": "The OpenAPI document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "staffToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Issued by the library's staff sign-in. This example has no staff accounts and issues no tokens."
+      }
+    },
+    "schemas": {
+      "Tool": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "category",
+          "loan_days",
+          "available"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "loan_days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 365,
+            "description": "How many days a member may keep the tool."
+          },
+          "available": {
+            "type": "boolean",
+            "description": "Whether the tool can be borrowed now."
+          }
+        }
+      },
+      "Envelope": {
+        "type": "object",
+        "required": [
+          "api_version",
+          "library",
+          "catalog_updated"
+        ],
+        "properties": {
+          "api_version": {
+            "type": "string",
+            "const": "1",
+            "description": "Changes only with a breaking change; the path carries it as v1."
+          },
+          "library": {
+            "type": "string"
+          },
+          "catalog_updated": {
+            "type": "string",
+            "format": "date",
+            "description": "When the catalog was last updated."
+          }
+        }
+      },
+      "ToolList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Envelope"
+          },
+          {
+            "type": "object",
+            "required": [
+              "categories",
+              "count",
+              "tools"
+            ],
+            "properties": {
+              "categories": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Every category in the catalog."
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "tools": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Tool"
+                }
+              }
+            }
+          }
+        ],
+        "unevaluatedProperties": false
+      },
+      "ToolResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Envelope"
+          },
+          {
+            "type": "object",
+            "required": [
+              "tool"
+            ],
+            "properties": {
+              "tool": {
+                "$ref": "#/components/schemas/Tool"
+              }
+            }
+          }
+        ],
+        "unevaluatedProperties": false
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "api_version",
+          "error"
+        ],
+        "properties": {
+          "api_version": {
+            "type": "string",
+            "const": "1"
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "invalid_parameter",
+                  "not_found",
+                  "method_not_allowed",
+                  "authentication_required",
+                  "rate_limited",
+                  "internal_error"
+                ]
+              },
+              "message": {
+                "type": "string"
+              },
+              "status": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

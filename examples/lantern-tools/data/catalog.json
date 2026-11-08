@@ -1,0 +1,13 @@
+{
+  "library": "Lantern Street Tool Library",
+  "updated": "2026-11-08",
+  "tools": [
+    {"id": "cordless-drill", "name": "Cordless drill", "category": "Power tools", "loan_days": 14, "available": true},
+    {"id": "circular-saw", "name": "Circular saw", "category": "Power tools", "loan_days": 7, "available": true},
+    {"id": "pressure-washer", "name": "Pressure washer", "category": "Power tools", "loan_days": 7, "available": false},
+    {"id": "extension-ladder", "name": "Extension ladder (6 m)", "category": "Ladders", "loan_days": 14, "available": false},
+    {"id": "hedge-trimmer", "name": "Hedge trimmer", "category": "Garden", "loan_days": 14, "available": true},
+    {"id": "tile-cutter", "name": "Tile cutter", "category": "Hand tools", "loan_days": 7, "available": true},
+    {"id": "stud-finder", "name": "Stud finder", "category": "Hand tools", "loan_days": 14, "available": true}
+  ]
+}
