@@ -325,7 +325,10 @@ test("the published archive holds exactly the command's source and matches its c
 
 test("the archive installs into a clean folder and runs from there", async () => {
   const folder = await mkdtemp(path.join(tmpdir(), "lantern-install-"));
-  const env = { PATH: process.env.PATH ?? "", HOME: folder, npm_config_cache: path.join(folder, ".npm"), npm_config_update_notifier: "false" };
+  // HOME is the empty folder, so put the running Node's own directory first: version-manager
+  // shims for node, npm and npx (asdf, as on Cloudflare's build image) look for files under HOME.
+  const bin = [path.dirname(process.execPath), process.env.PATH ?? ""].join(path.delimiter);
+  const env = { PATH: bin, HOME: folder, npm_config_cache: path.join(folder, ".npm"), npm_config_update_notifier: "false" };
   try {
     execFileSync("npm", ["install", "--no-save", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", path.resolve(`public/examples/lantern-tools/lantern-tools-${pkg.version}.tgz`)], { cwd: folder, env, stdio: "pipe" });
     const shown = spawnSync("npx", ["--no-install", "lantern-tools", "show", "tile-cutter", "--json"], { cwd: folder, env, encoding: "utf8" });
