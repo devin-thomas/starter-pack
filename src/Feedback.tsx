@@ -49,6 +49,8 @@ export function Feedback(): ReactElement {
   ] = useState<SubmissionState>({ kind: "idle" });
   const status: RefObject<HTMLDivElement | null> =
     useRef<HTMLDivElement | null>(null);
+  const retryIdentity: RefObject<{ digest: string; id: string } | null> =
+    useRef(null);
   const activeRequest: RefObject<FeedbackRequest | null> =
     useRef<FeedbackRequest | null>(null);
 
@@ -112,9 +114,52 @@ export function Feedback(): ReactElement {
     request: FeedbackRequest,
   ): Promise<void> {
     try {
+      const bytes: ArrayBuffer = await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(JSON.stringify(payload)),
+      );
+      const digest: string = [...new Uint8Array(bytes)]
+        .map((byte: number): string => byte.toString(16).padStart(2, "0"))
+        .join("");
+      if (retryIdentity.current?.digest !== digest) {
+        let saved: unknown;
+        try {
+          saved = JSON.parse(
+            sessionStorage.getItem("starter-feedback-retry") ?? "null",
+          );
+        } catch {
+          saved = null;
+        }
+        const prior =
+          saved &&
+          typeof saved === "object" &&
+          "digest" in saved &&
+          "id" in saved &&
+          saved.digest === digest &&
+          typeof saved.id === "string" &&
+          /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+            saved.id,
+          )
+            ? saved.id
+            : crypto.randomUUID();
+        retryIdentity.current = { digest, id: prior };
+        try {
+          sessionStorage.setItem(
+            "starter-feedback-retry",
+            JSON.stringify(retryIdentity.current),
+          );
+        } catch {
+          /* Memory still protects this page. */
+        }
+      }
+      if (activeRequest.current !== request) return;
+      const submissionId: string = retryIdentity.current.id;
       let response: Response = await fetch("/api/feedback", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": submissionId,
+        },
         body: JSON.stringify(payload),
         signal: request.controller.signal,
       });
@@ -131,13 +176,19 @@ export function Feedback(): ReactElement {
         throw new Error("delivery");
       }
       if (activeRequest.current !== request) return;
+      retryIdentity.current = null;
+      try {
+        sessionStorage.removeItem("starter-feedback-retry");
+      } catch {
+        /* Storage is optional. */
+      }
       setState({ kind: "success" });
     } catch (cause: unknown) {
       if (activeRequest.current !== request) return;
       const message: string =
         cause instanceof Error && cause.message === "rate-limit"
           ? "Too many messages were sent recently. Please wait a few minutes and try again. Your text is still here."
-          : "We could not confirm delivery. Your text is still here. A delayed notification may still arrive. Please try later, or email starter@devthomas.site.";
+          : "We could not confirm delivery. Your text is still here. A delayed notification may still arrive. To avoid sending a duplicate, please email starter@devthomas.site instead of retrying this message.";
       setState({ kind: "error", message });
     } finally {
       window.clearTimeout(request.timeoutId);
@@ -229,7 +280,7 @@ export function Feedback(): ReactElement {
               <label htmlFor={`${id}-phase`}>
                 Which part of the process?
                 <select id={`${id}-phase`} name="phase" defaultValue="general">
-                  <option value="general">General / more than one phase</option>
+                  <option value="general">General / multiple phases</option>
                   <option value="1">Phase 1</option>
                   <option value="2">Phase 2</option>
                   <option value="3">Phase 3</option>

@@ -4,6 +4,8 @@ export const phaseIds = ["phase-1", "phase-2", "phase-3"] as const;
 export type Phase = (typeof phaseIds)[number];
 export type RequirementLevel = "required" | "recommended" | "optional";
 export type RequirementSemantics = "all_of" | "any_of";
+/** readiness: a recorded milestone that never satisfies a gate. operation: counts only with verified real-client evidence. */
+export type VerificationRule = "readiness" | "operation";
 
 export type RequirementExpression =
   | { all_of: string[]; any_of?: never }
@@ -29,6 +31,7 @@ export interface RegistryStep {
   aliases?: string[];
   internal?: boolean;
   legacy?: boolean;
+  verification?: VerificationRule;
 }
 
 export interface RegistryPhase {
@@ -68,6 +71,8 @@ export type PhaseRequirements = Omit<RequirementsRegistry, "phases"> & {
 };
 
 const guideOrigin = siteOrigins.canonicalOrigin;
+// Any-of groups whose optional members are alternative routes through one phase's gate.
+const electiveGroups: Readonly<Record<string, Phase>> = { "instant-builder-choice": "phase-1", "agent-native-graduation": "phase-3" };
 const idPattern = /^(?!(?:constructor|prototype)$)[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const guidePattern = /^\/[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_.-]+)*(?:#[a-zA-Z0-9_-]+)?$/;
 
@@ -143,7 +148,8 @@ function parsePhase(value: unknown, id: Phase): RegistryPhase {
   if (Object.hasOwn(raw, "optional")) result.optional = list(raw.optional, path + ".optional");
   if (Object.hasOwn(raw, "preview")) result.preview = boolean(raw.preview, path + ".preview");
   if (id === "phase-3") {
-    if (result.preview !== true || result.gate) invalid(path, "Phase 3 preview without a graduation gate");
+    // Phase 3 always carries its graduation rule; preview only says whether the curriculum is announced as open.
+    if (!result.gate) invalid(path, "Phase 3 with an explicit graduation gate");
   } else if (!result.gate || result.preview === true) {
     invalid(path, "a released phase with an explicit gate");
   }
@@ -168,7 +174,7 @@ function parseStep(value: unknown, id: string): RegistryStep {
   const path = "steps." + id;
   const raw = record(value, path);
   fields(raw, ["title", "phase", "requirement", "gate_for", "prerequisites", "completion_meaning",
-    "completion", "allow_recorded_completion", "evidence", "guide", "aliases", "internal", "legacy"], path);
+    "completion", "allow_recorded_completion", "evidence", "guide", "aliases", "internal", "legacy", "verification"], path);
   if (raw.requirement !== "required" && raw.requirement !== "recommended" && raw.requirement !== "optional") {
     invalid(path + ".requirement", "a supported requirement level");
   }
@@ -198,6 +204,11 @@ function parseStep(value: unknown, id: string): RegistryStep {
   }
   if (Object.hasOwn(raw, "internal")) result.internal = boolean(raw.internal, path + ".internal");
   if (Object.hasOwn(raw, "legacy")) result.legacy = boolean(raw.legacy, path + ".legacy");
+  if (Object.hasOwn(raw, "verification")) {
+    if (raw.verification !== "readiness" && raw.verification !== "operation") invalid(path + ".verification", "readiness or operation");
+    if (result.phase !== "phase-3" || result.completion) invalid(path + ".verification", "a Phase 3 capability step without a completion expression");
+    result.verification = raw.verification;
+  }
   return result;
 }
 
@@ -267,40 +278,43 @@ export function parseRegistry(value: unknown): RequirementsRegistry {
   for (const id of known) visit(id);
 
   const participates = new Map<string, Set<Phase>>(Object.keys(steps).map(id => [id, new Set<Phase>()]));
-  const inspectPrerequisites = (id: string, owner: RegistryStep, gated: boolean, seen = new Set<string>(), builderChoice = false) => {
-    const key = id + ":" + builderChoice;
+  const electiveIn = (id: string): Phase | undefined => {
+    const group = groups[id];
+    return Object.hasOwn(electiveGroups, id) && group.semantics === "any_of" && group.members.length > 1 ? electiveGroups[id] : undefined;
+  };
+  const elective = (step: RegistryStep, choice: Phase | undefined) => choice !== undefined && step.phase === choice && step.requirement === "optional" && !step.completion
+    && (choice !== "phase-3" || step.verification === "operation");
+  const inspectPrerequisites = (id: string, owner: RegistryStep, gated: boolean, seen = new Set<string>(), choice?: Phase) => {
+    const key = id + ":" + choice;
     if (seen.has(key)) return;
     seen.add(key);
     if (Object.hasOwn(groups, id)) {
-      const group = groups[id];
-      const isChoice = id === "instant-builder-choice" && group.semantics === "any_of" && group.members.length > 1;
-      for (const member of group.members) inspectPrerequisites(member, owner, gated, seen, isChoice);
+      for (const member of groups[id].members) inspectPrerequisites(member, owner, gated, seen, electiveIn(id));
     } else {
       const prerequisite = steps[id];
       if (phaseIds.indexOf(prerequisite.phase) > phaseIds.indexOf(owner.phase)) {
         invalid("steps." + id + ".phase", "no later-phase prerequisite");
       }
-      if (gated && prerequisite.requirement !== "required" && !(builderChoice && prerequisite.phase === "phase-1" && prerequisite.requirement === "optional" && !prerequisite.completion)) {
+      if (gated && prerequisite.requirement !== "required" && !elective(prerequisite, choice)) {
         invalid("steps." + id + ".requirement", "required prerequisites for gated outcomes, never optional intake");
       }
       for (const child of graph.get(id) ?? []) inspectPrerequisites(child, owner, gated, seen);
     }
   };
   const inspectedGates = new Set<string>();
-  const inspectGate = (id: string, phaseId: Phase, builderChoice = false) => {
+  const inspectGate = (id: string, phaseId: Phase, choice?: Phase) => {
     checkReference(id, "phases." + phaseId + ".gate");
-    const key = phaseId + ":" + id + ":" + builderChoice;
+    const key = phaseId + ":" + id + ":" + choice;
     if (inspectedGates.has(key)) return;
     inspectedGates.add(key);
     if (Object.hasOwn(groups, id)) {
-      const group = groups[id];
-      const isChoice = id === "instant-builder-choice" && group.semantics === "any_of" && group.members.length > 1;
-      for (const member of group.members) inspectGate(member, phaseId, isChoice);
+      for (const member of groups[id].members) inspectGate(member, phaseId, electiveIn(id));
     } else {
       const step = steps[id];
       if (step.phase !== phaseId) invalid("steps." + id + ".phase", "gates confined to their own phase");
-      if (step.requirement !== "required" && !(builderChoice && step.phase === "phase-1" && step.requirement === "optional" && !step.completion)) {
-        invalid("steps." + id + ".requirement", "required outcomes or a conditional instant-builder alternative");
+      if (step.verification === "readiness") invalid("steps." + id + ".verification", "readiness milestones outside every graduation gate");
+      if (step.requirement !== "required" && !elective(step, choice)) {
+        invalid("steps." + id + ".requirement", "required outcomes or a conditional elective alternative (an instant builder, or a verified Phase 3 operation)");
       }
       participates.get(id)?.add(phaseId);
       if (step.completion) for (const member of expressionMembers(step.completion)) inspectGate(member, phaseId);

@@ -117,6 +117,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "verification": {
+            "$ref": "#/$defs/capabilityVerification"
           }
         },
         "additionalProperties": true
@@ -215,6 +218,9 @@
             }
           },
           "additionalProperties": true
+        },
+        "phase_3": {
+          "$ref": "#/$defs/phase3Choice"
         }
       },
       "additionalProperties": true
@@ -430,6 +436,126 @@
               }
             ]
           }
+        }
+      }
+    },
+    "phase3Choice": {
+      "description": "The learner's opt-in Phase 3 project and goal. Short nonsecret text only: never credentials, tokens, private data or logs.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "project_mode": {
+          "enum": [
+            "extend_phase_2",
+            "existing_project",
+            "new_project"
+          ]
+        },
+        "project_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "description": "Repository or live URL, or the artifacts key of an existing project"
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 280,
+          "description": "What an agent should find, read or do"
+        },
+        "recommended_level": {
+          "enum": [
+            "agent-ready-website",
+            "agent-cli",
+            "agent-api",
+            "agent-mcp",
+            "agent-native-package"
+          ]
+        },
+        "decided_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "notes": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 280
+          }
+        }
+      }
+    },
+    "capabilityVerification": {
+      "description": "Compact nonsecret proof for a Phase 3 capability step. Level 1 uses interface website; graduation needs cli, api or mcp, both checks passed and learner confirmation. Never store credentials, tokens, private data or raw logs.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interface",
+        "client",
+        "expected_output_check",
+        "negative_case_check",
+        "learner_confirmed"
+      ],
+      "properties": {
+        "interface": {
+          "enum": [
+            "website",
+            "cli",
+            "api",
+            "mcp"
+          ]
+        },
+        "client": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "The real agent or client that performed the check, with its version when known"
+        },
+        "operation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "The command, HTTP method and path, MCP tool or public URL exercised"
+        },
+        "expected_output_check": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_run"
+          ]
+        },
+        "negative_case_check": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_run"
+          ]
+        },
+        "learner_confirmed": {
+          "type": "boolean"
+        },
+        "verified_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "requirements_revision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "package_version": {
+          "type": "string",
+          "maxLength": 80,
+          "pattern": "^@?[a-z0-9][a-z0-9._/-]*@[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$",
+          "description": "Released package and exact version, for example @uppercut-labs/agent-native@1.0.1"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 280,
+          "description": "One nonsecret sentence on what was checked"
         }
       }
     }

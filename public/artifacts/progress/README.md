@@ -1,6 +1,6 @@
 # Your private progress repository
 
-Version: 0.2.0. Updated October 9, 2026. Your companion keeps this record for you; the website does not store it. During Phase 1 and the start of Phase 2 Computer Setup, use existing local or portable progress. A private repository is not required to graduate Phase 1 or begin installing the tools that enable GitHub access.
+Version: 0.2.0. Updated November 8, 2026. Your companion keeps this record for you; the website does not store it. During Phase 1 and the start of Phase 2 Computer Setup, use existing local or portable progress. A private repository is not required to graduate Phase 1 or begin installing the tools that enable GitHub access.
 
 ## Read progress in the local Workbench
 
@@ -66,7 +66,7 @@ Before the first intended commit/push, follow the [authentication guide](https:/
 
 Review the nonsecret files and actual diff, commit and push them, or save a commit through connected tools. Confirm the resulting revision and files on GitHub. Record the repository URL, branch, and checked result in the `private-progress-repository` step's notes; mark it completed only after the remote save succeeds. A local commit or empty private repository is not enough. Save the latest progress and setup results again before leaving Computer Setup. Keep this initial durable checkpoint distinct from `final-progress-save`, which confirms the Phase 2 closeout is saved too.
 
-If authentication, repository creation, or remote saving fails, keep local or portable state with an exact resume action. Independent setup can continue and completed capability checks remain completed, but Quick Build must not begin until its canonical prerequisites, including private remote progress, are confirmed. On resume, inspect what succeeded and continue from that point.
+If authentication, repository creation, or remote saving fails, keep local or portable state with an exact resume action. Independent setup can continue and completed capability checks remain completed, but project planning must not begin until its canonical prerequisites, including private remote progress, are confirmed. On resume, inspect what succeeded and continue from that point.
 
 ## Create the template
 
@@ -78,7 +78,7 @@ The [schema](https://starter.uppercut-labs.com/schemas/starter-progress.schema.j
 
 ## Requirements and older records
 
-Read the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json), or the matching generated definitions in a supplied packet. This release uses version `0.2.0` and requirements revision `2026-10-09`. Evaluate only the relevant phase's gate and its referenced groups, prerequisites, completion meanings, and accepted evidence. `all_of` means every member; `any_of` means a qualifying choice, not all alternatives. These are registry expressions, not JSON Schema validation keywords. Do not infer gates from labels, counts, or optional preferences or maintain a separate curriculum checklist.
+Read the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json), or the matching generated definitions in a supplied packet. This release uses version `0.2.0` and requirements revision `2026-11-09`. Evaluate only the relevant phase's gate and its referenced groups, prerequisites, completion meanings, and accepted evidence. `all_of` means every member; `any_of` means a qualifying choice, not all alternatives. These are registry expressions, not JSON Schema validation keywords. Do not infer gates from labels, counts, or optional preferences or maintain a separate curriculum checklist.
 
 Retain the original data while reconciling known IDs:
 
@@ -100,7 +100,7 @@ Run this protocol after the last apparent required outcome, at session close, an
 4. Prepare an updated full record and a history entry in `artifacts.phase_history`, an array. Each newly confirmed completion uses `phase`, `status: "completed"`, `requirements_revision`, actual `recorded_at`, concise `evidence_summary`, and `source`. Keep `phase.current` on the completed phase until the learner chooses the next one. Use actual observed completion times; omit unknown old times instead of inventing them.
 5. Validate writer output against the schema before saving. Use a temporary sibling file and atomic replacement when the filesystem supports it, preserving the previous valid record if validation or writing fails. In phone chat without filesystem access, return the entire updated JSON as a download or copyable block; a patch fragment or hidden chat memory is not a portable save. Say that the learner must retain the file, not that an inaccessible disk or repository was updated.
 6. For Phase 2, complete the final private save protocol below before announcing durable completion. Phase 1 never requires a private repository, desktop, Workbench, email preferences, or deployment. If a private repository is already available and saving is authorized, preserve the closeout there too without turning a temporary save failure into a new Phase 1 gate.
-7. State completion plainly, identify where progress is actually saved, and offer the next phase or a stopping point without beginning it automatically. Phase 3 is a preview, not an automatically certifiable graduation.
+7. State completion plainly, identify where progress is actually saved, and offer the next phase or a stopping point without beginning it automatically. Phase 3 is optional; record its graduation only as described under Phase 3 milestones below.
 
 ### History and repeat checks
 
@@ -124,7 +124,7 @@ On resume, first check whether the attempted save actually reached the remote; r
 
 Before switching devices or agents, provide canonical progress or its private location, completed required outcomes, genuine blockers, selected optional branches, the computer harness separately from the phone companion, one exact next action, and the schema/resource/requirements revisions with focused references. Preserve answered or declined choices. A new agent must inspect and merge the existing record; chats do not automatically transfer across providers.
 
-Make the companion available in Phase 1, Computer Setup at setup entry, and Quick Build plus its planning templates before the Phase 2 interview. Record the source/version used and whether a skill is supplied as `context_only` or confirmed `native_discovered` using the harness's supported discovery behavior. Copying Markdown into an arbitrary directory is not installation proof. Full skill theory, large engineering bundles, and AFK orchestration remain optional later work.
+Make the companion available in Phase 1, Computer Setup at setup entry, and Grill to Build plus its planning templates before Phase 2 project planning; stage Quick Build and its templates instead only when the learner explicitly asks for it. Record the source/version used and whether a skill is supplied as `context_only` or confirmed `native_discovered` using the harness's supported discovery behavior. Copying Markdown into an arbitrary directory is not installation proof. Full skill theory, large engineering bundles, and AFK orchestration remain optional later work.
 
 At the first harness build, keep a short private Markdown session report. For consequential friction, record the date and relevant OS/harness/resource versions, attempted action, observed result, cause hypothesis labeled as a hypothesis, workaround, actual verification, and unresolved next action. Mark an `expert_intervention` when a beginner likely could not devise the rescue, and whether it should become general guidance. Use `not_tested` when evidence is absent. Append later corrections; do not rewrite old reports or describe ordinary Git history as tamper-proof. No logging service is required and no secrets belong in the report.
 
@@ -137,9 +137,30 @@ At the first harness build, keep a short private Markdown session report. For co
 - `deferred`: work is saved for later, with a resume point.
 - `not_applicable`: a conditional branch does not apply, with the reason recorded.
 
-Required steps marked deferred, skipped, or not applicable do not count as complete. Overall phase status is `not_started`, `in_progress`, or `completed`. Phase 3 remains a curriculum preview.
+Required steps marked deferred, skipped, or not applicable do not count as complete. Overall phase status is `not_started`, `in_progress`, or `completed`. Phase 3 is an optional curriculum with its own milestone rules below.
 
 Phase 1 deployment is extra credit. If offered, record it as `phase-1-deployment-extra-credit`: `skipped` when declined, `deferred` when accepted but postponed, or `completed` only after the live app's main action is verified. Keep the route, destination, visibility decision, and live link in nonsecret notes. Skipped or deferred extra credit does not prevent Phase 1 completion and does not satisfy the Phase 2 project milestone.
+
+## Phase 3 milestones
+
+Phase 3 is optional. Move `phase.current` to `phase-3` only after the learner chooses it; a decline stays `skipped` and a postponement `deferred`, and neither is offered again unless the learner asks. Keep older Phase 3 preview records, including a completion claimed under an earlier requirements revision. They are history, not graduation.
+
+Record the choice in `choices.phase_3`: `project_mode` (`extend_phase_2`, `existing_project` or `new_project`), `project_ref` (the repository or live URL, or the key of an existing `artifacts` entry), a one-sentence `goal`, the `recommended_level` and `decided_at`. Mark `phase-3-project` completed once the learner has chosen. Inspect the project's source and earlier decisions before proposing changes, and reuse its durable repository.
+
+Each level is its own step, with `"phase": "phase-3"` so every Workbench copy groups it correctly: `agent-ready-website` (Level 1), `agent-cli` or `agent-api` (Level 2), `agent-mcp` (Level 3), `agent-native-package` (Level 4). Record only the levels the learner chooses; mark others `skipped`, `deferred` or `not_applicable` only when the learner says so. Unchosen levels are never failures.
+
+Mark a level `completed` only after its check, and add a `verification` object with short nonsecret fields:
+
+- `interface`: `website` for Level 1; `cli`, `api` or `mcp` for Levels 2 to 4 (Level 4 uses the interface it produced).
+- `client`: the real agent or client that ran the check, with its version when known. A simulation does not count.
+- `operation`: the command, HTTP method and path, MCP tool, or public URL exercised.
+- `expected_output_check` and `negative_case_check`: `passed`, `failed` or `not_run`. The negative case is one deliberate failure, wrong input, denied request, or (for Level 1) a nonpublic detail the client declines.
+- `learner_confirmed`: `true` only after the learner confirms the result.
+- `verified_at`, `requirements_revision`, an optional `package_version` (exact released version, Level 4) and a one-sentence `summary`.
+
+Never put credentials, tokens, private data, request headers or raw logs in these fields. The schema rejects unknown fields here.
+
+A verified Level 1 is a readiness milestone, not Phase 3 completion. Phase 3 graduates when `phase-3-project` is completed and at least one of `agent-cli`, `agent-api`, `agent-mcp` or `agent-native-package` is completed with an operational interface, both checks `passed` and learner confirmation. Then close the phase with the normal protocol: `phase.status`, `phase.completed_at` and one `artifacts.phase_history` entry under the current revision. Skipped, deferred and not-applicable levels never block it.
 
 ## What to record
 

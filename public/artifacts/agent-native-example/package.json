@@ -1,0 +1,19 @@
+{
+  "name": "pantry-agent-native-example",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A synthetic pantry capability defined once with Uppercut Agent Native and served as a CLI and an HTTP API.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test test/pantry.test.mjs",
+    "pantry": "node src/cli.mjs",
+    "serve": "node src/server.mjs"
+  },
+  "dependencies": {
+    "@uppercut-labs/agent-native": "1.0.1",
+    "zod": "4.6.5"
+  }
+}

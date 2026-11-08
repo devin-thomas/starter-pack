@@ -52,7 +52,7 @@ The skill takes the agent from nothing to one verified capture, reading before i
 
 Cappy is a product-specific agent skill that ships inside the `@uppercut-labs/cappy` npm package, at `.agents/skills/cappy/SKILL.md`. Install it in your game project with `npm install --save-dev @uppercut-labs/cappy`; the skill is then at `node_modules/@uppercut-labs/cappy/.agents/skills/cappy/SKILL.md`. Cappy's own tests fail whenever the skill names a command, flag, error code, or addon call that does not exist. Once Cappy is installed, point your agent at the skill:
 
-```
+```text
 Read the Cappy skill and help me capture the boss intro in my Godot game.
 ```
 

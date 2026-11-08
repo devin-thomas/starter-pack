@@ -50,7 +50,7 @@ None beyond a working web app with a browser available. Works with any existing 
 
 Surface Sweep is available as an agent skill. Point your agent at it when you want visual QA:
 
-```
+```text
 Read the Surface Sweep skill and sweep this web app for visual issues.
 ```
 

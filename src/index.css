@@ -59,7 +59,8 @@ a:focus-visible,
 button:focus-visible,
 textarea:focus-visible,
 input:focus-visible,
-summary:focus-visible {
+summary:focus-visible,
+pre[tabindex]:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
@@ -129,6 +130,8 @@ p {
   top: -70px;
   padding: 14px;
   background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
   z-index: 30;
 }
 .skip-link:focus {
@@ -190,6 +193,23 @@ p {
   height: 12px;
   border-left: 1px solid var(--line-strong);
   margin: 0 5px;
+}
+.resume-hint {
+  margin: 0;
+  padding: 0 20px 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.resume-hint a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.header-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
 }
 .header-guide {
   display: flex;
@@ -260,9 +280,6 @@ p {
   letter-spacing: 0.09em;
   font-weight: 400;
   margin-bottom: 5px;
-  color: var(--muted);
-}
-.preview-icon {
   color: var(--muted);
 }
 .workspace {
@@ -384,7 +401,7 @@ h3 {
 }
 .primary-action {
   border: 1px solid color-mix(in srgb, var(--accent) 70%, white);
-  background: var(--accent);
+  background: #1768c9;
   color: white;
   box-shadow: 0 10px 25px color-mix(in srgb, var(--accent) 22%, transparent);
 }
@@ -857,10 +874,16 @@ h3 {
 }
 .prose pre {
   overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   background: var(--surface);
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: 7px;
+}
+.prose pre:has(> code.language-text) {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .prose table {
   display: block;
@@ -891,6 +914,10 @@ h3 {
 }
 .notice p {
   margin: 0;
+}
+.notice a {
+  color: var(--phase-build);
+  text-decoration: underline;
 }
 .resource-list {
   border: 1px solid var(--line);
@@ -1314,6 +1341,13 @@ a.skill-card:hover {
   mask: no-repeat center / contain;
   -webkit-mask: no-repeat center / contain;
 }
+@media (forced-colors: active) {
+  .ui-icon,
+  .brand-icon-mask {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+}
 .brand-icon-neon {
   color: #34d59a;
 }
@@ -1443,13 +1477,16 @@ a.skill-card:hover {
 .style-agent-inline {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 16px;
   margin-left: auto;
   color: var(--muted);
   font-size: 12px;
 }
 .style-agent-inline button,
 .style-agent-inline a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
   border: 0;
   padding: 2px 0;
   background: transparent;
@@ -1501,6 +1538,11 @@ a.skill-card:hover {
   padding: 0;
   background: transparent;
 }
+.style-guide-intro pre:has(> code[class*="language-"]:not(.language-text)),
+.style-guide-prose pre:has(> code[class*="language-"]:not(.language-text)) {
+  white-space: pre;
+  overflow-wrap: normal;
+}
 .style-guide-prose ul {
   padding-left: 22px;
 }
@@ -1511,9 +1553,6 @@ a.skill-card:hover {
   }
   .header-status {
     display: none;
-  }
-  .header-guide {
-    margin-left: auto;
   }
   .phase-cards {
     grid-template-columns: 1fr;
@@ -1675,9 +1714,6 @@ a.skill-card:hover {
   .header-status {
     display: none;
   }
-  .header-guide {
-    margin-left: auto;
-  }
   .progress-rail {
     min-height: 72px;
     padding: 0 17px;
@@ -1685,7 +1721,6 @@ a.skill-card:hover {
   .progress-rail > a {
     padding: 17px 8px;
   }
-  .preview-icon,
   .progress-rail > a:after {
     display: none !important;
   }

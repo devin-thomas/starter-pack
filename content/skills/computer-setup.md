@@ -1,6 +1,6 @@
 ---
 skill_id: computer-setup
-updated: 2026-10-09
+updated: 2026-11-08
 ---
 
 # Computer Setup
@@ -45,7 +45,7 @@ Computer Setup follows an inspect-approve-install-verify cycle:
 - A private GitHub repository for durable progress saving
 - Verified networking and file transfer between phone and computer
 - A local Progress Workbench for viewing your state
-- A handoff ready for Quick Build
+- A handoff ready for planning your Phase 2 project
 
 ## Prerequisites
 
@@ -55,7 +55,7 @@ Phase 1 completion with a working phone companion and signed-in GitHub Mobile. N
 
 Computer Setup is loaded automatically by the Starter Pack companion when you reach Phase 2 on a computer. You can also point your agent at it directly:
 
-```
+```text
 Read the Computer Setup skill and help me prepare my computer for Phase 2.
 ```
 

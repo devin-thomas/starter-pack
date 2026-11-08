@@ -1,0 +1,33 @@
+{
+  "id": "agent-ready-website",
+  "name": "Lantern Street Tool Library",
+  "description": "A fictional community tool library that lends tools to its members. It is the example site for the Starter Pack Level 1 lesson; the library does not exist.",
+  "base": "/examples/agent-ready-website/",
+  "lesson": "/phases/3/agent-ready-website",
+  "opening_hours": {
+    "2": [
+      16,
+      20
+    ],
+    "4": [
+      16,
+      20
+    ],
+    "6": [
+      9,
+      13
+    ]
+  },
+  "redirects": {
+    "rules": "borrowing"
+  },
+  "withdrawn": [
+    {
+      "slug": "summer-hours",
+      "title": "Summer hours",
+      "withdrawn": "2026-09-30",
+      "reason": "Summer hours ended on September 30, 2026. The home page lists the current opening hours.",
+      "replacement": ""
+    }
+  ]
+}

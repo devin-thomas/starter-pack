@@ -41,7 +41,7 @@ test("readiness checkpoints cover milestones and the required scenarios", async 
   for (const milestone of [
     "Phase 1 closeout and device/companion handoff",
     "Computer Setup entry and closeout",
-    "Quick Build planning and the transition to approved implementation",
+    "Phase 2 project planning and the transition to approved implementation",
     "deployment/release and phase closeout",
     "after a material change to host, machine, workspace, permissions, runtime, or authentication",
   ]) assert.ok(guide.includes(milestone), milestone);
@@ -96,7 +96,7 @@ test("readiness guide, skills, version catalog, and setup manifest agree", async
   const setup = JSON.parse(await readFile("public/setup/computer-setup.manifest.json", "utf8"));
   const skills = JSON.parse(await readFile("content/skills/manifest.json", "utf8"));
   assert.equal(setup.focused_guides.codex_readiness, "https://starter.uppercut-labs.com/setup/codex-readiness.md");
-  assert.equal(setup.skill_version, "0.2.3");
+  assert.equal(setup.skill_version, "0.2.6");
   assert.equal(setup.required_capabilities.some((item: { id: string }) => item.id === "programmatic-harness"), false);
   for (const skill of versions.skills) {
     const current = await readFile(`public${skill.current}`, "utf8");
@@ -123,4 +123,22 @@ test("learner-facing proof copy describes the same file across both checks", asy
     assert.ok(text.includes("hello world"), `${label} describes the first content check`);
     assert.ok(text.includes("hello Codex"), `${label} describes the resumed content check`);
   }
+});
+
+test("phone-only and returning learners are not treated as having a computer account or a fresh start", async () => {
+  const [skill, phase, packet] = await Promise.all([
+    readFile("public/skills/starter-pack/current/SKILL.md", "utf8"),
+    readFile("content/phases/1.md", "utf8"),
+    instructionPacket(),
+  ]);
+  assert.match(skill, /Missing pasted progress does not mean the learner is new/);
+  assert.match(skill, /ask whether they have a saved record or want help finding it before creating fresh state/);
+  assert.match(skill, /do not assume a computer, account, or subscription exists/);
+  assert.match(skill, /already using a supported app and can send messages/);
+  assert.match(phase, /A computer or existing subscription is not required to begin/);
+  assert.ok(packet.includes(skill.trim()), "The fallback packet includes the current companion guidance");
+  assert.ok(packet.includes("A computer or existing subscription is not required to begin"));
+  assert.match(packet.slice(0, 2000), /A first visit or missing pasted file does not prove the learner has no prior progress/);
+  assert.match(packet.slice(0, 2000), /do not claim a new record exists without confirmation/);
+  assert.doesNotMatch(phase, /Sign in with the account you use on your computer/);
 });

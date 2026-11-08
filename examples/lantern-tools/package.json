@@ -1,0 +1,27 @@
+{
+  "name": "lantern-tools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Read-only command for looking up a fictional tool library's tools. The Starter Pack's Level 2 reference example.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "bin": {
+    "lantern-tools": "bin/lantern-tools.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/catalog.d.mts",
+      "default": "./lib/catalog.mjs"
+    }
+  },
+  "files": [
+    "bin/lantern-tools.mjs",
+    "lib/catalog.mjs",
+    "lib/catalog.d.mts",
+    "data/catalog.json",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}

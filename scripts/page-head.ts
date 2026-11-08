@@ -34,15 +34,16 @@ export function addPageHead(template: string, route: string, data: SiteData) {
   const phase = data.phases.find(item => route === `/phases/${item.order}`);
   const guide = data.styles.guides.find(item => route === item.route);
   const skill = data.skills.manifest.find(item => route === `/skills/${item.slug}`);
+  const lesson = data.lessons.find(item => route === item.route);
   const page = pages[route];
-  const title = guide ? `${guide.title} Style Guide` : phase?.title ?? skill?.title ?? page?.[0];
-  const description = guide?.humanSummary ?? phase?.summary ?? skill?.summary ?? page?.[1];
+  const title = guide ? `${guide.title} Style Guide` : phase?.title ?? lesson?.title ?? skill?.title ?? page?.[0];
+  const description = guide?.humanSummary ?? phase?.summary ?? lesson?.summary ?? skill?.summary ?? page?.[1];
   if (!title || !description) throw new Error(`Missing page metadata for ${route}`);
-  const updated = guide?.updated ?? phase?.updated ?? (skill && data.skills.lessons[skill.id]?.updated);
+  const updated = guide?.updated ?? phase?.updated ?? lesson?.updated ?? (skill && data.skills.lessons[skill.id]?.updated);
   const dateModified = updated ? new Date(updated).toISOString().slice(0, 10) : page && sourceDate(page.slice(2));
   const origin = siteOrigins.canonicalOrigin;
   const url = origin + route;
-  const article = Boolean(phase || guide || skill || route === "/help/cloudflare-iphone");
+  const article = Boolean(phase || lesson || guide || skill || route === "/help/cloudflare-iphone");
   const entity = {
     "@context": "https://schema.org",
     "@type": article ? "TechArticle" : "WebPage",

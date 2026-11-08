@@ -1,6 +1,13 @@
 import siteOrigins from "./site-origin.json";
 import skillManifest from "../content/skills/manifest.json";
 import { readingRoutes } from "./reading-routes";
+import {
+  exampleSites,
+  exampleSiteResponse,
+  type ExampleSiteRoutes,
+} from "./example-sites";
+import { lanternToolsResponse } from "./example-api";
+import { handleMcp, mcpPath } from "./mcp";
 
 type LimitRequest = { readonly key: string };
 type LimitResult = { readonly success: boolean };
@@ -25,6 +32,10 @@ export interface FeedbackEnv {
   LEGACY_HUMAN_REDIRECTS?: string;
   ASSETS: { fetch(request: Request): Promise<Response> };
   FEEDBACK_WEBHOOK_URL?: string;
+  FEEDBACK_DEDUP?: {
+    idFromName(name: string): unknown;
+    get(id: unknown): { fetch(request: Request): Promise<Response> };
+  };
   FEEDBACK_RATE_LIMITER: Limiter;
   FEEDBACK_TOTAL_LIMITER: Limiter;
 }
@@ -298,12 +309,72 @@ export async function handleFeedback(
           : "Invalid submission.",
     );
   }
-  const submissionId: string = crypto.randomUUID();
-  let deliveryStage: string = "configuration";
+  let hook: URL;
   try {
-    let hook: URL = new URL(env.FEEDBACK_WEBHOOK_URL);
+    hook = new URL(env.FEEDBACK_WEBHOOK_URL);
     if (hook.protocol !== "https:" || hook.hostname !== "hook.us2.make.com")
       throw new Error("Invalid notification configuration.");
+  } catch {
+    return reply(
+      502,
+      "We couldn't confirm delivery. Your text is still here. Please email starter@devthomas.site.",
+    );
+  }
+  const requestedId: string | null = request.headers.get("Idempotency-Key");
+  if (
+    requestedId &&
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      requestedId,
+    )
+  )
+    return reply(400, "Invalid submission identity.");
+  const submissionId: string = requestedId ?? crypto.randomUUID();
+  let receipt: { fetch(request: Request): Promise<Response> } | undefined;
+  let digest: string = "";
+  if (requestedId) {
+    if (!env.FEEDBACK_DEDUP)
+      return reply(
+        503,
+        "The form is temporarily unavailable. Please email starter@devthomas.site.",
+      );
+    digest = [
+      ...new Uint8Array(
+        await crypto.subtle.digest(
+          "SHA-256",
+          new TextEncoder().encode(JSON.stringify(data)),
+        ),
+      ),
+    ]
+      .map((byte: number): string => byte.toString(16).padStart(2, "0"))
+      .join("");
+    try {
+      receipt = env.FEEDBACK_DEDUP.get(
+        env.FEEDBACK_DEDUP.idFromName(submissionId),
+      );
+      const claim: Response = await receipt.fetch(
+        new Request("https://receipt.internal/claim", {
+          method: "POST",
+          body: JSON.stringify({ digest }),
+        }),
+      );
+      const result: unknown = await claim.json();
+      if (!claim.ok || !isRecord(result))
+        throw new Error("Receipt unavailable.");
+      if (result["state"] === "sent") return reply(200);
+      if (result["state"] !== "claimed")
+        return reply(
+          502,
+          "We couldn't confirm delivery. Your text is still here. A delayed notification may arrive; please email starter@devthomas.site rather than resending this message.",
+        );
+    } catch {
+      return reply(
+        503,
+        "The form is temporarily unavailable. Your text is still here; please email starter@devthomas.site.",
+      );
+    }
+  }
+  let deliveryStage: string = "configuration";
+  try {
     deliveryStage = "request";
     let response: Response = await send(hook, {
       method: "POST",
@@ -322,6 +393,15 @@ export async function handleFeedback(
     const acknowledgement: unknown = await response.json();
     if (!isRecord(acknowledgement) || acknowledgement["ok"] !== true)
       throw new Error("Notification not confirmed.");
+    if (receipt) {
+      const saved: Response = await receipt.fetch(
+        new Request("https://receipt.internal/sent", {
+          method: "POST",
+          body: JSON.stringify({ digest }),
+        }),
+      );
+      if (!saved.ok) throw new Error("Receipt not saved.");
+    }
     return reply(200);
   } catch {
     console.error(
@@ -365,8 +445,14 @@ export default {
   fetch(request: Request, env: FeedbackEnv): Promise<Response> {
     let url: URL = new URL(request.url);
     if (url.pathname === "/api/feedback") return handleFeedback(request, env);
+    if (url.pathname === mcpPath) return handleMcp(request, env);
     if (url.pathname.startsWith("/api/"))
       return Promise.resolve(reply(404, "Not found."));
+    const lanternTools: Promise<Response> | undefined = lanternToolsResponse(
+      request,
+      env.ASSETS,
+    );
+    if (lanternTools !== undefined) return lanternTools;
     if (request.method !== "GET" && request.method !== "HEAD")
       return Promise.resolve(reply(405, "Use GET or HEAD."));
     if (
@@ -376,6 +462,25 @@ export default {
       url.pathname = "/artifacts/progress-workbench/index.html";
       return env.ASSETS.fetch(new Request(url, request));
     }
+    if (
+      url.origin === siteOrigins.legacyOrigin &&
+      env.LEGACY_HUMAN_REDIRECTS === "enabled" &&
+      exampleSites.some((site: ExampleSiteRoutes): boolean =>
+        `${url.pathname}/`.startsWith(site.base),
+      ) &&
+      // Human example pages move to the canonical host; machine files stay direct.
+      (!/\.[a-z0-9]+$/i.test(url.pathname) || url.pathname.endsWith(".html"))
+    ) {
+      let target: URL = new URL(siteOrigins.canonicalOrigin);
+      target.pathname = url.pathname;
+      target.search = url.search;
+      return Promise.resolve(Response.redirect(target.href, 301));
+    }
+    const example: Promise<Response> | undefined = exampleSiteResponse(
+      request,
+      env.ASSETS,
+    );
+    if (example !== undefined) return example;
     const route: string | undefined = readingRoute(url.pathname);
     if (route !== undefined) {
       if (

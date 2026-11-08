@@ -61,6 +61,12 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/skills/computer-setup/current/SKILL.md](https://starter-pack.uppercut-labs.workers.dev/skills/computer-setup/current/SKILL.md)
 - GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/skills/computer-setup/current/SKILL.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/skills/computer-setup/current/SKILL.md)
 
+## /skills/grill-to-build/current/SKILL.md
+
+- Primary: [https://starter.uppercut-labs.com/skills/grill-to-build/current/SKILL.md](https://starter.uppercut-labs.com/skills/grill-to-build/current/SKILL.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/skills/grill-to-build/current/SKILL.md](https://starter-pack.uppercut-labs.workers.dev/skills/grill-to-build/current/SKILL.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/skills/grill-to-build/current/SKILL.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/skills/grill-to-build/current/SKILL.md)
+
 ## /skills/quick-build/current/SKILL.md
 
 - Primary: [https://starter.uppercut-labs.com/skills/quick-build/current/SKILL.md](https://starter.uppercut-labs.com/skills/quick-build/current/SKILL.md)
@@ -186,6 +192,48 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Primary: [https://starter.uppercut-labs.com/artifacts/progress-workbench/README.md](https://starter.uppercut-labs.com/artifacts/progress-workbench/README.md)
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/artifacts/progress-workbench/README.md](https://starter-pack.uppercut-labs.workers.dev/artifacts/progress-workbench/README.md)
 - GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/progress-workbench/README.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/progress-workbench/README.md)
+
+## /artifacts/grill-to-build/ADR.md
+
+- Primary: [https://starter.uppercut-labs.com/artifacts/grill-to-build/ADR.md](https://starter.uppercut-labs.com/artifacts/grill-to-build/ADR.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/ADR.md](https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/ADR.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/ADR.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/ADR.md)
+
+## /artifacts/grill-to-build/GLOSSARY.md
+
+- Primary: [https://starter.uppercut-labs.com/artifacts/grill-to-build/GLOSSARY.md](https://starter.uppercut-labs.com/artifacts/grill-to-build/GLOSSARY.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/GLOSSARY.md](https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/GLOSSARY.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/GLOSSARY.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/GLOSSARY.md)
+
+## /artifacts/grill-to-build/Ideas.md
+
+- Primary: [https://starter.uppercut-labs.com/artifacts/grill-to-build/Ideas.md](https://starter.uppercut-labs.com/artifacts/grill-to-build/Ideas.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/Ideas.md](https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/Ideas.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/Ideas.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/Ideas.md)
+
+## /artifacts/grill-to-build/PROJECT.md
+
+- Primary: [https://starter.uppercut-labs.com/artifacts/grill-to-build/PROJECT.md](https://starter.uppercut-labs.com/artifacts/grill-to-build/PROJECT.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/PROJECT.md](https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/PROJECT.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/PROJECT.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/PROJECT.md)
+
+## /artifacts/grill-to-build/README.md
+
+- Primary: [https://starter.uppercut-labs.com/artifacts/grill-to-build/README.md](https://starter.uppercut-labs.com/artifacts/grill-to-build/README.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/README.md](https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/README.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/README.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/README.md)
+
+## /artifacts/grill-to-build/SPEC.md
+
+- Primary: [https://starter.uppercut-labs.com/artifacts/grill-to-build/SPEC.md](https://starter.uppercut-labs.com/artifacts/grill-to-build/SPEC.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/SPEC.md](https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/SPEC.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/SPEC.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/SPEC.md)
+
+## /artifacts/grill-to-build/TICKET.md
+
+- Primary: [https://starter.uppercut-labs.com/artifacts/grill-to-build/TICKET.md](https://starter.uppercut-labs.com/artifacts/grill-to-build/TICKET.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/TICKET.md](https://starter-pack.uppercut-labs.workers.dev/artifacts/grill-to-build/TICKET.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/TICKET.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/artifacts/grill-to-build/TICKET.md)
 
 ## /artifacts/quick-build/DECISIONS.md
 

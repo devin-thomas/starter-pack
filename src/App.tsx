@@ -5,6 +5,7 @@ import type {
   ReactElement,
   ReactNode,
   SetStateAction,
+  SyntheticEvent,
 } from "react";
 import { CopyText } from "./CopyText";
 import siteOrigins from "./site-origin.json";
@@ -26,6 +27,7 @@ import {
 import type { IconName } from "./Icons";
 
 import type {
+  LessonEntry,
   PackageEntry,
   PhaseEntry,
   PhaseOutlineEntry,
@@ -80,12 +82,12 @@ const phaseSummaries: readonly PhaseSummary[] = [
   },
   {
     number: 3,
-    title: "Build something great",
-    shortLabel: "Build",
+    title: "Make It Agent Native",
+    shortLabel: "Agent",
     icon: "compass",
     description:
-      "A look ahead at deeper planning, deliberate decisions, and larger builds.",
-    outcome: "Preview of what comes next",
+      "Give your software an interface agents can use, and prove it with a real client.",
+    outcome: "An agent interface, proven with a real client",
   },
 ];
 
@@ -104,7 +106,6 @@ const nav: readonly NavigationLink[] = [
 type PromptProps = {
   readonly prompt: string;
   readonly phase2?: boolean;
-  readonly home?: boolean;
   readonly instructionPacket?: string;
 };
 
@@ -191,7 +192,6 @@ type ResolvedSkillPage = {
 function Prompt({
   prompt,
   phase2 = false,
-  home = false,
   instructionPacket,
 }: PromptProps): ReactElement {
   return (
@@ -211,9 +211,7 @@ function Prompt({
       <CopyText
         text={prompt}
         label={phase2 ? "Phase 2 handoff text" : "Starting prompt text"}
-        buttonLabel={
-          home ? "Get Started" : phase2 ? "Copy Phase 2 handoff" : "Copy prompt"
-        }
+        buttonLabel={phase2 ? "Copy Phase 2 handoff" : "Copy prompt"}
         copiedLabel={phase2 ? "Handoff copied" : "Prompt copied"}
         instruction={
           phase2
@@ -222,13 +220,37 @@ function Prompt({
         }
         download={phase2 ? "/prompts/phase-2.txt" : "/prompts/get-started.txt"}
       />
+      {!phase2 && (
+        <p className="resume-hint">
+          Returning? Attach your saved progress file or paste its full contents
+          with the prompt.{" "}
+          <a href="/artifacts#workbench-download">View your progress locally</a>
+          .
+        </p>
+      )}
       {!phase2 && instructionPacket && (
-        <details className="prompt-explainer packet-recovery">
-          <summary>Chat can't open the guide?</summary>
+        <details
+          className="prompt-explainer packet-recovery"
+          onToggle={(event: SyntheticEvent<HTMLDetailsElement>): void => {
+            const section: HTMLDetailsElement = event.currentTarget;
+            if (!section.open) return;
+            const action: HTMLButtonElement | null = section.querySelector(
+              ".prompt-controls button",
+            );
+            const bounds: DOMRect | undefined = action?.getBoundingClientRect();
+            if (
+              bounds &&
+              (bounds.top < 0 || bounds.bottom > window.innerHeight)
+            )
+              section.scrollIntoView({ block: "start", behavior: "instant" });
+          }}
+        >
+          <summary>Can't open the guide? Copy instruction packet</summary>
           <CopyText
             text={instructionPacket}
             label="Phase 1 instruction packet"
             buttonLabel="Copy instruction packet"
+            disclosureLabel="Read or select the instruction packet"
             copiedLabel="Instruction packet copied"
             instruction="Paste into the same chat. Keep your existing progress."
             download="/agent/phase-1-packet.txt"
@@ -320,6 +342,15 @@ function PhaseContent({
             phase2={phase.order === 2}
             instructionPacket={instructionPacket}
           />
+          {phase.order === 2 && (
+            <p className="prose">
+              Want to see your saved progress?{" "}
+              <a href="/artifacts#workbench-download">
+                Download the Progress Workbench
+              </a>
+              .
+            </p>
+          )}
           <article
             className="prose"
             dangerouslySetInnerHTML={{ __html: phase.html.slice(split) }}
@@ -345,12 +376,12 @@ function PhaseCards(): ReactElement {
             </span>
             <span className="eyebrow">
               PHASE 0{summary.number}
-              {summary.number === 3 && " / PREVIEW"}
+              {summary.number === 3 && " / OPTIONAL"}
             </span>
             <h3>{summary.title}</h3>
             <p>{summary.description}</p>
             <span className="card-link">
-              {summary.number === 3 ? "Explore the preview" : "Open phase"}
+              Open phase
               <Icon name="arrow-right" size={16} />
             </span>
           </a>
@@ -374,9 +405,14 @@ const templateResources: readonly Resource[] = [
     "Your agent uses this to keep a private record of completed work.",
   ],
   [
+    "/artifacts/grill-to-build/README.md",
+    "Grill to Build templates",
+    "Your agent creates the plan and project notes from these files.",
+  ],
+  [
     "/artifacts/quick-build/README.md",
     "Quick Build templates",
-    "Your agent creates the plan and project notes from these files.",
+    "Used instead when you ask for Quick Build.",
   ],
   ["/setup/computer-setup.manifest.json", "Computer Setup manifest"],
   ["/setup/state.example.json", "Setup state example"],
@@ -424,6 +460,10 @@ function Resources({ phase }: ResourcesProps): ReactElement {
                 "/skills/computer-setup/SKILL.md",
                 "Computer Setup instructions",
               ],
+              [
+                "/skills/grill-to-build/SKILL.md",
+                "Grill to Build instructions",
+              ],
               ["/skills/quick-build/SKILL.md", "Quick Build instructions"],
             ] satisfies Resource[])
           : ([
@@ -434,7 +474,7 @@ function Resources({ phase }: ResourcesProps): ReactElement {
         [
           "/agent/start.md",
           "Agent entry point",
-          "The first file your agent reads after you send the starting prompt.",
+          "General startup instructions. The starting prompt directs your agent to the Phase 1 packet.",
         ],
         [
           "/skills/starter-pack/SKILL.md",
@@ -447,9 +487,14 @@ function Resources({ phase }: ResourcesProps): ReactElement {
           "How your agent inspects and sets up a computer with your approval.",
         ],
         [
+          "/skills/grill-to-build/SKILL.md",
+          "Grill to Build instructions",
+          "How your agent turns an idea into an approved plan and a live project.",
+        ],
+        [
           "/skills/quick-build/SKILL.md",
           "Quick Build instructions",
-          "How your agent turns an idea into an approved plan and a live project.",
+          "A shorter planning path, used only when you ask for it.",
         ],
         ["/agent/catalog.json", "Resource catalog"],
         ["/recommendations.json", "Recommendations data"],
@@ -570,7 +615,8 @@ function RecommendationCard({ item }: RecommendationCardProps): ReactElement {
 
 function resourceIcon(href: string): IconName {
   if (href.includes("computer-setup")) return "monitor";
-  if (href.includes("quick-build")) return "blocks";
+  if (href.includes("quick-build") || href.includes("grill-to-build"))
+    return "blocks";
   if (href.includes("starter-pack") || href.includes("start.md"))
     return "compass";
   if (href.includes("artifacts")) return "folder-git-2";
@@ -787,7 +833,9 @@ function SkillInstall({ entry }: SkillInstallProps): ReactElement {
             ? `Install ${entry.title} with your agent`
             : "Choose and install skills with your agent"
         }
-        buttonLabel="Copy prompt for your agent"
+        buttonLabel="Copy installation prompt"
+        copiedLabel="Installation prompt copied"
+        disclosureLabel="Read or select the installation prompt"
       />
     </section>
   );
@@ -830,7 +878,9 @@ function SkillPage({
         <CopyText
           text={`Read https://starter.uppercut-labs.com/skills/${entry.slug}.md and help me install and use ${entry.title} for my project.`}
           label={`Get started with ${entry.title}`}
-          buttonLabel="Copy prompt for your agent"
+          buttonLabel="Copy lesson prompt"
+          copiedLabel="Lesson prompt copied"
+          disclosureLabel="Read or select the lesson prompt"
         />
         <ExternalLink href={`https://dvn.pw/${entry.slug}`}>
           Use with dvn
@@ -991,7 +1041,9 @@ function SkillsHub({ skills, packages }: SkillsHubProps): ReactElement {
         <CopyText
           text="Read https://starter.uppercut-labs.com/skills.json and help me choose and install the public skill that fits my project."
           label="Choose a public skill"
-          buttonLabel="Copy prompt for your agent"
+          buttonLabel="Copy selection prompt"
+          copiedLabel="Selection prompt copied"
+          disclosureLabel="Read or select the selection prompt"
         />
       </section>
       <p className="muted">
@@ -1191,6 +1243,9 @@ function StyleAgentLinks({ guide }: StyleGuideProps): ReactElement {
       <button type="button" onClick={copyAgentLink}>
         {copyStatus === "copied" ? "Agent link copied" : "Copy for agent"}
       </button>
+      <a href={`${guide.route}.md`} download>
+        Download agent guide
+      </a>
       <span className="sr-only" role="status">
         {copyStatus === "copied" ? "Style guide address copied." : ""}
       </span>
@@ -1263,6 +1318,11 @@ export function App({ path, data }: AppProps): ReactElement {
   const phase: PhaseEntry | undefined = data.phases.find(
     (item: PhaseEntry): boolean => item.order === phaseNumber,
   );
+  const lesson: LessonEntry | undefined = data.lessons.find(
+    (item: LessonEntry): boolean => item.route === normalized,
+  );
+  const railPhase: number =
+    phaseNumber || (lesson ? Number(lesson.phase.at(-1)) : 0);
   const skillSlug: string | null = normalized.startsWith("/skills/")
     ? normalized.slice("/skills/".length)
     : null;
@@ -1309,10 +1369,19 @@ export function App({ path, data }: AppProps): ReactElement {
           <span className="status-divider" />
           No account required
         </div>
-        <a className="header-guide" href={styleRoute ? "/style" : "/skills"}>
-          <Icon name="book-open" size={16} />
-          {styleRoute ? "Style guides" : "Skills"}
-        </a>
+        <nav className="header-links" aria-label="Site links">
+          <a
+            className="header-guide"
+            href={styleRoute ? "/style" : "/skills"}
+            aria-label={styleRoute ? "Style guides" : undefined}
+          >
+            <Icon name="book-open" size={16} />
+            {styleRoute ? "Style" : "Skills"}
+          </a>
+          <a className="header-guide" href="/contact">
+            Feedback
+          </a>
+        </nav>
       </header>
       {!styleRoute && (
         <nav className="progress-rail" aria-label="The three phases">
@@ -1321,7 +1390,7 @@ export function App({ path, data }: AppProps): ReactElement {
               <a
                 href={`/phases/${summary.number}`}
                 key={summary.number}
-                className={`phase-${summary.number} ${phaseNumber === summary.number ? "active" : ""}`}
+                className={`phase-${summary.number} ${railPhase === summary.number ? "active" : ""}`}
                 aria-current={
                   phaseNumber === summary.number ? "page" : undefined
                 }
@@ -1332,7 +1401,7 @@ export function App({ path, data }: AppProps): ReactElement {
                 <span className="progress-label">
                   <small>
                     {summary.number === 3
-                      ? "PHASE 3 / PREVIEW"
+                      ? "PHASE 3 / OPTIONAL"
                       : `PHASE ${summary.number}`}
                   </small>
                   <span className="phase-full-label">{summary.title}</span>
@@ -1340,13 +1409,6 @@ export function App({ path, data }: AppProps): ReactElement {
                     {summary.shortLabel}
                   </span>
                 </span>
-                {summary.number === 3 && (
-                  <Icon
-                    name="lock-keyhole"
-                    className="preview-icon"
-                    size={14}
-                  />
-                )}
               </a>
             ),
           )}
@@ -1379,7 +1441,6 @@ export function App({ path, data }: AppProps): ReactElement {
                 <Prompt
                   prompt={data.prompt}
                   instructionPacket={data.instructionPacket}
-                  home
                 />
                 <a className="browse-link" href="/guide">
                   <Icon name="book-open" size={17} />
@@ -1475,10 +1536,32 @@ export function App({ path, data }: AppProps): ReactElement {
                   </a>
                 </div>
               </>
+            ) : lesson ? (
+              <>
+                <PageHeading
+                  label={lesson.label}
+                  title={lesson.title}
+                  description={lesson.summary}
+                />
+                <div className="phase-content help-guide">
+                  <article
+                    className="prose"
+                    dangerouslySetInnerHTML={{ __html: lesson.html }}
+                  />
+                </div>
+                <div className="step-actions">
+                  <a
+                    className="secondary-action"
+                    href={`/phases/${lesson.phase.at(-1)}`}
+                  >
+                    Back to Phase {lesson.phase.at(-1)}
+                  </a>
+                </div>
+              </>
             ) : phase ? (
               <>
                 <PageHeading
-                  label={`PHASE 0${phaseNumber}${phaseNumber === 3 ? " / PREVIEW" : ""}`}
+                  label={`PHASE 0${phaseNumber}${phaseNumber === 3 ? " / OPTIONAL" : ""}`}
                   title={phase.title}
                   description={phase.summary}
                 />
@@ -1486,8 +1569,9 @@ export function App({ path, data }: AppProps): ReactElement {
                   <div className="notice">
                     <Icon name="book-open" size={18} />
                     <p>
-                      This is a preview. The complete Phase 3 curriculum is not
-                      part of this release.
+                      Phase 3 is optional. It works best with something you
+                      built in Phase 2; if you haven&apos;t finished Phase 2,{" "}
+                      <a href="/phases/2">continue with Phase 2</a>.
                     </p>
                   </div>
                 )}
@@ -1516,7 +1600,7 @@ export function App({ path, data }: AppProps): ReactElement {
                   >
                     {phaseNumber < 3
                       ? phaseNumber === 2
-                        ? "Phase 3 preview"
+                        ? "Continue to Phase 3"
                         : "Continue to Phase 2"
                       : "Get Started"}
                     <Icon name="arrow-right" size={16} />

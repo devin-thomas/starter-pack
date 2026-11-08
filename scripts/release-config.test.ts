@@ -15,6 +15,7 @@ test("follow-up releases preserve the approved two-host routing state and defens
   assert.deepEqual(config.ratelimits, [
     { name: "FEEDBACK_RATE_LIMITER", namespace_id: "1001", simple: { limit: 5, period: 60 } },
     { name: "FEEDBACK_TOTAL_LIMITER", namespace_id: "1002", simple: { limit: 30, period: 60 } },
+    { name: "MCP_RATE_LIMITER", namespace_id: "1003", simple: { limit: 240, period: 60 } },
   ]);
   assert.deepEqual(config.assets, { binding: "ASSETS", run_worker_first: true, directory: "./dist", html_handling: "none", not_found_handling: "404-page" });
   assert.deepEqual(config.vars, { LEGACY_HUMAN_REDIRECTS: "enabled" });

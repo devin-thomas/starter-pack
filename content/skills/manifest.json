@@ -17,12 +17,13 @@
       "order": 1,
       "sourceRepo": "devin-thomas/starter-pack",
       "sourcePath": "public/skills/starter-pack/current/SKILL.md",
-      "sourceVersion": "0.2.8",
-      "sourceRevision": "ac69dee90fcde13fed7a3ff5827e914e125c3620",
+      "sourceVersion": "0.2.19",
+      "sourceRevision": "ce99fe5c95b91f786aada9c91fa2ae9974721aea",
       "public": true,
       "ownedBy": "devin-thomas",
       "relatedSkills": [
         "computer-setup",
+        "grill-to-build",
         "quick-build"
       ],
       "prerequisites": [],
@@ -38,8 +39,8 @@
       "order": 2,
       "sourceRepo": "devin-thomas/starter-pack",
       "sourcePath": "public/skills/computer-setup/current/SKILL.md",
-      "sourceVersion": "0.2.3",
-      "sourceRevision": "310d94f6b2e4d1a6673b0c7d037aefd60c4d60ed",
+      "sourceVersion": "0.2.6",
+      "sourceRevision": "66b8807f2aec7cad26db19c300d5189ff866e246",
       "public": true,
       "ownedBy": "devin-thomas",
       "relatedSkills": [

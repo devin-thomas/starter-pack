@@ -1,6 +1,6 @@
 # Optional Programmatic Harness
 
-Programmatic Harness is an optional experiment for a learner whose required Computer Setup outcomes are already complete. It asks whether a small local program can control Codex, continue the same session for a second turn, and verify a harmless file result. Declining, deferring, or failing this experiment never blocks Quick Build or Phase 2 completion.
+Programmatic Harness is an optional experiment for a learner whose required Computer Setup outcomes are already complete. It asks whether a small local program can control Codex, continue the same session for a second turn, and verify a harmless file result. Declining, deferring, or failing this experiment never blocks project planning, the build, or Phase 2 completion.
 
 ## Codex local route
 

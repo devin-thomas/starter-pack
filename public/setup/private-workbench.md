@@ -1,6 +1,6 @@
 # Optional: open your Workbench privately from your phone
 
-Ask first: "Do you want to open your progress dashboard from your phone over your private Tailscale connection?" Declining or deferring never blocks setup, Quick Build or graduation. This is **Tailscale Serve**, not a separate tailserve app. [Serve](https://tailscale.com/docs/features/tailscale-serve) provides a private-network route; Funnel is public and must not be substituted. [Cloudflare Access hosting](https://starter.uppercut-labs.com/setup/workbench-publishing.md) is a different optional destination.
+Ask first: "Do you want to open your progress dashboard from your phone over your private Tailscale connection?" Declining or deferring never blocks setup, project planning or graduation. This is **Tailscale Serve**, not a separate tailserve app. [Serve](https://tailscale.com/docs/features/tailscale-serve) provides a private-network route; Funnel is public and must not be substituted. [Cloudflare Access hosting](https://starter.uppercut-labs.com/setup/workbench-publishing.md) is a different optional destination.
 
 ## Approve the content, audience and lifecycle
 

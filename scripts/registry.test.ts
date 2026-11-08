@@ -96,7 +96,7 @@ test("optional choices stay optional and Phase 1 stays phone-only", () => {
   const registry = registryModule.parseRegistry(source);
   assert.deepEqual(registry.groups["instant-builder-choice"].semantics, "any_of");
   assert.deepEqual(registry.steps["private-progress-repository"].prerequisites, []);
-  assert.deepEqual(registry.phases["phase-3"], { preview: true });
+  assert.deepEqual(registry.phases["phase-3"], { gate: { all_of: ["phase-3-project", "agent-native-graduation"] }, optional: ["agent-ready-website"] });
 });
 
 test("only the two deliberate aggregate exceptions can accept a recorded completion", () => {
@@ -213,4 +213,40 @@ test("catalog and phase packet projections are lossless, revision-aligned and se
     await rm(temporary, { recursive: true, force: true });
   }
   assert.equal(JSON.stringify(registry), before);
+});
+
+test("Phase 3 graduation stays an operational choice and Level 1 can never graduate", () => {
+  const mutations: ((data: RequirementsRegistry) => void)[] = [
+    data => { data.groups["agent-native-graduation"].members.push("agent-ready-website"); },
+    data => { data.phases["phase-3"].gate = { any_of: ["agent-ready-website", "agent-cli"] }; },
+    data => { delete data.steps["agent-cli"].verification; },
+    data => { data.steps["agent-cli"].verification = "readiness"; },
+    data => { data.steps["quick-build"].verification = "operation"; },
+    data => { Object.assign(data.steps["agent-api"], { verification: "certified" }); },
+    data => { data.groups["agent-native-graduation"].members.push("lovable"); },
+    data => { delete data.phases["phase-3"].gate; },
+    data => { data.phases["phase-3"].gate = { all_of: ["agent-cli"] }; },
+  ];
+  for (const mutate of mutations) {
+    const data = fresh();
+    mutate(data);
+    assert.throws(() => registryModule.parseRegistry(data));
+  }
+  for (const mutate of [mutations[5], mutations[7]]) {
+    const data = fresh();
+    mutate(data);
+    assert.equal(validate(resource(data)), false);
+  }
+  // Opening Phase 3 later is a flag change the parser and schema already accept.
+  for (const preview of [false, undefined]) {
+    const data = fresh();
+    if (preview === undefined) delete data.phases["phase-3"].preview;
+    else data.phases["phase-3"].preview = preview;
+    assert.equal(registryModule.parseRegistry(data).phases["phase-3"].gate !== undefined, true);
+    assert.ok(validate(resource(data)), ajv.errorsText(validate.errors));
+  }
+  const registry = registryModule.parseRegistry(source);
+  assert.deepEqual(Object.entries(registry.steps).filter(([, step]) => step.verification).map(([id, step]) => [id, step.verification]), [
+    ["agent-ready-website", "readiness"], ["agent-cli", "operation"], ["agent-api", "operation"], ["agent-mcp", "operation"], ["agent-native-package", "operation"],
+  ]);
 });

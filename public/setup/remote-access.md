@@ -48,6 +48,6 @@ Legacy booleans remain compatibility summaries, not authoritative evidence for n
 
 If a check fails, classify the layer: account/device connection, DNS/network, file send/receive, host service, credentials, selected session or actual interaction. Preserve unrelated successes and continue the remaining independent work. Optional [private Workbench](https://starter.uppercut-labs.com/setup/private-workbench.md) access is not a phase gate. [Authentication](https://starter.uppercut-labs.com/setup/authentication.md) uses provider login, not automatic .env transfer.
 
-After required setup outcomes pass, save and verify the latest private progress before Quick Build. Network installation, a status page, and HTTP availability alone do not prove the file or harness actions.
+After required setup outcomes pass, save and verify the latest private progress before project planning. Network installation, a status page, and HTTP availability alone do not prove the file or harness actions.
 
 Provider guidance checked September 10, 2026. Real device/session checks remain unverified until actually performed and recorded.

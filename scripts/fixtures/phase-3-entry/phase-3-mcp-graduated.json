@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "starter_pack_version": "0.2.0",
+  "updated_at": "2026-11-09T17:30:00Z",
+  "environment": {
+    "device": "computer",
+    "os": "macOS",
+    "harness": "Codex",
+    "remote_access_ready": true
+  },
+  "phase": {
+    "current": "phase-3",
+    "status": "completed",
+    "requirements_revision": "2026-11-09",
+    "completed_at": "2026-11-09T17:30:00Z"
+  },
+  "steps": {
+    "get-started": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "primary-ai-phone-app": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "github-mobile": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "github": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "cloudflare": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "neon": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "lovable": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "instant-builder": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "core-accounts": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "instant-build": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "computer-setup": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "selected-agentic-harness": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "selected-ide": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "system-cli-baseline": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "cli-contexts": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "private-progress-repository": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "tailscale-network": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "tailscale-computer": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "tailscale-phone": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "private-network-identity": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "phone-to-computer-file": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "computer-to-phone-file": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "verified-phone-connection": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "quick-build": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2",
+      "notes": [
+        "Workflow: Grill to Build (default)",
+        "Plan approved on 2026-11-08: reading tracker with a shared list view"
+      ]
+    },
+    "live-deployment": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "final-progress-save": {
+      "status": "completed",
+      "updated_at": "2026-11-08T18:00:00Z",
+      "phase": "phase-2"
+    },
+    "phase-3-project": {
+      "status": "completed",
+      "phase": "phase-3",
+      "updated_at": "2026-11-09T15:00:00Z",
+      "notes": [
+        "Extending the Phase 2 reading tracker; inspected its source and reused its repository"
+      ]
+    },
+    "agent-mcp": {
+      "status": "completed",
+      "phase": "phase-3",
+      "updated_at": "2026-11-09T17:00:00Z",
+      "verification": {
+        "interface": "mcp",
+        "client": "Claude Desktop 1.4",
+        "operation": "reading_tracker.list_books",
+        "expected_output_check": "passed",
+        "negative_case_check": "passed",
+        "learner_confirmed": true,
+        "verified_at": "2026-11-09T17:00:00Z",
+        "requirements_revision": "2026-11-09",
+        "summary": "Client discovered the tool, listed books, and received a validation error for a missing shelf"
+      }
+    }
+  },
+  "choices": {
+    "phase_3": {
+      "project_mode": "new_project",
+      "project_ref": "https://github.com/example-learner/plant-log",
+      "goal": "Let my agent list the books I am reading",
+      "recommended_level": "agent-mcp",
+      "decided_at": "2026-11-09T15:00:00Z"
+    }
+  },
+  "artifacts": {
+    "phase_history": [
+      {
+        "phase": "phase-1",
+        "status": "completed",
+        "recorded_at": "2026-10-01T15:30:00Z",
+        "requirements_revision": "2026-10-09",
+        "evidence_summary": "Instant build working on phone",
+        "source": "agent_check"
+      },
+      {
+        "phase": "phase-2",
+        "status": "completed",
+        "recorded_at": "2026-11-08T18:30:00Z",
+        "requirements_revision": "2026-11-08",
+        "evidence_summary": "Reading tracker live and verified; final progress save confirmed",
+        "source": "agent_check"
+      },
+      {
+        "phase": "phase-3",
+        "status": "completed",
+        "recorded_at": "2026-11-09T17:30:00Z",
+        "requirements_revision": "2026-11-09",
+        "evidence_summary": "Verified CLI, API or MCP capability with a real client; learner confirmed",
+        "source": "agent_check"
+      }
+    ],
+    "reading_tracker": {
+      "name": "Reading tracker",
+      "repository": "https://github.com/example-learner/reading-tracker",
+      "live_url": "https://reading-tracker.example-learner.workers.dev"
+    }
+  }
+}
