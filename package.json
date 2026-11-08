@@ -21,7 +21,7 @@
     "check": "tsx scripts/prepare-startup.ts --check && npm run typecheck && npm run check:format && npm run check:style && npm run test:workbench && npm run test:startup && npm run build && npm run test:routes && npm run verify:style",
     "test:workbench": "tsx --test scripts/workbench.test.ts scripts/workbench-recovery.test.ts scripts/registry.test.ts scripts/phase-2-workflow.test.ts scripts/phase-3-entry.test.ts",
     "test:workbench-browser": "node scripts/workbench-recovery-browser.mjs",
-    "test:startup": "tsx --test scripts/crawler-policy.test.ts scripts/companion-links.test.ts scripts/setup-contract.test.ts scripts/codex-readiness.test.ts scripts/deployment-catalog.test.ts scripts/feedback.test.ts scripts/canonical-origin.test.ts scripts/migration-contract.test.ts scripts/release-config.test.ts scripts/site-contracts.test.ts scripts/agent-ready-example.test.ts scripts/agent-cli-api.test.ts",
+    "test:startup": "tsx --test scripts/crawler-policy.test.ts scripts/companion-links.test.ts scripts/setup-contract.test.ts scripts/codex-readiness.test.ts scripts/deployment-catalog.test.ts scripts/feedback.test.ts scripts/canonical-origin.test.ts scripts/migration-contract.test.ts scripts/release-config.test.ts scripts/site-contracts.test.ts scripts/agent-ready-example.test.ts scripts/agent-cli-api.test.ts scripts/mcp-example.test.ts",
     "preview": "vite preview --host 127.0.0.1",
     "deploy": "npm run check && wrangler deploy && npm run verify:deployment",
     "verify:deployment": "tsx scripts/verify-deployment.ts",
