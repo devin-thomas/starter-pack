@@ -171,3 +171,14 @@ test("the guide records Level 4 progress through an operational interface", asyn
   assert.match(readme, /\(`cli` or `api`\)/);
   assert.match(readme, /Installing the package is not enough/);
 });
+
+test("Level 4 hands the agent the example guide and describes only the released package", async () => {
+  const level4 = levelFourSection(
+    await readFile("content/phases/3.md", "utf8"),
+  );
+  assert.ok(level4.includes(readmeUrl));
+  assert.match(level4, /version 1\.0\.1, for Node\.js 22 or newer/);
+  assert.match(level4, /not a command you install globally/);
+  assert.doesNotMatch(level4, /1\.1\.0|1\.1\b/);
+  assert.doesNotMatch(level4, forbiddenClaims);
+});
