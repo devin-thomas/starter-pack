@@ -34,7 +34,6 @@
       ]
     },
     "phase-3": {
-      "preview": true,
       "gate": {
         "all_of": [
           "phase-3-project",

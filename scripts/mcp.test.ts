@@ -85,7 +85,7 @@ test("get_phase_guidance returns the site's own requirements and lessons for eac
     const data = result.structuredContent;
     assert.deepEqual(JSON.parse(result.content[0].text), data);
     assert.deepEqual(data.required_steps.map((step: any) => step.id), requirements.phases[`phase-${phase}`].gate.all_of);
-    assert.equal(data.status, phase === 3 ? "preview" : "current");
+    assert.equal(data.status, "current");
     const resource = catalog.resources.find((item: any) => item.id === `phase-${phase}`);
     assert.equal(data.title, resource.title);
     assert.equal(data.read_more, resource.html);
@@ -121,7 +121,7 @@ test("next_action walks the real Phase 1 gate from explicitly supplied step IDs"
   assert.equal(setup.next_step.id, "computer-setup", "a summary report does not skip the setup checks");
   assert.equal(setup.still_needed.length, 4);
   const graduation = await next(3, ["phase-3-project"]);
-  assert.equal(graduation.status, "preview");
+  assert.equal(graduation.status, "current");
   assert.deepEqual(graduation.next_step.choose_one_of.map((item: any) => item.id), ["agent-cli", "agent-api", "agent-mcp", "agent-native-package"]);
   assert.equal((await next(3, ["phase-3-project", "agent-mcp"])).result, "phase-complete");
 });

@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "skillName": "starter-pack",
-  "skillBlobSha": "3a59fe01e137bb9967fdaf4a5754e29da4cd4238",
+  "skillBlobSha": "6b4f7eddbeae042774dede7308ac0f1013803c63",
   "auditComplete": true,
   "resources": [
     {
       "key": "requirements",
       "path": "workbench-steps.json",
-      "gitBlobSha": "f00b4f4977e7695a875b084a3b146b334558b722",
+      "gitBlobSha": "bb09adac09323f48468e2faea60f5dcaccd4b8bf",
       "required": "mandatory",
       "repository": "devin-thomas/starter-pack",
       "root": "content"
@@ -15,7 +15,7 @@
     {
       "key": "progress",
       "path": "progress/README.md",
-      "gitBlobSha": "fd3fe6fa8c55f91c991eb71daab166c3f09d4c39",
+      "gitBlobSha": "99b7b24e361cd5f4c273bddce5d7ae218553eb1f",
       "required": "mandatory",
       "repository": "devin-thomas/starter-pack",
       "root": "public/artifacts"
@@ -47,7 +47,7 @@
     {
       "key": "workbench",
       "path": "progress-workbench/README.md",
-      "gitBlobSha": "0380b5eb2c39f9f6160811a67b1bba3df6ac3b87",
+      "gitBlobSha": "1dd4f04e0ed01dadbc33c925c25f72c733fcbd1d",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/artifacts"
@@ -79,7 +79,7 @@
     {
       "key": "phase-3",
       "path": "3.md",
-      "gitBlobSha": "812a0f3c4ffe89df9f9a5495dba94ad2d6bbfd5d",
+      "gitBlobSha": "5b72bd4c5f4dd4902aaeb1aae4808d0516b0ca2d",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "content/phases"

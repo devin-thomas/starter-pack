@@ -131,7 +131,7 @@ test("the Level 1 lesson is routed, linked from Phase 3 and stays a milestone", 
   assert.equal(lesson.route, "/phases/3/agent-ready-website");
   assert.ok(staticRoutes.includes(lesson.route));
   const phase = matter(await readFile("content/phases/3.md", "utf8"));
-  assert.equal(phase.data.status, "preview", "Phase 3 stays a preview until every level is verified");
+  assert.equal(phase.data.status, "current", "Phase 3 is open");
   const level1 = phase.content.split("### Level 1: Discoverable")[1].split("\n### ")[0];
   assert.ok(level1.includes("](/phases/3/agent-ready-website)"), "the Level 1 section links to the lesson");
   assert.ok(level1.includes("does not finish Phase 3"));

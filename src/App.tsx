@@ -86,8 +86,8 @@ const phaseSummaries: readonly PhaseSummary[] = [
     shortLabel: "Agent",
     icon: "compass",
     description:
-      "A look ahead at giving your software an interface agents can use, proven with a real client.",
-    outcome: "Preview of what comes next",
+      "Give your software an interface agents can use, and prove it with a real client.",
+    outcome: "An agent interface, proven with a real client",
   },
 ];
 
@@ -376,12 +376,12 @@ function PhaseCards(): ReactElement {
             </span>
             <span className="eyebrow">
               PHASE 0{summary.number}
-              {summary.number === 3 && " / PREVIEW"}
+              {summary.number === 3 && " / OPTIONAL"}
             </span>
             <h3>{summary.title}</h3>
             <p>{summary.description}</p>
             <span className="card-link">
-              {summary.number === 3 ? "Explore the preview" : "Open phase"}
+              Open phase
               <Icon name="arrow-right" size={16} />
             </span>
           </a>
@@ -1401,7 +1401,7 @@ export function App({ path, data }: AppProps): ReactElement {
                 <span className="progress-label">
                   <small>
                     {summary.number === 3
-                      ? "PHASE 3 / PREVIEW"
+                      ? "PHASE 3 / OPTIONAL"
                       : `PHASE ${summary.number}`}
                   </small>
                   <span className="phase-full-label">{summary.title}</span>
@@ -1409,13 +1409,6 @@ export function App({ path, data }: AppProps): ReactElement {
                     {summary.shortLabel}
                   </span>
                 </span>
-                {summary.number === 3 && (
-                  <Icon
-                    name="lock-keyhole"
-                    className="preview-icon"
-                    size={14}
-                  />
-                )}
               </a>
             ),
           )}
@@ -1568,7 +1561,7 @@ export function App({ path, data }: AppProps): ReactElement {
             ) : phase ? (
               <>
                 <PageHeading
-                  label={`PHASE 0${phaseNumber}${phaseNumber === 3 ? " / PREVIEW" : ""}`}
+                  label={`PHASE 0${phaseNumber}${phaseNumber === 3 ? " / OPTIONAL" : ""}`}
                   title={phase.title}
                   description={phase.summary}
                 />
@@ -1576,9 +1569,9 @@ export function App({ path, data }: AppProps): ReactElement {
                   <div className="notice">
                     <Icon name="book-open" size={18} />
                     <p>
-                      This is a preview. The complete Phase 3 curriculum is not
-                      part of this release. If you haven&apos;t completed Phase
-                      2, <a href="/phases/2">continue with Phase 2</a>.
+                      Phase 3 is optional. It works best with something you
+                      built in Phase 2; if you haven&apos;t finished Phase 2,{" "}
+                      <a href="/phases/2">continue with Phase 2</a>.
                     </p>
                   </div>
                 )}
@@ -1607,7 +1600,7 @@ export function App({ path, data }: AppProps): ReactElement {
                   >
                     {phaseNumber < 3
                       ? phaseNumber === 2
-                        ? "Phase 3 preview"
+                        ? "Continue to Phase 3"
                         : "Continue to Phase 2"
                       : "Get Started"}
                     <Icon name="arrow-right" size={16} />

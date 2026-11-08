@@ -96,7 +96,7 @@ test("optional choices stay optional and Phase 1 stays phone-only", () => {
   const registry = registryModule.parseRegistry(source);
   assert.deepEqual(registry.groups["instant-builder-choice"].semantics, "any_of");
   assert.deepEqual(registry.steps["private-progress-repository"].prerequisites, []);
-  assert.deepEqual(registry.phases["phase-3"], { preview: true, gate: { all_of: ["phase-3-project", "agent-native-graduation"] }, optional: ["agent-ready-website"] });
+  assert.deepEqual(registry.phases["phase-3"], { gate: { all_of: ["phase-3-project", "agent-native-graduation"] }, optional: ["agent-ready-website"] });
 });
 
 test("only the two deliberate aggregate exceptions can accept a recorded completion", () => {

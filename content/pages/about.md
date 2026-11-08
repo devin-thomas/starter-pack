@@ -22,4 +22,4 @@ Submissions are private by default. The optional project-story checkbox permits 
 
 ## A living set of recommendations
 
-Tools change. Each recommendation has a checked date and a reason, so you can see what it is for and ask your agent whether it still fits. This release covers Phases 1 and 2, with a preview of Phase 3.
+Tools change. Each recommendation has a checked date and a reason, so you can see what it is for and ask your agent whether it still fits. This release covers all three phases; Phase 3 is optional.

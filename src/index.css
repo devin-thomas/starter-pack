@@ -282,9 +282,6 @@ p {
   margin-bottom: 5px;
   color: var(--muted);
 }
-.preview-icon {
-  color: var(--muted);
-}
 .workspace {
   min-height: calc(100vh - 172px);
   display: grid;
@@ -1724,7 +1721,6 @@ a.skill-card:hover {
   .progress-rail > a {
     padding: 17px 8px;
   }
-  .preview-icon,
   .progress-rail > a:after {
     display: none !important;
   }

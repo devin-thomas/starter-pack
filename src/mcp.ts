@@ -137,14 +137,14 @@ export const refusalText: string =
   "Refused: a value looked like a password, key, token or personal detail, so it was not used, stored or repeated. Send only public step IDs such as github-mobile. If a real secret was shared, change it.";
 
 const instructions: string =
-  "Starter Pack is a free, accountless course for making and deploying software with your own AI agent. Phase 1: phone app, accounts and a first working app. Phase 2: computer setup, plan, build and a live deployment. Phase 3 (preview): make software agent native. Use get_phase_guidance for what a phase requires, next_action for the learner's next step, and list_skills for hosted skills. Answer from tool results, not memory. Never send passwords, keys, tokens or personal details to these tools; only public step IDs.";
+  "Starter Pack is a free, accountless course for making and deploying software with your own AI agent. Phase 1: phone app, accounts and a first working app. Phase 2: computer setup, plan, build and a live deployment. Phase 3 (optional): make software agent native. Use get_phase_guidance for what a phase requires, next_action for the learner's next step, and list_skills for hosted skills. Answer from tool results, not memory. Never send passwords, keys, tokens or personal details to these tools; only public step IDs.";
 
 export const mcpTools: readonly { readonly [key: string]: Json }[] = [
   {
     name: "get_phase_guidance",
     title: "Starter Pack phase guidance",
     description:
-      "Look up the official Starter Pack course content for one phase: what the phase is for, every required step with what done means and a guide link, optional steps, and lessons. Call this before answering any question about a Starter Pack phase or step; do not answer from memory. Phase 1 = phone app, accounts and a first working app. Phase 2 = computer setup, plan, build and deploy. Phase 3 = make it agent native (preview). Optional topic narrows the result by a keyword such as deploy or github. Read-only; nothing is stored.",
+      "Look up the official Starter Pack course content for one phase: what the phase is for, every required step with what done means and a guide link, optional steps, and lessons. Call this before answering any question about a Starter Pack phase or step; do not answer from memory. Phase 1 = phone app, accounts and a first working app. Phase 2 = computer setup, plan, build and deploy. Phase 3 = make it agent native (optional). Optional topic narrows the result by a keyword such as deploy or github. Read-only; nothing is stored.",
     inputSchema: {
       type: "object",
       properties: {

@@ -7,7 +7,7 @@ title: "Level 1: Make your website agent-ready"
 label: PHASE 03 / LEVEL 1
 summary: Help an AI agent find your public pages, answer from them with a link, and leave out anything you have not published.
 route: /phases/3/agent-ready-website
-status: preview
+status: current
 updated: 2026-11-08
 ---
 

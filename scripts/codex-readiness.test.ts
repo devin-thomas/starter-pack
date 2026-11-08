@@ -96,7 +96,7 @@ test("readiness guide, skills, version catalog, and setup manifest agree", async
   const setup = JSON.parse(await readFile("public/setup/computer-setup.manifest.json", "utf8"));
   const skills = JSON.parse(await readFile("content/skills/manifest.json", "utf8"));
   assert.equal(setup.focused_guides.codex_readiness, "https://starter.uppercut-labs.com/setup/codex-readiness.md");
-  assert.equal(setup.skill_version, "0.2.5");
+  assert.equal(setup.skill_version, "0.2.6");
   assert.equal(setup.required_capabilities.some((item: { id: string }) => item.id === "programmatic-harness"), false);
   for (const skill of versions.skills) {
     const current = await readFile(`public${skill.current}`, "utf8");

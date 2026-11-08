@@ -1,7 +1,7 @@
 ---
 name: quick-build
 description: Shape a meaningful Starter Pack project with one design interview, an approved plan, a durable build, and live deployment, when the learner explicitly asks for Quick Build instead of the default Grill to Build.
-version: 0.2.5
+version: 0.2.6
 updated: 2026-11-08
 ---
 
@@ -57,4 +57,4 @@ After the last apparent required result, at session close, and on resume, proact
 
 Preserve existing history and add a confirmed `artifacts.phase_history` entry with `phase`, `status`, `requirements_revision`, `recorded_at`, `evidence_summary`, and `source`. Keep repeated closure idempotent: no duplicate history, empty commit, repeated celebration, or self-referential SHA loop. The `private-progress-repository` record proves the initial durable checkpoint; `final-progress-save` requires the final reviewed closeout to reach that private remote. Verify the saved files/revision before announcing Phase 2 completion. If the final push fails, preserve all local achievements and make the pending final save explicit; do not claim durable completion or reset the build. Follow the progress guide's pending-closeout handling.
 
-When all required results and the final private save are confirmed, say plainly that Phase 2 is complete, where the project and progress are saved, and offer Phase 3 or a stopping point. Do not begin Phase 3 automatically. Keep its preview status and old completion revisions intact. For a tool switch, return a compact handoff with canonical progress/location, completed outcomes, genuine blockers, selected optional branches, computer harness separately from phone companion, one next action, and exact resource/schema revisions. No secrets or promise of automatic chat transfer.
+When all required results and the final private save are confirmed, say plainly that Phase 2 is complete, where the project and progress are saved, and offer Phase 3 or a stopping point. Do not begin Phase 3 automatically. Keep Phase 3 optional and keep old completion revisions intact. For a tool switch, return a compact handoff with canonical progress/location, completed outcomes, genuine blockers, selected optional branches, computer harness separately from phone companion, one next action, and exact resource/schema revisions. No secrets or promise of automatic chat transfer.

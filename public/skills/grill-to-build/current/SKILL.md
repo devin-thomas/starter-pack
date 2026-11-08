@@ -1,7 +1,7 @@
 ---
 name: grill-to-build
 description: Plan, build and deploy a meaningful Starter Pack Phase 2 project with full Grill to Build discovery, explained for beginners, an approved specification and tickets, a durable build, and live verification.
-version: 0.2.1
+version: 0.2.2
 updated: 2026-11-08
 ---
 

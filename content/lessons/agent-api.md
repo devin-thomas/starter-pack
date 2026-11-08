@@ -7,7 +7,7 @@ title: "Level 2: Give your project an HTTP API"
 label: PHASE 03 / LEVEL 2
 summary: Give a web app or hosted tool one documented, read-only HTTP endpoint an agent can call, check and see fail clearly.
 route: /phases/3/agent-api
-status: preview
+status: current
 updated: 2026-11-08
 ---
 

@@ -137,10 +137,10 @@ test("hosted Grill to Build is published like Quick Build", async () => {
   const versions = JSON.parse(await text("public/skills/versions.json"));
   const entry = versions.skills.find((skill: { id: string }) => skill.id === "grill-to-build");
   assert.deepEqual(entry, {
-    id: "grill-to-build", version: "0.2.1",
-    current: "/skills/grill-to-build/current/SKILL.md", versioned: "/skills/grill-to-build/0.2.1/SKILL.md",
+    id: "grill-to-build", version: "0.2.2",
+    current: "/skills/grill-to-build/current/SKILL.md", versioned: "/skills/grill-to-build/0.2.2/SKILL.md",
   });
-  assert.match(grill, /^version: 0\.2\.1$/m);
+  assert.match(grill, /^version: 0\.2\.2$/m);
   assert.match(grill, /requirements revision `2026-11-09`/);
   const declaration = JSON.parse(await text("public/skills/grill-to-build/current/dvn.json"));
   assert.equal(declaration.skillName, "grill-to-build");

@@ -7,7 +7,7 @@ title: "Level 2: Give your project a command"
 label: PHASE 03 / LEVEL 2
 summary: Give software that runs on a computer one documented command an agent can run, read as JSON, and see fail clearly.
 route: /phases/3/agent-cli
-status: preview
+status: current
 updated: 2026-11-08
 ---
 

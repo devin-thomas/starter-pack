@@ -36,10 +36,10 @@ const [phase3Page, phase2Page, companion, progressGuide, workbenchGuide] = await
 ]);
 const phase3Html = await renderProse(phase3Page.replace(/^---\n[\s\S]*?\n---\n/, ""));
 
-test("Phase 3 has a graduation rule but stays a preview until every level is verified", () => {
+test("Phase 3 is open as an optional curriculum with its graduation rule", () => {
   assert.equal(registry.requirements_revision, "2026-11-09");
   const phase = registry.phases["phase-3"];
-  assert.equal(phase.preview, true);
+  assert.equal(phase.preview, undefined);
   assert.deepEqual(phase.gate, { all_of: ["phase-3-project", "agent-native-graduation"] });
   assert.deepEqual(registry.groups["agent-native-graduation"], { title: "One verified CLI, API or MCP capability", semantics: "any_of", members: operationLevels });
   assert.equal(registry.steps["agent-ready-website"].verification, "readiness");
@@ -48,9 +48,9 @@ test("Phase 3 has a graduation rule but stays a preview until every level is ver
     assert.equal(registry.steps[id].verification, "operation", id);
     assert.equal(registry.steps[id].requirement, "optional", id);
   }
-  assert.equal(catalog.phases.find(item => item.id === "phase-3")?.preview, true);
+  assert.equal(catalog.phases.find(item => item.id === "phase-3")?.preview, false);
   // The page status and the registry flag open together, never one without the other.
-  assert.match(phase3Page, /^status: preview$/m);
+  assert.match(phase3Page, /^status: current$/m);
   assert.equal(/^status: preview$/m.test(phase3Page), phase.preview === true);
 });
 
@@ -98,7 +98,7 @@ test("a new Phase 3 selection is resumable from the saved choice and in-progress
   const { progress } = await fixture("phase-3-in-progress");
   assert.deepEqual(currentStep(progress, catalog)?.[0], "agent-cli");
   const state = phase3Progress(progress, catalog)!;
-  assert.equal(state.preview, true);
+  assert.equal(state.preview, false);
   assert.deepEqual(state.choice, {
     project_mode: "extend_phase_2", project_ref: "https://github.com/example-learner/reading-tracker",
     goal: "Let my agent list the books I am reading", recommended_level: "agent-cli",
@@ -256,7 +256,8 @@ test("learner-facing copy offers the choice, recommends a level, keeps every lev
   assert.match(phase3Page, /new project/i);
   assert.match(phase3Page, /recommend/i);
   assert.match(phase3Page, /readiness milestone/i);
-  assert.match(phase3Page, /preview/i);
+  assert.match(phase3Page, /optional/i);
+  assert.doesNotMatch(phase3Page, /\bpreview\b/i);
   assert.match(phase2Page, /\[Make It Agent Native\]\(\/phases\/3\)/);
   assert.doesNotMatch(phase2Page, /Build something great/);
   for (const [name, body] of [["companion", companion], ["progress guide", progressGuide]] as const) {

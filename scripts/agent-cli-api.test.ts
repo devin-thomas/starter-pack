@@ -387,7 +387,7 @@ test("each Level 2 lane has its own lesson that stands alone", async () => {
     const { data, content } = matter(await text(file));
     assert.deepEqual(
       { id: data.id, kind: data.kind, phase: data.phase, level: data.level, route: data.route, status: data.status },
-      { id, kind: "lesson", phase: "phase-3", level: 2, route: `/phases/3/${id}`, status: "preview" },
+      { id, kind: "lesson", phase: "phase-3", level: 2, route: `/phases/3/${id}`, status: "current" },
     );
     assert.equal(data.title, registry.steps[id].title, `${id} title matches its registry step`);
     assert.ok(staticRoutes.includes(data.route));
@@ -450,5 +450,5 @@ test("the Phase 3 page's Level 2 section links both lessons", async () => {
   const page = await text("content/phases/3.md");
   const level2 = page.slice(page.indexOf("### Level 2: Operable"), page.indexOf("### Level 3"));
   assert.ok(level2.includes("](/phases/3/agent-cli)") && level2.includes("](/phases/3/agent-api)"));
-  assert.match(page, /^status: preview$/m);
+  assert.match(page, /^status: current$/m);
 });

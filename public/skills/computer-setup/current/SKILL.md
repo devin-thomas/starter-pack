@@ -1,7 +1,7 @@
 ---
 name: computer-setup
 description: Prepare or resume the Starter Pack computer baseline with approved capability installs, cross-context command checks, private saving, file transfer, and actual phone-to-harness control.
-version: 0.2.5
+version: 0.2.6
 updated: 2026-11-08
 ---
 
