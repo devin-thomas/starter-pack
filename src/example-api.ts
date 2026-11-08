@@ -1,4 +1,4 @@
-import catalogData from "../examples/lantern-tools/staff-catalog.json";
+import publicCatalog from "../examples/lantern-tools/data/catalog.json";
 import openApi from "../examples/lantern-tools/openapi.json";
 import {
   errorBody,
@@ -16,10 +16,11 @@ import {
 // same body for the same question. It lives outside /api/* on purpose.
 
 export const exampleApiBase: string = "/examples/lantern-tools/v1";
-const catalog: Catalog = parseCatalog(catalogData);
-const lastModified: string = new Date(
-  `${catalog.updated}T00:00:00Z`,
-).toUTCString();
+// The site serves the library's public catalog: the same file the command's
+// archive bundles, which tests keep equal to the public fields of the library's
+// own records. Staff-only fields never reach this server, and the response is
+// still built from the public-field allowlist in catalog.mjs.
+const defaultCatalog: Catalog = parseCatalog(publicCatalog);
 
 type LimitDecision = {
   readonly allowed: boolean;
@@ -65,6 +66,7 @@ function json(
   body: unknown,
   decision: LimitDecision,
   extra: Readonly<Record<string, string>> = {},
+  updated?: string,
 ): Response {
   const headers: Record<string, string> = {
     "Content-Type": "application/json; charset=utf-8",
@@ -74,7 +76,9 @@ function json(
     "RateLimit-Limit": String(decision.limit),
     "RateLimit-Remaining": String(decision.remaining),
     "RateLimit-Reset": String(decision.reset),
-    ...(status === 200 ? { "Last-Modified": lastModified } : {}),
+    ...(updated === undefined
+      ? {}
+      : { "Last-Modified": new Date(`${updated}T00:00:00Z`).toUTCString() }),
     ...extra,
   };
   return new Response(
@@ -111,6 +115,7 @@ function checkQuery(url: URL, allowed: readonly string[]): ErrorBody | null {
 export function exampleApiResponse(
   request: Request,
   limiter: RateLimiter = defaultLimiter,
+  catalog: Catalog = defaultCatalog,
 ): Response | undefined {
   const url: URL = new URL(request.url);
   if (
@@ -197,7 +202,7 @@ export function exampleApiResponse(
           category: url.searchParams.get("category") ?? undefined,
         }),
       );
-      return json(request, 200, body, decision);
+      return json(request, 200, body, decision, {}, catalog.updated);
     }
     const match: RegExpMatchArray | null = path.match(/^\/tools\/([^/]+)$/);
     if (match?.[1] !== undefined) {
@@ -209,7 +214,14 @@ export function exampleApiResponse(
       } catch {
         id = "";
       }
-      return json(request, 200, showTool(catalog, id), decision);
+      return json(
+        request,
+        200,
+        showTool(catalog, id),
+        decision,
+        {},
+        catalog.updated,
+      );
     }
     return json(
       request,
@@ -225,4 +237,32 @@ export function exampleApiResponse(
     const body: ErrorBody = errorBody(error);
     return json(request, body.error.status, body, decision);
   }
+}
+
+type Assets = { fetch(request: Request): Promise<Response> };
+const downloadTypes: Readonly<Record<string, string>> = {
+  ".tgz": "application/gzip",
+  ".sha256": "text/plain; charset=utf-8",
+};
+
+/** The API, plus the command's archive and checksum with explicit content types. */
+export function lanternToolsResponse(
+  request: Request,
+  assets: Assets,
+): Promise<Response> | undefined {
+  const api: Response | undefined = exampleApiResponse(request);
+  if (api !== undefined) return Promise.resolve(api);
+  const { pathname } = new URL(request.url);
+  if (!pathname.startsWith("/examples/lantern-tools/")) return undefined;
+  const type: string | undefined = Object.entries(downloadTypes).find(
+    ([extension]: [string, string]): boolean => pathname.endsWith(extension),
+  )?.[1];
+  if (type === undefined) return undefined;
+  return assets.fetch(request).then((response: Response): Response => {
+    if (!response.ok) return response;
+    const headers: Headers = new Headers(response.headers);
+    headers.set("Content-Type", type);
+    headers.set("X-Content-Type-Options", "nosniff");
+    return new Response(response.body, { status: response.status, headers });
+  });
 }

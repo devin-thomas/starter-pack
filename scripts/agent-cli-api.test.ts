@@ -1,4 +1,4 @@
-import test from "node:test";
+import test, { after } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -9,6 +9,7 @@ import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import worker, { type FeedbackEnv } from "../src/worker";
 import { exampleApiBase, exampleApiResponse, RateLimiter } from "../src/example-api";
+import { parseCatalog, type Catalog } from "../examples/lantern-tools/lib/catalog.mjs";
 import { parseRegistry, phaseIds, projectCatalog } from "../src/workbench/registry";
 import { phase3Progress, phaseCompletion, safeProgress, type Progress } from "../src/workbench/model";
 
@@ -17,11 +18,17 @@ import { phase3Progress, phaseCompletion, safeProgress, type Progress } from "..
 
 const root = "examples/lantern-tools";
 const bin = path.resolve(root, "bin/lantern-tools.mjs");
-const staffCatalog = path.resolve(root, "staff-catalog.json");
 const text = (file: string) => readFile(file, "utf8");
 const pkg = JSON.parse(await text(`${root}/package.json`));
-const staff = JSON.parse(await text(staffCatalog));
 const sample = JSON.parse(await text(`${root}/data/catalog.json`));
+// The library's own records (shared with the Level 1 example site), as a local catalog file.
+const records = JSON.parse(await text("content/examples/agent-ready-website/tools.json"));
+const site = JSON.parse(await text("content/examples/agent-ready-website/site.json"));
+const staff = { library: site.name, updated: sample.updated, tools: records.tools };
+const staffFolder = await mkdtemp(path.join(tmpdir(), "lantern-staff-"));
+const staffCatalog = path.join(staffFolder, "library-catalog.json");
+await writeFile(staffCatalog, JSON.stringify(staff, null, 2));
+after(() => rm(staffFolder, { recursive: true, force: true }));
 const openApi = JSON.parse(await text(`${root}/openapi.json`));
 const publicFields = ["id", "name", "category", "loan_days", "available"];
 // Every value that exists only in the staff catalog, plus the private field names.
@@ -43,8 +50,8 @@ function cli(args: string[], env: Record<string, string> = {}): Run {
 function assertNothingPrivate(output: string, label: string) {
   for (const value of [...privateValues, canary]) assert.equal(output.includes(value), false, `${label} leaked ${value}`);
 }
-function get(pathname: string, init: RequestInit = {}, limiter = new RateLimiter()): Response {
-  const response = exampleApiResponse(new Request(`${origin}${exampleApiBase}${pathname}`, init), limiter);
+function get(pathname: string, init: RequestInit = {}, limiter = new RateLimiter(), catalog?: Catalog): Response {
+  const response = exampleApiResponse(new Request(`${origin}${exampleApiBase}${pathname}`, init), limiter, catalog);
   assert.ok(response, pathname);
   return response;
 }
@@ -256,7 +263,16 @@ test("the API limits each client and says when to retry", async () => {
 
 test("no API response or document carries a private field", async () => {
   const routes = ["/tools", "/tools?available=false", "/openapi.json", "/tools/nope", "/tools?fields=staff_note", ...staff.tools.map((tool: { id: string }) => `/tools/${tool.id}`)];
-  for (const route of routes) assertNothingPrivate(await get(route).text(), route);
+  // The site serves the public catalog; even handed the library's full records,
+  // the API's public-field allowlist keeps every staff-only value out.
+  const full = parseCatalog(staff);
+  for (const route of routes) {
+    const served = await get(route).text();
+    assertNothingPrivate(served, route);
+    const filtered = await get(route, {}, new RateLimiter(), full).text();
+    assertNothingPrivate(filtered, `${route} (full records)`);
+    assert.equal(filtered, served, route);
+  }
   assertNothingPrivate(JSON.stringify(openApi), "openapi.json");
 });
 
@@ -270,8 +286,13 @@ test("the site's Worker serves the API ahead of its read-only page router", asyn
   assert.equal((await body(shown)).tool.id, "hedge-trimmer");
   const denied = await worker.fetch(new Request(`${origin}${exampleApiBase}/loans`, { method: "POST" }), env);
   assert.equal(denied.status, 401);
-  const other = await worker.fetch(new Request(`${origin}/examples/lantern-tools/lantern-tools-${pkg.version}.tgz`), env);
-  assert.equal(await other.text(), "asset");
+  const assets = { async fetch(request: Request) { return new URL(request.url).pathname.endsWith(".tgz") || new URL(request.url).pathname.endsWith(".sha256") ? new Response("bytes", { headers: { "Content-Type": "" } }) : new Response("asset", { status: 404 }); } };
+  const download = await worker.fetch(new Request(`${origin}/examples/lantern-tools/lantern-tools-${pkg.version}.tgz`), { ...env, ASSETS: assets });
+  assert.equal(download.headers.get("Content-Type"), "application/gzip");
+  const checksum = await worker.fetch(new Request(`${origin}/examples/lantern-tools/lantern-tools-${pkg.version}.tgz.sha256`), { ...env, ASSETS: assets });
+  assert.equal(checksum.headers.get("Content-Type"), "text/plain; charset=utf-8");
+  const missing = await worker.fetch(new Request(`${origin}/examples/lantern-tools/lantern-tools-9.9.9.zip`), env);
+  assert.equal(await missing.text(), "asset");
   assert.equal((await worker.fetch(new Request(`${origin}/api/examples`), env)).status, 404);
 });
 
@@ -350,5 +371,74 @@ test("either lane alone graduates Phase 3, and only with full real-client eviden
       assert.equal(phaseCompletion(incomplete, "phase-3", catalog), undefined, `${lane} ${JSON.stringify(missing)}`);
       assert.equal(phase3Progress(incomplete, catalog)!.graduationEvidence, false);
     }
+  }
+});
+
+// The two lessons: one per lane, each complete on its own, both using the reference application.
+const lessonFiles = { "agent-cli": "content/lessons/agent-cli.md", "agent-api": "content/lessons/agent-api.md" } as const;
+
+test("each Level 2 lane has its own lesson that stands alone", async () => {
+  const { staticRoutes } = await import("../src/reading-routes");
+  const matter = (await import("gray-matter")).default;
+  for (const [id, file] of Object.entries(lessonFiles)) {
+    const { data, content } = matter(await text(file));
+    assert.deepEqual(
+      { id: data.id, kind: data.kind, phase: data.phase, level: data.level, route: data.route, status: data.status },
+      { id, kind: "lesson", phase: "phase-3", level: 2, route: `/phases/3/${id}`, status: "preview" },
+    );
+    assert.equal(data.title, registry.steps[id].title, `${id} title matches its registry step`);
+    assert.ok(staticRoutes.includes(data.route));
+    const other = id === "agent-cli" ? "agent-api" : "agent-cli";
+    for (const part of [
+      "](/phases/3#prove-it-with-a-real-client)", "](/phases/3#save-your-milestones)", `](/phases/3/${other})`,
+      `"interface": "${id === "agent-cli" ? "cli" : "api"}"`, `\`${id}\` step`, "Start with your own project",
+      "completes Phase 3 on its own", "`@uppercut-labs/agent-native` package, version 1.0.1", "Lantern Street Tool Library",
+    ]) assert.ok(content.includes(part), `${id}: ${part}`);
+    // Learner-facing copy only: no tracker references.
+    assert.doesNotMatch(content, /\bticket|issues\//i, id);
+    // The API lesson names a private field to show it is refused; no private value appears.
+    for (const value of privateValues.slice(2)) assert.equal(content.includes(value), false, `${id} shows ${value}`);
+  }
+});
+
+test("the lessons' example commands and addresses are the real ones", async () => {
+  const cliLesson = await text(lessonFiles["agent-cli"]);
+  const apiLesson = await text(lessonFiles["agent-api"]);
+  const readme = await text(`${root}/README.md`);
+  const archive = `https://starter.uppercut-labs.com/examples/lantern-tools/lantern-tools-${pkg.version}.tgz`;
+  for (const document of [cliLesson, readme]) {
+    assert.ok(document.includes(`curl -fLO ${archive}\n`));
+    assert.ok(document.includes(`curl -fLO ${archive}.sha256\n`));
+    assert.ok(document.includes(`shasum -a 256 -c lantern-tools-${pkg.version}.tgz.sha256\n`));
+    assert.ok(document.includes(`npm install --no-save ./lantern-tools-${pkg.version}.tgz\n`));
+  }
+  // Every lantern-tools invocation in the lesson parses and exits as the lesson says.
+  for (const [, args] of cliLesson.matchAll(/npx --no-install lantern-tools ([^;\n`]+)/g)) {
+    const run = cli(args.trim().split(/\s+/));
+    assert.equal(run.code, args.includes("chainsaw") ? 1 : 0, args);
+  }
+  // Every example address in the API lesson answers as the lesson says.
+  const addresses = [...apiLesson.matchAll(/https:\/\/starter\.uppercut-labs\.com(\/examples\/lantern-tools\/v1[^\s"`]*)/g)].map((match) => match[1]);
+  assert.ok(addresses.length >= 4);
+  for (const address of addresses) {
+    const response = get(address.slice(exampleApiBase.length));
+    assert.equal(response.status, address.includes("chainsaw") ? 404 : 200, address);
+  }
+  for (const route of ["/tools/chainsaw", "/tools?fields=staff_note"]) assert.ok(apiLesson.includes(`/v1${route}`), route);
+  assert.equal(get("/tools?fields=staff_note").status, 400);
+  assert.equal(get("/tools/chainsaw").status, 404);
+});
+
+test("the site's llms.txt lists both lessons in level order and the API's document", async () => {
+  const { generateResources, loadContent } = await import("./content");
+  const folder = await mkdtemp(path.join(tmpdir(), "lantern-llms-"));
+  try {
+    await generateResources(await loadContent(), folder);
+    const llms = await text(path.join(folder, "llms.txt"));
+    const order = ["/phases/3/agent-ready-website.md", "/phases/3/agent-api.md", "/phases/3/agent-cli.md"].map((route) => llms.indexOf(route));
+    assert.ok(order.every((index) => index > 0) && order[0] < order[1] && order[1] < order[2], "lessons in level order");
+    assert.match(llms, /\(https:\/\/starter\.uppercut-labs\.com\/examples\/lantern-tools\/v1\/openapi\.json\)/);
+  } finally {
+    await rm(folder, { recursive: true, force: true });
   }
 });

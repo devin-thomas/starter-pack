@@ -7,6 +7,7 @@ import { App } from "../src/App";
 import { addPageHead } from "./page-head";
 import { buildWorkbench } from "./workbench";
 import { exampleRoutedPaths } from "../src/example-sites";
+import { exampleApiBase } from "../src/example-api";
 import { jsonResourceReferences, markdownResourceReferences } from "./style-guide-links";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
@@ -216,6 +217,8 @@ for (const file of outputFiles.filter(
     const pathname = decodeURIComponent(url.pathname);
     // Moved (301) and withdrawn (410) example pages are answered by the Worker, not a file.
     if (exampleRoutedPaths().has(pathname)) continue;
+    // The Level 2 example API is answered by the Worker, not a file.
+    if (pathname.startsWith(`${exampleApiBase}/`)) continue;
     const candidate = path.resolve("dist", "." + pathname);
     if (
       !candidate.startsWith(path.resolve("dist") + path.sep) &&

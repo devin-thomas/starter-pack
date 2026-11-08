@@ -6,7 +6,7 @@ import {
   exampleSiteResponse,
   type ExampleSiteRoutes,
 } from "./example-sites";
-import { exampleApiResponse } from "./example-api";
+import { lanternToolsResponse } from "./example-api";
 
 type LimitRequest = { readonly key: string };
 type LimitResult = { readonly success: boolean };
@@ -446,8 +446,11 @@ export default {
     if (url.pathname === "/api/feedback") return handleFeedback(request, env);
     if (url.pathname.startsWith("/api/"))
       return Promise.resolve(reply(404, "Not found."));
-    const exampleApi: Response | undefined = exampleApiResponse(request);
-    if (exampleApi !== undefined) return Promise.resolve(exampleApi);
+    const lanternTools: Promise<Response> | undefined = lanternToolsResponse(
+      request,
+      env.ASSETS,
+    );
+    if (lanternTools !== undefined) return lanternTools;
     if (request.method !== "GET" && request.method !== "HEAD")
       return Promise.resolve(reply(405, "Use GET or HEAD."));
     if (

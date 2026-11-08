@@ -246,6 +246,8 @@ export async function loadContent(): Promise<SiteData> {
       html: accentHeadings(await renderProse(content.replace(/^# .+\r?\n/m, ""))),
     });
   }
+  // Lessons list in level order, so Level 1 comes before the Level 2 lanes.
+  lessons.sort((a, b) => a.level - b.level || a.id.localeCompare(b.id));
   const recommendations: SiteData["recommendations"] = JSON.parse(
     await readFile("content/recommendations.json", "utf8"),
   );
@@ -724,6 +726,7 @@ export async function generateResources(data: SiteData, output: string) {
     "## Lessons and examples", [
       ...data.lessons.map((lesson) => `- ${link(lesson.title, `${lesson.route}.md`)} — ${lesson.summary}`),
       `- ${link(`${exampleSite.config.name} (fictional example site)`, `${exampleSite.config.base}llms.txt`)} — The example site for the Level 1 lesson.`,
+      `- ${link(`${exampleSite.config.name} API (OpenAPI document)`, "/examples/lantern-tools/v1/openapi.json")} — The read-only HTTP API for the Level 2 lessons; the lantern-tools command returns the same JSON.`,
     ].join("\n"),
     "## Style guides", `${styleList}\n- ${link("Style guide catalog", "/style/catalog.json")}`,
     "## Skills and tools", `- ${link("Skills and primary npm installer", "/skills.md")}\n- ${link("Recommendations", "/recommendations.json")}`,
