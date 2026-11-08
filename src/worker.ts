@@ -29,6 +29,69 @@ export interface FeedbackEnv {
   FEEDBACK_TOTAL_LIMITER: Limiter;
 }
 
+type ReceiptState = {
+  readonly digest: string;
+  readonly status: "pending" | "sent";
+};
+interface ReceiptStorage {
+  get<T>(key: string): Promise<T | undefined>;
+  put<T>(key: string, value: T): Promise<void>;
+  deleteAll(): Promise<void>;
+  setAlarm(time: number): Promise<void>;
+}
+interface ReceiptContext {
+  readonly storage: ReceiptStorage;
+  blockConcurrencyWhile<T>(callback: () => Promise<T>): Promise<T>;
+}
+
+// One object per client-generated submission. A pending record is deliberately
+// never retried: the upstream recipient may have accepted before a timeout.
+export class FeedbackReceipt {
+  constructor(private readonly context: ReceiptContext) {}
+
+  async fetch(request: Request): Promise<Response> {
+    const input: unknown = await request.json();
+    if (
+      !isRecord(input) ||
+      typeof input["digest"] !== "string" ||
+      !/^[0-9a-f]{64}$/.test(input["digest"])
+    )
+      return Response.json({ ok: false }, { status: 400 });
+    const digest: string = input["digest"];
+    const operation: string = new URL(request.url).pathname;
+    return this.context.blockConcurrencyWhile(async (): Promise<Response> => {
+      const existing: ReceiptState | undefined =
+        await this.context.storage.get<ReceiptState>("receipt");
+      if (operation === "/claim") {
+        if (existing)
+          return Response.json({
+            state: existing.digest === digest ? existing.status : "conflict",
+          });
+        await this.context.storage.put("receipt", {
+          digest,
+          status: "pending",
+        } satisfies ReceiptState);
+        await this.context.storage.setAlarm(
+          Date.now() + 7 * 24 * 60 * 60 * 1000,
+        );
+        return Response.json({ state: "claimed" });
+      }
+      if (operation === "/sent" && existing?.digest === digest) {
+        await this.context.storage.put("receipt", {
+          digest,
+          status: "sent",
+        } satisfies ReceiptState);
+        return Response.json({ state: "sent" });
+      }
+      return Response.json({ ok: false }, { status: 409 });
+    });
+  }
+
+  async alarm(): Promise<void> {
+    await this.context.storage.deleteAll();
+  }
+}
+
 let origins: ReadonlySet<string> = new Set(Object.values(siteOrigins));
 const maxBytes: number = 48_000;
 function reply(status: number, error?: string): Response {
