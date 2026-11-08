@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "skillName": "starter-pack",
-  "skillBlobSha": "e272500460bf578c732f992b4bd4dc0b0450efdd",
+  "skillBlobSha": "6114ff357c9e4a047af20933d0af283993014981",
   "auditComplete": true,
   "resources": [
     {
@@ -71,7 +71,7 @@
     {
       "key": "phase-2",
       "path": "2.md",
-      "gitBlobSha": "ac773de51d6252ccddde966ce6f636df73e293cb",
+      "gitBlobSha": "b72b24a19cdc26b3e6199cbaa6812f27e9909914",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "content/phases"
@@ -79,7 +79,7 @@
     {
       "key": "phase-3",
       "path": "3.md",
-      "gitBlobSha": "89a7b86ed2cafed657ed111839ad6f38c602404b",
+      "gitBlobSha": "fcc0955c2fbad52d4f7a2223dcb1d0084966b44b",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "content/phases"

@@ -727,6 +727,8 @@ export async function generateResources(data: SiteData, output: string) {
       ...data.lessons.map((lesson) => `- ${link(lesson.title, `${lesson.route}.md`)} — ${lesson.summary}`),
       `- ${link(`${exampleSite.config.name} (fictional example site)`, `${exampleSite.config.base}llms.txt`)} — The example site for the Level 1 lesson.`,
       `- ${link(`${exampleSite.config.name} API (OpenAPI document)`, "/examples/lantern-tools/v1/openapi.json")} — The read-only HTTP API for the Level 2 lessons; the lantern-tools command returns the same JSON.`,
+      `- ${link("MCP workshop", "/examples/mcp-tool-library/README.md")} — The Level 3 workshop: connect, call and remove a read-only example MCP server.`,
+      `- ${link("Agent Native 1.0.1 example", "/artifacts/agent-native-example/README.md")} — The Level 4 guide: one capability served as a command and an HTTP API with the released package.`,
     ].join("\n"),
     "## Style guides", `${styleList}\n- ${link("Style guide catalog", "/style/catalog.json")}`,
     "## Skills and tools", `- ${link("Skills and primary npm installer", "/skills.md")}\n- ${link("Recommendations", "/recommendations.json")}`,
