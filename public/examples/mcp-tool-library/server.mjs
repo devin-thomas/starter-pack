@@ -34,13 +34,13 @@ const MAX_REQUESTS_PER_MINUTE = 120;
 export const PUBLIC_FIELDS = Object.freeze(["id", "name", "category", "loan_days", "available"]);
 export const CATEGORIES = Object.freeze(["Power tools", "Hand tools", "Garden", "Ladders"]);
 const TOOLS = Object.freeze([
-  { id: "cordless-drill", name: "Cordless drill", category: "Power tools", loan_days: 14, available: true, storage_bin: "Back room, shelf K7", staff_note: "Second battery charger is kept behind the desk" },
-  { id: "circular-saw", name: "Circular saw", category: "Power tools", loan_days: 7, available: true, storage_bin: "Cage C, hook 3", staff_note: "Blade replaced after the October safety check" },
-  { id: "pressure-washer", name: "Pressure washer", category: "Power tools", loan_days: 7, available: false, storage_bin: "Loading bay, pallet 2", staff_note: "Hose coupling is loose; repair booked with the volunteer fixer" },
-  { id: "extension-ladder", name: "Extension ladder (6 m)", category: "Ladders", loan_days: 14, available: false, storage_bin: "Loading bay, wall rack", staff_note: "Only lend to members who have watched the ladder safety video" },
-  { id: "hedge-trimmer", name: "Hedge trimmer", category: "Garden", loan_days: 14, available: true, storage_bin: "Garden shed, bin G4", staff_note: "Donated by a neighbor in spring" },
-  { id: "tile-cutter", name: "Tile cutter", category: "Hand tools", loan_days: 7, available: true, storage_bin: "Back room, shelf K2", staff_note: "Spare scoring wheel is in the envelope taped inside the case" },
-  { id: "stud-finder", name: "Stud finder", category: "Hand tools", loan_days: 14, available: true, storage_bin: "Front desk drawer 1", staff_note: "Needs a 9-volt battery check before each loan" },
+  { id: "cordless-drill", name: "Cordless drill", category: "Power tools", loan_days: 14, available: true, storage_bin: "Workshop cabinet, slot 4", staff_note: "Charger lives in the locked drawer" },
+  { id: "circular-saw", name: "Circular saw", category: "Power tools", loan_days: 7, available: true, storage_bin: "Tool wall, peg 12", staff_note: "Guard spring checked at the last repair night" },
+  { id: "pressure-washer", name: "Pressure washer", category: "Power tools", loan_days: 7, available: false, storage_bin: "Yard store, bay 1", staff_note: "Waiting for a new trigger gun from the supplier" },
+  { id: "extension-ladder", name: "Extension ladder (6 m)", category: "Ladders", loan_days: 14, available: false, storage_bin: "Yard store, rail 2", staff_note: "Ask for a second person on the first loan" },
+  { id: "hedge-trimmer", name: "Hedge trimmer", category: "Garden", loan_days: 14, available: true, storage_bin: "Potting room, crate 3", staff_note: "Battery came from the spring plant swap" },
+  { id: "tile-cutter", name: "Tile cutter", category: "Hand tools", loan_days: 7, available: true, storage_bin: "Workshop cabinet, slot 9", staff_note: "Spare wheel sits under the foam insert" },
+  { id: "stud-finder", name: "Stud finder", category: "Hand tools", loan_days: 14, available: true, storage_bin: "Counter tray B", staff_note: "Test the display before each loan" },
 ]);
 const publicView = tool => Object.fromEntries(PUBLIC_FIELDS.map(field => [field, tool[field]]));
 

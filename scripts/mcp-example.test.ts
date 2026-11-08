@@ -16,7 +16,7 @@ const [readme, phase3, progressSchema] = await Promise.all([
 ]);
 const level3 = phase3.slice(phase3.indexOf("### Level 3: Connected"), phase3.indexOf("### Level 4"));
 const CANARY = "sk-STARTERPACKCANARY0000000000";
-const STAFF_ONLY = /storage_bin|staff_note|shelf K\d|Cage C|Loading bay|Garden shed|drawer 1|battery charger|safety video|volunteer fixer/;
+const STAFF_ONLY = /storage_bin|staff_note|Workshop cabinet|Tool wall|Yard store|Potting room|Counter tray|locked drawer|repair night|trigger gun|second person|plant swap|foam insert|display before/;
 
 const logs: string[] = [];
 const bodies: string[] = [];
