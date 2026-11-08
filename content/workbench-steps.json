@@ -1,6 +1,6 @@
 {
   "version": "0.2.0",
-  "requirements_revision": "2026-11-08",
+  "requirements_revision": "2026-11-09",
   "phases": {
     "phase-1": {
       "gate": {
@@ -34,7 +34,16 @@
       ]
     },
     "phase-3": {
-      "preview": true
+      "preview": true,
+      "gate": {
+        "all_of": [
+          "phase-3-project",
+          "agent-native-graduation"
+        ]
+      },
+      "optional": [
+        "agent-ready-website"
+      ]
     }
   },
   "groups": {
@@ -85,6 +94,16 @@
         "tailscale-computer",
         "tailscale-phone",
         "private-network-identity"
+      ]
+    },
+    "agent-native-graduation": {
+      "title": "One verified CLI, API or MCP capability",
+      "semantics": "any_of",
+      "members": [
+        "agent-cli",
+        "agent-api",
+        "agent-mcp",
+        "agent-native-package"
       ]
     }
   },
@@ -656,6 +675,110 @@
       ],
       "guide": "/phases/2",
       "completion_meaning": "After explicit opt-in and a compatible released workflow, a local two-turn file proof passes with the same session resumed. Record only normalized evidence in artifacts.programmatic_harness. Cloud proof is separate; absence, decline, deferral or failure never blocks project planning, the build or graduation. This activity is preparation until the compatible adapter and reusable skill are released."
+    },
+    "phase-3-project": {
+      "title": "Choose your Phase 3 project",
+      "phase": "phase-3",
+      "requirement": "required",
+      "gate_for": [
+        "phase-3"
+      ],
+      "prerequisites": [],
+      "evidence": [
+        "learner_report",
+        "agent_check"
+      ],
+      "guide": "/phases/3#choose-your-project",
+      "completion_meaning": "After the learner opted into Phase 3, they chose to extend their Phase 2 build, another existing project, or a new project, and what an agent should find, read or do with it. The agent inspected the actual source before proposing changes, reused the durable repository and earlier decisions where they exist, recommended a fitting level and left every level open. The choice is saved in choices.phase_3. Choosing does not require a bigger app, all four levels, or any account, payment, database, domain or package."
+    },
+    "agent-ready-website": {
+      "title": "Level 1: Make your website agent-ready",
+      "phase": "phase-3",
+      "requirement": "optional",
+      "gate_for": [],
+      "prerequisites": [
+        "phase-3-project"
+      ],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/phases/3#level-1-discoverable",
+      "verification": "readiness",
+      "completion_meaning": "Approved public content on the learner's website is findable and grounded: readable semantic HTML and, where useful, a truthful llms.txt and focused machine-readable pages. A separate client fetched a relevant public page, answered a concrete question citing it, and declined a nonpublic detail; the learner confirmed. This is a readiness milestone, not Phase 3 graduation."
+    },
+    "agent-cli": {
+      "title": "Level 2: Give your project a command",
+      "phase": "phase-3",
+      "requirement": "optional",
+      "gate_for": [
+        "phase-3"
+      ],
+      "prerequisites": [
+        "phase-3-project"
+      ],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/phases/3#level-2-operable",
+      "verification": "operation",
+      "completion_meaning": "The project has at least one documented command with usage help, structured output and a visible nonzero failure, reusing the app's own logic. A real agent or client the learner uses invoked it, its expected output was checked, one deliberate failure or negative case was checked, and the learner confirmed the result. Record only the short nonsecret verification fields in this step's verification object. This lane is enough for graduation on its own; an HTTP API is not also required."
+    },
+    "agent-api": {
+      "title": "Level 2: Give your project an HTTP API",
+      "phase": "phase-3",
+      "requirement": "optional",
+      "gate_for": [
+        "phase-3"
+      ],
+      "prerequisites": [
+        "phase-3-project"
+      ],
+      "evidence": [
+        "agent_check",
+        "remote_check",
+        "learner_report"
+      ],
+      "guide": "/phases/3#level-2-operable",
+      "verification": "operation",
+      "completion_meaning": "The running project serves at least one documented HTTP operation (read-only is a valid start) with described request, response and errors, keeping private data and protected operations behind their existing controls. A real agent or client the learner uses invoked it, its expected output was checked, one deliberate failure or negative case was checked, and the learner confirmed the result. Record only the short nonsecret verification fields in this step's verification object. This lane is enough for graduation on its own; a command-line tool is not also required."
+    },
+    "agent-mcp": {
+      "title": "Level 3: Connect it to your assistant with MCP",
+      "phase": "phase-3",
+      "requirement": "optional",
+      "gate_for": [
+        "phase-3"
+      ],
+      "prerequisites": [
+        "phase-3-project"
+      ],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/phases/3#level-3-connected",
+      "verification": "operation",
+      "completion_meaning": "After connecting a known-good example MCP server first, the learner's own MCP server exposes at least one useful tool or resource with least-privilege permissions, connected in a client that actually supports it. That client discovered and invoked it; its expected output was checked, one deliberate failure or denied case was checked, and the learner confirmed the result. Record only the short nonsecret verification fields in this step's verification object. No automatic plugin listing is implied."
+    },
+    "agent-native-package": {
+      "title": "Level 4: Build it with Uppercut Agent Native",
+      "phase": "phase-3",
+      "requirement": "optional",
+      "gate_for": [
+        "phase-3"
+      ],
+      "prerequisites": [
+        "phase-3-project"
+      ],
+      "evidence": [
+        "agent_check",
+        "learner_report"
+      ],
+      "guide": "/phases/3#level-4-full-agent-native",
+      "verification": "operation",
+      "completion_meaning": "A released, version-pinned @uppercut-labs/agent-native capability contract is projected to the surfaces the project needs, with authorization the app owns. It counts only through a working CLI, HTTP API or MCP projection: a real agent or client the learner uses invoked it, its expected output was checked, one deliberate failure or negative case was checked, and the learner confirmed the result. Record only the short nonsecret verification fields in this step's verification object. A package install alone is not graduation."
     }
   },
   "aliases": {

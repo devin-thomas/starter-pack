@@ -10,6 +10,9 @@ import {
   currentStep,
   humanize,
   displayJson,
+  levelStateLabel,
+  phase3Progress,
+  projectModeLabel,
   phaseFor,
   phaseGate,
   phaseCompletion,
@@ -175,6 +178,8 @@ function stepIcon(id: string): IconName {
   if (/deploy|publish|domain/.test(id)) return "rocket";
   if (/workbench|progress/.test(id)) return "list-checks";
   if (/build/.test(id)) return "blocks";
+  if (/^agent-(cli|api|mcp|native)/.test(id)) return "terminal";
+  if (/^agent-ready|phase-3-project/.test(id)) return "compass";
   return "file-text";
 }
 
@@ -212,11 +217,42 @@ function renderGateStatus(target: HTMLElement, phase: Phase) {
     target.textContent = `Needs reconciliation: ${gate.conflicts.slice(0, 2).join("; ")}`;
   } else if (gate.complete) {
     target.classList.add("complete");
-    target.textContent = "Required outcomes complete";
+    target.textContent = phase === "phase-3" ? "Graduation evidence complete: a verified CLI, API or MCP capability and your project choice" : "Required outcomes complete";
   } else {
     const missing = gate.missing.map((id) => titleFor(id, catalog)).slice(0, 3);
     target.textContent = `Required outcomes remaining: ${missing.join(", ")}${gate.missing.length > 3 ? " and more" : ""}`;
   }
+}
+
+function renderPhase3(target: HTMLElement) {
+  const state = progress && phase3Progress(progress, catalog);
+  if (!state) return;
+  const section = node("section", undefined, "milestones");
+  section.setAttribute("aria-labelledby", "milestones-title");
+  const heading = node("h3", "Capability milestones");
+  heading.id = "milestones-title";
+  section.append(heading);
+  if (state.choice) {
+    const recommended = state.choice.recommended_level;
+    rows(section, [["Project", projectModeLabel(state.choice.project_mode)], ["Project link", state.choice.project_ref], ["Goal", state.choice.goal], ["Recommended level", recommended ? titleFor(recommended, catalog) : undefined]]);
+  }
+  const list = node("ul");
+  for (const level of state.levels) {
+    const item = node("li", undefined, `milestone ${level.state}`);
+    item.append(node("span", level.title, "milestone-title"), node("span", levelStateLabel(level), "milestone-state"));
+    if (level.missing.length) item.append(node("span", `Missing: ${level.missing.join(", ")}`, "milestone-missing"));
+    list.append(item);
+  }
+  section.append(list);
+  const explanation = state.graduated
+    ? "Phase 3 graduation is recorded."
+    : state.graduationEvidence
+      ? "A CLI, API or MCP capability is verified with a real client. Confirm graduation with your agent so it is saved."
+      : state.readiness
+        ? "Level 1 readiness is a milestone. Graduation needs one CLI, API or MCP capability verified with a real client."
+        : "Graduation needs one CLI, API or MCP capability verified with a real client. Levels you skip or save for later never block it.";
+  section.append(node("p", explanation, "muted"));
+  target.append(section);
 }
 
 function renderServiceAuth(target: HTMLElement, auth: Record<string, unknown>) {
@@ -256,7 +292,8 @@ function render() {
     const complete = recorded.filter(([, step]) => step.status === "completed").length;
     const gate = progress ? phaseGate(progress, catalog, phase.id) : undefined;
     const completed = progress && phaseCompletion(progress, phase.id, catalog);
-    const phaseStatus = phase.preview ? "Preview" : progress?.phase.current === phase.id ? progress.phase.status === "completed" && !completed ? "Needs reconciliation" : statuses[progress.phase.status] : "";
+    const recordedStatus = progress?.phase.current === phase.id ? progress.phase.status === "completed" && !completed ? "Needs reconciliation" : statuses[progress.phase.status] : "";
+    const phaseStatus = phase.preview ? ["Preview", recordedStatus].filter(Boolean).join(" · ") : recordedStatus;
     const requirementStatus = completed ? "Completion recorded" : gate ? gate.conflicts.length ? "Needs reconciliation" : gate.complete ? "Required complete" : `${gate.missing.length} required missing` : "";
     button.append(node("span", [phaseStatus, requirementStatus, recorded.length ? `${complete} completed / ${recorded.length} recorded` : "No steps recorded"].filter(Boolean).join(" · "), "phase-meta"));
     if (selectedPhase === phase.id) button.setAttribute("aria-current", "page");
@@ -298,10 +335,7 @@ function render() {
   heading.id = "current-title";
   if (phase.id !== progress.phase.current) {
     heading.textContent = phase.preview ? "A look ahead" : "Your recorded work";
-    current.append(heading, node("p", phase.preview ? "Phase 3 is a preview. Recorded steps here do not make the full phase available." : "The steps below reflect your saved file."));
-  } else if (phase.preview) {
-    heading.textContent = "Phase 3 preview";
-    current.append(heading, node("p", "Advanced activity can be recorded here; it does not certify completion of a full Phase 3 curriculum."));
+    current.append(heading, node("p", phase.preview ? "Phase 3 is a preview and optional. Start it with your agent only when you choose to." : "The steps below reflect your saved file."));
   } else if (phaseCompletion(progress, phase.id, catalog)) {
     heading.textContent = "Phase recorded as complete";
     current.append(heading, node("p", "Your completion is preserved. Review any current-revision updates with your agent, or choose the next phase when ready."));
@@ -319,6 +353,7 @@ function render() {
     current.append(heading, node("p", "Your saved record does not name an unfinished step to continue."));
   }
   heading.prepend(icon(phase.id === progress.phase.current && entry ? stepIcon(entry[0]) : phaseIcons[phase.id], true));
+  if (phase.id === "phase-3") renderPhase3(current);
   const actions = node("div", undefined, "actions");
   actions.append(action(phase.id === progress.phase.current ? "Ask my agent" : "Continue current phase", () => {
     if (!progress) return;

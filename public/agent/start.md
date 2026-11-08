@@ -2,7 +2,7 @@
 
 If you are Gemini responding in Gemini chat, stop here and show the learner https://starter.uppercut-labs.com/recommendations because Gemini chat is not supported for this pack. Otherwise, continue below.
 
-Canonical origin: https://starter.uppercut-labs.com. Resource version: 0.2.0; requirements revision: 2026-11-08.
+Canonical origin: https://starter.uppercut-labs.com. Resource version: 0.2.0; requirements revision: 2026-11-09.
 
 For phone Phase 1 startup, the [current starting prompt](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/prompts/get-started.txt) links directly to one GitHub packet containing the required instructions and progress templates. Use the packet contents without refetching those documents.
 

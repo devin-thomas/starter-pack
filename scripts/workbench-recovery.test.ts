@@ -79,7 +79,8 @@ test("historical graduation remains recorded with update gaps and no stale next 
   assert.equal(phaseCompletion(data, "phase-2"), undefined);
   data.artifacts = { phase_history: [{ phase: "phase-2", status: "completed", requirements_revision: "old", source: "learner_report" }] };
   assert.equal(phaseCompletion(data, "phase-2")?.requirements_revision, "old");
-  assert.equal(phaseGate(data, catalog), undefined);
+  assert.equal(phaseGate(data, catalog)?.complete, false);
+  assert.equal(phaseCompletion(data, "phase-3", catalog), undefined);
 });
 test("invalid status is quarantined and cannot leave a false completion", () => {
   const data = phone();

@@ -37,4 +37,4 @@ Phase 1 deployment is [extra credit](/phases/1#extra-credit-put-your-app-online)
 
 ## What is available now
 
-Phases 1 and 2 are the complete path in this version. Phase 3 is a preview of a more deliberate approach to larger projects. Ask your agent for more depth whenever you want it.
+Phases 1 and 2 are the complete path in this version. Phase 3, Make It Agent Native, is a preview: give software you made an interface an agent can use, and prove it with a real client. Ask your agent for more depth whenever you want it.

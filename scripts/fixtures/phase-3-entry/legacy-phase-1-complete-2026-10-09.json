@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "starter_pack_version": "0.2.0",
+  "updated_at": "2026-10-01T15:30:00Z",
+  "environment": {
+    "device": "phone",
+    "os": null,
+    "harness": null,
+    "remote_access_ready": false
+  },
+  "phase": {
+    "current": "phase-1",
+    "status": "completed",
+    "requirements_revision": "2026-10-09",
+    "completed_at": "2026-10-01T15:30:00Z"
+  },
+  "steps": {
+    "get-started": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "primary-ai-phone-app": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "github-mobile": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "github": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "cloudflare": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "neon": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "lovable": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "instant-builder": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "core-accounts": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    },
+    "instant-build": {
+      "status": "completed",
+      "updated_at": "2026-10-01T15:00:00Z",
+      "phase": "phase-1"
+    }
+  },
+  "choices": {},
+  "artifacts": {
+    "phase_history": [
+      {
+        "phase": "phase-1",
+        "status": "completed",
+        "recorded_at": "2026-10-01T15:30:00Z",
+        "requirements_revision": "2026-10-09",
+        "evidence_summary": "Instant build working on phone",
+        "source": "agent_check"
+      }
+    ]
+  }
+}

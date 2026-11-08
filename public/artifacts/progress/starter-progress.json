@@ -11,7 +11,7 @@
   "phase": {
     "current": "phase-1",
     "status": "not_started",
-    "requirements_revision": "2026-11-08"
+    "requirements_revision": "2026-11-09"
   },
   "steps": {},
   "choices": {},

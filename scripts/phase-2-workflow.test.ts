@@ -35,7 +35,7 @@ const grillGuide = "/skills/grill-to-build/current/SKILL.md";
 const recordedQuickBuild = /^Workflow: Quick Build \(learner asked on \d{4}-\d{2}-\d{2}\)$/;
 
 test("the Phase 2 gate keeps its step IDs and plans with Grill to Build", () => {
-  assert.equal(registry.requirements_revision, "2026-11-08");
+  assert.equal(registry.requirements_revision, "2026-11-09");
   assert.deepEqual(registry.phases["phase-2"].gate, { all_of: [
     "computer-setup", "private-progress-repository", "phase-2-remote-baseline",
     "quick-build", "live-deployment", "final-progress-save",
@@ -137,11 +137,11 @@ test("hosted Grill to Build is published like Quick Build", async () => {
   const versions = JSON.parse(await text("public/skills/versions.json"));
   const entry = versions.skills.find((skill: { id: string }) => skill.id === "grill-to-build");
   assert.deepEqual(entry, {
-    id: "grill-to-build", version: "0.2.0",
-    current: "/skills/grill-to-build/current/SKILL.md", versioned: "/skills/grill-to-build/0.2.0/SKILL.md",
+    id: "grill-to-build", version: "0.2.1",
+    current: "/skills/grill-to-build/current/SKILL.md", versioned: "/skills/grill-to-build/0.2.1/SKILL.md",
   });
-  assert.match(grill, /^version: 0\.2\.0$/m);
-  assert.match(grill, /requirements revision `2026-11-08`/);
+  assert.match(grill, /^version: 0\.2\.1$/m);
+  assert.match(grill, /requirements revision `2026-11-09`/);
   const declaration = JSON.parse(await text("public/skills/grill-to-build/current/dvn.json"));
   assert.equal(declaration.skillName, "grill-to-build");
   assert.ok(declaration.resources.some((resource: { key: string; path: string }) => resource.key === "template-readme" && resource.path === "grill-to-build/README.md"));

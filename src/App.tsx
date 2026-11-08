@@ -81,11 +81,11 @@ const phaseSummaries: readonly PhaseSummary[] = [
   },
   {
     number: 3,
-    title: "Build something great",
-    shortLabel: "Build",
+    title: "Make It Agent Native",
+    shortLabel: "Agent",
     icon: "compass",
     description:
-      "A look ahead at deeper planning, deliberate decisions, and larger builds.",
+      "A look ahead at giving your software an interface agents can use, proven with a real client.",
     outcome: "Preview of what comes next",
   },
 ];

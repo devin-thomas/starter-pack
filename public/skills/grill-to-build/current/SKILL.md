@@ -1,7 +1,7 @@
 ---
 name: grill-to-build
 description: Plan, build and deploy a meaningful Starter Pack Phase 2 project with full Grill to Build discovery, explained for beginners, an approved specification and tickets, a durable build, and live verification.
-version: 0.2.0
+version: 0.2.1
 updated: 2026-11-08
 ---
 
@@ -11,7 +11,7 @@ Full Grill to Build is the standard way to plan the Phase 2 project. It turns th
 
 ## Entry gate
 
-Before the first question round, load existing progress and the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json), or the matching generated definitions already supplied. This skill uses resource version `0.2.0`, requirements revision `2026-11-08`. Resolve the prerequisites of the `quick-build` step ("Plan and build your project") from that registry, not a separately maintained checklist. Computer capability evidence includes the selected editor and actual CLI execution contexts; the remote baseline distinguishes networking on both devices, each file-transfer direction, and one real phone-to-harness action. One successful route does not certify another. Confirm the latest progress and setup state reached a private GitHub repository using the [progress guide](https://starter.uppercut-labs.com/artifacts/progress/README.md); a local commit or empty remote is insufficient.
+Before the first question round, load existing progress and the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json), or the matching generated definitions already supplied. This skill uses resource version `0.2.0`, requirements revision `2026-11-09`. Resolve the prerequisites of the `quick-build` step ("Plan and build your project") from that registry, not a separately maintained checklist. Computer capability evidence includes the selected editor and actual CLI execution contexts; the remote baseline distinguishes networking on both devices, each file-transfer direction, and one real phone-to-harness action. One successful route does not certify another. Confirm the latest progress and setup state reached a private GitHub repository using the [progress guide](https://starter.uppercut-labs.com/artifacts/progress/README.md); a local commit or empty remote is insufficient.
 
 If a prerequisite is missing, preserve results and return to the focused [Computer Setup](https://starter.uppercut-labs.com/skills/computer-setup/current/SKILL.md) action. Reuse verified evidence instead of repeating successful installs, sign-ins, or phone tests. Email preferences and the Workbench are not gates. A historically completed phase retains its revision; on resume do not restart planning because of an obsolete pointer. Reconcile completion first and offer any newly introduced checks separately.
 
