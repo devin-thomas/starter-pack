@@ -142,8 +142,8 @@ test("one Grill to Build and one Quick Build: the reusable skills plus one plann
   for (const id of ["grill-to-build", "quick-build"]) {
     const entry = versions.skills.find((skill: { id: string }) => skill.id === id);
     assert.deepEqual(entry, {
-      id, version: "0.3.0",
-      current: `/skills/${id}/current/SKILL.md`, versioned: `/skills/${id}/0.3.0/SKILL.md`,
+      id, version: "1.1.0",
+      current: `/skills/${id}/current/SKILL.md`, versioned: `/skills/${id}/1.1.0/SKILL.md`,
     });
     const skill = await text(`public/skills/${id}/current/SKILL.md`);
     assert.match(skill, new RegExp(`^name: ${id}$`, "m"));

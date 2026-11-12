@@ -59,10 +59,10 @@ function importSkill(id, from, to, source, revision) {
 }
 assert.equal(plugin.name, "starterpack");
 assert.equal(plugin.version, policy.pluginVersion);
-assert.equal(catalog.length, 20, "unexpected public package skill count");
+assert.equal(catalog.length, 19, "unexpected public package skill count");
 assert.equal(catalog.length, policy.publicSkillsCount);
 const allIds = catalog.map(s => s.id);
-assert.equal(new Set(allIds).size, 20, "duplicate skill identity");
+assert.equal(new Set(allIds).size, 19, "duplicate skill identity");
 assert.equal(plugin.skills, undefined, "use native skills/ discovery to avoid duplicates");
 assert.deepEqual(new Set(plugin.metadata.bundledSkillIds), new Set(allIds));
 const sources = {
@@ -99,7 +99,7 @@ try {
     }
     records.push(record);
   }
-  assert.equal(records.length, 20);
+  assert.equal(records.length, 19);
   const lock = { schemaVersion: 1, plugin: "starterpack", version: plugin.version, skills: records };
   writeFileSync(join(scratch, "starterpack.lock.json"), JSON.stringify(lock, null, 2) + "\n");
   const final = join(root, "skills");
@@ -113,7 +113,7 @@ try {
   }
   renameSync(join(scratch, "starterpack.lock.json"), join(root, "starterpack.lock.json"));
   if (existsSync(backup)) rmSync(backup, { recursive: true, force: true });
-  console.log("Prepared starterpack: 20 public skills, copied unmodified. Review and commit the generated tree before publication.");
+  console.log("Prepared starterpack: 19 public skills, copied unmodified. Review and commit the generated tree before publication.");
 } finally {
   rmSync(scratch, { recursive: true, force: true });
 }

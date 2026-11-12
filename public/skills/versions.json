@@ -1,29 +1,29 @@
 {
-  "current": "0.2.0",
+  "current": "1.1.0",
   "skills": [
     {
       "id": "starter-pack",
-      "version": "0.2.22",
+      "version": "1.1.0",
       "current": "/skills/starter-pack/current/SKILL.md",
-      "versioned": "/skills/starter-pack/0.2.22/SKILL.md"
+      "versioned": "/skills/starter-pack/1.1.0/SKILL.md"
     },
     {
       "id": "computer-setup",
-      "version": "0.2.7",
+      "version": "1.1.0",
       "current": "/skills/computer-setup/current/SKILL.md",
-      "versioned": "/skills/computer-setup/0.2.7/SKILL.md"
+      "versioned": "/skills/computer-setup/1.1.0/SKILL.md"
     },
     {
       "id": "grill-to-build",
-      "version": "0.3.0",
+      "version": "1.1.0",
       "current": "/skills/grill-to-build/current/SKILL.md",
-      "versioned": "/skills/grill-to-build/0.3.0/SKILL.md"
+      "versioned": "/skills/grill-to-build/1.1.0/SKILL.md"
     },
     {
       "id": "quick-build",
-      "version": "0.3.0",
+      "version": "1.1.0",
       "current": "/skills/quick-build/current/SKILL.md",
-      "versioned": "/skills/quick-build/0.3.0/SKILL.md"
+      "versioned": "/skills/quick-build/1.1.0/SKILL.md"
     }
   ]
 }

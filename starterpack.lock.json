@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "plugin": "starterpack",
-  "version": "0.1.1",
+  "version": "1.1.0",
   "skills": [
     {
       "id": "starter-pack",
@@ -10,11 +10,11 @@
       "files": [
         {
           "path": "SKILL.md",
-          "gitBlobSha": "0098bd80e9b47f8f87cc5196cd6c3eb804d41d2d"
+          "gitBlobSha": "caaeba3acbde726074b481564709f26f3553dd50"
         },
         {
           "path": "dvn.json",
-          "gitBlobSha": "8bd4791f74104c7121d89b39390d3a89a93a0644"
+          "gitBlobSha": "5a63702a5038890a4bc8f6d2babc7754d00f9807"
         }
       ]
     },
@@ -25,18 +25,18 @@
       "files": [
         {
           "path": "SKILL.md",
-          "gitBlobSha": "0a6d6d11761f3a9228176af9642bf52c159fa15f"
+          "gitBlobSha": "b2038d95f0b79e8c8122e584dfa71e41c6b7d635"
         },
         {
           "path": "dvn.json",
-          "gitBlobSha": "96ee852b25aaa23f164e974db53fa48dcd0d92e3"
+          "gitBlobSha": "386b4dc7a13d55b703e8b53a1d6b540f4c158cc9"
         }
       ]
     },
     {
       "id": "grill-to-build",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "README.md",
@@ -87,7 +87,7 @@
     {
       "id": "task-execution-prompt",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "SKILL.md",
@@ -118,7 +118,7 @@
     {
       "id": "long-horizon-dashboard",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "SKILL.md",
@@ -153,7 +153,7 @@
     {
       "id": "quick-build",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "README.md",
@@ -173,11 +173,11 @@
         },
         {
           "path": "references/starter-pack-0.2.3.md",
-          "gitBlobSha": "2a3f2737e7a2f7fe4a2e81be04e70193c41de447"
+          "gitBlobSha": "2f4a22a3550732449d061581f1ea46c453a2c3a1"
         },
         {
           "path": "references/starter-pack-mode.md",
-          "gitBlobSha": "1997d1e235de445ff16f45278b21ab66f7c169c9"
+          "gitBlobSha": "9fad7b9c211a1c3f79bdaa9e9379875af0b80250"
         },
         {
           "path": "templates/DECISIONS.md",
@@ -200,7 +200,7 @@
     {
       "id": "execute-task",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "SKILL.md",
@@ -231,7 +231,7 @@
     {
       "id": "execute-task-cycles",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "SKILL.md",
@@ -250,7 +250,7 @@
     {
       "id": "surface-sweep",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "README.md",
@@ -285,7 +285,7 @@
     {
       "id": "surface-sweep-showcase",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "README.md",
@@ -312,7 +312,7 @@
     {
       "id": "no-useless-copy",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "README.md",
@@ -335,7 +335,7 @@
     {
       "id": "style",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "SKILL.md",
@@ -354,7 +354,7 @@
     {
       "id": "pwa-development",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "README.md",
@@ -460,7 +460,7 @@
     {
       "id": "perfect-playlist",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "SKILL.md",
@@ -477,44 +477,9 @@
       ]
     },
     {
-      "id": "programmatic-harness",
-      "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
-      "files": [
-        {
-          "path": "README.md",
-          "gitBlobSha": "97b6f5727040c31f315ee46db0d43e231786a877"
-        },
-        {
-          "path": "SKILL.md",
-          "gitBlobSha": "c014b492d5901d5f1bc529dacba8a6de36519888"
-        },
-        {
-          "path": "dvn.json",
-          "gitBlobSha": "9454d2adb8fe1ce81d4cfff350f740cb7c7254c0"
-        },
-        {
-          "path": "references/codex.md",
-          "gitBlobSha": "604131e9fcd97b79fb7d6e2bc8019f65509ba2e2"
-        },
-        {
-          "path": "references/proof-and-evidence.md",
-          "gitBlobSha": "69afe1d7b7618a679c12dcc435b543a5db4807ec"
-        },
-        {
-          "path": "scripts/codex-proof.mjs",
-          "gitBlobSha": "c4dc3289e272e24c10356e37407d3622c3acb86c"
-        },
-        {
-          "path": "scripts/codex-proof.test.mjs",
-          "gitBlobSha": "b5388a36d40982edac9a97c8a2b3b4459a95c4f3"
-        }
-      ]
-    },
-    {
       "id": "branded-sign-in",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "LICENSE",
@@ -537,7 +502,7 @@
     {
       "id": "agent-cli",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "SKILL.md",
@@ -588,7 +553,7 @@
     {
       "id": "immutable-reports",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "SKILL.md",
@@ -623,7 +588,7 @@
     {
       "id": "agent-prompt",
       "source": "devin-thomas/skills",
-      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "revision": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
       "files": [
         {
           "path": "LICENSE",

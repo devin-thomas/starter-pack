@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "1.1.0",
   "requirements_revision": "2026-11-09",
   "phases": {
     "phase-1": {
@@ -29,8 +29,7 @@
       "optional": [
         "development-email",
         "progress-workbench",
-        "workbench-publishing-extra-credit",
-        "programmatic-harness"
+        "workbench-publishing-extra-credit"
       ]
     },
     "phase-3": {
@@ -660,20 +659,6 @@
       ],
       "guide": "/artifacts/progress/README.md",
       "completion_meaning": "The final reconciled progress, actual evidence and completion record have reached the intended private GitHub repository and the saved remote revision is verified. Preserve local success and mark this save pending on push failure; an earlier setup save is not the final save. Repeat closeout without empty commits or storing the containing commit's own SHA recursively."
-    },
-    "programmatic-harness": {
-      "title": "Programmatic Harness (optional)",
-      "phase": "phase-2",
-      "requirement": "optional",
-      "gate_for": [],
-      "prerequisites": [
-        "computer-setup"
-      ],
-      "evidence": [
-        "agent_check"
-      ],
-      "guide": "/phases/2",
-      "completion_meaning": "After explicit opt-in and a compatible released workflow, a local two-turn file proof passes with the same session resumed. Record only normalized evidence in artifacts.programmatic_harness. Cloud proof is separate; absence, decline, deferral or failure never blocks project planning, the build or graduation. This activity is preparation until the compatible adapter and reusable skill are released."
     },
     "phase-3-project": {
       "title": "Choose your Phase 3 project",

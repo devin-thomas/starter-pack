@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "starter_pack_version": "0.2.0",
+  "starter_pack_version": "1.1.0",
   "updated_at": "2026-10-09T12:00:00Z",
   "environment": {
     "device": "phone",

@@ -8,6 +8,7 @@ import {
 } from "./example-sites";
 import { lanternToolsResponse } from "./example-api";
 import { handleMcp, mcpPath } from "./mcp";
+import { handleOAuth } from "./oauth";
 
 type LimitRequest = { readonly key: string };
 type LimitResult = { readonly success: boolean };
@@ -475,6 +476,8 @@ export default {
     let url: URL = new URL(request.url);
     if (url.pathname === "/api/feedback") return handleFeedback(request, env);
     if (url.pathname === mcpPath) return handleMcp(request, env);
+    const oauth: Promise<Response> | undefined = handleOAuth(request);
+    if (oauth !== undefined) return oauth;
     if (url.pathname.startsWith("/api/"))
       return Promise.resolve(reply(404, "Not found."));
     const lanternTools: Promise<Response> | undefined = lanternToolsResponse(

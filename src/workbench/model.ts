@@ -186,9 +186,11 @@ export function levelStateLabel(level: LevelProgress) {
   if (level.state === "verified") return level.rule === "readiness" ? "Readiness milestone reached" : "Verified with a real client";
   return levelStates[level.state];
 }
+// Steps removed from the course. Old progress files may still hold them as history; they never come back as a next step.
+const retiredStepIds: ReadonlySet<string> = new Set(["programmatic-harness"]);
 export function currentStep(progress: Progress, catalog: Catalog): [string, Step] | undefined {
   if (phaseCompletion(progress, progress.phase.current, catalog) || phaseGate(progress, catalog)?.complete) return undefined;
-  const eligible = (id: string, step: Step) => phaseFor(id, step, catalog) === progress.phase.current && !terminalStatuses.has(step.status);
+  const eligible = (id: string, step: Step) => !retiredStepIds.has(id) && phaseFor(id, step, catalog) === progress.phase.current && !terminalStatuses.has(step.status);
   const preference = progress.choices?.workbench;
   if (record(preference) && typeof preference.next_step_id === "string") {
     const id = preference.next_step_id;
