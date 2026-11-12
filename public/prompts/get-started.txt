@@ -1,7 +1,7 @@
 Help me start or resume Devin Thomas's Starter Pack.
 
-If you are Gemini responding in Gemini chat, stop here and show me https://starter.uppercut-labs.com/recommendations. Otherwise, continue below.
+Gemini Chat: Search results may be indexed rather than fresh GitHub bytes. Tell me only: "Please switch to Task mode and paste this same prompt there." Stop. Gemini Task: fetch the exact packet, not search snippets.
 
-Read https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/agent/packets/phase-1-cc86b219d0c0c632.md and guide me one step at a time. Preserve any progress I provide.
+Read https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/agent/packets/phase-1-82959cd109424554.md and guide me one step at a time. Preserve my progress.
 
-If you can't read it, ask me for the site's "Copy instruction packet" instead of guessing.
+If unavailable, ask me for "Copy instruction packet".

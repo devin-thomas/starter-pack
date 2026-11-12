@@ -64,3 +64,25 @@ test("progress bootstrap exposes exact fallback URLs and existing GitHub files",
     assert.ok(text.includes("https://starter.uppercut-labs.com/agent/resource-links.md"), file);
   }
 });
+
+test("Gemini ordinary Chat hands off silently to Task mode; Task accepts live source reads", async () => {
+  const prompt = await readFile("public/prompts/get-started.txt", "utf8");
+  const phase2 = await readFile("public/prompts/phase-2.txt", "utf8");
+  const guide = await readFile("public/agent/start.md", "utf8");
+  const skill = await readFile("public/skills/starter-pack/current/SKILL.md", "utf8");
+  const phase1 = await readFile("content/phases/1.md", "utf8");
+  const recommendations = await readFile("content/recommendations.json", "utf8");
+  const versions = JSON.parse(await readFile("public/skills/versions.json", "utf8"));
+  const version = versions.skills.find((s: { id: string }) => s.id === "starter-pack")?.version;
+  assert.equal(version, "0.2.20");
+  for (const item of [prompt, phase2, guide, skill]) {
+    assert.match(item, /switch to Task mode/i);
+    assert.doesNotMatch(item, /Gemini chat is not supported|Gemini is not supported/);
+  }
+  assert.match(skill, /indexed snippets|search results/i);
+  assert.match(skill, /Do not explain indexing/i);
+  assert.match(phase1, /Gemini Task mode/);
+  assert.match(recommendations, /Gemini in Task mode/);
+  assert.match(prompt, /raw\.githubusercontent\.com\/devin-thomas\/starter-pack\/main\/public\/agent\/packets\/phase-1-[a-f0-9]{16}\.md/);
+  assert.match(await instructionPacket(), /Please switch to Task mode and paste the same Starter Pack prompt there/);
+});

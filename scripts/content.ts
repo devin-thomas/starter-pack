@@ -377,7 +377,7 @@ export function startupPacketRelease(packet: string) {
   const hash = createHash("sha256").update(packet).digest("hex");
   const file = `public/agent/packets/phase-1-${hash.slice(0, 16)}.md`;
   const url = `https://raw.githubusercontent.com/devin-thomas/starter-pack/main/${file}`;
-  const prompt = `Help me start or resume Devin Thomas's Starter Pack.\n\nIf you are Gemini responding in Gemini chat, stop here and show me ${origin}/recommendations. Otherwise, continue below.\n\nRead ${url} and guide me one step at a time. Preserve any progress I provide.\n\nIf you can't read it, ask me for the site's "Copy instruction packet" instead of guessing.\n`;
+  const prompt = `Help me start or resume Devin Thomas's Starter Pack.\n\nGemini Chat: Search results may be indexed rather than fresh GitHub bytes. Tell me only: "Please switch to Task mode and paste this same prompt there." Stop. Gemini Task: fetch the exact packet, not search snippets.\n\nRead ${url} and guide me one step at a time. Preserve my progress.\n\nIf unavailable, ask me for "Copy instruction packet".\n`;
   return { file, url, hash, prompt };
 }
 
