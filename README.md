@@ -1,138 +1,76 @@
 # Starter Pack
 
-A free guide from Devin Thomas at Uppercut Labs for making and deploying software with your own AI agent. No Starter Pack account or learner database.
+[Starter Pack](https://starter.uppercut-labs.com) is a free course from Uppercut Labs for making and deploying software with your own AI agent. Your agent follows the course with you and keeps your progress in a file you own. There is no Starter Pack account, and the site stores no learner data.
 
-[Starter Pack](https://starter.uppercut-labs.com) is the canonical live site. The former `starter.devthomas.site` address redirects human reading pages while preserving pinned agent resources.
+The course has three phases:
 
-The product and package name `dvn` is always lowercase. Published skill
-declarations use the lowercase filename `dvn.json`.
+1. **Phase 1:** set up an AI app on your phone and the free accounts you need, then make your first working app.
+2. **Phase 2:** set up your computer, plan a project with your agent and deploy it.
+3. **Phase 3 (optional):** make your software usable by other agents, from a discoverable website up to a full agent-native interface.
 
-## Public style guides
+## Start the course
 
-The site publishes stable coding style guides under [`/style`](https://starter.uppercut-labs.com/style):
+Open [starter.uppercut-labs.com](https://starter.uppercut-labs.com) and copy the starting prompt into the AI app you use. Your agent takes it from there.
 
-- [TypeScript](https://starter.uppercut-labs.com/style/TypeScript)
-- [Godot](https://starter.uppercut-labs.com/style/Godot) — hard-pinned to Godot 4.7.2 with GDScript as the primary language.
-- [Kotlin](https://starter.uppercut-labs.com/style/Kotlin) — language conventions with an Android TV profile.
-- [React + TypeScript](https://starter.uppercut-labs.com/style/React-TypeScript) — **stable 1.1.0; finished and approved**, with all 34 rules authoritative alongside TypeScript 1.1.0.
-- [Rust](https://starter.uppercut-labs.com/style/Rust) — **stable 1.0.0; finished and approved**, with all 36 rules authoritative for agent use.
+### Claude Code plugin
 
-All nine guides are finalized and authoritative for agent use. TypeScript, JavaScript, and React + TypeScript 1.1.0 default UI to text and proper icons; emoji require an explicit user request.
-
-- [Python](https://starter.uppercut-labs.com/style/Python)
-- [Swift + SwiftUI](https://starter.uppercut-labs.com/style/Swift-SwiftUI)
-- [JavaScript](https://starter.uppercut-labs.com/style/JavaScript)
-- [Dart + Flutter](https://starter.uppercut-labs.com/style/Dart-Flutter)
-
-Every guide has matching `.md` and `.json` resources at its page URL. Agent-readable forms are generated with the human pages:
-
-- `https://starter.uppercut-labs.com/style/TypeScript.md`
-- `https://starter.uppercut-labs.com/style/TypeScript.json`
-- `https://starter.uppercut-labs.com/style/Godot.md`
-- `https://starter.uppercut-labs.com/style/Godot.json`
-- `https://starter.uppercut-labs.com/style/React-TypeScript.md`
-- `https://starter.uppercut-labs.com/style/React-TypeScript.json`
-- `https://starter.uppercut-labs.com/style/Rust.md`
-- `https://starter.uppercut-labs.com/style/Rust.json`
-- `https://starter.uppercut-labs.com/style/catalog.json`
-
-Stable public guides contain accepted rules and are authoritative for agent use. Merge and website deployment are separate delivery steps, not unfinished-design labels. Private deliberation and rejected alternatives remain outside this repository's published surface.
-
-## Use and reuse
-
-Copyright (c) 2026 Devin Thomas. All rights reserved. You may read, examine, reference, and follow Starter Pack for your own learning. You may not resell, commercially reuse, redistribute, or create a copied or adapted version of the kit or course without written permission. Giving credit does not grant reuse rights. See [LICENSE](LICENSE) for the limited learner-workflow permissions, your rights in your own original projects, and the third-party and legal exceptions. Public source access does not make this an open-source project.
-
-## Feedback
-
-Found a confusing step or something that does not work? [Report a problem](https://github.com/devin-thomas/starter-pack/issues/new?template=bug_report.yml) with the page or phase, what you tried, and your device/browser/AI app. Reports are public: do not attach private progress files, conversations, account details, or credentials.
-
-For private feedback, feature requests, and project stories, use [the contact form](https://starter.uppercut-labs.com/contact) or email starter@uppercut-labs.com. Story submissions include an optional permission-to-feature checkbox; nothing is published automatically.
-
-`src/worker.ts` routes static content and handles `/api/feedback`. It validates bounded JSON, checks the exact approved request origin, applies per-IP and overall per-location rate limits, and emails escaped notification content through Resend from `feedback@uppercut-labs.com` to the fixed `starter@uppercut-labs.com` inbox, with a plain-text copy. A valid visitor email is used only as `reply_to`. No visitor-controlled recipient or automatic reply is used. A Durable Object receipt and Resend's `Idempotency-Key` keep a retried submission from sending twice. Failures preserve the form text and never claim confirmed delivery. Cloudflare's rate limits are approximate per location, not a global spending cap. See [routing](ROUTING.md) and [telemetry preparation](TELEMETRY.md).
-
-Configure `FEEDBACK_RESEND_API_KEY` with `npx wrangler secret put FEEDBACK_RESEND_API_KEY`; never place it in source, client code, or public build variables. Only a Resend 2xx response counts as delivered. Notification content can remain in Resend's email logs and the recipient mailbox. Do not log request bodies or attach learner progress. Local validation uses synthetic submissions and mocked delivery; a real submission is needed to verify the complete notification path after deployment.
-
-## Claude Code plugin (private release candidate)
-
-The proposed Claude Code plugin is **`starterpack`** (without a hyphen). The plugin is a release candidate; the public repository and live website do **not** yet offer a verified installation. After explicit promotion and native Claude Code validation, the installation will follow EditBay's marketplace pattern:
+The `starterpack` plugin bundles the course companion, Computer Setup, Grill to Build, Quick Build and the rest of the public Uppercut Labs skills, plus the read-only Starter Pack MCP server.
 
 ```sh
 claude plugin marketplace add devin-thomas/starter-pack
 claude plugin install starterpack@starterpack
 ```
 
-The plugin includes the 20 public Uppercut Labs package skills, among them the Starter Pack companion, Computer Setup, Grill to Build and Quick Build, a `/starterpack:start` command and a read-only connection to the existing `https://starter.uppercut-labs.com/mcp`. It never installs system software or certifies completion on install. Publication of the plugin and its install instructions follows separate source review, native Claude Code validation and real learner acceptance.
+Then run `/starterpack:start` to begin or resume the course. In Claude on the web or desktop (paid plans), add the same marketplace under **Customize > Plugins > Add > Add marketplace**.
 
-## Run locally
+### Other agents
 
-Use a current Node.js LTS release.
+Any MCP client can connect to `https://starter.uppercut-labs.com/mcp`. It is read-only and needs no sign-in. It answers what each phase requires, what to do next and which skills are available.
+
+## Style guides
+
+The site publishes coding style guides your agent can follow: [TypeScript](https://starter.uppercut-labs.com/style/TypeScript), [JavaScript](https://starter.uppercut-labs.com/style/JavaScript), [React + TypeScript](https://starter.uppercut-labs.com/style/React-TypeScript), [Python](https://starter.uppercut-labs.com/style/Python), [Rust](https://starter.uppercut-labs.com/style/Rust), [Swift + SwiftUI](https://starter.uppercut-labs.com/style/Swift-SwiftUI), [Dart + Flutter](https://starter.uppercut-labs.com/style/Dart-Flutter), [Kotlin](https://starter.uppercut-labs.com/style/Kotlin) and [Godot](https://starter.uppercut-labs.com/style/Godot). Each page also has Markdown and JSON versions for agents, for example `/style/TypeScript.md` and `/style/TypeScript.json`, and `/style/catalog.json` lists them all.
+
+## Report a problem
+
+Found a confusing step or something that doesn't work? [Open an issue](https://github.com/devin-thomas/starter-pack/issues/new?template=bug_report.yml) with the page or phase, what you tried, and your device, browser and AI app. Issues are public, so leave out your progress file, conversations, account details and credentials.
+
+For private feedback, feature requests or a project you'd like to share, use the [contact form](https://starter.uppercut-labs.com/contact) or email starter@uppercut-labs.com.
+
+## What's in this repository
+
+| Path | Contents |
+| --- | --- |
+| `content/` | Course text: phases, lessons, pages, style guides and the requirement registry (`workbench-steps.json`) |
+| `public/` | Files served as-is: hosted skills and their numbered releases, startup packets, templates, schemas and setup guides |
+| `src/` | The website, the Cloudflare Worker that serves it, the MCP server, the contact form handler and the Progress Workbench |
+| `scripts/` | The site build, content checks and tests |
+| `skills/`, `commands/`, `.claude-plugin/` | The `starterpack` Claude Code plugin; [STARTERPACK-SOURCES.md](STARTERPACK-SOURCES.md) records where each bundled skill comes from |
+| `examples/` | `lantern-tools`, the command-line example for the Phase 3 Level 2 lessons |
+
+## Run it locally
+
+You need Node.js 24 or newer.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-## Build
+`npm run check` runs the tests, the full build and the link and style checks. The build writes every page as HTML, Markdown and JSON into `dist/`, which is not committed.
 
-```sh
-npm run check
-npm run preview
-```
+A few parts of the repository change in specific ways:
 
-The build generates semantic HTML, focused Markdown and JSON, public style-guide resources, and an agent catalog from the public curriculum. `dist/` is generated and is not committed.
+- **Skill releases** are never edited after release. A change to a hosted skill adds a new numbered folder under `public/skills/<id>/`, updates `current/` and `public/skills/versions.json`, and refreshes the skill's `dvn.json` hashes.
+- **Startup packets** in `public/agent/packets/` are named by content hash and kept for learners who already started. After changing any packet source, run `npm run prepare:startup` and commit the new packet with the updated prompt.
+- **The plugin bundle** is rebuilt with `scripts/build-starterpack-plugin.mjs`, which records every bundled file in `starterpack.lock.json`.
 
-GitHub runs `npm ci` and `npm run check` on Node.js 24 for pushes to `main` and pull requests. These checks do not deploy the site; production deployment remains explicit.
+Changes merged to `main` deploy to the live site automatically.
 
-The React UI and feedback Worker use the full TypeScript guide safety baseline
-through `tsconfig.app.json`. The shared configuration also enables exact optional
-properties, explicit returns, override checks, and switch fallthrough checks for
-the build scripts and Workbench. Those older modules still need a separate
-checked-index and index-signature migration. `npm run format:app` formats the
-application sources; `npm run check:format` enforces the same scope in CI.
-The browser audit also runs `npm run test:controls` with its isolated pinned
-Playwright installation, using synthetic clipboard and feedback boundaries to
-verify cleanup, stale completions, and recovery without sending a message.
-`npm run test:usability` is a separate local check, not part of the Actions
-workflow. Run it against a production build to check prompt copying,
-narrow-screen text, feedback validation, and resource addresses.
-Both browser commands accept `STYLE_BROWSER_MODULE` for an isolated Playwright
-module. Usability reports and captures go to a temporary directory, or to
-`USABILITY_BROWSER_OUTPUT` outside the source tree.
+## License
 
-## Deploy
+Copyright (c) 2026 Devin Thomas. All rights reserved. You may read, reference and follow Starter Pack for your own learning. You may not resell, commercially reuse, redistribute or publish a copied or adapted version of the course without written permission. See [LICENSE](LICENSE) for the full terms, including your rights to the projects you build. The source is public, but this is not an open-source project.
 
-Authenticate Wrangler to the Cloudflare account that owns the configured domain, then run `npm run deploy`. This also checks the site through the computer's normal DNS resolver; unresolved DNS is a failed release check even when the upload succeeded.
+## Icon credits
 
-To recheck the domain without redeploying, run `npm run verify:deployment`.
-
-Public curriculum is in `content/`. Hosted skills, templates, and agent instructions are in `public/`. The website has no learner progress storage. The optional contact form processes the message and project details a visitor deliberately submits; its privacy explanation is on the About page.
-
-The [Skills page](https://starter.uppercut-labs.com/skills) features [Uppercut Skills](https://www.npmjs.com/package/@uppercut-labs/skills) as the premier and primary installer, with a copyable browse command and agent prompt. Each individual skill page provides a host-specific install command and agent prompt; Cappy currently ships separately in its own npm package. The hub and individual pages also publish Markdown and JSON installation guidance, linked from the agent catalog and `llms.txt`.
-
-The page also lists public `@uppercut-labs` npm packages, including the experimental Agent Native preview. `content/packages.json` is the single source for those cards; each entry links to its npm listing and public GitHub source. Add a package only after its npm listing and source repository are publicly accessible. Keep private and unpublished products out of this catalog, and label public previews clearly. Package names are intentionally versionless so the page stays useful across releases. `npm run check` validates catalog shape and links in the generated page; `npm run verify:deployment` checks the live package section, skill installation guidance, and matching Markdown/JSON resources after deployment.
-
-The short starting prompt reads a single GitHub-hosted Phase 1 packet containing the canonical companion, curriculum, progress guide, template and schema. Its filename includes a content hash and changes whenever those sources change. After editing packet sources, run `npm run prepare:startup`, then commit the new `public/agent/packets/` learner resource and updated prompt before deployment. These reviewed public learner releases are intentionally tracked; preserve earlier packets for existing sessions. `npm run check` rejects a stale packet or prompt. The starting-prompt section also offers the same packet for copy/download if fetching fails. Other resources retain the exact primary, Workers and GitHub links in the resource directory. A packet supports starting Phase 1 without URL fetching; it does not replace later-phase instructions or authorize resetting progress.
-
-Cloudflare can prepend managed robots rules to the generated file. `scripts/crawler-policy.ts` explicitly allows Google-Extended only on public curriculum/resource paths so those instructions remain eligible for Gemini grounding. Google uses this control for training as well as grounding. The production check parses the combined live robots rules and verifies the startup packet and prompt bytes; a successful check does not prove any specific chat app can fetch them. Do not disable unrelated WAF or bot protections to make a smoke test pass.
-
-**Gemini app mode routing (updated November 8, 2026):** Ordinary Gemini Chat is not the reliable path for fetching the exact latest GitHub-hosted instruction packet; its search-grounded responses may reflect indexed results instead of the live resource. The owner verified that pasting the same starting prompt into **Gemini Task mode** succeeds. The short prompt and companion tell the Gemini Chat agent to ask the learner to switch to Task mode without describing retrieval mechanics. Task mode must fetch and verify the actual linked packet; do not assume all Gemini experiences can do this. Task mode is account/region dependent and is never a mandatory subscription or phase gate. Google AI Studio remains the instant builder and Antigravity the computer harness. The previously published Vercel packet is a separate historical snapshot, **not** current Gemini routing guidance.
-
-The mirror is a separate public snapshot. Normal site deployment does not refresh it automatically.
-
-Each phase includes lessons adapted from Devin's projects: Domain Expansion, Daily Combo Trials, and Perfect Playlist. The stories and practice prompts live beside the relevant phase steps in canonical Markdown and appear in the generated HTML, Markdown, and JSON. The agent catalog links directly to each lesson. Phase 3 remains a preview.
-
-## Progress Workbench
-
-The [templates page](https://starter.uppercut-labs.com/artifacts) provides a downloadable, self-contained HTML viewer. Learners use it locally beside their canonical progress JSON; the Starter Pack site does not accept or personalize itself with that data. Computer Setup assembles the viewer and serves it on loopback as soon as Python is ready. Viewer use is not a completion gate.
-
-Source lives in `src/workbench/`; `scripts/workbench.ts` builds the single HTML file with embedded styles, Geist font/license, vanilla JavaScript, guide labels, and validation compiled from the progress schema. Learners need no build tools. The public catalog contains guide metadata only and allows anonymous cross-origin reads. The template response is an attachment, with a shared-host guard as a fallback. `npm run check` includes focused Workbench contract tests. Agent lifecycle and optional Cloudflare Access hosting instructions are in `public/artifacts/progress-workbench/README.md` and `public/setup/workbench-publishing.md`.
-
-Release 0.2.0 uses `content/workbench-steps.json` as the canonical requirement registry. Its validated phase gates, completion meanings, aliases and groups generate the public requirements resource, Workbench catalog/offline definitions, and the self-contained Phase 1 packet projection. Phase 3 remains preview-only. Recorded activity is separate from requirements; historical graduations retain their revision. The viewer accepts legacy OAuth sign-in notes, quarantines damaged core data, preserves a stale last-good copy on failed refresh, and offers sanitized diagnostics without writing progress or browser storage. Customized viewers receive side-by-side reviewed upgrades, not automatic replacement.
-
-`npm run check` exercises synthetic progress/schema/registry/startup/setup contracts and the production build/link checks. It does not certify an actual phone chat, clean installer journey, harness subprocess, file round trip, or tailnet audience. Those require explicit human/device evidence. To check the built asset routing locally, run `npx wrangler dev --local --ip 127.0.0.1 --port 8792` in one terminal and `npx tsx scripts/verify-deployment.ts http://127.0.0.1:8792 --local` in another. Local mode skips the published GitHub packet fetch and is not deployment acceptance.
-
-## Icon artwork
-
-The site vendors a small SVG selection from Lucide (ISC/MIT), Lobe Icons (MIT), and Simple Icons (CC0). Provider marks identify their respective products. Original colors and shapes are preserved; names remain visible alongside decorative marks.
-
-Sources, revisions, exact bytes, SHA-256 hashes, and license notices are in [`public/icons/interface`](public/icons/interface) and [`public/icons/brands`](public/icons/brands). The 35 SVGs total 25,225 bytes; including manifests and notices, the icon directories total 57,640 bytes. No external icon CDN or full icon library is required. Deployment verification checks every published SVG against its recorded hash.
+The site includes a small set of SVG icons from Lucide (ISC and MIT), Lobe Icons (MIT) and Simple Icons (CC0). Provider marks identify their own products. Sources, licenses and file hashes are in [`public/icons/interface`](public/icons/interface) and [`public/icons/brands`](public/icons/brands).
