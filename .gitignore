@@ -11,7 +11,7 @@ dist/
 .generated/
 .playwright-cli/
 output/playwright/
-# Internal work belongs in the separate private repository.
+# Keep drafts and working notes out of the repository.
 AGENTS.md
 *HANDOFF*.md
 *INTERNAL*.md

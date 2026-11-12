@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       verify_live:
-        description: 'Verify an owner-approved deployed migration'
+        description: 'Also verify the live site'
         type: boolean
         default: false
   pull_request:
@@ -47,7 +47,7 @@ jobs:
         env:
           STYLE_BROWSER_MODULE: file:///tmp/style-audit-browser/node_modules/playwright/index.mjs
         run: npm run test:controls
-      - name: Verify canonical live resources after owner-approved release
+      - name: Verify live resources
         if: github.event_name == 'workflow_dispatch' && inputs.verify_live
         run: |
           for attempt in $(seq 1 12); do
