@@ -176,7 +176,7 @@ test("Level 4 hands the agent the example guide and describes only the released 
     await readFile("content/phases/3.md", "utf8"),
   );
   assert.ok(level4.includes(readmeUrl));
-  assert.match(level4, /version 1\.0\.1, for Node\.js 22 or newer/);
+  assert.match(level4, /version 1\.1\.0, for Node\.js 22 or newer/);
   assert.match(level4, /not a command you install globally/);
   assert.doesNotMatch(level4, /\b1\.(?:[2-9]|1\d)\.\d/);
   assert.doesNotMatch(level4, forbiddenClaims);
