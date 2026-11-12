@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "starterpack": {
+      "type": "http",
+      "url": "https://starter.uppercut-labs.com/mcp"
+    }
+  }
+}

@@ -98,6 +98,10 @@ test("get_phase_guidance returns the site's own requirements and lessons for eac
   const accounts = phase1.required_steps.find((step: any) => step.id === "core-accounts");
   assert.deepEqual(accounts.includes.map((item: any) => item.id), ["github", "cloudflare", "neon", "instant-builder"]);
   assert.equal(accounts.done_when, "GitHub, Cloudflare, Neon and one instant builder are ready.");
+  const phase2 = (await call("get_phase_guidance", { phase: 2 })).result.structuredContent;
+  assert.match(phase2.lessons[0].link, /\/phases\/2\/planning$/, "the Phase 2 planning reference leads the lessons");
+  assert.match(phase2.lessons[0].markdown, /\/phases\/2\/planning\.md$/);
+  assert.ok(phase2.required_steps.some((step: any) => step.id === "quick-build" && /\/skills\/grill-to-build\/current\/SKILL\.md$/.test(step.guide)));
   const deploy = (await call("get_phase_guidance", { phase: 2, topic: "deploy" })).result.structuredContent;
   assert.ok(deploy.required_steps.some((step: any) => step.id === "live-deployment"));
   assert.ok(deploy.required_steps.length < requirements.phases["phase-2"].gate.all_of.length);
@@ -316,6 +320,6 @@ test("the homepage links to the guide's connector section and offers no Codex si
   const guide = await readFile("dist/guide.html", "utf8");
   const anchor = "optional-connect-the-starter-pack-to-claude-or-chatgpt";
   assert.match(guide, new RegExp(`<h2 id="${anchor}"`), "the guide still has the connector section");
-  assert.match(home, new RegExp(`<a class="text-link" href="/guide#${anchor}">How to add the connector`));
+  assert.match(home, new RegExp(`<a class="text-link" href="/guide#${anchor}">Connect MCP`));
   assert.doesNotMatch(home, /BUILD WITH CODEX|codex-start|start Codex through your ChatGPT sign-in/);
 });

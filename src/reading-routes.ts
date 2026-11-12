@@ -13,6 +13,7 @@ export const staticRoutes: readonly string[] = [
   "/style/Rust",
   "/phases/1",
   "/phases/2",
+  "/phases/2/planning",
   "/phases/3",
   "/phases/3/agent-ready-website",
   "/phases/3/agent-cli",

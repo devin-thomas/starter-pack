@@ -48,6 +48,8 @@ type Requirements = {
 };
 type CatalogResource = {
   readonly id: string;
+  readonly kind?: string;
+  readonly markdown?: string;
   readonly title?: string;
   readonly summary?: string;
   readonly html?: string;
@@ -579,12 +581,33 @@ async function getPhaseGuidance(
   const optional: { readonly [key: string]: Json }[] = (
     rule.optional ?? []
   ).map((id: string) => describe(req, id));
-  const lessons: Json[] = (resource?.lessons ?? []).map(
-    (lesson): Json => ({
-      title: lesson.title,
-      ...(lesson.html ? { link: lesson.html } : {}),
-    }),
-  );
+  // Standalone lesson pages for this phase (such as /phases/2/planning) come
+  // first, so the 15-item limit never drops them.
+  const pages: Json[] = catalog.resources
+    .filter(
+      (item: CatalogResource): boolean =>
+        item.kind === "lesson" &&
+        item.html !== undefined &&
+        new RegExp(`^https?://[^/]+/phases/${phase}/[a-z0-9-]+$`).test(
+          item.html,
+        ),
+    )
+    .map(
+      (item: CatalogResource): Json => ({
+        title: item.title ?? item.id,
+        ...(item.html ? { link: item.html } : {}),
+        ...(item.markdown ? { markdown: item.markdown } : {}),
+      }),
+    );
+  const lessons: Json[] = [
+    ...pages,
+    ...(resource?.lessons ?? []).map(
+      (lesson): Json => ({
+        title: lesson.title,
+        ...(lesson.html ? { link: lesson.html } : {}),
+      }),
+    ),
+  ];
   const matches = (item: Json): boolean =>
     !topic || JSON.stringify(item).toLowerCase().includes(topic);
   const narrowed: boolean =

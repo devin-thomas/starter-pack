@@ -1,0 +1,22 @@
+{
+  "name": "starterpack",
+  "owner": {
+    "name": "Devin Thomas",
+    "url": "https://starter.uppercut-labs.com"
+  },
+  "description": "Starter Pack for Agentic Development: Claude Code one-install course and skills.",
+  "plugins": [
+    {
+      "name": "starterpack",
+      "source": "./",
+      "description": "Starter Pack plus the public Uppercut Labs skills collection for Claude Code.",
+      "category": "education",
+      "keywords": [
+        "starterpack",
+        "agent-skills",
+        "onboarding",
+        "development"
+      ]
+    }
+  ]
+}

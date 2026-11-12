@@ -11,7 +11,7 @@ Turn a rough idea into an implementation-ready build pack through focused discov
 
 You have an idea for a product, feature, migration, or architecture change and want to resolve uncertainty before writing code. Grill to Build is designed for projects that need more discovery than Quick Build provides — when the scope, domain, or integration surface is large enough that jumping straight to implementation would waste effort.
 
-It is also the standard way to plan a Starter Pack Phase 2 project, explained for beginners: your agent asks about what the app should do and explains the technical ideas, rather than quizzing you about frameworks. For a small app you want scoped in one conversation, you can ask for Quick Build instead.
+It is also the standard way to plan a Starter Pack Phase 2 project, explained for beginners: your agent asks about what the app should do and explains the technical ideas, rather than quizzing you about frameworks. The course rules for that are on the [Phase 2 planning page](/phases/2/planning). For a small app you want scoped in one conversation, you can ask for Quick Build instead.
 
 ## How it works
 

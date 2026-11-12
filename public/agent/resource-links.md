@@ -43,6 +43,12 @@ A URL appearing here does not guarantee a browsing tool will allow it. If all li
 - Workers: [https://starter-pack.uppercut-labs.workers.dev/phases/2.md](https://starter-pack.uppercut-labs.workers.dev/phases/2.md)
 - GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/content/phases/2.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/content/phases/2.md)
 
+## /phases/2/planning.md
+
+- Primary: [https://starter.uppercut-labs.com/phases/2/planning.md](https://starter.uppercut-labs.com/phases/2/planning.md)
+- Workers: [https://starter-pack.uppercut-labs.workers.dev/phases/2/planning.md](https://starter-pack.uppercut-labs.workers.dev/phases/2/planning.md)
+- GitHub source: [https://raw.githubusercontent.com/devin-thomas/starter-pack/main/content/lessons/phase-2-planning.md](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/content/lessons/phase-2-planning.md)
+
 ## /phases/3.md
 
 - Primary: [https://starter.uppercut-labs.com/phases/3.md](https://starter.uppercut-labs.com/phases/3.md)

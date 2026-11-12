@@ -1,0 +1,44 @@
+{
+  "name": "starterpack",
+  "version": "0.1.0",
+  "description": "Starter Pack course companion, computer setup, Grill to Build and Quick Build, and the complete public Uppercut Labs agent skills collection for Claude Code.",
+  "author": {
+    "name": "Devin Thomas",
+    "url": "https://starter.uppercut-labs.com"
+  },
+  "repository": "https://github.com/devin-thomas/starter-pack",
+  "homepage": "https://starter.uppercut-labs.com",
+  "privacyPolicyUrl": "https://starter.uppercut-labs.com/about#privacy-and-your-progress",
+  "keywords": [
+    "starterpack",
+    "starter-pack",
+    "claude-code",
+    "agent-skills",
+    "computer-setup",
+    "build"
+  ],
+  "metadata": {
+    "bundledSkillIds": [
+      "starter-pack",
+      "computer-setup",
+      "grill-to-build",
+      "task-execution-prompt",
+      "long-horizon-dashboard",
+      "quick-build",
+      "execute-task",
+      "execute-task-cycles",
+      "surface-sweep",
+      "surface-sweep-showcase",
+      "no-useless-copy",
+      "style",
+      "pwa-development",
+      "vidchopper-cli",
+      "perfect-playlist",
+      "programmatic-harness",
+      "branded-sign-in",
+      "agent-cli",
+      "immutable-reports",
+      "agent-prompt"
+    ]
+  }
+}

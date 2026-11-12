@@ -1,4 +1,4 @@
-import { readFile, readdir, mkdir, writeFile } from "node:fs/promises";
+import { cp, readFile, readdir, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
 import { Marked } from "marked";
@@ -15,9 +15,9 @@ const headingIcons: Readonly<Record<string, string>> = {
   "How the companion works": "compass",
   "What you will own": "folder-git-2",
   "What is available now": "route",
-  "Make something first": "blocks",
-  "Your work belongs to you": "shield-check",
-  "A living set of recommendations": "compass",
+  "Approach": "blocks",
+  "Privacy and your progress": "shield-check",
+  "Recommendations": "compass",
   "Start with your agent": "terminal",
   "Prepare your apps and accounts": "lock-keyhole",
   "Make one app that does something": "blocks",
@@ -508,6 +508,11 @@ export async function generateResources(data: SiteData, output: string) {
       await readFile(`public/skills/${id}/current/SKILL.md`, "utf8"),
     );
   }
+  // Grill to Build and Quick Build are the reusable skills; serve their whole
+  // root beside the alias so relative links such as references/ resolve.
+  for (const id of ["grill-to-build", "quick-build"]) {
+    await cp(`public/skills/${id}/current`, `${output}/skills/${id}`, { recursive: true });
+  }
   for (const phase of data.phases) {
     const raw = await readFile(`content/phases/${phase.order}.md`, "utf8");
     const parsed = matter(raw);
@@ -530,6 +535,7 @@ export async function generateResources(data: SiteData, output: string) {
             `- [Optional Codex programmatic-harness guide](${origin}/setup/programmatic-harness.md)`,
             `- [Grill to Build instructions (standard planning)](${origin}/skills/grill-to-build/SKILL.md)`,
             `- [Quick Build instructions (only when the learner asks)](${origin}/skills/quick-build/SKILL.md)`,
+            `- [Phase 2 planning reference (course rules for either skill)](${origin}/phases/2/planning.md)`,
             `- [Private progress repository instructions](${origin}/artifacts/progress/README.md)`,
             `- [Progress Workbench lifecycle](${origin}/artifacts/progress-workbench/README.md)`,
           ] : []),

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "skillName": "surface-sweep",
+  "skillBlobSha": "586905bd0ce2974414db8b154a9b392913f10993",
+  "auditComplete": true,
+  "resources": [
+    {
+      "key": "coverage-and-evidence",
+      "path": "references/coverage-and-evidence.md",
+      "gitBlobSha": "79a4224456f79db9d487fe030f7e7ccbb072c7fb",
+      "required": "mandatory"
+    },
+    {
+      "key": "browser-checks",
+      "path": "references/browser-checks.md",
+      "gitBlobSha": "fca3be74c5ecd7d9cbf819c46602256d82e3cf27",
+      "required": "mandatory"
+    },
+    {
+      "key": "browser-probes",
+      "path": "scripts/browser-probes.mjs",
+      "gitBlobSha": "a3cb9eccd53bd8dc65d4e609265508d03e6d2766",
+      "required": "optional",
+      "requires": [
+        "browser-checks"
+      ]
+    }
+  ],
+  "stages": [],
+  "dependencies": []
+}

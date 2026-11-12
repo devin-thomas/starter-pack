@@ -1,0 +1,667 @@
+{
+  "schemaVersion": 1,
+  "plugin": "starterpack",
+  "version": "0.1.0",
+  "skills": [
+    {
+      "id": "starter-pack",
+      "source": "devin-thomas/starter-pack",
+      "revision": "local-current",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "daa3bd15577a92f86faf95a950a6ef4dcd2d6744"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "451131d74825dcbd0ac1baf9cd39e917236e8801"
+        }
+      ]
+    },
+    {
+      "id": "computer-setup",
+      "source": "devin-thomas/starter-pack",
+      "revision": "local-current",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "0a6d6d11761f3a9228176af9642bf52c159fa15f"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "96ee852b25aaa23f164e974db53fa48dcd0d92e3"
+        }
+      ]
+    },
+    {
+      "id": "grill-to-build",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "README.md",
+          "gitBlobSha": "bb6bcbfc4c22669bd579866b9606f2150956bd29"
+        },
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "005c34318364728238e2f23b5e4d31cdefd4168d"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "d68e81429617e5b82129a82fbd7c2128b03e202d"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "44b43ac501dd1ae3f60ec48b7790007b4761df37"
+        },
+        {
+          "path": "profiles/figma.md",
+          "gitBlobSha": "a7ccab5a03be5397143a7748baf82710921880fa"
+        },
+        {
+          "path": "references/artifact-contracts.md",
+          "gitBlobSha": "bb6770a27b248a81cc3bf2d71a073cc1b272b476"
+        },
+        {
+          "path": "references/grilling-and-modeling.md",
+          "gitBlobSha": "3119e538233af0a83e008b9defb4c23d614ed524"
+        },
+        {
+          "path": "references/migration-from-context.md",
+          "gitBlobSha": "8762aec61e6d310455b283a50a30fd6c1b00dcbc"
+        },
+        {
+          "path": "references/preferences-and-diagrams.md",
+          "gitBlobSha": "0c0741a968626a2d9a5400f8ca49d66e796c8afc"
+        },
+        {
+          "path": "references/presentation-and-interaction.md",
+          "gitBlobSha": "02af43261d0a9452b5e739098a6621273f016475"
+        },
+        {
+          "path": "references/specification-tickets-and-build.md",
+          "gitBlobSha": "cd9593e826ab60ebdec4f313be2682b1a9b933cd"
+        }
+      ]
+    },
+    {
+      "id": "task-execution-prompt",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "c97ecfc09a8fd17c3622d2308f03590d759c9f5b"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "b6e8c0b0d27a9d62e2d7fb711d8c6f4667c03146"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "79707b57dab266769e103b14d6c310e67b4a30f3"
+        },
+        {
+          "path": "references/authoring-checklist.md",
+          "gitBlobSha": "2e07df72004983b798b0d6948c041a8fadb34df2"
+        },
+        {
+          "path": "references/preflight-rehearsal.md",
+          "gitBlobSha": "d7179db470e180f00d0686f25745dc97972fe03b"
+        },
+        {
+          "path": "references/prompt-template.md",
+          "gitBlobSha": "fa2df8d6e77fc7523ca5065f7dcb9cc18122d11b"
+        }
+      ]
+    },
+    {
+      "id": "long-horizon-dashboard",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "3cb290bc71abe0ebcfee4158fc9895e274be88c6"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "f0f46e723ddbe910992e9875076e01b21dbc3062"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "c090787aaec96a7b4fcad4aff337279bea53c591"
+        },
+        {
+          "path": "references/optional-delivery.md",
+          "gitBlobSha": "772ca196c2141675c904c3c5a0addfff505a00eb"
+        },
+        {
+          "path": "references/port-checks.md",
+          "gitBlobSha": "2f0585d15a78aae87d8ae83d5198d13339064db7"
+        },
+        {
+          "path": "scripts/dashboard_endpoint.py",
+          "gitBlobSha": "971f810c368f00bcec9bb7a6776647d4a8e977c0"
+        },
+        {
+          "path": "scripts/test_dashboard_endpoint.py",
+          "gitBlobSha": "f677eb67adbe765f5d25e260f46626717456d53f"
+        }
+      ]
+    },
+    {
+      "id": "quick-build",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "README.md",
+          "gitBlobSha": "7fa4e4745dd7385e6e4fb7101b728353e5fa5d64"
+        },
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "3bfcb7d145d9b3152aaa53d84290fe8fba142ad9"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "c31f5b5a28118f7c821c3a908622068407d48b43"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "7ee7628e52fca926a063561d348fbd29687262b2"
+        },
+        {
+          "path": "references/starter-pack-0.2.3.md",
+          "gitBlobSha": "2a3f2737e7a2f7fe4a2e81be04e70193c41de447"
+        },
+        {
+          "path": "references/starter-pack-mode.md",
+          "gitBlobSha": "1997d1e235de445ff16f45278b21ab66f7c169c9"
+        },
+        {
+          "path": "templates/DECISIONS.md",
+          "gitBlobSha": "3f692e403ec8728577b1c3f0b0c61d1bf98ebbc7"
+        },
+        {
+          "path": "templates/PLAN.md",
+          "gitBlobSha": "0d7252fc289303e98ce96bd59e935516e3e7e470"
+        },
+        {
+          "path": "templates/SPEC.md",
+          "gitBlobSha": "40c09bd169a0ef20244c4ef8f6d6d6fe9dc39d49"
+        },
+        {
+          "path": "templates/TICKET.md",
+          "gitBlobSha": "3bcbc49db9bb35fd382cdcf0eb172b64a95fd1f4"
+        }
+      ]
+    },
+    {
+      "id": "execute-task",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "dcfbca4396c56444c56d41090ea80e9e381106bf"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "24c1f0a5c60d6bb831f7f0e67c06a21e74715bbe"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "fc57c949ae2ce8703f7f8e6b758bf8fa16472eaa"
+        },
+        {
+          "path": "references/portable-workflow.md",
+          "gitBlobSha": "f9a44c5f5861e7380a34f6e47d47b7d8c3f821b6"
+        },
+        {
+          "path": "references/reporting-clock.md",
+          "gitBlobSha": "3fd73a241ef18352d6ca6ae634b318057cd68603"
+        },
+        {
+          "path": "references/task-sources.md",
+          "gitBlobSha": "453c01d29c128dbf44e3dd39df4ab09eeb61913d"
+        }
+      ]
+    },
+    {
+      "id": "execute-task-cycles",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "6e9161e79e866f5e88ebb2b33932e85471adadf7"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "ce6e901805ae6848bbe7dfa2ab321fc01183a4cf"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "a6196618148a5fc1b59cc19bc7bf2b7061fc6c59"
+        }
+      ]
+    },
+    {
+      "id": "surface-sweep",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "README.md",
+          "gitBlobSha": "06321b2c7a76921e2722c6785238cd8be25d3233"
+        },
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "586905bd0ce2974414db8b154a9b392913f10993"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "7f41cb9ee33e91e41bd40c933c32b28046e239f7"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "5f9a439f7827379800c416cc563e813dc073d89b"
+        },
+        {
+          "path": "references/browser-checks.md",
+          "gitBlobSha": "fca3be74c5ecd7d9cbf819c46602256d82e3cf27"
+        },
+        {
+          "path": "references/coverage-and-evidence.md",
+          "gitBlobSha": "79a4224456f79db9d487fe030f7e7ccbb072c7fb"
+        },
+        {
+          "path": "scripts/browser-probes.mjs",
+          "gitBlobSha": "a3cb9eccd53bd8dc65d4e609265508d03e6d2766"
+        }
+      ]
+    },
+    {
+      "id": "surface-sweep-showcase",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "README.md",
+          "gitBlobSha": "764de75aebd4bdb82a98200bb55ff9067014e3c8"
+        },
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "6ff9461912a5c33afa9d93515458228ad2c14c1d"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "140b35737e472beaec0f259ba757f49362886fee"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "699e593fabf3a8ade655de4605785fc548fda89c"
+        },
+        {
+          "path": "references/showcase-delivery.md",
+          "gitBlobSha": "8ad3b976ad54cdc262b1cec1c644f2b55a28ddde"
+        }
+      ]
+    },
+    {
+      "id": "no-useless-copy",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "README.md",
+          "gitBlobSha": "ab9236090a35fa32db38322e1388bf1508066d09"
+        },
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "9d597c0e688a2cdb6b65a490ac79c49c5a22a807"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "7cec2ad7a949c95efc52a4532c9dbaaff2258cf9"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "44d50b53e12d7a05253b103e169a2d3bf35cbefb"
+        }
+      ]
+    },
+    {
+      "id": "style",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "6d52812e9b753e06b1efbf6023bb9a7c0d81a75b"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "76a0c5b468c9af21f8605bbdb49f74f043b26c0e"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "071c97a2e92bef78d894ab8fe2d6f99bb81de379"
+        }
+      ]
+    },
+    {
+      "id": "pwa-development",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "README.md",
+          "gitBlobSha": "ec22284022c056498e1e14ca29b36bd32f805eac"
+        },
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "452eb57696a487738869dc36057b7180c1c789ef"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "bb299b50c760cb2880f87bdf9c16c23ced4c3001"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "1a772bfb2a8395bdb6502f400f238ecc0cf12180"
+        },
+        {
+          "path": "references/compatibility-and-evidence.md",
+          "gitBlobSha": "65415ff237045c1d3c2cfd4e336445374237e9b4"
+        },
+        {
+          "path": "references/manifest-and-icons.md",
+          "gitBlobSha": "8a3ecc58da9d40080ea0ab88529c413853981d7f"
+        },
+        {
+          "path": "references/offline-data-and-storage.md",
+          "gitBlobSha": "2dcf048799b91427228ead922c416629625aa500"
+        },
+        {
+          "path": "references/packaging-and-stores.md",
+          "gitBlobSha": "4156a8a5eb4ed0c27ae2c02290a8b2d5c18a1af8"
+        },
+        {
+          "path": "references/platform-installation.md",
+          "gitBlobSha": "3223606a22b94de85a485470bf185c373b2e03a0"
+        },
+        {
+          "path": "references/release-and-validation.md",
+          "gitBlobSha": "504dab5afb2e5c6315bf7aa6f967e3ff31cde0c0"
+        },
+        {
+          "path": "references/service-worker-and-updates.md",
+          "gitBlobSha": "2359918b17a066a876dea0b29cfc76700b61183a"
+        },
+        {
+          "path": "scripts/audit-manifest.mjs",
+          "gitBlobSha": "c2eb99cd84f39d343e05098fe5b888f848006f6c"
+        },
+        {
+          "path": "scripts/probe-release.mjs",
+          "gitBlobSha": "ece8f4617d0ebdfd4b04937ee20e98f3e672ac46"
+        }
+      ]
+    },
+    {
+      "id": "vidchopper-cli",
+      "source": "devin-thomas/vid-chopper",
+      "revision": "428963b6db87e47f98209c92bc59aca41b5f997a",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "6d8429b146510a7cce81c81367e3c2e8cd9469a6"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "4317457c648bf7094daedae571bbad090f790c1f"
+        },
+        {
+          "path": "assets/chapter-config.example.json",
+          "gitBlobSha": "8e270c37531819bfe75735ec54c1d6bdddc28fbd"
+        },
+        {
+          "path": "assets/chapter-config.example.yaml",
+          "gitBlobSha": "a45a2a3f14f127fddd03bb01a66613a182c28604"
+        },
+        {
+          "path": "assets/chapter-config.schema.json",
+          "gitBlobSha": "a47ad016f06aa078815a4c5129b08adee622371d"
+        },
+        {
+          "path": "assets/chapterbuilder-tns-2xko-36.json",
+          "gitBlobSha": "9542a06e88c4d4d71f8c24a3ed2c4047243f7404"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "53863c5a133100296a0e4f028ff728002455b147"
+        },
+        {
+          "path": "references/chapterfile.md",
+          "gitBlobSha": "4ce7e08917f940a0aac2afc2aabc41ba9872c777"
+        },
+        {
+          "path": "references/cli.md",
+          "gitBlobSha": "5b2db61bf8aff3163e906dd11903e26c70ef253e"
+        },
+        {
+          "path": "references/manifests.md",
+          "gitBlobSha": "96ba4ce4ee050e50fa0c99bb4084d0707aa5fcc4"
+        }
+      ]
+    },
+    {
+      "id": "perfect-playlist",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "13ac7682a3cced02ade75f7129cb9a6be3e5ac10"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "e1b0253ee3e13eb5f0402e48bc5474eb132dfc9c"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "c6344179a1a495ad7b2ce51d9537cb971c464e8a"
+        }
+      ]
+    },
+    {
+      "id": "programmatic-harness",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "README.md",
+          "gitBlobSha": "97b6f5727040c31f315ee46db0d43e231786a877"
+        },
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "c014b492d5901d5f1bc529dacba8a6de36519888"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "9454d2adb8fe1ce81d4cfff350f740cb7c7254c0"
+        },
+        {
+          "path": "references/codex.md",
+          "gitBlobSha": "604131e9fcd97b79fb7d6e2bc8019f65509ba2e2"
+        },
+        {
+          "path": "references/proof-and-evidence.md",
+          "gitBlobSha": "69afe1d7b7618a679c12dcc435b543a5db4807ec"
+        },
+        {
+          "path": "scripts/codex-proof.mjs",
+          "gitBlobSha": "c4dc3289e272e24c10356e37407d3622c3acb86c"
+        },
+        {
+          "path": "scripts/codex-proof.test.mjs",
+          "gitBlobSha": "b5388a36d40982edac9a97c8a2b3b4459a95c4f3"
+        }
+      ]
+    },
+    {
+      "id": "branded-sign-in",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "LICENSE",
+          "gitBlobSha": "96315711128c98716a8caf78a1a834874aeb57d5"
+        },
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "61c0ce46999b7bee9b53d2132ae680fd4d925e32"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "1db30c72d7cc9985f3fd56ccc3be606383c8cbf6"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "5a98545a8e0a82b1cd2407ba6adb587c1634de70"
+        }
+      ]
+    },
+    {
+      "id": "agent-cli",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "eb4dd9233b5a95c14fbd66c0db6de374053fe5c6"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "4ceb0a0140bbf5078ae26655a3aec1962b1ca5a5"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "56ad2a653cefa3f02a1937540bc5dc1272e71a4d"
+        },
+        {
+          "path": "references/antigravity.md",
+          "gitBlobSha": "caca1f440c8e7707d4559168921cc3f245b5b11a"
+        },
+        {
+          "path": "references/claude.md",
+          "gitBlobSha": "d8387b180193bf4597af63f0617961171490c566"
+        },
+        {
+          "path": "references/codex.md",
+          "gitBlobSha": "f8272f6833d911c74fd35fa4eda5cedcb13f4b33"
+        },
+        {
+          "path": "references/coding-artifacts.md",
+          "gitBlobSha": "5aa78ad8e81d13e241eafe4f13dcaca148b4449a"
+        },
+        {
+          "path": "references/cursor.md",
+          "gitBlobSha": "53d15d717832ab5a1b51affc3f0499c7821ed4ea"
+        },
+        {
+          "path": "references/process-control.md",
+          "gitBlobSha": "4f5b954b71a8342706f5c35acc9ba173c15c661e"
+        },
+        {
+          "path": "references/usage.md",
+          "gitBlobSha": "202b6013faadf428d244b7d3832c92c0c002274d"
+        },
+        {
+          "path": "references/verification.md",
+          "gitBlobSha": "1f4d033ef78ca923a8ab29ae0ea05d07e57b7ccb"
+        }
+      ]
+    },
+    {
+      "id": "immutable-reports",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "596806b76274557016a0ee521d4ec3217bce8425"
+        },
+        {
+          "path": "assets/INDEX.md",
+          "gitBlobSha": "097d4795fd075ca86580aabcd63c840cccf312a3"
+        },
+        {
+          "path": "assets/plan.md",
+          "gitBlobSha": "1c6244f0f712d6846cfa15b0911192887892938e"
+        },
+        {
+          "path": "assets/project-rule.md",
+          "gitBlobSha": "85f5dc08687e4683fabc36e838bb4195ba2a5129"
+        },
+        {
+          "path": "assets/walkthrough.md",
+          "gitBlobSha": "a0fc1241db2efdf73aaa6c70f0dfe424b783a2d7"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "ed60d1e5a3392c50bcd978ae8671b7def599b5e6"
+        },
+        {
+          "path": "references/ledger-format.md",
+          "gitBlobSha": "175319d739debbab3404de2cae44c154de4cc6d1"
+        }
+      ]
+    },
+    {
+      "id": "agent-prompt",
+      "source": "devin-thomas/skills",
+      "revision": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
+      "files": [
+        {
+          "path": "LICENSE",
+          "gitBlobSha": "96315711128c98716a8caf78a1a834874aeb57d5"
+        },
+        {
+          "path": "SKILL.md",
+          "gitBlobSha": "e78f18c3a6fa37b672de864665b97278ca1e76fb"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "gitBlobSha": "5fc9e4b54f0a78cc75e6270aaca29e2aa2e6f691"
+        },
+        {
+          "path": "assets/agent-prompt.css",
+          "gitBlobSha": "50733b6d426404b0242c201a2f871eafe9188f68"
+        },
+        {
+          "path": "dvn.json",
+          "gitBlobSha": "f586733651a32b6fbc2fb3dc9cd304d3cdf7a966"
+        },
+        {
+          "path": "references/contract.md",
+          "gitBlobSha": "dbc08105685ad03b23057bcd9247b275ab95dbce"
+        },
+        {
+          "path": "references/default-appearance.md",
+          "gitBlobSha": "0acc2d2613ce3eef9e7076318d565e6f7a9c8d20"
+        },
+        {
+          "path": "references/formats.md",
+          "gitBlobSha": "a515f712dc1ad89d8da8acfa5e8a39b2b211601c"
+        },
+        {
+          "path": "references/observed-patterns.md",
+          "gitBlobSha": "4bdbf193163d09bd05d1d57fe9f480d5273adbd7"
+        }
+      ]
+    }
+  ]
+}

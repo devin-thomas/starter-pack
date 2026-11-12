@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "skillName": "execute-task",
+  "skillBlobSha": "dcfbca4396c56444c56d41090ea80e9e381106bf",
+  "auditComplete": true,
+  "resources": [
+    {
+      "key": "portable-workflow",
+      "path": "references/portable-workflow.md",
+      "gitBlobSha": "f9a44c5f5861e7380a34f6e47d47b7d8c3f821b6",
+      "required": "stage",
+      "stages": [
+        "portable-workflow"
+      ],
+      "requires": [
+        "task-sources",
+        "reporting-clock"
+      ]
+    },
+    {
+      "key": "task-sources",
+      "path": "references/task-sources.md",
+      "gitBlobSha": "453c01d29c128dbf44e3dd39df4ab09eeb61913d",
+      "required": "stage",
+      "stages": [
+        "portable-workflow"
+      ]
+    },
+    {
+      "key": "reporting-clock",
+      "path": "references/reporting-clock.md",
+      "gitBlobSha": "3fd73a241ef18352d6ca6ae634b318057cd68603",
+      "required": "stage",
+      "stages": [
+        "portable-workflow"
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "key": "portable-workflow",
+      "resources": [
+        "portable-workflow",
+        "task-sources",
+        "reporting-clock"
+      ],
+      "dependencies": []
+    }
+  ],
+  "dependencies": []
+}

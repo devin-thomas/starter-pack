@@ -1,0 +1,5 @@
+---
+description: Start or resume Starter Pack using the installed course companion and the learner's existing progress.
+---
+
+Load the bundled `starter-pack` skill and follow the actual saved Starter Pack learner state; missing state is not proof of a new learner. Use the bundled `computer-setup` skill for Phase 2. For Phase 2 planning, use the bundled `grill-to-build` skill by default, or `quick-build` only when the learner explicitly requested Quick Build, and follow the course rules in the Phase 2 planning reference (https://starter.uppercut-labs.com/phases/2/planning.md) alongside it. Completing either skill alone does not complete Phase 2. If the bundled read-only Starter Pack MCP is healthy, consult its authoritative phase guidance and next action; if it isn't, use official focused resources. Require approval before changing the machine, publishing, or implementing an unapproved plan. Verify the live app and final saved private progress before claiming graduation. Offer Phase 3 as optional. Never reinstall a separately bundled skill or claim the plugin installation completes a phase.

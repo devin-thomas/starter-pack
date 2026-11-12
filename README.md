@@ -52,6 +52,17 @@ For private feedback, feature requests, and project stories, use [the contact fo
 
 Configure `FEEDBACK_RESEND_API_KEY` with `npx wrangler secret put FEEDBACK_RESEND_API_KEY`; never place it in source, client code, or public build variables. Only a Resend 2xx response counts as delivered. Notification content can remain in Resend's email logs and the recipient mailbox. Do not log request bodies or attach learner progress. Local validation uses synthetic submissions and mocked delivery; a real submission is needed to verify the complete notification path after deployment.
 
+## Claude Code plugin (private release candidate)
+
+The proposed Claude Code plugin is **`starterpack`** (without a hyphen). The plugin is a release candidate; the public repository and live website do **not** yet offer a verified installation. After explicit promotion and native Claude Code validation, the installation will follow EditBay's marketplace pattern:
+
+```sh
+claude plugin marketplace add devin-thomas/starter-pack
+claude plugin install starterpack@starterpack
+```
+
+The plugin includes the 20 public Uppercut Labs package skills, among them the Starter Pack companion, Computer Setup, Grill to Build and Quick Build, a `/starterpack:start` command and a read-only connection to the existing `https://starter.uppercut-labs.com/mcp`. It never installs system software or certifies completion on install. Publication of the plugin and its install instructions follows separate source review, native Claude Code validation and real learner acceptance.
+
 ## Run locally
 
 Use a current Node.js LTS release.
