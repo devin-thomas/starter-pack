@@ -1,6 +1,6 @@
 # Grill to Build artifact templates
 
-Version: 0.2.0. Use these when the [Grill to Build skill](https://starter.uppercut-labs.com/skills/grill-to-build/current/SKILL.md) plans a Phase 2 project, after its canonical prerequisites pass. Make them available before the first question round. Replace bracketed fields with the learner's decisions. Reuse equivalent files the project already has. These are public blank templates, not this site's internal planning.
+Version: 0.2.0. Use these when the [Grill to Build skill](https://starter.uppercut-labs.com/skills/grill-to-build/current/SKILL.md) plans a Phase 2 project, after its canonical prerequisites pass, together with the [Phase 2 planning reference](https://starter.uppercut-labs.com/phases/2/planning.md). Make them available before the first question round. Replace bracketed fields with the learner's decisions. Reuse equivalent files the project already has. These are public blank templates, not this site's internal planning.
 
 - [PROJECT.md](https://starter.uppercut-labs.com/artifacts/grill-to-build/PROJECT.md): the living project brief, scope, agreed rules, discovery progress and open questions.
 - [GLOSSARY.md](https://starter.uppercut-labs.com/artifacts/grill-to-build/GLOSSARY.md): the project's own words for its things, created once the first term is settled.

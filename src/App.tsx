@@ -96,6 +96,12 @@ type NavigationLink = readonly [href: string, label: string];
 // The heading id of the guide's optional connector section, from content/pages/guide.md.
 const guideConnectorHref: string =
   "/guide#optional-connect-the-starter-pack-to-claude-or-chatgpt";
+const starterpackMcpUrl: string = "https://starter.uppercut-labs.com/mcp";
+const starterpackInstallCommands: string =
+  "claude plugin marketplace add devin-thomas/starter-pack\n" +
+  "claude plugin install starterpack@starterpack";
+// Keep this false until the public plugin is installed and accepted on real Claude Code.
+const starterpackPluginPublished: boolean = false;
 
 const nav: readonly NavigationLink[] = [
   ["/guide", "Guide"],
@@ -181,7 +187,6 @@ type AppProps = {
 };
 
 type PageHeadingProps = {
-  readonly label: string;
   readonly title: string;
   readonly description: string;
 };
@@ -209,7 +214,6 @@ function Prompt({
           <Icon name="terminal" size={20} />
           {phase2 ? "Phase 2 handoff" : "Your starting prompt"}
         </span>
-        <span className="metadata">COPY + PASTE</span>
       </div>
       {!phase2 && <AgentBrands />}
       <CopyText
@@ -378,11 +382,10 @@ function PhaseCards(): ReactElement {
             <span className="concept-icon">
               <Icon name={summary.icon} size={24} />
             </span>
-            <span className="eyebrow">
-              PHASE 0{summary.number}
-              {summary.number === 3 && " / OPTIONAL"}
-            </span>
-            <h3>{summary.title}</h3>
+            <h3>
+              Phase {summary.number}
+              {summary.number === 3 && " (optional)"}: {summary.title}
+            </h3>
             <p>{summary.description}</p>
             <span className="card-link">
               Open phase
@@ -545,7 +548,6 @@ function RecommendationCard({ item }: RecommendationCardProps): ReactElement {
   return (
     <article className="recommendation">
       <div className="recommendation-top">
-        <span className="eyebrow">{item.category.replaceAll("_", " ")}</span>
         <span
           className={`requirement ${devinsPick ? "devin-pick" : `requirement-${item.requirement}`}`}
         >
@@ -642,7 +644,7 @@ function ContextRail({
   return (
     <aside className="context-rail" aria-label="Your starting point">
       <section>
-        <span className="eyebrow">WHAT YOU NEED</span>
+        <h2>What you need</h2>
         <div className="need-item">
           <Icon name="terminal" size={18} />
           <div>
@@ -686,7 +688,7 @@ function ContextRail({
             <strong>
               {phase === 2
                 ? "A computer + your phone"
-                : "Start on your phone. Finish on a computer."}
+                : "A phone, then a computer"}
             </strong>
             <p>
               {phase === 2
@@ -708,8 +710,7 @@ function ContextRail({
         </a>
       </section>
       <section>
-        <span className="eyebrow">THE PATH</span>
-        <h2>One milestone at a time.</h2>
+        <h2>Milestones</h2>
         <ol className="milestone-list">
           {phaseSummaries.map(
             (summary: PhaseSummary): ReactElement => (
@@ -731,10 +732,11 @@ function ContextRail({
       </section>
       <section className="privacy-note">
         <Icon name="shield-check" size={20} />
-        <h2>No Starter Pack account.</h2>
+        <h2>Privacy</h2>
         <p>
-          Your agent tracks progress; this site does not. Your progress stays
-          with you and your agent, in your own files and private GitHub repo.
+          There is no Starter Pack account. Your agent tracks progress; this
+          site does not. Your progress stays with you and your agent, in your
+          own files and private GitHub repo.
         </p>
       </section>
       <div className="rail-footnote">
@@ -829,7 +831,7 @@ function SkillInstall({ entry }: SkillInstallProps): ReactElement {
           in its own package.
         </p>
       )}
-      <h3>Let your agent take it from here</h3>
+      <h3>Install with your agent</h3>
       <CopyText
         text={installation.prompt}
         label={
@@ -869,11 +871,7 @@ function SkillPage({
 
   return (
     <>
-      <PageHeading
-        label={categoryLabels[entry.category] || entry.category}
-        title={entry.title}
-        description={entry.summary}
-      />
+      <PageHeading title={entry.title} description={entry.summary} />
       <section
         className="skill-handoff"
         aria-label="Use this skill with your agent"
@@ -1033,8 +1031,7 @@ function SkillsHub({ skills, packages }: SkillsHubProps): ReactElement {
   return (
     <>
       <PageHeading
-        label="SKILLS"
-        title="Tools for every stage of a build."
+        title="Skills"
         description="Agent skills that help you plan, build, maintain, and ship. Pick what fits your current job."
       />
       <section
@@ -1152,8 +1149,7 @@ function SkillRecommendations({
   return (
     <>
       <PageHeading
-        label="SKILL RECOMMENDATIONS"
-        title="Worth learning from."
+        title="Skill recommendations"
         description="Third-party skills and resources that complement the Starter Pack collection. These are not authored or maintained by Devin."
       />
       {groups.map(
@@ -1202,8 +1198,7 @@ function StyleHub({ guides }: StyleHubProps): ReactElement {
   return (
     <>
       <PageHeading
-        label="STYLE GUIDES"
-        title="Style guides."
+        title="Style guides"
         description="The coding conventions I use for my own projects and agent-directed work."
       />
       <div className="style-guide-grid">
@@ -1269,8 +1264,7 @@ function StyleGuidePage({ guide }: StyleGuideProps): ReactElement {
   return (
     <>
       <PageHeading
-        label="STYLE GUIDE"
-        title={guide.title}
+        title={`${guide.title} style guide`}
         description={guide.humanSummary}
       />
       <div className="style-status-bar" aria-label="Guide status">
@@ -1285,12 +1279,6 @@ function StyleGuidePage({ guide }: StyleGuideProps): ReactElement {
         className="prose style-guide-intro"
         dangerouslySetInnerHTML={{ __html: guide.introHtml }}
       />
-      <div className="style-rules-label">
-        <span className="eyebrow">
-          <span className="small-rule" />
-          THE STYLE
-        </span>
-      </div>
       <article
         className="prose style-guide-prose"
         dangerouslySetInnerHTML={{ __html: guide.html }}
@@ -1405,8 +1393,8 @@ export function App({ path, data }: AppProps): ReactElement {
                 <span className="progress-label">
                   <small>
                     {summary.number === 3
-                      ? "PHASE 3 / OPTIONAL"
-                      : `PHASE ${summary.number}`}
+                      ? "Phase 3 (optional)"
+                      : `Phase ${summary.number}`}
                   </small>
                   <span className="phase-full-label">{summary.title}</span>
                   <span className="phase-short-label">
@@ -1428,15 +1416,7 @@ export function App({ path, data }: AppProps): ReactElement {
             {normalized === "/" ? (
               <>
                 <div className="page-heading">
-                  <span className="eyebrow">
-                    <Icon name="sprout" size={19} />
-                    START HERE
-                  </span>
-                  <h1>
-                    Your first build
-                    <br />
-                    starts here.
-                  </h1>
+                  <h1>Starter Pack</h1>
                   <p>
                     A practical pack for making things with an AI agent, from
                     your first working idea to a project you can put online.
@@ -1452,34 +1432,79 @@ export function App({ path, data }: AppProps): ReactElement {
                   <Icon name="arrow-right" size={16} />
                 </a>
                 <section
-                  className="content-section how-it-works"
-                  aria-labelledby="connector-start"
+                  className="content-section how-it-works starter-connectivity"
+                  aria-labelledby="starterpack-use"
                 >
-                  <span className="eyebrow">OPTIONAL</span>
-                  <h2 id="connector-start">
-                    Connect the Starter Pack to Claude or ChatGPT.
-                  </h2>
-                  <p>
-                    The connector lets your chat app look up the course steps,
-                    your next step and the current skills. It reads only the
-                    public course and needs no sign-in.
-                  </p>
-                  <a className="text-link" href={guideConnectorHref}>
-                    How to add the connector
-                    <Icon name="arrow-right" size={15} />
-                  </a>
+                  <h2 id="starterpack-use">Use Starter Pack</h2>
+                  <div className="starter-connectivity-method">
+                    <h3>MCP</h3>
+                    <p>
+                      Read-only course steps, next actions and skill listings
+                      over Streamable HTTP. No sign-in or personal progress
+                      upload. It does not install software or run builds.
+                    </p>
+                    <code className="starter-connectivity-address">
+                      {starterpackMcpUrl}
+                    </code>
+                    <CopyText
+                      text={starterpackMcpUrl}
+                      label="Starter Pack MCP URL"
+                      buttonLabel="Copy URL"
+                      copiedLabel="URL copied"
+                      instruction=""
+                      disclosureLabel="Select URL manually"
+                    />
+                    <a className="text-link" href={guideConnectorHref}>
+                      Connect MCP
+                      <Icon name="arrow-right" size={15} />
+                    </a>
+                  </div>
+                  <div className="starter-connectivity-method">
+                    <h3>Plugin</h3>
+                    <pre className="starter-connectivity-commands" tabIndex={0}>
+                      <code>{starterpackInstallCommands}</code>
+                    </pre>
+                    <CopyText
+                      text={starterpackInstallCommands}
+                      label="Claude Code plugin installation commands"
+                      buttonLabel="Copy commands"
+                      copiedLabel="Commands copied"
+                      instruction=""
+                      disclosureLabel="Select commands manually"
+                    />
+                    <p>
+                      One install brings the 20 public Uppercut Labs skills,
+                      including the Starter Pack companion, computer setup,
+                      Grill to Build and Quick Build, and the read-only MCP
+                      connection into Claude Code. Start a new session after
+                      installation. Other agents can still use the original
+                      starting prompt.
+                    </p>
+                    {!starterpackPluginPublished && (
+                      <p className="starter-connectivity-pending" role="status">
+                        Plugin preview: the public installation is not available
+                        until the release is approved.
+                      </p>
+                    )}
+                    <a
+                      className="text-link"
+                      href="/guide#install-the-starterpack-claude-code-plugin"
+                    >
+                      Install guide
+                      <Icon name="arrow-right" size={15} />
+                    </a>
+                  </div>
                 </section>
                 <section className="content-section">
                   <div className="section-heading">
-                    <h2>Three phases. A clear next step.</h2>
-                    <span className="metadata">V1: PHASES 1 + 2</span>
+                    <h2>Phases</h2>
                   </div>
                   <PhaseCards />
                 </section>
                 <section className="content-section how-it-works">
                   <h2 className="icon-heading">
                     <Icon name="route" size={23} />
-                    You bring the idea. Your agent helps you build.
+                    How it works
                   </h2>
                   <p>
                     Paste the prompt into your agent. It figures out where you
@@ -1496,11 +1521,15 @@ export function App({ path, data }: AppProps): ReactElement {
             ) : normalized === "/guide" ? (
               <>
                 <PageHeading
-                  label="THE GUIDE"
-                  title="A small start. A real project."
+                  title="Guide"
                   description="Follow the pack with your agent, or browse each phase at your own pace."
                 />
-                <PhaseCards />
+                <section className="content-section">
+                  <div className="section-heading">
+                    <h2>Phases</h2>
+                  </div>
+                  <PhaseCards />
+                </section>
                 <article
                   className="content-section prose"
                   dangerouslySetInnerHTML={{ __html: data.pages.guide }}
@@ -1514,9 +1543,8 @@ export function App({ path, data }: AppProps): ReactElement {
             ) : normalized === "/help/cloudflare-iphone" ? (
               <>
                 <PageHeading
-                  label="EXTRA CREDIT / IPHONE"
                   title="Deploy a static site to Cloudflare from your iPhone"
-                  description="Turn website files from your agent into a public site using Files and Safari."
+                  description="Phase 1 extra credit: turn website files from your agent into a public site using Files and Safari."
                 />
                 <div className="phase-content help-guide">
                   <article
@@ -1538,7 +1566,6 @@ export function App({ path, data }: AppProps): ReactElement {
             ) : lesson ? (
               <>
                 <PageHeading
-                  label={lesson.label}
                   title={lesson.title}
                   description={lesson.summary}
                 />
@@ -1560,8 +1587,7 @@ export function App({ path, data }: AppProps): ReactElement {
             ) : phase ? (
               <>
                 <PageHeading
-                  label={`PHASE 0${phaseNumber}${phaseNumber === 3 ? " / OPTIONAL" : ""}`}
-                  title={phase.title}
+                  title={`Phase ${phaseNumber}: ${phase.title}`}
                   description={phase.summary}
                 />
                 {phaseNumber === 3 && (
@@ -1592,7 +1618,6 @@ export function App({ path, data }: AppProps): ReactElement {
                   >
                     {phaseNumber === 1 ? "Back to guide" : "Previous phase"}
                   </a>
-                  <span className="metadata">0{phaseNumber} / 03</span>
                   <a
                     className="primary-action"
                     href={phaseNumber < 3 ? `/phases/${phaseNumber + 1}` : "/"}
@@ -1609,8 +1634,7 @@ export function App({ path, data }: AppProps): ReactElement {
             ) : normalized === "/recommendations" ? (
               <>
                 <PageHeading
-                  label="THE TOOLKIT"
-                  title="Tools I would hand a friend."
+                  title="Recommendations"
                   description="Start with the required tools, choose one instant builder, and keep Vercel as an optional hosting path."
                 />
                 <p className="muted">
@@ -1622,7 +1646,6 @@ export function App({ path, data }: AppProps): ReactElement {
                     className="recommendation-group"
                   >
                     <div className="recommendation-group-heading">
-                      <span className="eyebrow">HARNESS</span>
                       <h2>Choose your development harness</h2>
                       <p>
                         Your harness is where your agent works on project files
@@ -1648,8 +1671,7 @@ export function App({ path, data }: AppProps): ReactElement {
                     className="recommendation-group sr-only"
                   >
                     <div className="recommendation-group-heading">
-                      <span className="eyebrow">COMPUTER SETUP</span>
-                      <h2>Your IDE follows your harness</h2>
+                      <h2>IDE for your harness</h2>
                       <p>
                         Your agent installs and configures it as part of the
                         approved setup batch.
@@ -1681,8 +1703,7 @@ export function App({ path, data }: AppProps): ReactElement {
                   </section>
                   <section className="recommendation-group">
                     <div className="recommendation-group-heading">
-                      <span className="eyebrow">REQUIRED</span>
-                      <h2>Core accounts and tools</h2>
+                      <h2>Required accounts and tools</h2>
                       <p>
                         Start with a companion on your phone, then prepare these
                         apps and accounts.
@@ -1703,7 +1724,6 @@ export function App({ path, data }: AppProps): ReactElement {
                   </section>
                   <section className="recommendation-group">
                     <div className="recommendation-group-heading">
-                      <span className="eyebrow">INSTANT BUILDERS</span>
                       <h2>Choose one instant builder</h2>
                       <p>
                         Google AI Studio is my pick. These are all recommended
@@ -1736,8 +1756,7 @@ export function App({ path, data }: AppProps): ReactElement {
                   </section>
                   <section className="recommendation-group">
                     <div className="recommendation-group-heading">
-                      <span className="eyebrow">OPTIONAL</span>
-                      <h2>Vercel, if you want another hosting path</h2>
+                      <h2>Optional hosting: Vercel</h2>
                       <p>
                         Vercel is an alternate deployment option, not a required
                         account.
@@ -1765,8 +1784,7 @@ export function App({ path, data }: AppProps): ReactElement {
             ) : normalized === "/resources" ? (
               <>
                 <PageHeading
-                  label="SKILLS + RESOURCES"
-                  title="The pack behind your agent."
+                  title="Agent resources"
                   description="These addresses are for your agent to read. Copy one when it asks for a specific file."
                 />
                 <p className="muted">
@@ -1820,8 +1838,7 @@ export function App({ path, data }: AppProps): ReactElement {
             ) : normalized === "/artifacts" ? (
               <>
                 <PageHeading
-                  label="FILES FOR YOUR AGENT"
-                  title="Progress and planning templates."
+                  title="Progress and planning templates"
                   description="Your agent uses these starter files to keep your progress and prepare your project. You review its summaries and decide what to do next."
                 />
                 <p className="muted">
@@ -1865,8 +1882,7 @@ export function App({ path, data }: AppProps): ReactElement {
             ) : normalized === "/about" ? (
               <>
                 <PageHeading
-                  label="ABOUT THE PACK"
-                  title="A starting point, from me to you."
+                  title="About Starter Pack"
                   description="I'm Devin Thomas. This is the collection of tools and guidance I would give a friend who wants to start building with an AI agent."
                 />
                 <article
@@ -1893,8 +1909,7 @@ export function App({ path, data }: AppProps): ReactElement {
             ) : (
               <>
                 <PageHeading
-                  label="PAGE NOT FOUND"
-                  title="Let's find your next step."
+                  title="Page not found"
                   description="This page is not in the pack. The guide is a good place to pick up again."
                 />
                 <a href="/guide" className="primary-action">
@@ -1939,17 +1954,9 @@ export function App({ path, data }: AppProps): ReactElement {
   );
 }
 
-function PageHeading({
-  label,
-  title,
-  description,
-}: PageHeadingProps): ReactElement {
+function PageHeading({ title, description }: PageHeadingProps): ReactElement {
   return (
     <div className="page-heading">
-      <span className="eyebrow">
-        <span className="small-rule" />
-        {label}
-      </span>
       <h1>{title}</h1>
       <p>{description}</p>
     </div>

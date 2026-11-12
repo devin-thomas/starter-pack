@@ -1,4 +1,4 @@
-## Make something first
+## Approach
 
 You do not need to master a long list of technologies before your first build. Start with one observable result. Then use that experience to build something meaningful and put it in the world.
 
@@ -6,7 +6,7 @@ You do not need to master a long list of technologies before your first build. S
 
 Starter Pack for Agentic Development brings my current recommendations and a practical agent companion into one free, accountless place.
 
-## Your work belongs to you
+## Privacy and your progress
 
 There is no Starter Pack profile or progress dashboard. Your agent keeps progress in files you control. During Phase 2 setup, it saves that progress to your own private GitHub repository as soon as GitHub access is ready, before you plan your project. Keep passwords, access tokens, and other secrets out of those files.
 
@@ -20,6 +20,6 @@ The contact form sends only the fields you choose to submit. Your name and reply
 
 Submissions are private by default. The optional project-story checkbox permits featuring your submitted story, project link, and name on Starter Pack; your email is never published. There is no automatic public posting. You keep ownership of your work. To ask about a submission, request deletion, or withdraw permission for future featuring, email starter@uppercut-labs.com.
 
-## A living set of recommendations
+## Recommendations
 
 Tools change. Each recommendation has a checked date and a reason, so you can see what it is for and ask your agent whether it still fits. This release covers all three phases; Phase 3 is optional.

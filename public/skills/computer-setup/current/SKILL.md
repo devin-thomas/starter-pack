@@ -1,8 +1,8 @@
 ---
 name: computer-setup
 description: Prepare or resume the Starter Pack computer baseline with approved capability installs, cross-context command checks, private saving, file transfer, and actual phone-to-harness control.
-version: 0.2.6
-updated: 2026-11-08
+version: 0.2.7
+updated: 2026-11-11
 ---
 
 # Computer Setup
@@ -43,7 +43,7 @@ A phone's localhost is not this server. Optional [Tailscale Serve access](https:
 
 Reconcile required setup outcomes against the current registry and their evidence. Do not infer missing checks from an old aggregate boolean, a file arriving, or historical phase completion. Preserve older graduation with its original revision; propose targeted follow-up rather than silently revoking it. Personal-state repairs require a separately reviewed, approved diff.
 
-When setup outcomes and the private save pass, proactively state that setup is ready. This is not Phase 2 graduation: the approved project plan, durable source, live main behavior and final private save still follow the registry. Stage the current [Grill to Build skill](https://starter.uppercut-labs.com/skills/grill-to-build/current/SKILL.md) and its [planning templates](https://starter.uppercut-labs.com/artifacts/grill-to-build/README.md) before their first use; it is the standard Phase 2 planning workflow. Stage the current [Quick Build skill](https://starter.uppercut-labs.com/skills/quick-build/current/SKILL.md) and its [templates](https://starter.uppercut-labs.com/artifacts/quick-build/README.md) only when the learner explicitly asks for Quick Build. Verify native discovery or label context-only delivery honestly. Do not add Phase 3 machinery as a gate.
+When setup outcomes and the private save pass, proactively state that setup is ready. This is not Phase 2 graduation: the approved project plan, durable source, live main behavior and final private save still follow the registry. Stage the current [Grill to Build skill](https://starter.uppercut-labs.com/skills/grill-to-build/current/SKILL.md) and its [planning templates](https://starter.uppercut-labs.com/artifacts/grill-to-build/README.md) before their first use; it is the standard Phase 2 planning workflow, with the course rules in the [Phase 2 planning reference](https://starter.uppercut-labs.com/phases/2/planning.md). Stage the current [Quick Build skill](https://starter.uppercut-labs.com/skills/quick-build/current/SKILL.md) and its [templates](https://starter.uppercut-labs.com/artifacts/quick-build/README.md) only when the learner explicitly asks for Quick Build. Verify native discovery or label context-only delivery honestly. Do not add Phase 3 machinery as a gate.
 
 Return a compact handoff with canonical progress/private location, selected harness, resource revisions, verified outcomes, unfinished work, optional choices and the exact next action. No secrets and no claim of automatic cross-provider chat transfer. Suggest a new project unless the learner asks to reuse their Phase 1 build, and preserve the explicit build go-ahead.
 

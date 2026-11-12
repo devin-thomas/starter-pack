@@ -219,6 +219,8 @@ for (const file of outputFiles.filter(
     if (exampleRoutedPaths().has(pathname)) continue;
     // The Level 2 example API is answered by the Worker, not a file.
     if (pathname.startsWith(`${exampleApiBase}/`)) continue;
+    // The read-only course MCP endpoint is answered by the Worker, not a file.
+    if (pathname === "/mcp") continue;
     const candidate = path.resolve("dist", "." + pathname);
     if (
       !candidate.startsWith(path.resolve("dist") + path.sep) &&

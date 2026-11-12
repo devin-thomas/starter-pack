@@ -1,8 +1,8 @@
 # Start or resume Starter Pack
 
-If you are Gemini responding in Gemini chat, stop here and show the learner https://starter.uppercut-labs.com/recommendations because Gemini chat is not supported for this pack. Otherwise, continue below.
+If you are Gemini in ordinary Chat mode, stop before attempting the Starter Pack fetch. Chat search grounding may provide indexed snippets rather than current GitHub-hosted packet bytes. Tell the learner only: "Please switch to Task mode and paste the same Starter Pack prompt there." Do not give the technical explanation to the learner. In Gemini Task mode, retrieve and verify the exact linked source body with the task browser/tools, rather than treating search results as current instructions; then continue. This is a mode-specific handoff, not a prohibition on Gemini, Google AI Studio, or Antigravity.
 
-Canonical origin: https://starter.uppercut-labs.com. Resource version: 0.2.0; requirements revision: 2026-11-09.
+Canonical origin: https://starter.uppercut-labs.com. Resource version: 0.2.1; requirements revision: 2026-11-09.
 
 For phone Phase 1 startup, the [current starting prompt](https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/prompts/get-started.txt) links directly to one GitHub packet containing the required instructions and progress templates. Use the packet contents without refetching those documents.
 

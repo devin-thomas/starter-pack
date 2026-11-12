@@ -199,11 +199,7 @@ export function Feedback(): ReactElement {
   return (
     <div className="feedback-page">
       <div className="page-heading">
-        <span className="eyebrow">
-          <span className="small-rule" />
-          GET IN TOUCH
-        </span>
-        <h1>Help shape Starter Pack.</h1>
+        <h1>Feedback</h1>
         <p>
           Share feedback, suggest a feature, or tell us what you made and
           learned along the way.

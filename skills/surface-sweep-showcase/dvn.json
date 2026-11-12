@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "skillName": "surface-sweep-showcase",
+  "skillBlobSha": "6ff9461912a5c33afa9d93515458228ad2c14c1d",
+  "auditComplete": true,
+  "resources": [
+    {
+      "key": "showcase-delivery",
+      "path": "references/showcase-delivery.md",
+      "gitBlobSha": "8ad3b976ad54cdc262b1cec1c644f2b55a28ddde",
+      "required": "stage",
+      "stages": [
+        "showcase"
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "key": "showcase",
+      "resources": [
+        "showcase-delivery"
+      ],
+      "dependencies": []
+    }
+  ],
+  "dependencies": [
+    {
+      "key": "surface-sweep",
+      "canonicalId": "public/surface-sweep",
+      "required": "mandatory"
+    }
+  ]
+}

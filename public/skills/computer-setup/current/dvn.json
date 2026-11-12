@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "skillName": "computer-setup",
-  "skillBlobSha": "1fab9910839b8b7fbdea86d671f8a9368a3260ff",
+  "skillBlobSha": "0a6d6d11761f3a9228176af9642bf52c159fa15f",
   "auditComplete": true,
   "resources": [
     {
@@ -55,7 +55,7 @@
     {
       "key": "resource-directory",
       "path": "resource-links.md",
-      "gitBlobSha": "ddb20fb7801fcfc94dd049d34e7ed1598c7e953c",
+      "gitBlobSha": "2c4d47f0d627f561119d7cca13a287ebea2e4980",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/agent"
@@ -63,7 +63,7 @@
     {
       "key": "setup-manifest",
       "path": "computer-setup.manifest.json",
-      "gitBlobSha": "37f67e18b2e668128659128d2ac7ae1927f0f80b",
+      "gitBlobSha": "a2a25ae5fc3226257dee4282a357899b4c5dcfe5",
       "required": "mandatory",
       "repository": "devin-thomas/starter-pack",
       "root": "public/setup"
@@ -332,7 +332,7 @@
   "dependencies": [
     {
       "key": "grill-to-build",
-      "canonicalId": "starter-pack/grill-to-build",
+      "canonicalId": "public/grill-to-build",
       "required": "stage",
       "stages": [
         "grill-to-build"
@@ -340,7 +340,7 @@
     },
     {
       "key": "quick-build",
-      "canonicalId": "starter-pack/quick-build",
+      "canonicalId": "public/quick-build",
       "required": "stage",
       "stages": [
         "quick-build"

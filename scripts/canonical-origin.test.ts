@@ -51,7 +51,8 @@ test("canonical generation and copy controls use the new origin with the origina
     const release = startupPacketRelease(data.instructionPacket);
     assert.equal(catalog.bootstrap, release.url);
     assert.ok(release.url.startsWith("https://raw.githubusercontent.com/devin-thomas/starter-pack/main/public/agent/packets/phase-1-"));
-    assert.ok(release.prompt.includes(canonical + "/recommendations"));
+    assert.ok(release.prompt.includes("Please switch to Task mode and paste this same prompt there."));
+    assert.ok(!release.prompt.includes(canonical + "/recommendations"));
   } finally {
     await rm(output, { recursive: true, force: true });
   }

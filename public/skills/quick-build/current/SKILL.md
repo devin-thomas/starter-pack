@@ -1,60 +1,56 @@
 ---
 name: quick-build
-description: Shape a meaningful Starter Pack project with one design interview, an approved plan, a durable build, and live deployment, when the learner explicitly asks for Quick Build instead of the default Grill to Build.
-version: 0.2.6
-updated: 2026-11-08
+description: Use when a user wants a small meaningful app scoped and built through one compact design interview, or explicitly invokes Starter Pack Quick Build. Do not use for a throwaway experiment, a minor fix, or a complex project that needs extended discovery.
 ---
 
 # Quick Build
 
-## Entry gate
+Take one meaningful idea through a short interview, an approved plan, a durable build, and the requested delivery. Keep the learner's first useful action central.
 
-In Phase 2, full [Grill to Build](https://starter.uppercut-labs.com/skills/grill-to-build/current/SKILL.md) is the standard planning workflow. Use this skill only when the learner explicitly asked for Quick Build in their own words, or when resuming a Quick Build the learner already chose. Do not choose it for them, suggest it as a shortcut, or switch to it because discovery takes effort. Record the choice in the `quick-build` step's `notes`, for example "Workflow: Quick Build (learner asked on <date>)". An approved Quick Build plan and go-ahead stay valid on resume: continue that build instead of planning again. If the learner asks to switch back, continue with Grill to Build and reuse every answer already given.
+## 1. Choose the entry mode
 
-Suggest a new project for Phase 2. Reuse or rebuild the Phase 1 instant build only when the learner asks. The Phase 1 Two-Build Challenge is optional and never a prerequisite.
+Standalone is the default. Inspect repository instructions, existing plans, assets, available tools, and any supplied handoff. Reuse answered questions and completed work. Require only capabilities needed for this project; no Starter Pack accounts, phone setup, private progress repository, or companion skill is a standalone prerequisite.
 
-Before the interview, load existing progress and the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json), or the matching generated definitions already supplied. This skill uses resource version `0.2.0`, requirements revision `2026-11-09`. Resolve the prerequisites of the `quick-build` step ("Plan and build your project") from that registry, not a separately maintained checklist. Computer capability evidence includes the selected editor and actual CLI execution contexts; the remote baseline distinguishes networking on both devices, each file-transfer direction, and one real phone-to-harness action. One successful route does not certify another. Confirm the latest progress and setup state reached a private GitHub repository using the [progress guide](https://starter.uppercut-labs.com/artifacts/progress/README.md); a local commit or empty remote is insufficient.
+For a Starter Pack Phase 2 learner, also follow the course's [Phase 2 planning reference](https://starter.uppercut-labs.com/phases/2/planning.md) and its [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json). Completing this skill alone does not certify Starter Pack completion.
 
-If a prerequisite is missing, preserve results and return to the focused [Computer Setup](https://starter.uppercut-labs.com/skills/computer-setup/current/SKILL.md) action. Reuse verified evidence instead of repeating successful installs, sign-ins, or phone tests. Email preferences and the Workbench are not gates. A historically completed phase retains its revision; on resume do not restart Quick Build because of an obsolete pointer. Reconcile completion first and offer any newly introduced checks separately.
+Done when the mode, existing work, intended outcome, and available capabilities are understood.
 
-## Reuse Codex readiness
+## 2. Interview once
 
-When Quick Build is part of Starter Pack, reuse the [Codex readiness checkpoint](https://starter.uppercut-labs.com/setup/codex-readiness.md) during planning and before approved implementation. Recheck only facts affected by a material host, harness, workspace, permission, runtime, or authentication change. Do not repeat a decline, setup, or successful sign-in check. The optional Programmatic Harness proof is never a Quick Build prerequisite; preserve the required next action when it is declined, deferred, unavailable, or failed.
+Ask one compact round about missing decisions: idea, audience, primary behavior, inputs/content, exclusions, visual direction, target devices, and definition of done. Do not ask every topic as a separate question or repeat facts already supplied. Accept conversational answers and omissions; choose reversible implementation details directly. Follow up only on consequential unresolved choices. If the project needs substantial discovery, explain why and suggest `grill-to-build`; do not force it into a quick-build promise.
 
-Before use, make this skill and its [planning templates](https://starter.uppercut-labs.com/artifacts/quick-build/README.md) available. Record their source/version in the private handoff. If using them as supplied context, say `context_only`; claim `native_discovered` only after verifying discovery in the selected harness's currently supported skill location. Do not install a full global engineering bundle or require skill theory for this build. Begin or reuse the lightweight private session report described in the progress guide.
+Clarify the first useful action and starting empty state. Prioritize the user's input and controls in creator tools. Do not invent uploads, unrelated demo content, or autoplay. Treat demos as an explicit choice.
 
-## Interview
+Done when the smallest complete scope and meaningful normal, empty, and error behavior can be stated without inventing product decisions.
 
-Read any supplied repository instructions, references, and saved handoff first. Ask one compact round covering the idea, audience, required user behavior, available inputs/content, exclusions, visual direction, definition of done, and existing assets or URLs. Reuse answers already supplied or explicitly declined; do not restart intake. Accept conversational answers and reasonable omissions. Choose routine implementation details yourself; ask follow-up questions only for consequential unresolved product choices, not a second stack questionnaire.
+## 3. Write a compact plan
 
-## Plan
+Use the bundled [PLAN](templates/PLAN.md), [SPEC](templates/SPEC.md), [DECISIONS](templates/DECISIONS.md), and [TICKET](templates/TICKET.md) templates. Reuse equivalent existing artifacts and filename conventions; do not create competing decision records or specifications. Keep documents proportional to the build and confidential material private.
 
-Use the [artifact templates](https://starter.uppercut-labs.com/artifacts/quick-build/README.md), adapting to existing repository conventions. Write a plan, specification, durable decisions, and ordered tickets with observable acceptance conditions. Keep confidential planning in a private repo or private workspace; publish only documents the learner intends to share.
+**Domain-document compatibility:** When the project already uses `GLOSSARY.md` or `GLOSSARY-MAP.md` with mapped domain glossaries, read and reuse its canonical terms while writing the plan, spec, and tickets. Preserve a separate `PROJECT.md` if the project uses one for its broader brief. Quick Build does not require or create a glossary, project brief, or full Grill artifact pack for a simple new app. If legacy `CONTEXT.md`, `CONTEXT-MAP.md`, or a mixed-use `Context.md` exists, do not automatically rename it or create a parallel empty glossary; preserve it and flag an actual migration conflict when relevant. An unrelated task-specific file named `CONTEXT.md` is not necessarily a domain glossary.
 
-Defaults for a new project: React and TypeScript; Vite for a simple browser app; a full-stack framework only when beneficial; Cloudflare hosting; Neon only for relational persistence; authentication and payments only when the product requires them. Preserve existing repository conventions, package manager, scripts, source visibility, and privacy choices. Vercel is an explicit suitable alternative, not a silent replacement for Cloudflare. Paid services, new credential scope, and public publication require the learner's decision.
+For a blank project, suggested defaults are React and TypeScript, Vite for a simple browser app, and Cloudflare if deployment is requested. Use a full-stack framework, relational database such as Neon, authentication, or payments only when the product needs them. Preserve existing stacks and respect alternatives selected by the user. A hosting default does not authorize creating accounts, paid services, new credential scopes, or public publication.
 
-Synthesize the first meaningful action, starting empty state, whose content is used, and how the user supplies or selects it. For creator tools, put the learner's input and primary controls first. Do not preload unrelated creative content or autoplay demo audio; a demo is an explicit choice. Do not invent uploads for products that do not need them. Keep the main controls reachable and readable on the actual target phones and computers without disabling zoom or forcing every control above the fold. Optional effects must not crowd out the workflow.
+Write observable acceptance checks and separate build/type checks, layout/accessibility, release availability, primary behavior, and device-specific promises. Preserve zoom and keep primary controls readable and reachable. Screenshots or desktop emulation do not establish physical-device behavior; clearly labeled learner reports can supply that evidence.
 
-Write a few plain-language behavioral acceptance checks from the approved promise. Separate build/type checks, layout/accessibility, deployment availability, and the actual live user action. Identify which platform promises need real-device evidence, such as background audio or touch interaction; screenshots or desktop emulation cannot prove those. A clear learner report counts, labeled with device and action. Mark unperformed checks pending instead of claiming success.
+Summarize the result: "I wrote the plan and broke the build into steps. You can tell me to go, or ask to inspect the plan or tickets first." Obtain approval of the concrete scope before implementation. Reuse an earlier approval when it covers this actual plan; resolve material changes before building.
 
-Summarize the planned result in plain English. Say: "I wrote the plan and broke the build into steps. You can tell me to go, or ask to inspect the plan or tickets first." Record the approval or requested revisions in the `quick-build` step's `notes` with the date and plan location. Complete this stage only after the learner approves. Revise before building if they request changes.
+Done when the plan and ordered work have observable acceptance conditions and the user has approved the scope.
 
-## Deliver
+## 4. Build and verify
 
-Build the approved scope in a durable repository. Preserve unrelated work. Make the primary flow responsive and accessible. Validate in proportion to the product and the learner's testing instructions; record precisely what was checked and leave unperformed human checks visible.
+Implement the approved scope in a durable project directory, preserving unrelated work and existing package-manager conventions. Keep dependencies project-local. Use supported authentication and secret storage; never request secrets in chat or weaken Git email protections to unblock a push. Resolve consequential tool failures narrowly and record the actual repair and validation.
 
-Before the first useful commit or private save, follow the [authentication guide](https://starter.uppercut-labs.com/setup/authentication.md). Confirm the intended Git identity and propose an approved repository-local privacy choice where needed, using the learner's actual account-specific noreply address if selected. Preserve global identity and GitHub email protection; never disable the safeguard or rewrite shared history to clear GH007. Prefer the provider's supported login/consent flow; do not make the learner assemble credential files on a phone or assume a phone's localhost can complete a computer callback.
+Run repository-standard checks and exercise the primary flow, including meaningful empty/error states, at the intended viewport sizes. Report unperformed device checks explicitly. Do not mark a ticket complete from a build alone when behavioral acceptance remains unverified.
 
-For conditional tool failures, use [focused troubleshooting](https://starter.uppercut-labs.com/setup/tool-troubleshooting.md). Keep dependencies project-local and preserve the package manager. Review only the necessary named package's build-script permission using the installed package-manager version; never approve all scripts blindly. Fix module settings for the runtime that failed, not universal NodeNext across a bundler project. Recheck newly selected CLIs in their intended terminal and harness contexts without adding project `.bin` folders to global PATH. Docker Desktop stays optional and last, with current suitability checked if selected; Rosetta only for an identified need and with approval. Neither is a Phase 2 gate.
+Done when all scoped behavior is implemented and the required verification has passed, or remaining checks are explicitly pending with their impact.
 
-Deploy to Cloudflare unless an alternative is selected. Confirm destination and intended visibility within the learner's authorization. Keep credentials in supported secret storage. Check that the URL resolves to the intended release and app, not a hosting login page, then verify its primary behavior, accepting a clear learner report where appropriate. A local build, HTTP 200, screenshot, or successful Vercel release is not evidence of a Cloudflare deployment or an untested device behavior.
+## 5. Deliver and leave a resume point
 
-Record the durable source destination, live URL, behavior evidence and provenance, actual device/harness context, unresolved checks, and consequential repairs in private progress. Do not copy private content into public fixtures.
+Carry out already-authorized Git publishing or deployment to the selected destination. If delivery is local-only, provide the working run command and source location. Otherwise confirm the intended owner, source visibility, hosting destination, and existing authorization before the external action; prepare the reviewable result first when a decision is missing.
 
-## Close out or resume
+Verify any published revision and live primary action. A local commit, HTTP 200, screenshot, or URL alone does not prove remote delivery or behavior. Preserve local achievements if publishing fails and identify the exact pending action.
 
-After the last apparent required result, at session close, and on resume, proactively follow the progress guide's closeout protocol. Evaluate only the current phase's canonical gate, reconcile aliases and clear obsolete next actions. In particular, `phase-2-project` is historical evidence, not an automatic pass for both `quick-build` and `live-deployment`; a URL alone does not prove the main action. Ask only for the missing required evidence, not repeated optional preferences or successful tests.
+Record source location, actual live URL when applicable, verification evidence, unresolved checks, and one next action in the existing handoff or plan. Keep secrets and private content out of public files. Resume from that record without repeating intake or claiming chat history automatically transfers. Standalone completion is project completion, never Starter Pack graduation.
 
-Preserve existing history and add a confirmed `artifacts.phase_history` entry with `phase`, `status`, `requirements_revision`, `recorded_at`, `evidence_summary`, and `source`. Keep repeated closure idempotent: no duplicate history, empty commit, repeated celebration, or self-referential SHA loop. The `private-progress-repository` record proves the initial durable checkpoint; `final-progress-save` requires the final reviewed closeout to reach that private remote. Verify the saved files/revision before announcing Phase 2 completion. If the final push fails, preserve all local achievements and make the pending final save explicit; do not claim durable completion or reset the build. Follow the progress guide's pending-closeout handling.
-
-When all required results and the final private save are confirmed, say plainly that Phase 2 is complete, where the project and progress are saved, and offer Phase 3 or a stopping point. Do not begin Phase 3 automatically. Keep Phase 3 optional and keep old completion revisions intact. For a tool switch, return a compact handoff with canonical progress/location, completed outcomes, genuine blockers, selected optional branches, computer harness separately from phone companion, one next action, and exact resource/schema revisions. No secrets or promise of automatic chat transfer.
+Done when the approved delivery is verified or explicitly blocked, artifacts match reality, and the user has a usable result or a precise resume point.

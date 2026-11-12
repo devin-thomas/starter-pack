@@ -1,77 +1,105 @@
 ---
 name: grill-to-build
-description: Plan, build and deploy a meaningful Starter Pack Phase 2 project with full Grill to Build discovery, explained for beginners, an approved specification and tickets, a durable build, and live verification.
-version: 0.2.2
-updated: 2026-11-08
+description: Turn a rough product, feature, migration, or architecture idea into an implementation-ready build pack through focused discovery, synchronized glossary, project brief, and decision records, an explicit specification, ordered tickets, and implementation. Use when a user asks to grill an idea, resolve high-impact product or technical uncertainty before coding, create GLOSSARY/PROJECT/ADR/Ideas/SPEC/ticket artifacts, or run a grill-to-build pipeline.
 ---
 
-# Grill to Build for Phase 2
+# Grill to Build
 
-Full Grill to Build is the standard way to plan the Phase 2 project. It turns the learner's idea into shared language, explicit decisions, testable behavior and ordered work before any code is written, then builds, deploys and verifies it. The learner decides what the product does; you explain the technical ideas.
+Convert uncertainty into shared language, explicit decisions, testable behavior, and executable work without designing the solution prematurely.
 
-## Entry gate
+## Core contract
 
-Before the first question round, load existing progress and the [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json), or the matching generated definitions already supplied. This skill uses resource version `0.2.0`, requirements revision `2026-11-09`. Resolve the prerequisites of the `quick-build` step ("Plan and build your project") from that registry, not a separately maintained checklist. Computer capability evidence includes the selected editor and actual CLI execution contexts; the remote baseline distinguishes networking on both devices, each file-transfer direction, and one real phone-to-harness action. One successful route does not certify another. Confirm the latest progress and setup state reached a private GitHub repository using the [progress guide](https://starter.uppercut-labs.com/artifacts/progress/README.md); a local commit or empty remote is insufficient.
+Maintain these artifacts in new projects:
 
-If a prerequisite is missing, preserve results and return to the focused [Computer Setup](https://starter.uppercut-labs.com/skills/computer-setup/current/SKILL.md) action. Reuse verified evidence instead of repeating successful installs, sign-ins, or phone tests. Email preferences and the Workbench are not gates. A historically completed phase retains its revision; on resume do not restart planning because of an obsolete pointer. Reconcile completion first and offer any newly introduced checks separately.
+- `GLOSSARY.md`: exact-case Matt Pocock skills v1.3-compatible canonical **domain terms only**, created lazily when the first term is settled. Honor existing `GLOSSARY-MAP.md` and its mapped per-domain glossaries.
+- `PROJECT.md`: the living project brief, scope, constraints, agreed product rules, discovery progress and open questions, workflow preferences, and editable models (the non-lexical portion of the former `Context.md`).
+- `ADR.md`: append-only record of consequential accepted, rejected, proposed, or superseded decisions.
+- `Ideas.md`: valuable work deliberately deferred from the current scope.
+- `SPEC.md`: implementation contract created only after discovery stabilizes.
+- `tickets/*.md`: ordered work units created only after the specification stabilizes.
 
-## Choose the project and the workflow
+`GLOSSARY.md` must **not** become a spec, project brief, transcript, general context file, or store of decisions. Preserve compatible existing ADR/ticket layouts. Read [artifact-contracts.md](references/artifact-contracts.md) and [migration-from-context.md](references/migration-from-context.md) before creating or materially restructuring artifacts. An existing `Context.md` / `CONTEXT.md` is a *migration input*, not the new canonical output: never blindly rename a broad document or silently discard or duplicate its contents.
 
-Suggest a new, meaningful project for Phase 2: something the learner would actually use and can finish. Reuse or rebuild the Phase 1 instant build only when the learner asks for that. The Phase 1 Two-Build Challenge was optional; never require it, repeat it, or treat its absence as missing work.
+Authority is purpose-specific: an explicit current user decision wins; `PROJECT.md` holds current approved boundaries and state, `GLOSSARY.md` defines terminology only, ADR records reasoning and history, SPEC binds implementation behavior, and tickets bind scoped acceptance criteria. Reconcile conflicts immediately. `Ideas.md` is non-binding.
 
-Use full Grill to Build unless the learner explicitly asks for Quick Build. A request counts only when the learner says they want Quick Build, a shorter single-round plan, or equivalent words in their own message. Do not offer Quick Build as a way out of longer discovery, and never switch to it silently because discovery takes effort, the learner seems tired, or answers are short. If the learner asks what Quick Build is, explain the difference plainly and let them choose. When they choose it, follow the [Quick Build skill](https://starter.uppercut-labs.com/skills/quick-build/current/SKILL.md) from its entry gate. To pause instead, save the discovery state and resume later.
+## Run the pipeline
 
-Record the workflow in the `quick-build` step's `notes`, for example "Workflow: Grill to Build (default)" or "Workflow: Quick Build (learner asked on <date>)". On resume, reuse the recorded workflow. An already approved plan and go-ahead under either workflow stay valid: continue that build instead of planning again.
+### 0. Resolve scope and portable preferences
 
-## Reuse Codex readiness
+Infer the requested endpoint: discovery, build pack, or implementation. Run only the requested stages; invoking this skill alone does not authorize implementation, publishing, or external sharing. No companion skill, paid service, global `AGENTS.md`, or account memory is required.
 
-Reuse the [Codex readiness checkpoint](https://starter.uppercut-labs.com/setup/codex-readiness.md) during planning and before approved implementation. Recheck only facts affected by a material host, harness, workspace, permission, runtime, or authentication change. Do not repeat a decline, setup, or successful sign-in check. The optional Programmatic Harness proof is never a prerequisite for planning or building; preserve the required next action when it is declined, deferred, unavailable, or failed.
+For a Starter Pack Phase 2 learner, also follow the course's [Phase 2 planning reference](https://starter.uppercut-labs.com/phases/2/planning.md) and its [canonical requirements](https://starter.uppercut-labs.com/agent/requirements.json). Completing this skill alone does not certify Starter Pack completion.
 
-Before use, make this skill and its [planning templates](https://starter.uppercut-labs.com/artifacts/grill-to-build/README.md) available. Record their source/version in the private handoff. If using them as supplied context, say `context_only`; claim `native_discovered` only after verifying discovery in the selected harness's currently supported skill location. Do not install a full global engineering bundle or require skill theory for this build. Begin or reuse the lightweight private session report described in the progress guide.
+Before editing project artifacts, inspect `GLOSSARY.md`, `GLOSSARY-MAP.md`, `PROJECT.md`, and any legacy `Context.md`, `CONTEXT.md`, or `CONTEXT-MAP.md`; follow the [migration contract](references/migration-from-context.md) to avoid split vocabularies. Read [presentation-and-interaction.md](references/presentation-and-interaction.md) and [preferences-and-diagrams.md](references/preferences-and-diagrams.md) before the first discovery round. **Silently choose the live Grill presentation based on verified host capabilities**: native, mobile-friendly interactive chat presentation in ChatGPT when supported; Claude Artifacts in Claude when available and useful; otherwise concise Markdown, with Mermaid when supported and useful. Do not ask a separate presentation or diagram-format setup question by default. Reuse explicit user/project preferences and allow overrides at any time. Independently maintain portable living-model semantics in `PROJECT.md`, defaulting to Markdown/Mermaid unless explicitly changed. A choice of **no persistent diagram** preserves the model as structured prose/tables and still permits host-native interactive chat visualization; **no diagrams anywhere** prohibits visualization in chat too.
 
-## Explain, don't interrogate
+Treat the selected diagram format and authoring source as a hard output constraint. Do not substitute an image-generation model for Figma/FigJam, Excalidraw, diagrams.net, Markdown/Mermaid, or no-diagram output. Image generation may be used for a diagram only when the user explicitly selects generated imagery as the diagram source or output method.
 
-The learner may be new to software. Ask about people, behavior, content, and what "working" means, never about frameworks, libraries, databases, or hosting internals. Choose routine technical details yourself and record consequential ones in `ADR.md` with a one-line plain reason.
+On resume, read existing artifacts and their open questions before asking anything. Reuse recorded preferences and completed decisions. Preserve compatible repository layouts, including existing ADR directories and ticket conventions.
 
-When a technical idea affects a decision, explain it in one or two plain sentences before asking. For example: "Some apps keep information only on this device; others keep it online so it survives a new phone. Which does yours need?" Define a term the first time you use it. Offer concrete options with a labeled recommendation and its consequence; a recommendation is never a hidden decision.
+### 1. Extract the raw idea
 
-Paid services, new accounts, new credential scope, public publication, and anything that stores other people's data need the learner's decision, explained plainly.
+Inspect the existing project and pull out facts already supplied: problem, user, platform, current system, constraints, technology preferences, likely scope, exclusions, terminology, and known decisions.
 
-## Run the full pipeline
+Do not ask for information already present in the request, repository, or existing artifacts. Initialize `PROJECT.md` when discovery needs persistence; create `GLOSSARY.md` only once a canonical term has been resolved. Do not create `SPEC.md` or tickets yet.
 
-Work in the project repository. Keep the files in [the template set](https://starter.uppercut-labs.com/artifacts/grill-to-build/README.md): `PROJECT.md`, `GLOSSARY.md`, `ADR.md`, `Ideas.md`, `SPEC.md`, and `tickets/`. Reuse equivalent existing files and conventions; do not create competing specifications or decision records. Keep confidential planning in a private repository or private workspace; publish only documents the learner intends to share.
+### 2. Grill high-impact uncertainty
 
-1. **Start from what is known.** Read the handoff, saved progress, any repository instructions, and the learner's idea. Write down what is already known in `PROJECT.md`. Do not ask for anything already supplied or declined.
-2. **Grill what matters.** Before each round, rank unknowns by how much they change the result. Ask about three or four short, independently answerable questions per round. Prioritize who it is for, the main action, the content and whose it is, what must be remembered and for how long, what must never happen, edge cases, and what counts as done. Leave cosmetics and reversible details for later. By default stop within five rounds or twenty questions, earlier once remaining choices are cheap to change. Track rounds and question count in `PROJECT.md` so resuming does not reset them. At the limit, record the open questions and ask whether to continue discovery; do not invent answers.
-3. **After every round,** rewrite `PROJECT.md` coherently (no transcript), add a `GLOSSARY.md` term only once one is settled, append consequential `ADR.md` entries, park deferred ideas in `Ideas.md`, and refresh the model when things, states or storage change. Show a diagram in chat when the host supports it and it helps; keep Markdown/Mermaid in `PROJECT.md` unless the learner chose another format. Never substitute a generated image for a chosen diagram format.
-4. **Close discovery.** Restate the agreed project in plain language and confirm the files agree.
-5. **Write `SPEC.md`.** Make important behavior observable and testable, including the first meaningful action, starting empty state, whose content is used and how it arrives, normal, empty and error states, and the plain-language acceptance checks. Do not introduce a new product decision here; return to discovery if one appears. For creator tools, the learner's input and primary controls come first; no unrelated demo content or autoplay. Identify promises that need real-device evidence, such as background audio or touch, and who will check them.
-6. **Write ordered tickets** in `tickets/` with a stable project prefix. Each has a goal, scope, observable acceptance, and dependencies. Prefer small vertical slices that each produce something the learner can try.
+Before each round, rank unknowns by downstream impact. Ask approximately 3-4 short, independently answerable questions. Default to no more than 5 rounds or 20 total questions, and stop earlier once remaining ambiguity is inexpensive and reversible.
 
-Defaults for a new project: React and TypeScript; Vite for a simple browser app; a full-stack framework only when beneficial; Cloudflare hosting; Neon only for relational persistence; authentication and payments only when the product requires them. Preserve existing repository conventions, package manager, scripts, source visibility, and privacy choices. Vercel is an explicit suitable alternative, not a silent replacement for Cloudflare.
+Track discovery rounds and question count in `PROJECT.md` so resuming does not reset the budget. Count each independently answerable product question; the default presentation selection is silent and costs no question. At the limit, record unresolved material questions and the blocked specification sections. Continue independent work, but do not invent answers or call the pack implementation-ready. Ask whether to extend discovery when more answers are necessary.
 
-## Approve the plan
+Prioritize product boundaries, domain/state semantics, data integrity, user workflow, platform architecture, persistence, external dependencies, destructive behavior, and acceptance criteria. Deprioritize cosmetics, speculative features, and reversible implementation details.
 
-Summarize the planned result in plain English: what the learner will be able to do, what is left out, and how you will check it works. Say where the plan files are. Then say: "The plan, specification and tickets are ready. You can tell me to go, or ask to see or change any of them first." Record the approval or requested revisions in the `quick-build` step's `notes` with the date and the plan location. Implementation begins only after an explicit go-ahead. Revise before building if they ask for changes.
+When useful, give concrete options. Clearly label a recommendation and its consequence; never turn a recommendation into a hidden decision. Present questions and visual models through the active host-native surface only when the content merits it; keep controls actionable, responses conversationally answerable, and unsubmitted UI selections non-binding. Read [grilling-and-modeling.md](references/grilling-and-modeling.md) for question selection, vocabulary, state, diagram, and completion rules.
 
-## Deliver
+After every round:
 
-Build the tickets in order in a durable repository. Preserve unrelated work. Make the primary flow responsive and accessible. Validate each ticket's acceptance in proportion to the product and the learner's testing instructions; record precisely what was checked and leave unperformed human checks visible. Route new information deliberately: a new requirement updates `PROJECT.md` and `SPEC.md`; a new decision updates `ADR.md`; a deferred idea goes to `Ideas.md`; an implementation detail leaves the product files alone. Ask the learner before changing an approved behavior.
+1. Rewrite `PROJECT.md` coherently; do not append a conversation transcript.
+2. Update `GLOSSARY.md` (or its mapped glossary) **only** when a new domain term has become canonical; do not dump answers into it.
+3. Append or supersede only consequential ADR entries.
+4. Park useful deferred ideas immediately.
+5. Update the living model when entities, relationships, flows, states, systems, or storage boundaries change.
+6. Refresh any useful in-chat/Artifact visual from canonical understanding; never let a temporary UI become the only copy of a decision.
 
-Before the first useful commit or private save, follow the [authentication guide](https://starter.uppercut-labs.com/setup/authentication.md). Confirm the intended Git identity and propose an approved repository-local privacy choice where needed, using the learner's actual account-specific noreply address if selected. Preserve global identity and GitHub email protection; never disable the safeguard or rewrite shared history to clear GH007. Prefer the provider's supported login/consent flow; do not make the learner assemble credential files on a phone or assume a phone's localhost can complete a computer callback.
+Continue useful read-only investigation while waiting for answers, but do not guess at choices that materially change the product.
 
-For conditional tool failures, use [focused troubleshooting](https://starter.uppercut-labs.com/setup/tool-troubleshooting.md). Keep dependencies project-local and preserve the package manager. Review only the necessary named package's build-script permission; never approve all scripts blindly. Recheck newly selected CLIs in their intended terminal and harness contexts without adding project `.bin` folders to global PATH. Docker Desktop stays optional and last; neither Docker nor Rosetta is a Phase 2 gate.
+### 3. Close discovery
 
-Deploy to Cloudflare unless an alternative is selected. Confirm destination and intended visibility within the learner's authorization. Keep credentials in supported secret storage. Check that the URL resolves to the intended release and app, not a hosting login page, then verify its primary behavior, accepting a clear learner report where appropriate. A local build, HTTP 200, screenshot, or successful Vercel release is not evidence of a Cloudflare deployment or an untested device behavior.
+End discovery once the important entities, lifecycle behavior, required data, destructive operations, platform boundaries, major constraints, and meaningful edge cases are understood. Briefly restate the agreed project and ensure `PROJECT.md`, applicable `GLOSSARY.md`, ADR, Ideas, and the living model agree.
 
-Record the durable source destination, live URL, behavior evidence and provenance, actual device/harness context, unresolved checks, and consequential repairs in private progress. Do not copy private content into public fixtures.
+### 4. Write the specification
 
-## Close out or resume
+Generate `SPEC.md` from the accepted discovery artifacts. Do not introduce a major product decision while writing it. If a material unknown appears, resolve it through discovery, synchronize the artifacts, then continue.
 
-After the last apparent required result, at session close, and on resume, follow the progress guide's closeout protocol. Evaluate only the current phase's canonical gate, reconcile aliases and clear obsolete next actions. `phase-2-project` is historical evidence, not an automatic pass for both `quick-build` and `live-deployment`; a URL alone does not prove the main action. Ask only for missing required evidence.
+Make important behavior observable and testable. Prefer explicit rules over phrases such as "handle appropriately." Read [specification-tickets-and-build.md](references/specification-tickets-and-build.md) before generating the specification.
 
-Preserve existing history and add a confirmed `artifacts.phase_history` entry with `phase`, `status`, `requirements_revision`, `recorded_at`, `evidence_summary`, and `source`. Keep repeated closure idempotent: no duplicate history, empty commit, repeated celebration, or self-referential SHA loop. `final-progress-save` requires the final reviewed closeout to reach the private remote. Verify the saved files/revision before announcing Phase 2 completion. If the final push fails, preserve all local achievements and make the pending final save explicit; do not claim durable completion or reset the build.
+### 5. Decompose tickets
 
-When all required results and the final private save are confirmed, say plainly that Phase 2 is complete, where the project and progress are saved, and offer Phase 3 or a stopping point. Do not begin Phase 3 automatically. For a tool switch, return a compact handoff with canonical progress/location, the workflow and plan location, completed outcomes, genuine blockers, selected optional branches, computer harness separately from phone companion, one next action, and exact resource/schema revisions. No secrets or promise of automatic chat transfer.
+After the specification is stable, create ordered `tickets/PRJ-###-slug.md` work units using a stable, project-specific prefix. Each ticket must have a goal, concrete scope, observable acceptance criteria, and dependencies. Prefer coherent vertical increments over file-level chores or entire-project tickets.
 
-The general-purpose Grill to Build skill this contract follows is published at [devin-thomas/skills](https://github.com/devin-thomas/skills/tree/2f245b58d25cf0da5aeb61f137e8909ef7a10891/grill-to-build); its deeper references are optional.
+### 6. Build and feed discoveries back
+
+When implementation is part of the request, start from the first incomplete ticket and continue through the scoped pack. Treat SPEC as required behavior, `GLOSSARY.md` as shared terminology, `PROJECT.md` as current scope and discovery state, ADR as decision rationale, and Ideas as out of scope.
+
+Route new information deliberately:
+
+- New requirement: update `PROJECT.md` and SPEC, plus ADR/tickets when affected. Only update the glossary if canonical terms change.
+- New architectural decision: update ADR and `PROJECT.md`, then affected SPEC/tickets.
+- New canonical terminology: update the applicable `GLOSSARY.md` and reconcile dependent contracts.
+- Future idea: update Ideas only unless explicitly promoted.
+- Implementation detail: leave product artifacts alone unless shared understanding changes.
+
+Verify ticket acceptance criteria and repository-standard tests before marking work complete.
+
+## Operating rules
+
+1. Ask only questions that can materially alter the result.
+2. Keep a ubiquitous vocabulary in `GLOSSARY.md` (or mapped glossary) and reuse it in models, storage, UI, tests, and tickets.
+3. Distinguish stored, derived, inferred, and external state; avoid persisting derived state without a strong reason.
+4. Keep `GLOSSARY.md` lexical, `PROJECT.md` descriptive, ADR argumentative, SPEC contractual, and Ideas non-binding.
+5. Make destructive behavior, error behavior, migrations, and data ownership explicit.
+6. Preserve future options through clean boundaries, not current-scope feature inflation.
+7. Do not generate tickets before the specification stabilizes.
+8. Update the pack when implementation invalidates an assumption.
+9. Stop grilling when remaining decisions are inexpensive and reversible.
+10. Finish with a synchronized, executable pack rather than a discussion transcript.

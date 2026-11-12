@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "skillName": "starter-pack",
-  "skillBlobSha": "d83d53a2f0c0d21ccf7857fed6f0747271e69d79",
+  "skillBlobSha": "daa3bd15577a92f86faf95a950a6ef4dcd2d6744",
   "auditComplete": true,
   "resources": [
     {
@@ -55,7 +55,7 @@
     {
       "key": "resource-directory",
       "path": "resource-links.md",
-      "gitBlobSha": "ddb20fb7801fcfc94dd049d34e7ed1598c7e953c",
+      "gitBlobSha": "2c4d47f0d627f561119d7cca13a287ebea2e4980",
       "required": "optional",
       "repository": "devin-thomas/starter-pack",
       "root": "public/agent"
@@ -63,7 +63,7 @@
     {
       "key": "phase-1",
       "path": "1.md",
-      "gitBlobSha": "d835d867e258316419e3c5beb981b963dae20af6",
+      "gitBlobSha": "23244783ba2a12feef17bb768aedf3869bb4fc13",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "content/phases"
@@ -71,10 +71,18 @@
     {
       "key": "phase-2",
       "path": "2.md",
-      "gitBlobSha": "48f3b9730faf3941f0d1ac3b617e471df60ee43b",
+      "gitBlobSha": "0eacdfea4b177c01e635b97c96bddf38e62ec3f5",
       "required": "stage",
       "repository": "devin-thomas/starter-pack",
       "root": "content/phases"
+    },
+    {
+      "key": "phase-2-planning",
+      "path": "phase-2-planning.md",
+      "gitBlobSha": "69d961fc5b1ce8f7eb5aabe189ba1041dbe45f19",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "content/lessons"
     },
     {
       "key": "phase-3",
@@ -191,6 +199,7 @@
       "key": "phase-2",
       "resources": [
         "phase-2",
+        "phase-2-planning",
         "readiness"
       ],
       "dependencies": []
@@ -212,14 +221,18 @@
     },
     {
       "key": "grill-to-build",
-      "resources": [],
+      "resources": [
+        "phase-2-planning"
+      ],
       "dependencies": [
         "grill-to-build"
       ]
     },
     {
       "key": "quick-build",
-      "resources": [],
+      "resources": [
+        "phase-2-planning"
+      ],
       "dependencies": [
         "quick-build"
       ]
@@ -284,7 +297,7 @@
     },
     {
       "key": "grill-to-build",
-      "canonicalId": "starter-pack/grill-to-build",
+      "canonicalId": "public/grill-to-build",
       "required": "stage",
       "stages": [
         "grill-to-build"
@@ -292,7 +305,7 @@
     },
     {
       "key": "quick-build",
-      "canonicalId": "starter-pack/quick-build",
+      "canonicalId": "public/quick-build",
       "required": "stage",
       "stages": [
         "quick-build"

@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "skillName": "agent-cli",
+  "skillBlobSha": "eb4dd9233b5a95c14fbd66c0db6de374053fe5c6",
+  "auditComplete": true,
+  "resources": [
+    {
+      "key": "antigravity",
+      "path": "references/antigravity.md",
+      "gitBlobSha": "caca1f440c8e7707d4559168921cc3f245b5b11a",
+      "required": "optional"
+    },
+    {
+      "key": "claude",
+      "path": "references/claude.md",
+      "gitBlobSha": "d8387b180193bf4597af63f0617961171490c566",
+      "required": "optional"
+    },
+    {
+      "key": "codex",
+      "path": "references/codex.md",
+      "gitBlobSha": "f8272f6833d911c74fd35fa4eda5cedcb13f4b33",
+      "required": "optional"
+    },
+    {
+      "key": "coding-artifacts",
+      "path": "references/coding-artifacts.md",
+      "gitBlobSha": "5aa78ad8e81d13e241eafe4f13dcaca148b4449a",
+      "required": "optional"
+    },
+    {
+      "key": "cursor",
+      "path": "references/cursor.md",
+      "gitBlobSha": "53d15d717832ab5a1b51affc3f0499c7821ed4ea",
+      "required": "optional"
+    },
+    {
+      "key": "process-control",
+      "path": "references/process-control.md",
+      "gitBlobSha": "4f5b954b71a8342706f5c35acc9ba173c15c661e",
+      "required": "optional"
+    },
+    {
+      "key": "usage",
+      "path": "references/usage.md",
+      "gitBlobSha": "202b6013faadf428d244b7d3832c92c0c002274d",
+      "required": "optional"
+    },
+    {
+      "key": "verification",
+      "path": "references/verification.md",
+      "gitBlobSha": "1f4d033ef78ca923a8ab29ae0ea05d07e57b7ccb",
+      "required": "optional"
+    }
+  ],
+  "stages": [
+    {
+      "key": "antigravity",
+      "resources": [
+        "antigravity"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "claude",
+      "resources": [
+        "claude"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "codex",
+      "resources": [
+        "codex"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "coding-artifacts",
+      "resources": [
+        "coding-artifacts"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "cursor",
+      "resources": [
+        "cursor"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "process-control",
+      "resources": [
+        "process-control"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "usage",
+      "resources": [
+        "usage"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "verification",
+      "resources": [
+        "verification"
+      ],
+      "dependencies": []
+    }
+  ],
+  "dependencies": []
+}

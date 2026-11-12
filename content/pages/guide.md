@@ -18,7 +18,7 @@ Copy these exactly when your app asks:
 
 **Claude app, claude.ai or Claude Desktop.** Open [Claude's add-connector form](https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Starter%20Pack&connectorUrl=https://starter.uppercut-labs.com/mcp), which fills in the name and URL, or go to **Connectors** in Claude's settings and choose **Add custom connector**. Check the name and URL, keep the detected **No sign-in**, add no request headers, then choose **Add**. When Claude shows **Starter Pack**, choose **Connect**. In a chat, ask: "Use the Starter Pack connector: what does Phase 1 require?" On Claude's Free plan you can add one custom connector; remove this one when Phase 3 asks you to connect your own.
 
-**Claude Code.** Run `claude mcp add --transport http starter-pack https://starter.uppercut-labs.com/mcp`.
+**Claude Code without the `starterpack` plugin.** Run `claude mcp add --transport http starter-pack https://starter.uppercut-labs.com/mcp`. If you have installed the Claude Code `starterpack` plugin, it already includes this read-only MCP connection; skip the separate add.
 
 **ChatGPT on the web or the desktop app.** The phone app cannot add it. Custom servers depend on your ChatGPT plan; if you do not see **Add custom MCP server**, skip this.
 
@@ -32,6 +32,21 @@ Copy these exactly when your app asks:
 
 **Undo.** In Claude, open **Connectors**, select **Starter Pack** and choose **Remove**. A connector cannot be renamed, and Claude allows only one connector per URL, so to fix a typo in the name, remove it and then add it again with the same URL. In Claude Code, run `claude mcp remove starter-pack`. In ChatGPT, open **Settings**, select the **Starter Pack** plugin and choose **Delete app**; to fix the icon, name or description, delete it and create it again with the steps above. Removing it changes nothing in your progress.
 
+## Install the starterpack Claude Code plugin
+
+*Plugin release preview: these commands will work after the reviewed public release. The current starting prompt and separate MCP connector remain available now.*
+
+Claude Code users can install all 20 public Uppercut Labs agent skills, the Starter Pack companion, Computer Setup, and the two course-specific Phase 2 planning variants together. The plugin also connects the same read-only Starter Pack MCP server, so you do not need to add it a second time.
+
+```sh
+claude plugin marketplace add devin-thomas/starter-pack
+claude plugin install starterpack@starterpack
+```
+
+Start or reload Claude Code, open `/plugin` to confirm **starterpack** is enabled, and run `/starterpack:start` to start or resume the course. The direct companion is `/starterpack:starter-pack`. Phase 2 uses `/starterpack:computer-setup`, then `/starterpack:grill-to-build` to plan your project by default; `/starterpack:quick-build` is only for someone who explicitly requests Quick Build. These are the same Grill to Build and Quick Build skills as in the collection. During Starter Pack, your agent also follows the [Phase 2 planning page](/phases/2/planning).
+
+The plugin does not access private learner progress or sign you into accounts. Bring your saved progress file when resuming, and approve consequential setup or deployment steps as you go. The independent course completion requirements do not change. If the bundled MCP is unavailable, follow the supplied skill instructions and the official course resources without fabricating completion.
+
 ## Build with Codex
 
 On a computer, open Codex and paste the [starting prompt](#starting-prompt). Bring your saved progress if you are returning. On a phone, begin with your supported companion and carry its handoff into your computer harness for Phase 2. Before the first Phase 1 action, your agent checks the conversation host, selected computer harness, and accessible target separately. The copyable Codex readiness checkpoint is `https://starter.uppercut-labs.com/setup/codex-readiness.md`.
@@ -40,7 +55,7 @@ Starter Pack gives Codex a path to follow: inspect your computer, prepare an ins
 
 Your part is to choose what you want, review consequential changes, sign in to your accounts, and try the app's main action. Codex handles the project files and routine commands it has permission to run. You do not need to copy every command from this guide or maintain the plan by hand. You can keep another supported agent if that already works for you.
 
-### What is new: a program can continue a Codex session
+### A program can continue a Codex session
 
 The optional local workflow adds a way for software to drive Codex using its managed ChatGPT sign-in. In our release check, a small program asked Codex to create `proof.txt` with `hello world`, checked the exact contents, closed the connection, then restarted and resumed the same session to change that same file to `hello Codex`. Both content checks and cleanup passed. That demonstrates continuity across two tasks; a complete unattended Starter Pack run has not been verified.
 

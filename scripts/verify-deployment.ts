@@ -52,7 +52,7 @@ async function read(route: string, expectedType: RegExp) {
 }
 
 const html = await read("/", /text\/html/);
-if (!html.includes('id="site-data"') || !html.includes("Your first build")) {
+if (!html.includes('id="site-data"') || !html.includes('id="starterpack-use"')) {
   throw new Error("The response is not the rendered Starter Pack homepage.");
 }
 const skillsHtml = await read("/skills", /text\/html/);

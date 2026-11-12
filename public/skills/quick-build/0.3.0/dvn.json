@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "skillName": "quick-build",
+  "skillBlobSha": "3bfcb7d145d9b3152aaa53d84290fe8fba142ad9",
+  "auditComplete": true,
+  "resources": [
+    {
+      "key": "plan",
+      "path": "templates/PLAN.md",
+      "gitBlobSha": "0d7252fc289303e98ce96bd59e935516e3e7e470",
+      "required": "stage",
+      "stages": [
+        "specification"
+      ]
+    },
+    {
+      "key": "spec",
+      "path": "templates/SPEC.md",
+      "gitBlobSha": "40c09bd169a0ef20244c4ef8f6d6d6fe9dc39d49",
+      "required": "stage",
+      "stages": [
+        "specification"
+      ]
+    },
+    {
+      "key": "decisions",
+      "path": "templates/DECISIONS.md",
+      "gitBlobSha": "3f692e403ec8728577b1c3f0b0c61d1bf98ebbc7",
+      "required": "stage",
+      "stages": [
+        "specification"
+      ]
+    },
+    {
+      "key": "ticket",
+      "path": "templates/TICKET.md",
+      "gitBlobSha": "3bcbc49db9bb35fd382cdcf0eb172b64a95fd1f4",
+      "required": "stage",
+      "stages": [
+        "specification"
+      ]
+    },
+    {
+      "key": "source-provenance",
+      "path": "README.md",
+      "gitBlobSha": "7fa4e4745dd7385e6e4fb7101b728353e5fa5d64",
+      "required": "optional"
+    },
+    {
+      "key": "host-metadata",
+      "path": "agents/openai.yaml",
+      "gitBlobSha": "c31f5b5a28118f7c821c3a908622068407d48b43",
+      "required": "optional"
+    }
+  ],
+  "stages": [
+    {
+      "key": "specification",
+      "resources": [
+        "plan",
+        "spec",
+        "decisions",
+        "ticket"
+      ],
+      "dependencies": []
+    }
+  ],
+  "dependencies": []
+}

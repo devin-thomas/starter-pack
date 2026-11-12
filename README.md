@@ -52,6 +52,17 @@ For private feedback, feature requests, and project stories, use [the contact fo
 
 Configure `FEEDBACK_RESEND_API_KEY` with `npx wrangler secret put FEEDBACK_RESEND_API_KEY`; never place it in source, client code, or public build variables. Only a Resend 2xx response counts as delivered. Notification content can remain in Resend's email logs and the recipient mailbox. Do not log request bodies or attach learner progress. Local validation uses synthetic submissions and mocked delivery; a real submission is needed to verify the complete notification path after deployment.
 
+## Claude Code plugin (private release candidate)
+
+The proposed Claude Code plugin is **`starterpack`** (without a hyphen). The plugin is a release candidate; the public repository and live website do **not** yet offer a verified installation. After explicit promotion and native Claude Code validation, the installation will follow EditBay's marketplace pattern:
+
+```sh
+claude plugin marketplace add devin-thomas/starter-pack
+claude plugin install starterpack@starterpack
+```
+
+The plugin includes the 20 public Uppercut Labs package skills, among them the Starter Pack companion, Computer Setup, Grill to Build and Quick Build, a `/starterpack:start` command and a read-only connection to the existing `https://starter.uppercut-labs.com/mcp`. It never installs system software or certifies completion on install. Publication of the plugin and its install instructions follows separate source review, native Claude Code validation and real learner acceptance.
+
 ## Run locally
 
 Use a current Node.js LTS release.
@@ -104,7 +115,7 @@ The short starting prompt reads a single GitHub-hosted Phase 1 packet containing
 
 Cloudflare can prepend managed robots rules to the generated file. `scripts/crawler-policy.ts` explicitly allows Google-Extended only on public curriculum/resource paths so those instructions remain eligible for Gemini grounding. Google uses this control for training as well as grounding. The production check parses the combined live robots rules and verifies the startup packet and prompt bytes; a successful check does not prove any specific chat app can fetch them. Do not disable unrelated WAF or bot protections to make a smoke test pass.
 
-Gemini is not supported for this pack after the owner's final test. Prompts stop those chats and point to recommendations. Free Claude Sonnet is a Phase 1 workaround for Antigravity users and those with untested or unsupported harnesses; the owner's Sonnet 4.6 Medium baseline stayed within the free allowance in testing. Antigravity and Google AI Studio keep their separate roles. The Vercel packet at `https://starter-pack-agent.vercel.app/agent/phase-1-packet.txt` records the same unsupported status; do not offer it as another Google workaround.
+**Gemini app mode routing (updated November 8, 2026):** Ordinary Gemini Chat is not the reliable path for fetching the exact latest GitHub-hosted instruction packet; its search-grounded responses may reflect indexed results instead of the live resource. The owner verified that pasting the same starting prompt into **Gemini Task mode** succeeds. The short prompt and companion tell the Gemini Chat agent to ask the learner to switch to Task mode without describing retrieval mechanics. Task mode must fetch and verify the actual linked packet; do not assume all Gemini experiences can do this. Task mode is account/region dependent and is never a mandatory subscription or phase gate. Google AI Studio remains the instant builder and Antigravity the computer harness. The previously published Vercel packet is a separate historical snapshot, **not** current Gemini routing guidance.
 
 The mirror is a separate public snapshot. Normal site deployment does not refresh it automatically.
 
