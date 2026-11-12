@@ -62,7 +62,7 @@ test("readiness checkpoints cover milestones and the required scenarios", async 
   assert.match(guide, /A deferral can be revisited only when its recorded blocker changes or the learner asks/);
 });
 
-test("readiness state stays separate from proof and remains schema-valid", async () => {
+test("readiness notes stay nonsecret and older harness records remain schema-valid", async () => {
   const [schemaText, exampleText, guide] = await Promise.all([
     readFile("public/schemas/starter-progress.schema.json", "utf8"),
     readFile("public/artifacts/progress/starter-progress.json", "utf8"),
@@ -74,21 +74,17 @@ test("readiness state stays separate from proof and remains schema-valid", async
   addFormats(ajv);
   const validate = ajv.compile(schema);
 
+  // Progress saved before the retired harness experiment was removed must still load.
   state.steps["programmatic-harness"] = {
     status: "deferred",
     notes: ["CLI sign-in status was not checked because the target is unavailable."],
   };
-  state.artifacts.programmatic_harness = { attempts: [] };
+  state.artifacts.programmatic_harness = { attempts: [{ provider: "codex", target: "local", outcome: "declined" }] };
   assert.equal(validate(state), true, JSON.stringify(validate.errors));
-  assert.equal(state.steps["programmatic-harness"].status, "deferred");
-  assert.deepEqual(state.artifacts.programmatic_harness.attempts, []);
-  assert.match(guide, /Readiness and offer history belong in the existing `steps\["programmatic-harness"\]` status and concise nonsecret notes/);
-  assert.match(guide, /Actual proof outcomes belong only in `artifacts\.programmatic_harness\.attempts`/);
-  assert.match(guide, /Version and sign-in do not prove plan eligibility, model availability, or a successful programmatic turn/);
-  assert.match(guide, /Do not promote CLI capability, a managed login, or model-list metadata into a passed proof/);
-  assert.match(guide, /Do not save a machine name, workspace path, account identity, credentials, raw status output, or session\/turn ID/);
-  assert.deepEqual(schema.$defs.programmaticHarnessEvidence.properties.attempts.items.properties.outcome.enum,
-    ["not_tested", "declined", "deferred", "partial", "failed", "passed"]);
+  assert.match(guide, /Record readiness as concise nonsecret notes on the `computer-setup` step/);
+  assert.match(guide, /Version and sign-in do not prove plan eligibility or model availability/);
+  assert.match(guide, /Do not save a machine name, workspace path, account identity, credentials, raw status output, or session ID/);
+  assert.doesNotMatch(guide, /programmatic|proof/i);
 });
 
 test("readiness guide, skills, version catalog, and setup manifest agree", async () => {
@@ -96,8 +92,7 @@ test("readiness guide, skills, version catalog, and setup manifest agree", async
   const setup = JSON.parse(await readFile("public/setup/computer-setup.manifest.json", "utf8"));
   const skills = JSON.parse(await readFile("content/skills/manifest.json", "utf8"));
   assert.equal(setup.focused_guides.codex_readiness, "https://starter.uppercut-labs.com/setup/codex-readiness.md");
-  assert.equal(setup.skill_version, "0.2.7");
-  assert.equal(setup.required_capabilities.some((item: { id: string }) => item.id === "programmatic-harness"), false);
+  assert.equal(setup.skill_version, "1.1.0");
   for (const skill of versions.skills) {
     const current = await readFile(`public${skill.current}`, "utf8");
     const numbered = await readFile(`public${skill.versioned}`, "utf8");
@@ -112,19 +107,6 @@ test("readiness guide, skills, version catalog, and setup manifest agree", async
     const release = versions.skills.find((item: { id: string }) => item.id === id);
     assert.ok(entry && release, `${id} is present in both skill catalogs`);
     assert.equal(entry.sourceVersion, release.version);
-  }
-});
-
-test("learner-facing proof copy describes the same file across both checks", async () => {
-  const [phase, guide, proof] = await Promise.all([
-    readFile("content/phases/2.md", "utf8"),
-    readFile("content/pages/guide.md", "utf8"),
-    readFile("public/setup/programmatic-harness.md", "utf8"),
-  ]);
-  for (const [label, text] of [["Phase 2", phase], ["Guide", guide], ["proof guide", proof]] as const) {
-    assert.ok(text.includes("proof.txt"), `${label} names proof.txt`);
-    assert.ok(text.includes("hello world"), `${label} describes the first content check`);
-    assert.ok(text.includes("hello Codex"), `${label} describes the resumed content check`);
   }
 });
 

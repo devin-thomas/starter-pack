@@ -30,7 +30,7 @@
     "check:format": "prettier --check \"src/*.{ts,tsx}\"",
     "check:style": "node scripts/style-guide-check.mjs && tsx --test scripts/style-guide-links.test.ts",
     "verify:style": "node scripts/style-guide-surfaces.mjs && node scripts/godot-style-guide-surfaces.mjs && node scripts/kotlin-style-guide-surfaces.mjs && node scripts/companion-style-guide-surfaces.mjs",
-    "test:routes": "tsx --test scripts/legacy-routing.test.ts scripts/local-deployment.test.ts scripts/seo-migration.test.ts scripts/mcp.test.ts",
+    "test:routes": "tsx --test scripts/legacy-routing.test.ts scripts/local-deployment.test.ts scripts/seo-migration.test.ts scripts/mcp.test.ts scripts/oauth.test.ts",
     "test:controls": "node scripts/react-controls-browser.mjs",
     "test:usability": "node scripts/site-usability-browser.mjs",
     "test:level-1-browser": "tsx scripts/agent-ready-example-browser.ts",

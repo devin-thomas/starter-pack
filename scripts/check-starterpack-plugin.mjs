@@ -24,7 +24,7 @@ assert.equal(marketplace.plugins.length, 1);
 assert.equal(marketplace.plugins[0].name, "starterpack");
 assert.equal(marketplace.plugins[0].source, "./");
 assert.equal(plugin.version, sources.pluginVersion);
-assert.equal(catalog.length, 20, "review public skills inventory before release");
+assert.equal(catalog.length, 19, "review public skills inventory before release");
 assert.equal(plugin.skills, undefined, "default skills/ must not be declared twice");
 assert.deepEqual([...plugin.metadata.bundledSkillIds].sort(), expected, "plugin skill coverage drift");
 assert.equal(mcp.mcpServers.starterpack.type, "http", "remote MCP must specify HTTP transport");
@@ -36,7 +36,7 @@ for (const needle of ["`grill-to-build`", "`quick-build`", "/phases/2/planning.m
 assert.ok(!/phase2-/.test(read("content/pages/guide.md").toString("utf8")), "guide names a retired curriculum copy");
 assert.ok(read("content/pages/guide.md").toString("utf8").includes("starterpack@starterpack"));
 if (process.argv.includes("--metadata-only")) {
-  console.log("starterpack metadata validated: 20 public skills; bundle not yet certified.");
+  console.log("starterpack metadata validated: 19 public skills; bundle not yet certified.");
   process.exit(0);
 }
 const lock = json("starterpack.lock.json");
@@ -81,4 +81,4 @@ for (const id of ["grill-to-build", "quick-build"]) {
 // No bundled companion adaptation: the plugin ships the hosted companion and Computer Setup unchanged.
 for (const id of ["starter-pack", "computer-setup"])
   assert.ok(read(join("skills", id, "SKILL.md")).equals(read(join("public", "skills", id, "current", "SKILL.md"))), "bundled " + id + " differs from its hosted current release");
-console.log("starterpack release bundle validated: 20 native skills, " + checkedFiles + " locked files. Still run claude plugin validate and real learner QA.");
+console.log("starterpack release bundle validated: 19 native skills, " + checkedFiles + " locked files. Still run claude plugin validate and real learner QA.");

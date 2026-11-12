@@ -8,7 +8,7 @@ label: Phase 2 planning
 summary: The course rules your agent follows when it plans, builds and saves your Phase 2 project with Grill to Build or Quick Build.
 route: /phases/2/planning
 status: current
-updated: 2026-11-11
+updated: 2026-11-12
 ---
 
 # Plan your Phase 2 project
@@ -31,7 +31,7 @@ Record the workflow in the `quick-build` step's `notes`, for example "Workflow: 
 
 ## Prepare the skill and templates
 
-Reuse the Codex readiness checkpoint (`https://starter.uppercut-labs.com/setup/codex-readiness.md`) during planning and before approved implementation. Recheck only facts affected by a material host, harness, workspace, permission, runtime, or authentication change. Do not repeat a decline, setup, or successful sign-in check. The optional Programmatic Harness proof is never a prerequisite for planning or building; preserve the required next action when it is declined, deferred, unavailable, or failed.
+Reuse the Codex readiness checkpoint (`https://starter.uppercut-labs.com/setup/codex-readiness.md`) during planning and before approved implementation. Recheck only facts affected by a material host, harness, workspace, permission, runtime, or authentication change. Do not repeat a decline, setup, or successful sign-in check.
 
 Before use, make the selected skill and its planning templates available: the Grill to Build templates (`https://starter.uppercut-labs.com/artifacts/grill-to-build/README.md`) or the Quick Build templates (`https://starter.uppercut-labs.com/artifacts/quick-build/README.md`). Record their source and version in the private handoff. If using them as supplied context, say `context_only`; claim `native_discovered` only after verifying discovery in the selected harness's currently supported skill location. Do not install a full global engineering bundle or require skill theory for this build. Begin or reuse the lightweight private session report described in the progress guide.
 

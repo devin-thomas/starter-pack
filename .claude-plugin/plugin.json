@@ -1,6 +1,6 @@
 {
   "name": "starterpack",
-  "version": "0.1.1",
+  "version": "1.1.0",
   "description": "Starter Pack course companion, computer setup, Grill to Build and Quick Build, and the complete public Uppercut Labs agent skills collection for Claude Code.",
   "author": {
     "name": "Devin Thomas",
@@ -34,7 +34,6 @@
       "pwa-development",
       "vidchopper-cli",
       "perfect-playlist",
-      "programmatic-harness",
       "branded-sign-in",
       "agent-cli",
       "immutable-reports",

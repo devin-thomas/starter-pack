@@ -1,6 +1,6 @@
 ---
 skill_id: quick-build
-updated: 2026-11-08
+updated: 2026-11-12
 ---
 
 # Quick Build
@@ -46,7 +46,7 @@ None for standalone use. In Starter Pack Phase 2, Grill to Build is the standard
 
 ## Reuse the Codex readiness check
 
-When Quick Build is part of Starter Pack, reuse the Codex readiness checkpoint (`https://starter.uppercut-labs.com/setup/codex-readiness.md`) during planning and before the learner-approved implementation begins. Recheck only after a material change to the conversation host, selected harness, target workspace, permissions, runtime, or authentication. Do not repeat an answered offer, successful setup, or login check. The Programmatic Harness proof is optional and never a Quick Build prerequisite; continue with the required next action if it was declined, deferred, unavailable, or failed.
+When Quick Build is part of Starter Pack, reuse the Codex readiness checkpoint (`https://starter.uppercut-labs.com/setup/codex-readiness.md`) during planning and before the learner-approved implementation begins. Recheck only after a material change to the conversation host, selected harness, target workspace, permissions, runtime, or authentication. Do not repeat an answered offer, successful setup, or login check.
 
 ## Installation and use
 

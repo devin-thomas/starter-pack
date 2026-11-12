@@ -1,13 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginName": "starterpack",
-  "pluginVersion": "0.1.1",
-  "publicSkillsCount": 20,
+  "pluginVersion": "1.1.0",
+  "publicSkillsCount": 19,
   "sources": {
     "devin-thomas/skills": {
-      "commit": "f078c00b15bfe3e14f3e81937f8e70647eb4f326",
-      "root": ".",
-      "pinStatus": "provisional: head of devin-thomas/skills PR #7 (not yet merged). Keep it if the PR merges with a merge commit; repin to the reviewed main commit if it is squashed or rebased."
+      "commit": "49f7205e7fb3e8b38c3e99b385e4b3c0df97f045",
+      "root": "."
     },
     "devin-thomas/vid-chopper": {
       "commit": "428963b6db87e47f98209c92bc59aca41b5f997a",

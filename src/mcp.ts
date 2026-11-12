@@ -90,7 +90,7 @@ export const supportedProtocolVersions: readonly string[] = [
   "2025-06-18",
   "2025-03-26",
 ];
-const serverVersion: string = "0.1.0";
+const serverVersion: string = "1.1.0";
 const canonicalOrigin: string = siteOrigins.canonicalOrigin;
 const siteHosts: ReadonlySet<string> = new Set(
   Object.values(siteOrigins).map(

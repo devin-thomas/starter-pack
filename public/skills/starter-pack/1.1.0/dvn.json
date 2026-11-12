@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "skillName": "starter-pack",
+  "skillBlobSha": "caaeba3acbde726074b481564709f26f3553dd50",
+  "auditComplete": true,
+  "resources": [
+    {
+      "key": "requirements",
+      "path": "workbench-steps.json",
+      "gitBlobSha": "c3d4f9c8619e7ec8835b5f7baa1ebba34eeccf31",
+      "required": "mandatory",
+      "repository": "devin-thomas/starter-pack",
+      "root": "content"
+    },
+    {
+      "key": "progress",
+      "path": "progress/README.md",
+      "gitBlobSha": "99b7b24e361cd5f4c273bddce5d7ae218553eb1f",
+      "required": "mandatory",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/artifacts"
+    },
+    {
+      "key": "progress-schema",
+      "path": "starter-progress.schema.json",
+      "gitBlobSha": "9c8964dbe43a37998f6c79f17fea845e9de07e34",
+      "required": "mandatory",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/schemas"
+    },
+    {
+      "key": "progress-template",
+      "path": "progress/starter-progress.json",
+      "gitBlobSha": "e5e5797914bd5e98ae19e3e958f416081e6b8ea7",
+      "required": "optional",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/artifacts"
+    },
+    {
+      "key": "readiness",
+      "path": "codex-readiness.md",
+      "gitBlobSha": "ca938f71f190c69b1a87c8605d65a82973c299ab",
+      "required": "optional",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "workbench",
+      "path": "progress-workbench/README.md",
+      "gitBlobSha": "1dd4f04e0ed01dadbc33c925c25f72c733fcbd1d",
+      "required": "optional",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/artifacts"
+    },
+    {
+      "key": "resource-directory",
+      "path": "resource-links.md",
+      "gitBlobSha": "5a99a4369543d0828c94d9767aa1f63d3f149512",
+      "required": "optional",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/agent"
+    },
+    {
+      "key": "phase-1",
+      "path": "1.md",
+      "gitBlobSha": "ae4b1dc4cdf73f2232d8463d8185daa2438571db",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "content/phases"
+    },
+    {
+      "key": "phase-2",
+      "path": "2.md",
+      "gitBlobSha": "1d6e82a888e6b96ea582a52f58e8f232e70f0cb4",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "content/phases"
+    },
+    {
+      "key": "phase-2-planning",
+      "path": "phase-2-planning.md",
+      "gitBlobSha": "340112c67e5dcbad0dfd1428a0d6b08a05daa7b5",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "content/lessons"
+    },
+    {
+      "key": "phase-3",
+      "path": "3.md",
+      "gitBlobSha": "fd718095ad8ef9f1069bb5a1e23e2d666a3e9fd3",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "content/phases"
+    },
+    {
+      "key": "private-workbench",
+      "path": "private-workbench.md",
+      "gitBlobSha": "32a90d4b208a3a816e439e610406373a1acac6a0",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup"
+    },
+    {
+      "key": "workbench-publishing",
+      "path": "workbench-publishing.md",
+      "gitBlobSha": "1bb5f1babfc155ace143334fcaafb7f315e9da05",
+      "required": "stage",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup",
+      "requires": [
+        "private-workbench"
+      ]
+    },
+    {
+      "key": "progress-gitignore",
+      "path": "progress/gitignore.txt",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/artifacts",
+      "gitBlobSha": "8904fe490b11f117c6655a9545a2985f03d4b41b",
+      "required": "stage"
+    },
+    {
+      "key": "setup-state",
+      "path": "state.example.json",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup",
+      "gitBlobSha": "aeab1589ca0202cf5cae597c8b760406063aa407",
+      "required": "optional"
+    },
+    {
+      "key": "mobile-deployment",
+      "path": "mobile-deployment.md",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup",
+      "gitBlobSha": "8cb22e194ca4a2f02b9d1f9d6c5ae0890b9b6068",
+      "required": "stage"
+    },
+    {
+      "key": "iphone-deployment",
+      "path": "cloudflare-iphone.md",
+      "repository": "devin-thomas/starter-pack",
+      "root": "content/pages",
+      "gitBlobSha": "5b315c4b22cf8614274f0bf4ad5e1b27938130d9",
+      "required": "stage"
+    },
+    {
+      "key": "antigravity-control",
+      "path": "remote-access.md",
+      "repository": "devin-thomas/starter-pack",
+      "root": "public/setup",
+      "gitBlobSha": "f9e9fbc29c531639128107b040e1b1e9818ce5b0",
+      "required": "stage"
+    }
+  ],
+  "stages": [
+    {
+      "key": "readiness",
+      "resources": [
+        "readiness"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "initialize-progress",
+      "resources": [
+        "progress-template",
+        "progress-schema",
+        "progress-gitignore",
+        "setup-state"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "workbench",
+      "resources": [
+        "workbench",
+        "progress-template",
+        "progress-schema"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "phase-1",
+      "resources": [
+        "phase-1",
+        "readiness"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "phase-2",
+      "resources": [
+        "phase-2",
+        "phase-2-planning",
+        "readiness"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "phase-3",
+      "resources": [
+        "phase-3",
+        "readiness"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "computer-setup",
+      "resources": [],
+      "dependencies": [
+        "computer-setup"
+      ]
+    },
+    {
+      "key": "grill-to-build",
+      "resources": [
+        "phase-2-planning"
+      ],
+      "dependencies": [
+        "grill-to-build"
+      ]
+    },
+    {
+      "key": "quick-build",
+      "resources": [
+        "phase-2-planning"
+      ],
+      "dependencies": [
+        "quick-build"
+      ]
+    },
+    {
+      "key": "private-workbench",
+      "resources": [
+        "private-workbench",
+        "workbench",
+        "progress-schema"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "workbench-publishing",
+      "resources": [
+        "workbench-publishing",
+        "workbench",
+        "progress-schema"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "mobile-deployment",
+      "resources": [
+        "mobile-deployment"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "iphone-deployment",
+      "resources": [
+        "iphone-deployment"
+      ],
+      "dependencies": []
+    },
+    {
+      "key": "antigravity-control",
+      "resources": [
+        "antigravity-control"
+      ],
+      "dependencies": []
+    }
+  ],
+  "dependencies": [
+    {
+      "key": "computer-setup",
+      "canonicalId": "starter-pack/computer-setup",
+      "required": "stage",
+      "stages": [
+        "computer-setup"
+      ]
+    },
+    {
+      "key": "grill-to-build",
+      "canonicalId": "public/grill-to-build",
+      "required": "stage",
+      "stages": [
+        "grill-to-build"
+      ]
+    },
+    {
+      "key": "quick-build",
+      "canonicalId": "public/quick-build",
+      "required": "stage",
+      "stages": [
+        "quick-build"
+      ]
+    }
+  ]
+}

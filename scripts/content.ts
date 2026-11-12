@@ -532,7 +532,6 @@ export async function generateResources(data: SiteData, output: string) {
           ] : []),
           ...(phase.order === 2 ? [
             `- [Computer Setup instructions](${origin}/skills/computer-setup/SKILL.md)`,
-            `- [Optional Codex programmatic-harness guide](${origin}/setup/programmatic-harness.md)`,
             `- [Grill to Build instructions (standard planning)](${origin}/skills/grill-to-build/SKILL.md)`,
             `- [Quick Build instructions (only when the learner asks)](${origin}/skills/quick-build/SKILL.md)`,
             `- [Phase 2 planning reference (course rules for either skill)](${origin}/phases/2/planning.md)`,

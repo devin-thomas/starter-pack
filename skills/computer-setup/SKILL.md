@@ -1,8 +1,8 @@
 ---
 name: computer-setup
 description: Prepare or resume the Starter Pack computer baseline with approved capability installs, cross-context command checks, private saving, file transfer, and actual phone-to-harness control.
-version: 0.2.7
-updated: 2026-11-11
+version: 1.1.0
+updated: 2026-11-12
 ---
 
 # Computer Setup
@@ -49,10 +49,6 @@ Return a compact handoff with canonical progress/private location, selected harn
 
 ## Reuse Codex readiness at milestones
 
-Reuse the [Codex readiness checkpoint](https://starter.uppercut-labs.com/setup/codex-readiness.md) at Computer Setup entry and closeout. A readiness check never installs Codex, starts login, or runs inference. Preserve prior results when the target is unchanged; recheck only affected facts after a material change. Do not repeat an answered offer. Keep a decline as `skipped` and a deferral as `deferred` with one recovery action; continue to project planning either way.
-
-After required setup outcomes and the private save pass, Codex users who have not declined may choose the optional local [Programmatic Harness proof](https://starter.uppercut-labs.com/setup/programmatic-harness.md). Offer it only when the compatible adapter and reusable skill are released at pinned versions. The learner's explicit opt-in authorizes the documented checksum-verified reusable skill install; follow the skill's approval rules for any additional project changes. Load the released `programmatic-harness` skill from the skills repository and follow its exact project-local install command and proof. The Codex route uses managed ChatGPT sign-in with an eligible ChatGPT plan; it does not require an OpenAI Platform API key or API billing. Cloud usage is a separate opt-in. Keep Cursor and cloud workflows deferred until their own compatible routes are released. A decline, deferral, failure, or unavailable release preserves setup completion and hands directly to project planning.
-
-Record only normalized local/cloud proof outcomes under `artifacts.programmatic_harness`. Never save credentials, raw provider output, private planning URLs, or raw session/turn IDs. Local and cloud proof are independent evidence; neither changes the Phase 2 gate.
+Reuse the [Codex readiness checkpoint](https://starter.uppercut-labs.com/setup/codex-readiness.md) at Computer Setup entry and closeout. A readiness check never installs Codex, starts login, or runs inference. Preserve prior results when the target is unchanged; recheck only affected facts after a material change. Record readiness as the checkpoint describes. Keep an explicit decline of the Codex route and a deferral with one recovery action; continue to project planning either way.
 
 Selected Docker Desktop is conditional and installed last; OrbStack is excluded. For pnpm approvals, runtime/module errors, Docker or Rosetta, use [bounded troubleshooting](https://starter.uppercut-labs.com/setup/tool-troubleshooting.md); do not apply those fixes universally.
