@@ -68,12 +68,12 @@ const viewer = {
 test("pins: package.json names exact versions and the installed package matches", () => {
   assert.equal(
     packageJson.dependencies["@uppercut-labs/agent-native"],
-    "1.0.1",
+    "1.1.0",
   );
   assert.equal(packageJson.dependencies.zod, "4.6.5");
   const version = cli("--version");
   assert.equal(version.status, 0);
-  assert.equal(version.stdout.trim(), "@uppercut-labs/agent-native 1.0.1");
+  assert.equal(version.stdout.trim(), "@uppercut-labs/agent-native 1.1.0");
 });
 
 test("contract: v1 schemas, risk, access and surfaces match the reviewed snapshot", async () => {

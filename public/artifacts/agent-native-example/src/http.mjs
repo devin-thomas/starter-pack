@@ -1,6 +1,6 @@
 // HTTP projection. createHttpHandler turns the registry into a Web
 // Request -> Response function; this file mounts it on Node's built-in server.
-// The 1.0.1 HTTP adapter serves public reads only: protected contracts get no
+// The 1.1.0 HTTP adapter serves public reads only: protected contracts get no
 // route and no OpenAPI entry, whatever headers a request carries.
 import { createServer } from "node:http";
 import { createHttpHandler } from "@uppercut-labs/agent-native/http";

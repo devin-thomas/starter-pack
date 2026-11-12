@@ -23,12 +23,12 @@ If none of these apply yet, finish a simpler level first. You can adopt the pack
 
 | Package | Version | Why |
 | --- | --- | --- |
-| `@uppercut-labs/agent-native` | `1.0.1` | Contracts, registry, authorization checks, CLI runner, HTTP handler |
-| `zod` | `4.6.5` | Schemas for inputs and outputs (1.0.1 accepts 4.6.5 and later 4.6 patches) |
+| `@uppercut-labs/agent-native` | `1.1.0` | Contracts, registry, authorization checks, CLI runner, HTTP handler |
+| `zod` | `4.6.5` | Schemas for inputs and outputs (1.1.0 accepts 4.6.5 and later 4.6 patches) |
 
-Version 1.0.1 is the current release on npm. It is a library you import: it has no global `agent-native` command, no `npx` setup tool, and no single command that converts a whole site. Your project owns the CLI file and the server file, as this example does.
+Version 1.1.0 is the current release on npm. It is a library you import: it has no global `agent-native` command, no `npx` setup tool, and no single command that converts a whole site. Your project owns the CLI file and the server file, as this example does.
 
-This example uses only stable entry points: the package root, `schema/zod`, `cli` and `http`. See the package's [stability policy](https://github.com/uppercut-labs/agent-native/blob/v1.0.1/docs/stability.md) and [installation guide](https://github.com/uppercut-labs/agent-native/blob/v1.0.1/docs/installation.md) for 1.0.1.
+This example uses only stable entry points: the package root, `schema/zod`, `cli` and `http`. See the package's [stability policy](https://github.com/uppercut-labs/agent-native/blob/v1.0.1/docs/stability.md) and [installation guide](https://github.com/uppercut-labs/agent-native/blob/v1.0.1/docs/installation.md). They were written for 1.0.1, and 1.1.0 keeps these entry points stable.
 
 ## Get the example
 
@@ -83,7 +83,7 @@ curl -s -i -X POST -H 'content-type: application/json' -d '{"name":"rice","quant
   http://127.0.0.1:8787/agent-native/v1/capabilities/example.pantry/items.restock/v1/invoke
 ```
 
-The CLI exits with status 3 and reports `unauthorized`. The HTTP API answers `404`: in 1.0.1 the HTTP handler gives protected operations no route and leaves them out of its OpenAPI document at `/agent-native/v1/openapi.json`, whatever headers the request sends. The pantry is unchanged either way.
+The CLI exits with status 3 and reports `unauthorized`. The HTTP API answers `404`: in 1.1.0 the HTTP handler gives protected operations no route and leaves them out of its OpenAPI document at `/agent-native/v1/openapi.json`, whatever headers the request sends. The pantry is unchanged either way.
 
 ## How the pieces fit
 
@@ -102,14 +102,14 @@ Every call, on every interface, goes through the same steps in this order: check
 
 Each contract has a major version in its identity (`@1`) and in its HTTP route (`/v1/`). Within version 1 you can reword a description or change the implementation. A change that could break a caller, such as a new required input or a different output, needs version 2.
 
-Two checks protect this. The test compares every contract with `contract/pantry.v1.json`, so an accidental change fails. The test also uses the package's `assertCompatibleCapabilityReplacement`, which rejects a breaking change to an existing version. To make a breaking change, define the new contract with `majorVersion: 2`, keep version 1 working until its callers have moved, and add a new snapshot. Regenerate a snapshot only for a change you meant: `node src/contract.mjs --write`. See [composition and versioning](https://github.com/uppercut-labs/agent-native/blob/v1.0.1/docs/composition-and-versioning.md) for version 1.0.1.
+Two checks protect this. The test compares every contract with `contract/pantry.v1.json`, so an accidental change fails. The test also uses the package's `assertCompatibleCapabilityReplacement`, which rejects a breaking change to an existing version. To make a breaking change, define the new contract with `majorVersion: 2`, keep version 1 working until its callers have moved, and add a new snapshot. Regenerate a snapshot only for a change you meant: `node src/contract.mjs --write`. See [composition and versioning](https://github.com/uppercut-labs/agent-native/blob/v1.0.1/docs/composition-and-versioning.md) for the 1.x rules.
 
 ## Adapt it to your own project
 
 Work on a branch, and give your agent this page. Start with one operation.
 
 1. **Choose one operation your app already performs**, ideally a read. Write down what goes in, what comes out, and who may call it.
-2. **Install the pinned versions**: `npm install --save-exact @uppercut-labs/agent-native@1.0.1 zod@4.6.5`. Commit `package.json` and the lockfile together. Install the package only when you have chosen this level; it is never required.
+2. **Install the pinned versions**: `npm install --save-exact @uppercut-labs/agent-native@1.1.0 zod@4.6.5`. Commit `package.json` and the lockfile together. Install the package only when you have chosen this level; it is never required.
 3. **Write the contract** with `defineCapability`: a namespace for your app, a name, `majorVersion: 1`, input and output schemas (use `z.strictObject` for inputs so unknown fields are rejected), a risk (`read`, `write` or `destructive`) and an access rule (`public` only for reads, otherwise `protected` with scopes).
 4. **Bind it to your existing function** with `bindCapability`. Call your code; do not copy it.
 5. **Write the authorization policy.** Allow public reads. For anything protected, build the caller from your app's existing sign-in on the server side, never from command-line arguments, request text or a header you have not verified. If your app has no sign-in, keep every write off agent interfaces.
@@ -145,11 +145,11 @@ Phase 3 counts this level only through a working CLI, API or MCP tool, checked b
 3. Check one denied case: a restock attempt is refused, with exit status 3 or HTTP 404.
 4. Confirm the result yourself.
 
-Your agent records the result on the Level 4 step of your private progress file with the interface you tested (`cli` or `api`), the client, the operation, both checks, your confirmation, the time, and `package_version` set to `@uppercut-labs/agent-native@1.0.1`. It records short notes only, never logs, keys or tokens.
+Your agent records the result on the Level 4 step of your private progress file with the interface you tested (`cli` or `api`), the client, the operation, both checks, your confirmation, the time, and `package_version` set to `@uppercut-labs/agent-native@1.1.0`. It records short notes only, never logs, keys or tokens.
 
 ## Limits of this example
 
 - The data is synthetic and resets every time a process starts.
 - Restocking succeeds only in the tests, through a signed-in caller the test creates. A real app would build that caller from its own sign-in.
 - The HTTP server is for your own computer. It is not hardened for the internet.
-- The checks describe version 1.0.1. A later version may add features; check its release notes rather than assuming them.
+- The checks describe version 1.1.0. A later version may add features; check its release notes rather than assuming them.

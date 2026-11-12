@@ -153,6 +153,6 @@ These are optional. Choose one only when your project needs it.
 - **Your framework's API tools.** Many frameworks can generate the OpenAPI document from your route definitions and validate requests for you.
 - **Caching with `ETag`,** so clients can ask whether data changed without downloading it again.
 - **Signed-in reads.** When an agent should read a user's own private data, use your app's existing sign-in and give the agent its own limited token, rather than making that data public.
-- **Uppercut Agent Native.** The released `@uppercut-labs/agent-native` package, version 1.0.1, describes an operation once and serves it as an HTTP API, a command or an MCP tool. It is an optional accelerator. Installing it is not the finish line; a working endpoint that passes the checks is.
+- **Uppercut Agent Native.** The released `@uppercut-labs/agent-native` package, version 1.1.0, describes an operation once and serves it as an HTTP API, a command or an MCP tool. It is an optional accelerator. Installing it is not the finish line; a working endpoint that passes the checks is.
 
 When your milestone is recorded, return to [Phase 3](/phases/3#choose-what-an-agent-should-do). You can stop here, or add a [command](/phases/3/agent-cli) or an MCP tool when your project needs one.
