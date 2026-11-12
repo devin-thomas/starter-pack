@@ -143,8 +143,8 @@ test("the Level 1 lesson is routed, linked from Phase 3 and stays a milestone", 
   assert.ok(!JSON.stringify(registry.phases["phase-3"].gate).includes("agent-ready-website"));
   assert.ok(!Object.values(registry.groups).some((group) => JSON.stringify(group).includes("agent-ready-website")));
   assert.match(content, /does not finish Phase 3 on its own/);
-  assert.match(content, /`@uppercut-labs\/agent-native` package, version 1\.0\.1/, "cite the released package version");
-  assert.doesNotMatch(content, /\b1\.1(\.\d+)?\b|v1\.1/, "never present an unreleased version");
+  assert.match(content, /`@uppercut-labs\/agent-native` package, version 1\.1\.0/, "cite the released package version");
+  assert.doesNotMatch(content, /\b1\.(?:[2-9]|1\d)\.\d|v1\.[2-9]/, "never present an unreleased version");
   const site = await loadExampleSite();
   for (const marker of privateMarkers(site)) assert.ok(!content.includes(marker), `lesson leaks ${marker}`);
   assert.equal(site.config.lesson, lesson.route);

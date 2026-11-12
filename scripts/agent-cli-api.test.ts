@@ -395,7 +395,7 @@ test("each Level 2 lane has its own lesson that stands alone", async () => {
     for (const part of [
       "](/phases/3#prove-it-with-a-real-client)", "](/phases/3#save-your-milestones)", `](/phases/3/${other})`,
       `"interface": "${id === "agent-cli" ? "cli" : "api"}"`, `\`${id}\` step`, "Start with your own project",
-      "completes Phase 3 on its own", "`@uppercut-labs/agent-native` package, version 1.0.1", "Lantern Street Tool Library",
+      "completes Phase 3 on its own", "`@uppercut-labs/agent-native` package, version 1.1.0", "Lantern Street Tool Library",
     ]) assert.ok(content.includes(part), `${id}: ${part}`);
     // Learner-facing copy only: no tracker references.
     assert.doesNotMatch(content, /\bticket|issues\//i, id);

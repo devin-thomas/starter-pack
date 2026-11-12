@@ -163,6 +163,6 @@ These are optional. Choose one only when your project needs it.
 - **Your language's CLI library.** Libraries such as Commander for Node.js or Typer for Python generate help text and check arguments for you.
 - **Shell completion and a man page,** once the command has settled.
 - **A test that runs the installed command** and fails when output keys change or a private field appears, like the one behind this example.
-- **Uppercut Agent Native.** The released `@uppercut-labs/agent-native` package, version 1.0.1, describes an operation once and serves it as an HTTP API, a command or an MCP tool. It is an optional accelerator. Installing it is not the finish line; a working command that passes the checks is.
+- **Uppercut Agent Native.** The released `@uppercut-labs/agent-native` package, version 1.1.0, describes an operation once and serves it as an HTTP API, a command or an MCP tool. It is an optional accelerator. Installing it is not the finish line; a working command that passes the checks is.
 
 When your milestone is recorded, return to [Phase 3](/phases/3#choose-what-an-agent-should-do). You can stop here, or add an [HTTP API](/phases/3/agent-api) or an MCP tool when your project needs one.

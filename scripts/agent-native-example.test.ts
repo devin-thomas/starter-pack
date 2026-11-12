@@ -11,15 +11,14 @@ const exampleDir = "public/artifacts/agent-native-example";
 const readmeUrl =
   "https://starter.uppercut-labs.com/artifacts/agent-native-example/README.md";
 
-// Recorded from the npm registry for the released versions; the GitHub release asset
-// for agent-native 1.0.1 has the same bytes.
+// Recorded from the npm registry for the released versions.
 const released = {
   "@uppercut-labs/agent-native": {
-    version: "1.0.1",
+    version: "1.1.0",
     resolved:
-      "https://registry.npmjs.org/@uppercut-labs/agent-native/-/agent-native-1.0.1.tgz",
+      "https://registry.npmjs.org/@uppercut-labs/agent-native/-/agent-native-1.1.0.tgz",
     integrity:
-      "sha512-fPCd8ulKge1B56wP8aLnKkJWssP0duetrbvabiXtn0Mww7X/afTsZSO0CvTusp7Pnbboi+upD4PyIjyH9nuIcw==",
+      "sha512-YVNvAjwy/Y5OJ+cRDuAlwTz7c4Qg1IbMRiU+q3EkFcNbkw22h/dMowX1hhGYKDcSEDGaP/407tgKvsSyAS/NZg==",
   },
   zod: {
     version: "4.6.5",
@@ -131,9 +130,9 @@ const forbiddenClaims =
 
 test("the guide describes only the released package", async () => {
   const readme = await readFile(`${exampleDir}/README.md`, "utf8");
-  assert.match(readme, /1\.0\.1/);
+  assert.match(readme, /1\.1\.0/);
   assert.match(readme, /Node\.js 22 or newer/);
-  assert.doesNotMatch(readme, /1\.1\.0|1\.1\b/, "no unreleased version");
+  assert.doesNotMatch(readme, /\b1\.(?:[2-9]|1\d)\.\d/, "no unreleased version");
   assert.doesNotMatch(
     readme,
     forbiddenClaims,
@@ -166,7 +165,7 @@ test("the guide records Level 4 progress through an operational interface", asyn
   assert.equal(step?.guide, "/phases/3#level-4-full-agent-native");
   assert.match(
     readme,
-    /`package_version` set to `@uppercut-labs\/agent-native@1\.0\.1`/,
+    /`package_version` set to `@uppercut-labs\/agent-native@1\.1\.0`/,
   );
   assert.match(readme, /\(`cli` or `api`\)/);
   assert.match(readme, /Installing the package is not enough/);
@@ -179,6 +178,6 @@ test("Level 4 hands the agent the example guide and describes only the released 
   assert.ok(level4.includes(readmeUrl));
   assert.match(level4, /version 1\.0\.1, for Node\.js 22 or newer/);
   assert.match(level4, /not a command you install globally/);
-  assert.doesNotMatch(level4, /1\.1\.0|1\.1\b/);
+  assert.doesNotMatch(level4, /\b1\.(?:[2-9]|1\d)\.\d/);
   assert.doesNotMatch(level4, forbiddenClaims);
 });

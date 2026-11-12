@@ -143,6 +143,6 @@ These are optional. Choose one only when your project needs it.
 - **Your framework's own tools.** Many site frameworks can generate sitemaps, canonical links and page metadata. Ask your agent to check your framework's current documentation before adding them by hand.
 - **Structured data.** Schema.org markup can describe things such as events, products or opening hours in a form search tools understand.
 - **A publication check.** A test that fails your build when a draft or internal field reaches the output, like the one behind this example.
-- **Uppercut Agent Native.** The released `@uppercut-labs/agent-native` package, version 1.0.1, describes an operation once and serves it as an HTTP API, a command or an MCP tool. It is the optional accelerator for Levels 2 to 4. It does not convert a website, and Level 1 does not need it.
+- **Uppercut Agent Native.** The released `@uppercut-labs/agent-native` package, version 1.1.0, describes an operation once and serves it as an HTTP API, a command or an MCP tool. It is the optional accelerator for Levels 2 to 4. It does not convert a website, and Level 1 does not need it.
 
 When your milestone is recorded, return to [Phase 3](/phases/3#choose-what-an-agent-should-do) to choose a command, API or MCP tool for your project.

@@ -13,7 +13,7 @@
     "serve": "node src/server.mjs"
   },
   "dependencies": {
-    "@uppercut-labs/agent-native": "1.0.1",
+    "@uppercut-labs/agent-native": "1.1.0",
     "zod": "4.6.5"
   }
 }
