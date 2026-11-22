@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
-import { createServer } from "node:http";
-import { mkdir, mkdtemp, readFile, realpath, stat, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, realpath, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { startStaticServer } from "@uppercut-labs/static-file-server";
 import { fileURLToPath } from "node:url";
 import siteOrigins from "../src/site-origin.json" with { type: "json" };
 
@@ -44,49 +44,13 @@ const report = {
   cases: expectedCases.map((id) => ({ id, status: "not-executed" })),
   page_errors: [], failed_requests: [], http_errors: [], server_errors: [], mutation_requests: [], captures: [],
 };
-const mime = {
-  ".html": "text/html; charset=utf-8", ".js": "application/javascript",
-  ".css": "text/css", ".json": "application/json", ".md": "text/plain; charset=utf-8",
-  ".txt": "text/plain; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png",
-  ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".woff2": "font/woff2", ".ico": "image/x-icon",
-};
 let browser;
 let page;
 let origin;
 let currentCase = "setup";
 
-/** @param {string} pathname @returns {Promise<string | undefined>} */
-async function findAsset(pathname) {
-  const base = path.resolve(root, "." + decodeURIComponent(pathname));
-  if (base !== root && !base.startsWith(root + path.sep)) return undefined;
-  for (const candidate of [base, base + ".html", path.join(base, "index.html")]) {
-    try {
-      if ((await stat(candidate)).isFile()) return candidate;
-    } catch (error) {
-      if (error.code !== "ENOENT" && error.code !== "ENOTDIR") throw error;
-    }
-  }
-  return undefined;
-}
-
-const server = createServer((request, response) => {
-  void (async () => {
-    if (request.method !== "GET" && request.method !== "HEAD") {
-      report.mutation_requests.push({ layer: "server", method: request.method, url: request.url });
-      response.writeHead(405).end("Read-only test server.");
-      return;
-    }
-    const file = await findAsset(new URL(request.url, "http://127.0.0.1").pathname);
-    if (!file) { response.writeHead(404).end("Not found."); return; }
-    response.setHeader("Content-Type", mime[path.extname(file)] || "application/octet-stream");
-    response.setHeader("Cache-Control", "no-store");
-    response.end(request.method === "HEAD" ? undefined : await readFile(file));
-  })().catch((error) => {
-    report.server_errors.push(String(error));
-    if (!response.headersSent) response.writeHead(500);
-    response.end("Test server failed.");
-  });
-});
+/** @type {import("@uppercut-labs/static-file-server").RunningServer | undefined} */
+let server;
 
 /** @param {string} id @param {() => Promise<unknown>} check @returns {Promise<void>} */
 async function testCase(id, check) {
@@ -108,6 +72,16 @@ async function navigate(route) {
   await page.locator("main").waitFor();
   await page.evaluate(() => document.fonts.ready);
   assert.equal(await page.locator("#site-data").count(), 1, `${route}: production application data exists`);
+}
+
+/**
+ * Leaves the current page before resizing. A resize on a page with lazy images starts loads that the next
+ * navigation then aborts, which the run would record as a failed request.
+ * @param {number} width @returns {Promise<void>}
+ */
+async function resizeViewport(width) {
+  await page.goto("about:blank");
+  await page.setViewportSize({ width, height: 844 });
 }
 
 /** @returns {Promise<void>} */
@@ -151,9 +125,12 @@ try {
   assert.equal(plaintextConsumers.length, 13, "All thirteen plaintext consumers must be covered.");
   const expectedPrompt = (await readFile(path.join(project, "public/prompts/get-started.txt"), "utf8")).trim();
   const expectedPacket = await readFile(path.join(root, "agent/phase-1-packet.txt"), "utf8");
-  assert.equal(expectedPrompt.length, 476, "The current starting prompt remains complete.");
-  assert(expectedPrompt.includes(siteOrigins.canonicalOrigin + "/recommendations"));
-  assert.match(expectedPrompt, /Read https:\/\/raw\.githubusercontent\.com\/[^\s]+\/public\/agent\/packets\/phase-1-[a-f0-9]{16}\.md and guide me/);
+  assert.equal(expectedPrompt.length, 499, "The current starting prompt remains complete.");
+  assert(expectedPrompt.includes("Please switch to Task mode and paste this same prompt there."), "The starting prompt sends Gemini Chat learners to Task mode.");
+  assert(expectedPrompt.includes('If unavailable, ask me for "Copy instruction packet".'), "The starting prompt names the manual fallback.");
+  const packetUrl = expectedPrompt.match(/Read (https:\/\/raw\.githubusercontent\.com\/[^\s]+\/public\/agent\/packets\/(phase-1-[a-f0-9]{16}\.md)) and guide me/);
+  assert(packetUrl, "The starting prompt names a hashed Phase 1 packet.");
+  await readFile(path.join(project, "public/agent/packets", packetUrl[2]), "utf8");
   for (const consumer of plaintextConsumers) {
     const source = (await readFile(path.join(project, consumer.source), "utf8")).replace(/\r\n/g, "\n");
     consumer.blocks = [...source.matchAll(/^```text[^\S\n]*\n([\s\S]*?)^```[^\S\n]*$/gm)].map((match) => match[1]);
@@ -161,10 +138,18 @@ try {
   }
   const skills = JSON.parse(await readFile(path.join(root, "skills.json"), "utf8"));
   const quickBuild = JSON.parse(await readFile(path.join(root, "skills/quick-build.json"), "utf8"));
-  await new Promise((resolve, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", resolve); });
-  const address = server.address();
-  assert(address && typeof address !== "string", "The test server must expose its actual listener.");
-  origin = `http://127.0.0.1:${address.port}`;
+  server = await startStaticServer({
+    root,
+    cleanUrls: true,
+    cacheControl: "no-store",
+    mime: { ".md": "text/plain; charset=utf-8" },
+    onRequest: ({ method, path: requestPath, status }) => {
+      // Anything but GET and HEAD is a mutation attempt; the server refuses it and the run records it.
+      if (status === 405) report.mutation_requests.push({ layer: "server", method, url: requestPath });
+      if (status === 500) report.server_errors.push(`${method} ${requestPath}: server error`);
+    },
+  });
+  origin = server.url;
   const { chromium } = await import(process.env.STYLE_BROWSER_MODULE || "playwright");
   browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
@@ -243,7 +228,7 @@ try {
   }
 
   await testCase("contact:320", async () => {
-    await page.setViewportSize({ width: 320, height: 844 });
+    await resizeViewport(320);
     await navigate("/contact");
     const phase = page.locator('select[name="phase"]');
     assert.equal(await phase.inputValue(), "general");
@@ -279,7 +264,7 @@ try {
   });
 
   for (const width of [320, 390]) {
-    await page.setViewportSize({ width, height: 844 });
+    await resizeViewport(width);
     for (const consumer of plaintextConsumers) {
       await testCase(`plaintext:${consumer.route}:${width}`, async () => {
         await navigate(consumer.route);
@@ -310,7 +295,7 @@ try {
   }
 
   await testCase("program-code:TypeScript:320", async () => {
-    await page.setViewportSize({ width: 320, height: 844 });
+    await resizeViewport(320);
     await navigate("/style/TypeScript");
     const blocks = page.locator(".style-guide-prose pre > code.language-ts");
     assert(await blocks.count() > 0, "TypeScript program-code examples must exist.");
@@ -374,8 +359,8 @@ try {
     try { await browser.close(); }
     catch (error) { report.browser_cleanup_error = String(error); report.status = "failed"; process.exitCode = 1; }
   }
-  if (server.listening) {
-    try { await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve())); }
+  if (server) {
+    try { await server.close(); }
     catch (error) { report.server_cleanup_error = String(error); report.status = "failed"; process.exitCode = 1; }
   }
   report.ended_at = new Date().toISOString();
