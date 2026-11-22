@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
-import { createServer } from "node:http";
-import { mkdir, mkdtemp, readFile, realpath, stat, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, realpath, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { startStaticServer } from "@uppercut-labs/static-file-server";
 import { fileURLToPath } from "node:url";
 import siteOrigins from "../src/site-origin.json" with { type: "json" };
 
@@ -44,49 +44,13 @@ const report = {
   cases: expectedCases.map((id) => ({ id, status: "not-executed" })),
   page_errors: [], failed_requests: [], http_errors: [], server_errors: [], mutation_requests: [], captures: [],
 };
-const mime = {
-  ".html": "text/html; charset=utf-8", ".js": "application/javascript",
-  ".css": "text/css", ".json": "application/json", ".md": "text/plain; charset=utf-8",
-  ".txt": "text/plain; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png",
-  ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".woff2": "font/woff2", ".ico": "image/x-icon",
-};
 let browser;
 let page;
 let origin;
 let currentCase = "setup";
 
-/** @param {string} pathname @returns {Promise<string | undefined>} */
-async function findAsset(pathname) {
-  const base = path.resolve(root, "." + decodeURIComponent(pathname));
-  if (base !== root && !base.startsWith(root + path.sep)) return undefined;
-  for (const candidate of [base, base + ".html", path.join(base, "index.html")]) {
-    try {
-      if ((await stat(candidate)).isFile()) return candidate;
-    } catch (error) {
-      if (error.code !== "ENOENT" && error.code !== "ENOTDIR") throw error;
-    }
-  }
-  return undefined;
-}
-
-const server = createServer((request, response) => {
-  void (async () => {
-    if (request.method !== "GET" && request.method !== "HEAD") {
-      report.mutation_requests.push({ layer: "server", method: request.method, url: request.url });
-      response.writeHead(405).end("Read-only test server.");
-      return;
-    }
-    const file = await findAsset(new URL(request.url, "http://127.0.0.1").pathname);
-    if (!file) { response.writeHead(404).end("Not found."); return; }
-    response.setHeader("Content-Type", mime[path.extname(file)] || "application/octet-stream");
-    response.setHeader("Cache-Control", "no-store");
-    response.end(request.method === "HEAD" ? undefined : await readFile(file));
-  })().catch((error) => {
-    report.server_errors.push(String(error));
-    if (!response.headersSent) response.writeHead(500);
-    response.end("Test server failed.");
-  });
-});
+/** @type {import("@uppercut-labs/static-file-server").RunningServer | undefined} */
+let server;
 
 /** @param {string} id @param {() => Promise<unknown>} check @returns {Promise<void>} */
 async function testCase(id, check) {
@@ -161,10 +125,18 @@ try {
   }
   const skills = JSON.parse(await readFile(path.join(root, "skills.json"), "utf8"));
   const quickBuild = JSON.parse(await readFile(path.join(root, "skills/quick-build.json"), "utf8"));
-  await new Promise((resolve, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", resolve); });
-  const address = server.address();
-  assert(address && typeof address !== "string", "The test server must expose its actual listener.");
-  origin = `http://127.0.0.1:${address.port}`;
+  server = await startStaticServer({
+    root,
+    cleanUrls: true,
+    cacheControl: "no-store",
+    mime: { ".md": "text/plain; charset=utf-8" },
+    onRequest: ({ method, path: requestPath, status }) => {
+      // Anything but GET and HEAD is a mutation attempt; the server refuses it and the run records it.
+      if (status === 405) report.mutation_requests.push({ layer: "server", method, url: requestPath });
+      if (status === 500) report.server_errors.push(`${method} ${requestPath}: server error`);
+    },
+  });
+  origin = server.url;
   const { chromium } = await import(process.env.STYLE_BROWSER_MODULE || "playwright");
   browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
@@ -374,8 +346,8 @@ try {
     try { await browser.close(); }
     catch (error) { report.browser_cleanup_error = String(error); report.status = "failed"; process.exitCode = 1; }
   }
-  if (server.listening) {
-    try { await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve())); }
+  if (server) {
+    try { await server.close(); }
     catch (error) { report.server_cleanup_error = String(error); report.status = "failed"; process.exitCode = 1; }
   }
   report.ended_at = new Date().toISOString();

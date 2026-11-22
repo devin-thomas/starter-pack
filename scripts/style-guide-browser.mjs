@@ -1,8 +1,8 @@
 import siteOrigins from "../src/site-origin.json" with { type: "json" };
 import assert from "node:assert/strict";
-import { createServer } from "node:http";
-import { readFile, stat, mkdir, writeFile } from "node:fs/promises";
+import { readFile, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { startStaticServer } from "@uppercut-labs/static-file-server";
 const { chromium } = await import(process.env.STYLE_BROWSER_MODULE || "playwright");
 
 const root = path.resolve("dist");
@@ -21,24 +21,8 @@ const guides = [
   { slug: "Rust", internalId: /^RS\d{3}/, headingCount: 40, data: JSON.parse(await readFile(path.join(root,"style/Rust.json"),"utf8")) },
 ];
 
-const mime = { ".html":"text/html", ".js":"application/javascript", ".css":"text/css", ".json":"application/json", ".md":"text/plain", ".txt":"text/plain", ".svg":"image/svg+xml", ".png":"image/png", ".woff2":"font/woff2", ".woff":"font/woff" };
-const server = createServer(async (request,response) => {
-  try {
-    const url = new URL(request.url,"http://127.0.0.1");
-    const base = path.resolve(root,"."+decodeURIComponent(url.pathname));
-    if (base !== root && !base.startsWith(root+path.sep)) {response.writeHead(403).end();return;}
-    let found;
-    for (const file of [base,base+".html",path.join(base,"index.html")]) {
-      try {if ((await stat(file)).isFile()) {found=file;break;}} catch {}
-    }
-    if (!found) {response.writeHead(404).end("Not found");return;}
-    response.setHeader("Content-Type",mime[path.extname(found)]||"application/octet-stream");
-    response.end(await readFile(found));
-  } catch {response.writeHead(500).end("Server error");}
-});
-
-await new Promise((resolve) => server.listen(0,"127.0.0.1",resolve));
-const origin = `http://127.0.0.1:${server.address().port}`;
+const server = await startStaticServer({ root, cleanUrls: true, mime: { ".md": "text/plain", ".txt": "text/plain" } });
+const origin = server.url;
 const browser = await chromium.launch({headless:true});
 const report = {
   version: guides[0].data.version,
@@ -138,7 +122,7 @@ try {
 } finally {
   await writeFile(path.join(output,"browser-report.json"),JSON.stringify(report,null,2)+"\n");
   await browser.close();
-  await new Promise((resolve) => server.close(resolve));
+  await server.close();
 }
 
 console.log(JSON.stringify(report));
