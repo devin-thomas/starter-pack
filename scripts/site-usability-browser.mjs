@@ -74,6 +74,16 @@ async function navigate(route) {
   assert.equal(await page.locator("#site-data").count(), 1, `${route}: production application data exists`);
 }
 
+/**
+ * Leaves the current page before resizing. A resize on a page with lazy images starts loads that the next
+ * navigation then aborts, which the run would record as a failed request.
+ * @param {number} width @returns {Promise<void>}
+ */
+async function resizeViewport(width) {
+  await page.goto("about:blank");
+  await page.setViewportSize({ width, height: 844 });
+}
+
 /** @returns {Promise<void>} */
 async function noPageOverflow() {
   const geometry = await page.evaluate(() => ({ width: innerWidth, scrollWidth: document.documentElement.scrollWidth }));
@@ -115,9 +125,12 @@ try {
   assert.equal(plaintextConsumers.length, 13, "All thirteen plaintext consumers must be covered.");
   const expectedPrompt = (await readFile(path.join(project, "public/prompts/get-started.txt"), "utf8")).trim();
   const expectedPacket = await readFile(path.join(root, "agent/phase-1-packet.txt"), "utf8");
-  assert.equal(expectedPrompt.length, 476, "The current starting prompt remains complete.");
-  assert(expectedPrompt.includes(siteOrigins.canonicalOrigin + "/recommendations"));
-  assert.match(expectedPrompt, /Read https:\/\/raw\.githubusercontent\.com\/[^\s]+\/public\/agent\/packets\/phase-1-[a-f0-9]{16}\.md and guide me/);
+  assert.equal(expectedPrompt.length, 499, "The current starting prompt remains complete.");
+  assert(expectedPrompt.includes("Please switch to Task mode and paste this same prompt there."), "The starting prompt sends Gemini Chat learners to Task mode.");
+  assert(expectedPrompt.includes('If unavailable, ask me for "Copy instruction packet".'), "The starting prompt names the manual fallback.");
+  const packetUrl = expectedPrompt.match(/Read (https:\/\/raw\.githubusercontent\.com\/[^\s]+\/public\/agent\/packets\/(phase-1-[a-f0-9]{16}\.md)) and guide me/);
+  assert(packetUrl, "The starting prompt names a hashed Phase 1 packet.");
+  await readFile(path.join(project, "public/agent/packets", packetUrl[2]), "utf8");
   for (const consumer of plaintextConsumers) {
     const source = (await readFile(path.join(project, consumer.source), "utf8")).replace(/\r\n/g, "\n");
     consumer.blocks = [...source.matchAll(/^```text[^\S\n]*\n([\s\S]*?)^```[^\S\n]*$/gm)].map((match) => match[1]);
@@ -215,7 +228,7 @@ try {
   }
 
   await testCase("contact:320", async () => {
-    await page.setViewportSize({ width: 320, height: 844 });
+    await resizeViewport(320);
     await navigate("/contact");
     const phase = page.locator('select[name="phase"]');
     assert.equal(await phase.inputValue(), "general");
@@ -251,7 +264,7 @@ try {
   });
 
   for (const width of [320, 390]) {
-    await page.setViewportSize({ width, height: 844 });
+    await resizeViewport(width);
     for (const consumer of plaintextConsumers) {
       await testCase(`plaintext:${consumer.route}:${width}`, async () => {
         await navigate(consumer.route);
@@ -282,7 +295,7 @@ try {
   }
 
   await testCase("program-code:TypeScript:320", async () => {
-    await page.setViewportSize({ width: 320, height: 844 });
+    await resizeViewport(320);
     await navigate("/style/TypeScript");
     const blocks = page.locator(".style-guide-prose pre > code.language-ts");
     assert(await blocks.count() > 0, "TypeScript program-code examples must exist.");
